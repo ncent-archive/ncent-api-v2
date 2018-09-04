@@ -1,0 +1,16 @@
+routes:
+  # =========================
+  # Health Check Microservice
+  # =========================
+
+  - regex: '^/health(/*[a-zA-Z0-9]*)?'
+    cls: kotlinserverless.framework.healthchecks.controllers.HealthcheckController
+    func: execute
+    
+  # =========================
+  # User Microservice
+  # =========================
+  
+  - regex: '^/user(/*[a-zA-Z0-9]*)?'
+    cls: kotlinserverless.main.users.controllers.UserController
+    func: execute
