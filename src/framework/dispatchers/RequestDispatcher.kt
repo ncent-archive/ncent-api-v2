@@ -4,9 +4,11 @@ import kotlinserverless.framework.*
 import java.io.File
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import kotlin.reflect.full.createInstance
-import kotlinserverless.framework.controllers.Controller
 import kotlinserverless.framework.controllers.DefaultController
+import kotlinserverless.framework.healthchecks.models.Healthcheck
+import kotlinserverless.framework.healthchecks.services.HealthcheckService
+import kotlinserverless.main.users.models.User
+import kotlinserverless.main.users.services.UserService
 
 /**
  * Request Dispatcher implementation
@@ -14,27 +16,30 @@ import kotlinserverless.framework.controllers.DefaultController
 open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
 
     @Throws(RouterException::class)
-    override fun locate(key: ApiGatewayRequest): Any? {
-        val path = key.input["path"]
+    override fun locate(request: ApiGatewayRequest): Any? {
+        val path = request.input["path"]
 
-        var response: Any? = null
-        var found: Boolean = false
+        for ((regex, model) in ROUTER.routes) {
+			if (!Regex(regex).matches(path as CharSequence)) {
+				continue
+			}
 
-        for ((regex, function, cls) in ROUTER.routes) {
-            if (Regex(regex).matches(path as CharSequence)) {
-                val kClass = Class.forName(cls).kotlin
-				val func = kClass.members.find { it.name == function }
-                response = func?.call(kClass.createInstance(), key)
-                found = true
-
-                break
+            return when(Class.forName(model)) {
+                Healthcheck::class.java -> DefaultController<Healthcheck>().defaultRouting(
+                    Healthcheck::class.java,
+                    request!!,
+                    HealthcheckService()
+                )
+                User::class.java -> DefaultController<User>().defaultRouting(
+                    User::class.java,
+                    request!!,
+                    UserService()
+                )
+                else -> throw RouterException(path as? String ?: "")
             }
         }
-
-        if (!found)
-            throw RouterException(path as? String ?: "")
-
-        return response
+		
+		throw RouterException(path as? String ?: "")
     }
 
     /**
@@ -46,5 +51,4 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
         private val FILE = File("src/main/resources/yml/routes.yml")
         val ROUTER: Routes = ObjectMapper(YAMLFactory()).readValue(FILE, Routes::class.java)
     }
-
 }

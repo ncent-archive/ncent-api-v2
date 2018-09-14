@@ -1,16 +1,14 @@
 package kotlinserverless.main.users.services
 
-import kotlin.math.min
 import kotlinserverless.framework.*
 import kotlinserverless.framework.services.Service
 import kotlinserverless.framework.healthchecks.models.Healthcheck
-import kotlinserverless.framework.healthchecks.InvalidEndpoint
 import kotlinserverless.main.users.models.User
 import kotlinserverless.framework.ApiUser
 
 class UserService: Service<User, ApiUser> {
 
-    override fun create(user: ApiUser, element: User): User {
+    override fun create(user: ApiUser, element: User) {
 		throw NotImplementedError()
 	}
 
@@ -26,7 +24,7 @@ class UserService: Service<User, ApiUser> {
 		throw NotImplementedError()
 	}
 
-    override fun update(user: ApiUser, element: User): User {
+    override fun update(user: ApiUser, element: User) {
 		throw NotImplementedError()
 	}
 

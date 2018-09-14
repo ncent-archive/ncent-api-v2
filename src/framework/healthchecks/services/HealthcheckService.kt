@@ -10,8 +10,8 @@ class HealthcheckService: Service<Healthcheck, ApiUser> {
 	
 	val elements: MutableList<Healthcheck> = ArrayList()
 	
-	override fun create(user: ApiUser, element: Healthcheck): Healthcheck {
-		return Healthcheck("Healthy")
+	override fun create(user: ApiUser, element: Healthcheck) {
+		throw InvalidEndpoint()
 	}
 	
 	override fun findAll(user: ApiUser, filters: Map<String, Any>, pagination: Pagination): Page<Healthcheck> {
@@ -30,9 +30,8 @@ class HealthcheckService: Service<Healthcheck, ApiUser> {
         return Healthcheck("Healthy")
     }
 	
-	override fun update(user: ApiUser, element: Healthcheck): Healthcheck {
-		// example unhealthy
-		return Healthcheck("Unhealthy", "Should not try to update the healthcheck.")
+	override fun update(user: ApiUser, element: Healthcheck) {
+		throw InvalidEndpoint()
 	}
 	
 	override fun delete(user: ApiUser, id: Int) {

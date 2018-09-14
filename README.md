@@ -44,9 +44,9 @@ Todo:
 Since this is a template/framework, you are expected to fork.
 In order to add new api endpoint (To non existing object class)
 
-- Add a folder under /src/main/{object_name} and add under it (controllers, models, services)
+- Add a folder under /src/main/{object_name} and add under it (models, services)
 - Add your appropriate model under models, similar to User.kt
-- Copy UserControllers and change anywhere that says User to {object_name}
+- Update the RequestDispatcher.locate (when statement) if you are adding a new service/model
 - Add {object_name}Service.kt (This will have your new functionality)
 - If you are adding a new non standard CRUD endpoint, simply add it as a method {method_name}
 - Edit serverless.yml

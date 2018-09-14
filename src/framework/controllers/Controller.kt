@@ -97,7 +97,6 @@ interface Controller<M> {
      * @param service CRUD service to execute
      */
     fun <T : Model> defaultRouting(cls: Class<T>, request: Request, service: Service<T, ApiUser>): Any? {
-		println("[Controller][ARYA - TEST]" + ObjectMapper().writeValueAsString(request.input))
 		val resource: String = getResource(request)
         val headers: Map<String, Any> = getHeaders(request)
         val pathParameters: Map<String, Any> = getPathParameters(request)
@@ -134,7 +133,6 @@ interface Controller<M> {
             }
 
             else -> {
-				println("REACHED ELSE!!!!")
                 throw Exception()
             }
         }

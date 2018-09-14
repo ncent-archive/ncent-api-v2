@@ -49,12 +49,11 @@ interface Request {
 /**
  * Request Dispatcher route to a concrete function based on a regex
  * @property regex Regex that needs to satisfy to route the request
- * @property func Function name to be executed
- * @property cls ClassPath
+ * @property model Name of model class
  * @constructor Creates an empty object with empty values
  */
-data class Route(var regex: String, var func: String, var cls: String) {
-    constructor(): this("", "", "")
+data class Route(var regex: String, var model: String) {
+    constructor(): this("", "")
 }
 
 /**
