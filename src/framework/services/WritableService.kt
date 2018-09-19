@@ -1,8 +1,5 @@
 package kotlinserverless.framework.services
 
-import kotlinserverless.framework.*
-import kotlinserverless.framework.healthchecks.models.Healthcheck
-
 /**
  * Service that exposes the capabilities of a {@link T} element
  * @param <K> Natural Key type

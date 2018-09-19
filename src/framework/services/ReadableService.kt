@@ -1,6 +1,6 @@
 package kotlinserverless.framework.services
 
-import kotlinserverless.framework.*
+import kotlinserverless.framework.models.*
 import kotlinserverless.framework.healthchecks.models.Healthcheck
 
 /**

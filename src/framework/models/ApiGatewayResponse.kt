@@ -1,8 +1,8 @@
-package kotlinserverless.framework
+package kotlinserverless.framework.models
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinserverless.framework.*
+import kotlinserverless.framework.models.*
 import org.apache.log4j.LogManager
 import java.nio.charset.StandardCharsets
 import java.util.*

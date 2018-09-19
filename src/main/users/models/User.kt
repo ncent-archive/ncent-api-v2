@@ -1,6 +1,6 @@
 package kotlinserverless.main.users.models
 
-import kotlinserverless.framework.BaseModel
+import kotlinserverless.framework.models.BaseModel
 
 /**
  * Basic fields that a User needs

@@ -1,6 +1,6 @@
-package kotlinserverless.framework
+package kotlinserverless.framework.models
 
-import kotlinserverless.framework.ApiGatewayResponse.Companion.LOG
+import kotlinserverless.framework.models.ApiGatewayResponse.Companion.LOG
 import kotlinserverless.framework.dispatchers.RequestDispatcher
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler

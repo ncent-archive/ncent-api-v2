@@ -1,6 +1,6 @@
 package kotlinserverless.framework.dispatchers
 
-import kotlinserverless.framework.*
+import kotlinserverless.framework.models.*
 import java.io.File
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory

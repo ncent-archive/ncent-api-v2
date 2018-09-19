@@ -1,10 +1,9 @@
 package kotlinserverless.main.users.services
 
-import kotlinserverless.framework.*
+import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.Service
 import kotlinserverless.framework.healthchecks.models.Healthcheck
 import kotlinserverless.main.users.models.User
-import kotlinserverless.framework.ApiUser
 
 class UserService: Service<User, ApiUser> {
 

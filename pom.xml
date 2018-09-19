@@ -15,11 +15,23 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-       <dependencies>
+    <repositories>
+        <repository>
+            <id>spek-dev</id>
+            <url>https://dl.bintray.com/spekframework/spek-dev</url>
+        </repository>
+    </repositories>
+
+   <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
@@ -59,7 +71,7 @@
         <dependency>
         	<groupId>org.jetbrains.kotlin</groupId>
         	<artifactId>kotlin-reflect</artifactId>
-        	<version>1.2.61</version>
+        	<version>${kotlin.version}</version>
         </dependency>
         <dependency>
         	<groupId>org.mockito</groupId>
@@ -67,25 +79,30 @@
         	<version>1.10.19</version>
         </dependency>
         <dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>${junit.jupiter.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>${junit.jupiter.version}</version>
-		</dependency>
-        <dependency>
-        	<groupId>org.jetbrains.spek</groupId>
-        	<artifactId>spek-api</artifactId>
-        	<version>1.1.5</version>
+            <groupId>org.spekframework.spek2</groupId>
+            <artifactId>spek-runner-junit5</artifactId>
+            <version>2.0.0-alpha.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.junit.platform</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.jetbrains.spek</groupId>
-            <artifactId>spek-junit-platform-engine</artifactId>
-            <version>1.1.5</version>
-            <scope>test</scope>
+            <groupId>org.spekframework.spek2</groupId>
+            <artifactId>spek-dsl-jvm</artifactId>
+            <version>2.0.0-alpha.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
         	<groupId>com.nhaarman</groupId>
@@ -95,8 +112,8 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>${project.basedir}/src/framework, ${project.basedir}/src/main</sourceDirectory>
-      	<!-- <testSourceDirectory>${project.basedir}/src/main/test</testSourceDirectory> -->
+        <sourceDirectory>${project.basedir}/src</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test</testSourceDirectory>
         <plugins>
             <!--
               Using the Apache Maven Shade plugin to package the jar
@@ -124,36 +141,26 @@
                 </executions>
             </plugin>
             <plugin>
-		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-surefire-plugin</artifactId>
-		        <version>2.22.0</version>
-		        <configuration>
-		          <includes>
-		            <include>**/*Test.*</include>
-		            <include>**/*Spec.*</include>
-		          </includes>
-		          <parallel>methods</parallel>
-        		  <threadCount>10</threadCount>
-		        </configuration>
-		        <dependencies>
-			        <dependency>
-			            <groupId>org.junit.platform</groupId>
-			            <artifactId>junit-platform-surefire-provider</artifactId>
-			            <version>1.2.0</version>
-			        </dependency>
-			        <dependency>
-					    <groupId>org.junit.platform</groupId>
-					    <artifactId>junit-platform-commons</artifactId>
-					    <version>1.2.0</version>
-					</dependency>
-								        
-			        <dependency>
-						<groupId>org.junit.jupiter</groupId>
-						<artifactId>junit-jupiter-engine</artifactId>
-						<version>${junit.jupiter.version}</version>
-					</dependency>
-			    </dependencies>
-		      </plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.0</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Spec*</include>
+                    </includes>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>1.2.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit.jupiter.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -161,24 +168,17 @@
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <goals> <goal>compile</goal> </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>${project.basedir}/src/main</sourceDir>
-                                <sourceDir>${project.basedir}/src/framework</sourceDir>
-                            </sourceDirs>
-                        </configuration>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
                     </execution>
                     <execution>
                         <id>test-compile</id>
-                        <goals> <goal>test-compile</goal> </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>${project.basedir}/src/framework/test</sourceDir>
-                                <sourceDir>${project.basedir}/src/main/test</sourceDir>
-                                <sourceDir>${project.basedir}/src/main/test/unit</sourceDir>
-                            </sourceDirs>
-                        </configuration>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

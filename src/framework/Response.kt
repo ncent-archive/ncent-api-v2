@@ -1,3 +1,0 @@
-package kotlinserverless.framework
-
-interface Response

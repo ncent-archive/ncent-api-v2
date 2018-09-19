@@ -1,4 +1,4 @@
-package kotlinserverless.framework
+package kotlinserverless.framework.models
 
 /**
  * Custom exception for our project

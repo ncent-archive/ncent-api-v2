@@ -1,32 +1,28 @@
-package kotlinserverless.framework
+package kotlinserverless.test
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinserverless.framework.dispatchers.RequestDispatcher
-import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.given
-import org.jetbrains.spek.api.dsl.it
-import org.jetbrains.spek.api.dsl.on
-import org.junit.jupiter.api.Assertions.assertEquals
+import kotlinserverless.framework.models.*
+import org.spekframework.spek2.Spek
+import org.spekframework.spek2.style.specification.describe
 import org.mockito.Mockito
+import kotlin.test.assertEquals
 
 object HandlerSpec: Spek({
-    given("a new event") {
-        var handler: Handler? = null
-        var context: Context? = null
-        var dispatcher: RequestDispatcher? = null
-        var map: Map<String, Any>? = null
+    describe("a new event") {
+        val handler by memoized { Handler() }
+        val context by memoized { Mockito.mock(Context::class.java) }
+        val map: MutableMap<String, Any> = mutableMapOf()
+        val dispatcher by memoized { Mockito.mock(RequestDispatcher::class.java) }
 
-        beforeEachTest {
-            handler = Handler()
-            context = Mockito.mock(Context::class.java)
-            map = mapOf<String, Any>("path" to "test")
-            dispatcher = Mockito.mock(RequestDispatcher::class.java)
+        beforeEach {
             handler?.requestDispatcher = dispatcher!!
-
+            map["path"] = "test"
         }
-        on("correct path") {
+
+        describe("correct path") {
             it("should return a status code of 204 if the response body is empty") {
                 whenever(dispatcher?.locate(any())).thenReturn(EmptyModel())
                 val response = context?.let { handler?.handleRequest(map as Map<String, Any>, it) }
@@ -39,7 +35,7 @@ object HandlerSpec: Spek({
             }
 
         }
-        on("non-existent path") {
+        describe("non-existent path") {
             it("should return a status code of 404") {
                 whenever(dispatcher?.locate(any())).thenThrow(RouterException(""))
                 val response = context?.let { handler?.handleRequest(map as Map<String, Any>, it) }

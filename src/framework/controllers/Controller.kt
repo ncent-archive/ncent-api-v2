@@ -1,7 +1,7 @@
 package kotlinserverless.framework.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinserverless.framework.*
+import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.Service
 import kotlin.math.ceil
 

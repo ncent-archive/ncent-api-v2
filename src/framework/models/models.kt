@@ -1,4 +1,4 @@
-package kotlinserverless.framework
+package kotlinserverless.framework.models
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.fasterxml.jackson.core.JsonGenerator

@@ -1,7 +1,7 @@
 package kotlinserverless.framework.healthchecks.services
 
 import kotlin.math.min
-import kotlinserverless.framework.*
+import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.Service
 import kotlinserverless.framework.healthchecks.models.Healthcheck
 import kotlinserverless.framework.healthchecks.InvalidEndpoint
