@@ -1,5 +1,7 @@
 package kotlinserverless.framework.services
 
+import kotlinserverless.framework.healthchecks.InvalidEndpoint
+
 /**
  * Service that exposes the capabilities of a {@link T} element
  * @param <K> Natural Key type
@@ -13,19 +15,25 @@ interface WritableService<T, U> {
      * @param user [U] User who is requesting (to verify permissions)
      * @param element [T] that is going to be saved
      */
-    fun create(user: U, element: T)
+    fun create(user: U, element: T) {
+        throw InvalidEndpoint()
+    }
 
     /**
      * Updates a [T]
      * @param user [U] User who is requesting (to verify permissions)
      * @param element [T] that is going to be updated
      */
-    fun update(user: U, element: T)
+    fun update(user: U, element: T) {
+        throw InvalidEndpoint()
+    }
 
     /**
      * Deletes a [T] given a unique ID
      * @param user [U] User who is requesting (to verify permissions)
      * @param id Unique ID of the [T]
      */
-    fun delete(user: U, id: Int)
+    fun delete(user: U, id: Int) {
+        throw InvalidEndpoint()
+    }
 }

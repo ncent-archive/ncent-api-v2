@@ -1,5 +1,6 @@
 package kotlinserverless.framework.services
 
+import kotlinserverless.framework.healthchecks.InvalidEndpoint
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.healthchecks.models.Healthcheck
 
@@ -19,7 +20,9 @@ interface ReadableService<T, U> {
      * @return list of [T]
      */
     fun findAll(user: U, filters: Map<String, Any> = mapOf( "order" to "creationDate" ),
-                pagination: Pagination = Pagination(0, 50)): Page<T>
+                pagination: Pagination = Pagination(0, 50)): Page<T> {
+        throw InvalidEndpoint()
+    }
 
     /**
      * Finds one [T] by the unique ID
@@ -27,7 +30,9 @@ interface ReadableService<T, U> {
      * @param id Unique id
      * @return [T] that has that ID
      */
-    fun findOne(user: U, id: Int): T
+    fun findOne(user: U, id: Int): T {
+        throw InvalidEndpoint()
+    }
 
     /**
      * Finds one [T] by an unique natural [K] key
@@ -35,7 +40,9 @@ interface ReadableService<T, U> {
      * @param filters Set of filters that will return a unique value
      * @return [T] that has that [Any] natural key
      */
-    fun findOne(user: U, filters: Map<String, Any> = emptyMap()): T
+    fun findOne(user: U, filters: Map<String, Any> = emptyMap()): T {
+        throw InvalidEndpoint()
+    }
 
     /**
      * Returns the amount or [T] entities in the system
@@ -43,7 +50,9 @@ interface ReadableService<T, U> {
      * @param filters Set of filters
      * @return list of [T]
      */
-    fun count(user: U, filters: Map<String, Any> = emptyMap()): Int
+    fun count(user: U, filters: Map<String, Any> = emptyMap()): Int {
+        throw InvalidEndpoint()
+    }
 
     /**
      * Verifies if a entity with a specific ID exists
@@ -51,12 +60,16 @@ interface ReadableService<T, U> {
      * @param id Unique id
      * @return [Boolean] value indicating true if exists or false if not
      */
-    fun exists(user: U, id: Int): Boolean
+    fun exists(user: U, id: Int): Boolean {
+        throw InvalidEndpoint()
+    }
 
     /**
      * Provide a basic healthcheck for this object type and function
      * ex: used to verify access to the database/cache layer is functioning properly
      * @return [Healthcheck] object representing the health
      */
-    fun health(user: U, request: Request?): Healthcheck
+    fun health(user: U, request: Request?): Healthcheck {
+        throw InvalidEndpoint()
+    }
 }
