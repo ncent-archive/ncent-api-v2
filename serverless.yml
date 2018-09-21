@@ -59,6 +59,12 @@ functions:
       - http:
           path: /user/hello
           method: get
+  health:
+    handler: kotlinserverless.framework.Handler
+    events:
+    - http:
+        path: /health/health
+        method: get
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

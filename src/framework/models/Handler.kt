@@ -22,6 +22,11 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
         false -> 200
       }
     }
+    catch(e: RouterException) {
+      LOG.error(e.message, e)
+      status = 404
+      body = ErrorModel(e.message)
+    }
     catch (e: MyException) {
       LOG.error(e.message, e)
       status = e.code

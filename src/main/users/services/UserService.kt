@@ -39,7 +39,7 @@ class UserService: Service<User, ApiUser> {
 		throw NotImplementedError()
 	}
 
-	override fun health(): Healthcheck {
+	override fun health(user: ApiUser, request: Request?): Healthcheck {
 		throw NotImplementedError()
 	}
 	

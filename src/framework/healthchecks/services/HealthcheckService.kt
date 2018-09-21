@@ -46,7 +46,7 @@ class HealthcheckService: Service<Healthcheck, ApiUser> {
         throw InvalidEndpoint()
     }
 	
-	override fun health(): Healthcheck {
+	override fun health(user: ApiUser, request: Request?): Healthcheck {
 		return Healthcheck("Healthy")
 	}
 }

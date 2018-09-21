@@ -58,5 +58,5 @@ interface ReadableService<T, U> {
      * ex: used to verify access to the database/cache layer is functioning properly
      * @return [Healthcheck] object representing the health
      */
-    fun health(): Healthcheck
+    fun health(user: U, request: Request?): Healthcheck
 }

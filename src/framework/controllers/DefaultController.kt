@@ -17,6 +17,8 @@ class DefaultController<T: Model> : Controller<T> {
 				return func.call(service, AnonymousUser(), request)
 			}
 			catch(e: Exception) {
+				println("FOUND AN ERROR")
+				println(e)
 				println("There was an error: " + e)
 				return super.defaultRouting(cls, request, service)
 			}
