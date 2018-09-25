@@ -1,0 +1,2 @@
+package main.rewards.models
+
