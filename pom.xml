@@ -2,10 +2,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ncnt.kotlin</groupId>
-    <artifactId>kotlin-serverless</artifactId>
+    <artifactId>ncent-api</artifactId>
     <packaging>jar</packaging>
     <version>dev</version>
-    <name>kotlin-serverless</name>
+    <name>ncent-api</name>
 
     <properties>
     	<junit.jupiter.version>5.3.1</junit.jupiter.version>
