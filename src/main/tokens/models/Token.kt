@@ -1,4 +1,4 @@
-package main.transactions.models
+package main.tokens.models
 
 import kotlinserverless.framework.models.BaseModel
 
