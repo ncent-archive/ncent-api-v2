@@ -5,10 +5,10 @@ import kotlinserverless.framework.services.SOAServiceInterface
 import main.transactions.models.Transaction
 
 /**
- * Retrieve a transaction and it's connecting objects
+ * Retrieve transactions by filter, such as from/to
  */
-class GetTransactionService<T>: SOAServiceInterface<Transaction<T>> {
-    override fun execute(caller: Int?, id: Int?, params: Map<String, String>?) : SOAResult<Transaction<T>> {
+class GetTransactionsService<T>: SOAServiceInterface<Transaction<T>> {
+    override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<List<Transaction<T>>> {
         throw NotImplementedError()
     }
 }
