@@ -2,7 +2,6 @@ package kotlinserverless.framework.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinserverless.framework.models.*
-import kotlinserverless.framework.services.Service
 import kotlin.math.ceil
 
 /**
@@ -96,7 +95,7 @@ interface Controller<M> {
      * @param request Http Client request
      * @param service CRUD service to execute
      */
-    fun <T : Model> defaultRouting(cls: Class<T>, request: Request, service: Service<T, ApiUser>): Any? {
+    fun <T : Model> defaultRouting(cls: Class<T>, request: Request, restController: RestController<T, ApiUser>): Any? {
 		val resource: String = getResource(request)
         val headers: Map<String, Any> = getHeaders(request)
         val pathParameters: Map<String, Any> = getPathParameters(request)
@@ -105,31 +104,31 @@ interface Controller<M> {
         return when((request.input[HTTP_METHOD] as String).toLowerCase()) {
             HTTP_GET -> {
                 when {
-                    resource.endsWith("findOne", true) -> service.findOne(AnonymousUser(), queryParameters)
+                    resource.endsWith("findOne", true) -> restController.findOne(AnonymousUser(), queryParameters)
                     pathParameters.containsKey("id") -> {
                         val id = pathParameters["id"]
 
                         when (id) {
-                            is Int -> service.findOne(AnonymousUser(), id)
+                            is Int -> restController.findOne(AnonymousUser(), id)
                             else -> throw Exception("Id must be an integer")
                         }
                     }
                     else -> {
-                        return service.findAll(AnonymousUser(), queryParameters, getPagination(queryParameters))
+                        return restController.findAll(AnonymousUser(), queryParameters, getPagination(queryParameters))
                     }
                 }
             }
             HTTP_POST -> {
-                service.create(AnonymousUser(), getEntity(getRawBody(request), cls))
+                restController.create(AnonymousUser(), getEntity(getRawBody(request), cls))
             }
             HTTP_PUT -> {
-                service.update(AnonymousUser(), getEntity(getRawBody(request), cls))
+                restController.update(AnonymousUser(), getEntity(getRawBody(request), cls))
             }
             HTTP_DELETE -> {
-                service.delete(AnonymousUser(), getEntity(getRawBody(request), cls).id!!)
+                restController.delete(AnonymousUser(), getEntity(getRawBody(request), cls).id!!)
             }
             HTTP_PATCH -> {
-                service.update(AnonymousUser(), getEntity(getRawBody(request), cls))
+                restController.update(AnonymousUser(), getEntity(getRawBody(request), cls))
             }
 
             else -> {

@@ -1,4 +1,4 @@
-package kotlinserverless.framework.services
+package kotlinserverless.framework.controllers
 
 import kotlinserverless.framework.healthchecks.InvalidEndpoint
 
@@ -9,7 +9,7 @@ import kotlinserverless.framework.healthchecks.InvalidEndpoint
  * @param <F> Filter type
  * @param <U> User permissions
  */
-interface WritableService<T, U> {
+interface WritableController<T, U> {
     /**
      * Creates a [T] in the system
      * @param user [U] User who is requesting (to verify permissions)

@@ -1,4 +1,4 @@
-package kotlinserverless.framework.services
+package kotlinserverless.framework.controllers
 
 import kotlinserverless.framework.healthchecks.InvalidEndpoint
 import kotlinserverless.framework.models.*
@@ -11,7 +11,7 @@ import kotlinserverless.framework.healthchecks.models.Healthcheck
  * @param <F> Filter type
  * @param <U> User permissions
  */
-interface ReadableService<T, U> {
+interface ReadableController<T, U> {
     /**
      * Find a set of [T] by a given set of optional parameters
      * @param user [U] User who is requesting (to verify permissions)

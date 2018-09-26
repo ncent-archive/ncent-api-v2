@@ -6,9 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.healthchecks.models.Healthcheck
-import kotlinserverless.framework.healthchecks.services.HealthcheckService
 import kotlinserverless.main.users.models.User
-import kotlinserverless.main.users.services.UserService
+import kotlinserverless.framework.controllers.DefaultRestController
 
 /**
  * Request Dispatcher implementation
@@ -28,12 +27,12 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
                 Healthcheck::class.java -> DefaultController<Healthcheck>().defaultRouting(
                     Healthcheck::class.java,
                     request!!,
-                    HealthcheckService()
+                    DefaultRestController<Healthcheck>()
                 )
                 User::class.java -> DefaultController<User>().defaultRouting(
                     User::class.java,
                     request!!,
-                    UserService()
+                        DefaultRestController<User>()
                 )
                 else -> throw RouterException(path as? String ?: "")
             }

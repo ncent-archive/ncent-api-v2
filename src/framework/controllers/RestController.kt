@@ -1,4 +1,4 @@
-package kotlinserverless.framework.services
+package kotlinserverless.framework.controllers
 
 /**
  * Service that exposes the capabilities of a {@link T} element
@@ -7,4 +7,4 @@ package kotlinserverless.framework.services
  * @param <F> Filter type
  * @param <U> User permissions
  */
-interface Service<T, U> : ReadableService<T, U>, WritableService<T, U>
+interface RestController<T, U> : ReadableController<T, U>, WritableController<T, U>
