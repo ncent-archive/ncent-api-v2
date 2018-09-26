@@ -97,6 +97,11 @@
            <version>3.0.0-beta2</version>
        </dependency>
 
+       <dependency>
+           <groupId>org.jdbi</groupId>
+           <artifactId>jdbi3-kotlin</artifactId>
+       </dependency>
+
    </dependencies>
 
     <pluginRepositories>
