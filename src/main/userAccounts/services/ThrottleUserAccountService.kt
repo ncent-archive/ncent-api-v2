@@ -5,9 +5,9 @@ import kotlinserverless.framework.services.SOAServiceInterface
 import main.userAccounts.models.UserAccount
 
 /**
- * Validate the accuracy of the passed ApiKey and Secret key in the UserAccount
+ * Check if we need to throttle the user
  */
-class ValidateApiKeyService: SOAServiceInterface<UserAccount> {
+class ThrottleUserAccountService: SOAServiceInterface<UserAccount> {
     override fun execute(caller: Int?, data: UserAccount?, params: Map<String, String>?) : SOAResult<UserAccount> {
         throw NotImplementedError()
     }
