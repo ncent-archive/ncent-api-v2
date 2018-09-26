@@ -3,6 +3,10 @@ package kotlinserverless.framework.services
 import kotlinserverless.framework.healthchecks.InvalidEndpoint
 
 interface SOAServiceInterface<T> {
+    fun execute() : SOAResult<T> {
+        throw InvalidEndpoint()
+    }
+
     fun execute(caller: Int?) : SOAResult<T> {
         throw InvalidEndpoint()
     }
