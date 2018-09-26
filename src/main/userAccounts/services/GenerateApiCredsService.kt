@@ -8,7 +8,7 @@ import main.userAccounts.models.ApiCreds
  * This service will be used to generate Api credentials
  */
 class GenerateApiCredsService: SOAServiceInterface<ApiCreds> {
-    override fun execute(caller: Int?) : SOAResult<ApiCreds> {
+    override fun execute() : SOAResult<ApiCreds> {
         throw NotImplementedError()
     }
 }
