@@ -8,6 +8,7 @@ import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.healthchecks.models.Healthcheck
 import kotlinserverless.main.users.models.User
 import kotlinserverless.framework.controllers.DefaultRestController
+import main.users.controllers.UserController
 
 /**
  * Request Dispatcher implementation
@@ -17,7 +18,6 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
     @Throws(RouterException::class)
     override fun locate(request: ApiGatewayRequest): Any? {
         val path = request.input["path"]
-
         for ((regex, model) in ROUTER.routes) {
 			if (!Regex(regex).matches(path as CharSequence)) {
 				continue
@@ -32,7 +32,7 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
                 User::class.java -> DefaultController<User>().defaultRouting(
                     User::class.java,
                     request!!,
-                        DefaultRestController<User>()
+                    UserController()
                 )
                 else -> throw RouterException(path as? String ?: "")
             }

@@ -1,4 +1,4 @@
-package test
+package test.unit.services
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
@@ -25,7 +25,7 @@ class UserHelloServiceTest : WordSpec() {
     init {
         "calling hello on a User Service" should {
             "return HELLO WORLD" {
-                var result = service.execute("HELLO", null)
+                var result = service.execute(123, "HELLO", HashMap())
                 result.result shouldBe SOAResultType.SUCCESS
                 result.data shouldBe "HELLO WORLD"
             }

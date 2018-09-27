@@ -10,15 +10,14 @@ class DefaultController<T: Model> : Controller<T> {
     ): Any? {
 		val path = request.input["path"].toString().removePrefix("/").split("/")
 		val function = path[1]
-		val func = this::class.members.find { it.name == function }
+		val func = restController::class.members.find { it.name == function }
 		if(path.size > 1 && func != null) {
 			try {
-				return func.call(this, AnonymousUser(), request)
+				return func.call(restController, AnonymousUser(), request)
 			}
 			catch(e: Exception) {
-				println("FOUND AN ERROR")
+				println("There was an error routing!")
 				println(e)
-				println("There was an error: " + e)
 				return super.defaultRouting(cls, request, restController)
 			}
 		}

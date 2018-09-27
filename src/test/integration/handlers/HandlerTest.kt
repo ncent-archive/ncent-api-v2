@@ -1,4 +1,4 @@
-package kotlinserverless.test
+package kotlinserverless.test.integration.handlers
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
@@ -10,6 +10,7 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.every
 import io.mockk.mockk
+import kotlinserverless.test.TestModel
 
 @ExtendWith(MockKExtension::class)
 class HandlerTest : WordSpec() {
