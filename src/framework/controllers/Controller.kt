@@ -2,6 +2,7 @@ package kotlinserverless.framework.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinserverless.framework.models.*
+import kotlinserverless.framework.services.SOAResult
 import kotlin.math.ceil
 
 /**
@@ -95,7 +96,7 @@ interface Controller<M> {
      * @param request Http Client request
      * @param service CRUD service to execute
      */
-    fun <T : Model> defaultRouting(cls: Class<T>, request: Request, restController: RestController<T, ApiUser>): Any? {
+    fun <T : Model> defaultRouting(cls: Class<T>, request: Request, restController: RestController<T, ApiUser>): SOAResult<T> {
 		val resource: String = getResource(request)
         val headers: Map<String, Any> = getHeaders(request)
         val pathParameters: Map<String, Any> = getPathParameters(request)
@@ -114,7 +115,9 @@ interface Controller<M> {
                         }
                     }
                     else -> {
-                        return restController.findAll(AnonymousUser(), queryParameters, getPagination(queryParameters))
+                        // TODO figure out how to implement findAll better
+                        throw NotImplementedError()
+                        // return restController.findAll(AnonymousUser(), queryParameters, getPagination(queryParameters))
                     }
                 }
             }

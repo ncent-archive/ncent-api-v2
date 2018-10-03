@@ -4,11 +4,8 @@ import kotlinserverless.framework.models.*
 import java.io.File
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import kotlinserverless.framework.controllers.DefaultController
-import kotlinserverless.framework.healthchecks.models.Healthcheck
-import kotlinserverless.main.users.models.User
-import kotlinserverless.framework.controllers.DefaultRestController
-import main.users.controllers.UserController
+import kotlinserverless.framework.services.SOAResult
+import kotlinserverless.framework.services.SOAResultType
 import kotlin.reflect.full.createInstance
 
 /**
@@ -30,12 +27,20 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
 
             val func = controllerClass.members.find { it.name == "defaultRouting" }
 
-            return func?.call(
+            val result = func?.call(
                     controllerInstance,
                     modelClass::class.java,
                     request!!,
                     controllerInstance
-            )
+            ) as SOAResult<Any>
+
+            if(result.result == SOAResultType.SUCCESS) {
+                return result.data
+            } else {
+                println("There was an error processing the request.")
+                println(result.message)
+                throw InternalError(result.message)
+            }
         }
 		
 		throw RouterException(path as? String ?: "")
