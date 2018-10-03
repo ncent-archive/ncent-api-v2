@@ -183,35 +183,35 @@ functions:
     events:
     - http:
         path: /challenge/expire
-        method: post
+        method: put
 
   challenge_invalidate:
     handler: kotlinserverless.framework.Handler
     events:
     - http:
         path: /challenge/invalidate
-        method: post
+        method: put
 
   challenge_validate:
     handler: kotlinserverless.framework.Handler
     events:
     - http:
         path: /challenge/validate
-        method: post
+        method: put
 
   challenge_complete:
     handler: kotlinserverless.framework.Handler
     events:
     - http:
         path: /challenge/complete
-        method: post
+        method: put
 
   challenge_share:
     handler: kotlinserverless.framework.Handler
     events:
     - http:
         path: /challenge/share
-        method: post
+        method: put
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

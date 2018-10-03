@@ -19,40 +19,55 @@ routes:
 # Challenges Microservice
 # =========================
 
-  - regex: '^/user(/*[a-zA-Z0-9]*)?'
+  - regex: '^/challenge(/*[a-zA-Z0-9]*)?'
     model: main.challenges.models.Challenge
+    controller: main.challenges.controllers.ChallengeController
+
+  - regex: '^/challenges(/*[a-zA-Z0-9]*)?'
+    model: main.challenges.models.Challenge
+    controller: main.challenges.controllers.ChallengesController
 
 # =========================
 # Completion Criteria Microservice
 # =========================
 
-  - regex: '^/user(/*[a-zA-Z0-9]*)?'
+  - regex: '^/completion(/*[a-zA-Z0-9]*)?'
     model: main.completionCriterias.models.CompletionCriteria
+    controller: main.completionCriterias.controllers.CompletionCriteriaController
 
 # =========================
 # Rewards Microservice
 # =========================
 
-  - regex: '^/user(/*[a-zA-Z0-9]*)?'
+  - regex: '^/reward(/*[a-zA-Z0-9]*)?'
     model: main.rewards.models.Reward
+    controller: main.rewards.controllers.RewardController
 
 # =========================
 # Token Microservice
 # =========================
 
-  - regex: '^/user(/*[a-zA-Z0-9]*)?'
+  - regex: '^/token(/*[a-zA-Z0-9]*)?'
     model: main.tokens.models.Token
+    controller: main.tokens.controllers.TokenController
+
+  - regex: '^/tokens(/*[a-zA-Z0-9]*)?'
+    model: main.tokens.models.Token
+    controller: main.tokens.controllers.TokensController
 
 # =========================
 # Transactions Microservice
 # =========================
 
-  - regex: '^/user(/*[a-zA-Z0-9]*)?'
+  - regex: '^/transaction(/*[a-zA-Z0-9]*)?'
     model: main.transactions.models.Transaction
+    controller: main.transactions.controllers.TransactionController
 
 # =========================
 # User Account Microservice
 # =========================
 
-  - regex: '^/user(/*[a-zA-Z0-9]*)?'
+  - regex: '^/user_account(/*[a-zA-Z0-9]*)?'
     model: main.userAccounts.models.UserAccount
+    controller: main.userAccounts.models.UserAccountController
+
