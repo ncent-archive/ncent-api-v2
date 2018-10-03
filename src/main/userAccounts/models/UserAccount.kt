@@ -1,6 +1,7 @@
 package main.userAccounts.models
 
 import kotlinserverless.framework.models.BaseModel
+import org.joda.time.DateTime
 
 /**
  * User Accounts will be used exclusively by the API in order to manage
@@ -51,4 +52,14 @@ data class CryptoKeyPair(
 data class ApiCreds(
         var apiKey: String,
         var encryptedSecretKey: String
+)
+
+/**
+ * Session Information
+ * @property sessionKey
+ * @property expiration
+ */
+data class SessionInformation(
+        var sessionKey: String,
+        var expiration: DateTime
 )
