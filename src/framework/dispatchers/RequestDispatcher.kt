@@ -9,6 +9,7 @@ import kotlinserverless.framework.healthchecks.models.Healthcheck
 import kotlinserverless.main.users.models.User
 import kotlinserverless.framework.controllers.DefaultRestController
 import main.users.controllers.UserController
+import kotlin.reflect.full.createInstance
 
 /**
  * Request Dispatcher implementation
@@ -18,24 +19,23 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
     @Throws(RouterException::class)
     override fun locate(request: ApiGatewayRequest): Any? {
         val path = request.input["path"]
-        for ((regex, model) in ROUTER.routes) {
+        for ((regex, model, controller) in ROUTER.routes) {
 			if (!Regex(regex).matches(path as CharSequence)) {
 				continue
 			}
 
-            return when(Class.forName(model)) {
-                Healthcheck::class.java -> DefaultController<Healthcheck>().defaultRouting(
-                    Healthcheck::class.java,
+            val modelClass = Class.forName(model).kotlin
+            val controllerClass = Class.forName(controller).kotlin
+            val controllerInstance = controllerClass.createInstance()
+
+            val func = controllerClass.members.find { it.name == "defaultRouting" }
+
+            return func?.call(
+                    controllerInstance,
+                    modelClass::class.java,
                     request!!,
-                    DefaultRestController<Healthcheck>()
-                )
-                User::class.java -> DefaultController<User>().defaultRouting(
-                    User::class.java,
-                    request!!,
-                    UserController()
-                )
-                else -> throw RouterException(path as? String ?: "")
-            }
+                    controllerInstance
+            )
         }
 		
 		throw RouterException(path as? String ?: "")

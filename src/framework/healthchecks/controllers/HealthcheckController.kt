@@ -1,11 +1,12 @@
 package kotlinserverless.framework.healthchecks.controllers
 
+import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.controllers.RestController
 import kotlin.math.min
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.healthchecks.models.Healthcheck
 
-class HealthcheckController: RestController<Healthcheck, ApiUser> {
+class HealthcheckController: DefaultController<Healthcheck>(), RestController<Healthcheck, ApiUser> {
 
     val elements: MutableList<Healthcheck> = ArrayList()
 

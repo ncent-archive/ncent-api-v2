@@ -2,7 +2,7 @@ package kotlinserverless.framework.controllers
 
 import kotlinserverless.framework.models.*
 
-class DefaultController<T: Model> : Controller<T> {
+open class DefaultController<T: Model> : Controller<T> {
 	override fun <T : Model> defaultRouting(
 			cls: Class<T>,
             request: Request,

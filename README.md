@@ -66,8 +66,8 @@ functions:
   # =========================
   
   - regex: '^/{object_name}(/*[a-zA-Z0-9]*)?'
-    cls: kotlinserverless.main.{object_name}s.controllers.{Object_name}Controller
-    func: execute
+    model: main.{object_name}s.models.{Object_name}
+    controller: main.{object_name}s.controllers.{Object_name}Controller
 ```
 - Add appropriate Unit test to /main/test/unit
 - test via 
