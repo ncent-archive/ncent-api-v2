@@ -1,6 +1,9 @@
 package kotlinserverless.main.users.models
 
-import kotlinserverless.framework.models.BaseModel
+import framework.models.BaseIntEntity
+import framework.models.BaseIntEntityClass
+import framework.models.BaseIntIdTable
+import org.jetbrains.exposed.dao.*
 
 /**
  * Basic fields that a User needs
@@ -9,9 +12,16 @@ import kotlinserverless.framework.models.BaseModel
  * @property firstname User first name
  * @property lastname User last name
  */
-data class User(
-		override var id: Int?,
-		var email: String,
-		var firstname: String,
-		var lastname: String
-) : BaseModel()
+class User(id: EntityID<Int>) : BaseIntEntity(id, Users) {
+	companion object : BaseIntEntityClass<User>(Users)
+
+	var email by Users.email
+	var firstname by Users.firstname
+	var lastname by Users.lastname
+}
+
+private object Users : BaseIntIdTable("users") {
+	val email = varchar("email", 50).uniqueIndex()
+	val firstname = varchar("firstname", 20)
+	val lastname = varchar("lastname", 20)
+}

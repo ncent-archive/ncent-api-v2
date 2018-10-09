@@ -2,7 +2,6 @@ package kotlinserverless.framework.healthchecks.controllers
 
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.controllers.RestController
-import kotlin.math.min
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.healthchecks.models.Healthcheck
 import kotlinserverless.framework.services.SOAResult
@@ -20,16 +19,21 @@ class HealthcheckController: DefaultController<Healthcheck>(), RestController<He
 //        return Page(filters, pagination.size, offset, elements.size, elements.subList(offset, toIndex))
 //    }
 
+    val defaultHealthyHealthCheck = Healthcheck.new {
+        status = "Healthy"
+        message = "default"
+    }
+
     override fun findOne(user: ApiUser, id: Int): SOAResult<Healthcheck> {
-        return SOAResult(SOAResultType.SUCCESS, "", Healthcheck("Healthy"))
+        return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
     }
 
     override fun findOne(user: ApiUser, filters: Map<String, Any>): SOAResult<Healthcheck> {
-        return SOAResult(SOAResultType.SUCCESS, "", Healthcheck("Healthy"))
+        return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
     }
 
     override fun health(user: ApiUser, request: Request?): SOAResult<Healthcheck> {
-        return SOAResult(SOAResultType.SUCCESS, "", Healthcheck("Healthy"))
+        return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
     }
 }
 

@@ -1,10 +1,11 @@
 package kotlinserverless.framework.controllers
 
+import framework.models.BaseIntEntity
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
 
-open class DefaultController<T: Model> : Controller<T> {
-	override fun <T : Model> defaultRouting(
+open class DefaultController<T: BaseIntEntity> : Controller<T> {
+	override fun <T : BaseIntEntity> defaultRouting(
 			cls: Class<T>,
             request: Request,
             restController: RestController<T, ApiUser>

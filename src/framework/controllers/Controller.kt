@@ -1,6 +1,9 @@
 package kotlinserverless.framework.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import framework.models.BaseIntEntity
+import framework.models.BaseIntIdTable
+import framework.models.idValue
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
 import kotlin.math.ceil
@@ -65,7 +68,7 @@ interface Controller<M> {
             throw InvalidArguments("body")
     }
 
-    fun <T : Model> getEntity(rawBody: Any, cls: Class<T>): T {
+    fun <T : BaseIntEntity> getEntity(rawBody: Any, cls: Class<T>): T {
         val objectMapper = ObjectMapper()
 
         return if (rawBody is String) objectMapper.readValue(rawBody, cls) else objectMapper.convertValue(rawBody, cls)
@@ -96,7 +99,7 @@ interface Controller<M> {
      * @param request Http Client request
      * @param service CRUD service to execute
      */
-    fun <T : Model> defaultRouting(cls: Class<T>, request: Request, restController: RestController<T, ApiUser>): SOAResult<T> {
+    fun <T : BaseIntEntity> defaultRouting(cls: Class<T>, request: Request, restController: RestController<T, ApiUser>): SOAResult<T> {
 		val resource: String = getResource(request)
         val headers: Map<String, Any> = getHeaders(request)
         val pathParameters: Map<String, Any> = getPathParameters(request)
@@ -128,7 +131,7 @@ interface Controller<M> {
                 restController.update(AnonymousUser(), getEntity(getRawBody(request), cls))
             }
             HTTP_DELETE -> {
-                restController.delete(AnonymousUser(), getEntity(getRawBody(request), cls).id!!)
+                restController.delete(AnonymousUser(), getEntity(getRawBody(request), cls).idValue!!)
             }
             HTTP_PATCH -> {
                 restController.update(AnonymousUser(), getEntity(getRawBody(request), cls))
