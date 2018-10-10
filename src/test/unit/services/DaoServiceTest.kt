@@ -1,28 +1,28 @@
 package test.unit.services
 
+import framework.services.DaoService
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import io.mockk.junit5.MockKExtension
-import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
-import kotlinserverless.framework.models.*
+import org.junit.jupiter.api.extension.ExtendWith
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.main.users.models.User
-import kotlinserverless.main.users.services.UserHelloService
+import kotlinserverless.framework.models.Handler
 
 @ExtendWith(MockKExtension::class)
-class UserHelloServiceTest : WordSpec() {
-    private lateinit var service: UserHelloService
+class DaoServiceTest : WordSpec() {
+    private lateinit var service: DaoService<String>
 
     override fun beforeTest(description: Description): Unit {
-        service = UserHelloService()
+        service = DaoService()
+        Handler(mockk()).connectToDatabase()
     }
 
     init {
-        "calling hello on a User Service" should {
-            "return HELLO WORLD" {
-                var result = service.execute(123, "HELLO", HashMap())
+        "calling execute on a dao service" should {
+            "execute the passed function" {
+                var result = service.execute({ "HELLO WORLD" })
                 result.result shouldBe SOAResultType.SUCCESS
                 result.data shouldBe "HELLO WORLD"
             }
