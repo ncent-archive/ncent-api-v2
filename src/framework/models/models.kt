@@ -6,35 +6,13 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import framework.models.BaseIntEntity
+import framework.models.BaseIntIdTable
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import java.io.IOException
-import java.io.Serializable
 import java.net.URL
 import kotlin.math.ceil
-
-/**
- * Generic Model that any body in the future should reply to
- */
-interface Model: Serializable {
-    var id: Int?
-}
-
-/**
- * In case of no model this is the default model reply
- */
-class EmptyModel(override var id: Int? = null) : Model
-
-/**
- * In case of error this is the Default Error model to return
- */
-class ErrorModel(var message: String): Model {
-    override var id: Int?
-        get() = null
-        set(value) {}
-
-    constructor(): this("")
-}
 
 /**
  * Represents a client Request
@@ -90,35 +68,6 @@ class DateTimeSerializer @JvmOverloads constructor(t: Class<DateTime>? = null) :
 
     private val formatter = ISODateTimeFormat.basicDateTime()
 }
-
-/**
- * A base model with some minimum attributes that any entity in the system should have
- * @property id Unique ID of that element
- * @property createdAt When it was created
- * @property updatedAt Last time that the entity changed
- */
-abstract class BaseModel(override var id: Int?): Model {
-    constructor(): this(0)
-
-    @JsonSerialize(using = DateTimeSerializer::class)
-    var createdAt: DateTime? = DateTime()
-
-    @JsonSerialize(using = DateTimeSerializer::class)
-    var updatedAt: DateTime? = DateTime()
-}
-
-/**
- * Basic fields that a User needs
- * @property email User email
- */
-abstract class ApiUser: BaseModel() {
-    open var email: String = ""
-}
-
-/**
- * Anonymous User -> User who is not logged into the system
- */
-class AnonymousUser: ApiUser()
 
 // ------------------------------------------------------
 // HTTP and W3C compliant models for HATEOAS/HAL
@@ -179,12 +128,14 @@ class PageMetadata(limit: Int, offset: Int, count: Int) {
  * @property sort Way to sort our results based on URL params
  * @property metadata HAL metadata
  */
-class Page<T>(sort: Map<String, Any>, limit: Int, offset: Int, count: Int,
-              var content: List<T>, var links: List<Link> = emptyList()): Model {
-
-    override var id: Int?
-        get() = null
-        set(value) {}
+class Page<T>(
+        sort: Map<String, Any>,
+        limit: Int,
+        offset: Int,
+        count: Int,
+        var content: List<T>,
+        var links: List<Link> = emptyList()
+): BaseIntIdTable("pages") {
 
     var sort: Map<String, Any> = sort
         get() = field.minus(arrayOf("page", "size"))

@@ -20,7 +20,7 @@ class User(id: EntityID<Int>) : BaseIntEntity(id, Users) {
 	var lastname by Users.lastname
 }
 
-private object Users : BaseIntIdTable("users") {
+object Users : BaseIntIdTable("users") {
 	val email = varchar("email", 50).uniqueIndex()
 	val firstname = varchar("firstname", 20)
 	val lastname = varchar("lastname", 20)

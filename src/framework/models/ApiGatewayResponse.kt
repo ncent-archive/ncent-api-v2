@@ -2,6 +2,7 @@ package kotlinserverless.framework.models
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
+import framework.models.BaseIntEntity
 import kotlinserverless.framework.models.*
 import org.apache.log4j.LogManager
 import java.nio.charset.StandardCharsets
@@ -38,7 +39,7 @@ class ApiGatewayResponse(
     var statusCode: Int = 200
     var rawBody: String? = null
     var headers: Map<String, String>? = Collections.emptyMap()
-    var objectBody: Model? = null
+    var objectBody: BaseIntEntity? = null
     var listBody: List<Any>? = null
     var binaryBody: ByteArray? = null
     var base64Encoded: Boolean = false

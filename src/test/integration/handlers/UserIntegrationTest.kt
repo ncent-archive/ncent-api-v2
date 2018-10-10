@@ -8,15 +8,18 @@ import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
+import kotlinserverless.main.users.models.User
 
 @ExtendWith(MockKExtension::class)
 class UserIntegrationTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
+    private lateinit var user: User
     private val map = mapOf("path" to "/user/hello")
 
     override fun beforeTest(description: Description): Unit {
-        handler = Handler()
+        user = mockk(relaxed = true)
+        handler = Handler(user)
         contxt = mockk()
     }
 

@@ -1,5 +1,5 @@
 package kotlinserverless.framework.controllers
 
-import kotlinserverless.framework.models.ApiUser
+import kotlinserverless.main.users.models.User
 
-class DefaultRestController<T> : RestController<T, ApiUser>
+class DefaultRestController<T> : RestController<T, User>

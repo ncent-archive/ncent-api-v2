@@ -10,7 +10,7 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.every
 import io.mockk.mockk
-import kotlinserverless.test.TestModel
+import kotlinserverless.main.users.models.User
 
 @ExtendWith(MockKExtension::class)
 class HandlerTest : WordSpec() {
@@ -20,7 +20,7 @@ class HandlerTest : WordSpec() {
     private val map = mapOf("path" to "/health/health")
 
     override fun beforeTest(description: Description): Unit {
-        handler = Handler()
+        handler = Handler(mockk(relaxed = true))
         contxt = mockk()
         dispatcher = mockk()
         handler.requestDispatcher = dispatcher
@@ -29,12 +29,12 @@ class HandlerTest : WordSpec() {
     init {
         "correct path" should {
             "should return a status code of 204 if the response body is empty" {
-                every { dispatcher.locate(any()) } returns EmptyModel()
+                every { dispatcher.locate(any()) } returns null
                 val response = contxt.let { handler.handleRequest(map, it) }
                 response.statusCode shouldBe 204
             }
             "should return a status code of 200 if the response body is not empty" {
-                every { dispatcher.locate(any()) } returns TestModel()
+                every { dispatcher.locate(any()) } returns "Hello"
                 val response = contxt.let { handler.handleRequest(map, it) }
                 response.statusCode shouldBe 200
             }

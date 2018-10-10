@@ -1,7 +1,7 @@
 package kotlinserverless.framework.services
 
+import framework.models.BaseIntEntity
 import kotlinserverless.framework.healthchecks.InvalidEndpoint
-import kotlinserverless.framework.models.BaseModel
 
 interface SOAServiceInterface<T> {
     fun execute() : SOAResult<T> {
@@ -28,7 +28,7 @@ interface SOAServiceInterface<T> {
     }
 
     // GET/UPDATE multiple results by filters
-    fun execute(caller: Int?, key: String?, value: BaseModel?) : SOAResult<List<T>> {
+    fun execute(caller: Int?, key: String?, value: BaseIntEntity?) : SOAResult<List<T>> {
         throw InvalidEndpoint()
     }
 

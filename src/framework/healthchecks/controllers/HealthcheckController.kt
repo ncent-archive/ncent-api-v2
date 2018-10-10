@@ -6,8 +6,9 @@ import kotlinserverless.framework.models.*
 import kotlinserverless.framework.healthchecks.models.Healthcheck
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
+import kotlinserverless.main.users.models.User
 
-class HealthcheckController: DefaultController<Healthcheck>(), RestController<Healthcheck, ApiUser> {
+class HealthcheckController: DefaultController<Healthcheck>(), RestController<Healthcheck, User> {
 
     val elements: MutableList<Healthcheck> = ArrayList()
 
@@ -24,15 +25,15 @@ class HealthcheckController: DefaultController<Healthcheck>(), RestController<He
         message = "default"
     }
 
-    override fun findOne(user: ApiUser, id: Int): SOAResult<Healthcheck> {
+    override fun findOne(user: User, id: Int): SOAResult<Healthcheck> {
         return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
     }
 
-    override fun findOne(user: ApiUser, filters: Map<String, Any>): SOAResult<Healthcheck> {
+    override fun findOne(user: User, filters: Map<String, Any>): SOAResult<Healthcheck> {
         return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
     }
 
-    override fun health(user: ApiUser, request: Request?): SOAResult<Healthcheck> {
+    override fun health(user: User, request: Request?): SOAResult<Healthcheck> {
         return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
     }
 }

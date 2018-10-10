@@ -6,6 +6,7 @@ import framework.models.BaseIntIdTable
 import framework.models.idValue
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
+import kotlinserverless.main.users.models.User
 import kotlin.math.ceil
 
 /**
@@ -99,7 +100,7 @@ interface Controller<M> {
      * @param request Http Client request
      * @param service CRUD service to execute
      */
-    fun <T : BaseIntEntity> defaultRouting(cls: Class<T>, request: Request, restController: RestController<T, ApiUser>): SOAResult<T> {
+    fun <T : BaseIntEntity> defaultRouting(cls: Class<T>, request: Request, user: User, restController: RestController<T, User>): SOAResult<T> {
 		val resource: String = getResource(request)
         val headers: Map<String, Any> = getHeaders(request)
         val pathParameters: Map<String, Any> = getPathParameters(request)
@@ -108,12 +109,12 @@ interface Controller<M> {
         return when((request.input[HTTP_METHOD] as String).toLowerCase()) {
             HTTP_GET -> {
                 when {
-                    resource.endsWith("findOne", true) -> restController.findOne(AnonymousUser(), queryParameters)
+                    resource.endsWith("findOne", true) -> restController.findOne(user, queryParameters)
                     pathParameters.containsKey("id") -> {
                         val id = pathParameters["id"]
 
                         when (id) {
-                            is Int -> restController.findOne(AnonymousUser(), id)
+                            is Int -> restController.findOne(user, id)
                             else -> throw Exception("Id must be an integer")
                         }
                     }
@@ -125,16 +126,16 @@ interface Controller<M> {
                 }
             }
             HTTP_POST -> {
-                restController.create(AnonymousUser(), getEntity(getRawBody(request), cls))
+                restController.create(user, getEntity(getRawBody(request), cls))
             }
             HTTP_PUT -> {
-                restController.update(AnonymousUser(), getEntity(getRawBody(request), cls))
+                restController.update(user, getEntity(getRawBody(request), cls))
             }
             HTTP_DELETE -> {
-                restController.delete(AnonymousUser(), getEntity(getRawBody(request), cls).idValue!!)
+                restController.delete(user, getEntity(getRawBody(request), cls).idValue!!)
             }
             HTTP_PATCH -> {
-                restController.update(AnonymousUser(), getEntity(getRawBody(request), cls))
+                restController.update(user, getEntity(getRawBody(request), cls))
             }
 
             else -> {
