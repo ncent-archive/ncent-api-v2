@@ -3,17 +3,17 @@ package main.rewards.controllers
 
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
-import kotlinserverless.framework.models.ApiUser
 import kotlinserverless.framework.services.SOAResult
 import main.rewards.models.Reward
 import kotlinserverless.framework.models.Request
+import kotlinserverless.main.users.models.User
 
-class RewardController: DefaultController<Reward>(), RestController<Reward, ApiUser> {
-    override fun create(user: ApiUser, element: Reward): SOAResult<Reward> {
+class RewardController: DefaultController<Reward>(), RestController<Reward, User> {
+    override fun create(user: User, element: Reward): SOAResult<Reward> {
         throw NotImplementedError()
     }
 
-    fun pool(user: ApiUser, request: Request): SOAResult<Reward> {
+    fun pool(user: User, request: Request): SOAResult<Reward> {
         throw NotImplementedError()
     }
 }

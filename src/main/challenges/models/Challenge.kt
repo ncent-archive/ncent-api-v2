@@ -1,9 +1,12 @@
 package main.challenges.models
 
-import kotlinserverless.framework.models.BaseModel
-import main.completionCriterias.models.CompletionCriteria
-import main.rewards.models.Reward
-import org.joda.time.DateTime
+import framework.models.BaseIntEntity
+import framework.models.BaseIntEntityClass
+import framework.models.BaseIntIdTable
+import kotlinserverless.main.users.models.Users
+import main.completionCriterias.models.CompletionCriterias
+import main.rewards.models.Rewards
+import org.jetbrains.exposed.dao.*
 
 /**
  * Used to represent challenges and store pointers to models that
@@ -11,15 +14,25 @@ import org.joda.time.DateTime
  *
  * @property id
  * @property challengeSettings ChallengeSettings
- * @property subChallenges SubChallenges
+ * @property asyncSubChallenges sub challenges that can be completed in any order
+ * @property syncSubChallenges sub challenges that must be completed in order
  * @property resultVectors ResultVectors
  */
-data class Challenge(
-        override var id: Int?,
-        val challengeSettings: ChallengeSettings,
-        val subChallenges: SubChallenges,
-        val resultVectors: ResultVectors
-) : BaseModel()
+class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
+    companion object : BaseIntEntityClass<Challenge>(Challenges)
+
+    var challengeSettings by Challenges.challengeSettings
+    var asyncSubChallenges by Challenges.asyncSubChallenges
+    var syncSubChallenges by Challenges.syncSubChallenges
+    var resultVectors by Challenges.resultVectors
+}
+
+object Challenges : BaseIntIdTable("challenges") {
+    val challengeSettings = reference("challenge_settings", ChallengeSettings)
+    val asyncSubChallenges = reference("challenges", Challenges)
+    val syncSubChallenges = reference("challenges", Challenges)
+    val resultVectors = reference("result_vectors", ResultVectors)
+}
 
 
 /**
@@ -33,25 +46,31 @@ data class Challenge(
  * @property maxDistributionFeeReward the number of times the distribution fee
  * can be rewarded
  */
-data class ChallengeSettings(
-        val name: String,
-        val expiration: DateTime,
-        val admin: String,
-        val offChain: Boolean = false,
-        val maxRewards: Int = 1,
-        val maxDistributionFeeReward: Int = 1
-)
+class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings) {
+    companion object : BaseIntEntityClass<ChallengeSetting>(ChallengeSettings)
 
-/**
- * Used to represent optional sub challenges
- *
- * @property synchronousChallenges sub challenges that must be completed in order
- * @property asynchronousChallenges sub challenges that can be completed in any order
- */
-data class SubChallenges(
-        val synchronousChallenges: List<Challenge>?,
-        val asynchronousChallenges: Map<Int, Challenge>?
-)
+    var name by ChallengeSettings.name
+    var expiration by ChallengeSettings.expiration
+    var admin by ChallengeSettings.admin
+    var offChain by ChallengeSettings.offChain
+    var maxRewards by ChallengeSettings.maxRewards
+    var maxDistributionFeeReward by ChallengeSettings.maxDistributionFeeReward
+    var maxSharesPerReceivedShare by ChallengeSettings.maxSharesPerReceivedShare
+    var maxDepth by ChallengeSettings.maxDepth
+    var maxNodes by ChallengeSettings.maxNodes
+}
+
+object ChallengeSettings : BaseIntIdTable("challenge_settings") {
+    var name = varchar("name", 100)
+    var expiration = datetime("expiration")
+    var admin = reference("users", Users)
+    var offChain = bool("off_chain").default(false)
+    var maxRewards = integer("max_rewards").default(1)
+    var maxDistributionFeeReward = integer("max_distribution_fee_reward").default(Integer.MAX_VALUE)
+    var maxSharesPerReceivedShare = integer("max_shares_per_received_share").default(Integer.MAX_VALUE)
+    var maxDepth = integer("max_depth").default(Integer.MAX_VALUE)
+    var maxNodes = integer("max_nodes").default(Integer.MAX_VALUE)
+}
 
 /**
  * Used to represent end results for a challenge user interacting with the challenge
@@ -62,8 +81,16 @@ data class SubChallenges(
  * @property distributionFeeReward the distribution fees and the pool. this is the
  * pool that will be drawn on if anybody 'opts-out' of attempting to help.
  */
-data class ResultVectors(
-        val completionCriteria: CompletionCriteria,
-        val reward: Reward,
-        val distributionFeeReward: Reward
-)
+class ResultVector(id: EntityID<Int>) : BaseIntEntity(id, ResultVectors) {
+    companion object : BaseIntEntityClass<ResultVector>(ResultVectors)
+
+    var completionCriteria by ResultVectors.completionCriteria
+    var reward by ResultVectors.reward
+    var distributionFeeReward by ResultVectors.reward
+}
+
+object ResultVectors : BaseIntIdTable("result_vectors") {
+    var completionCriteria = reference("completion_criterias", CompletionCriterias)
+    var reward = reference("rewards", Rewards)
+    var distributionFeeReward = reference("rewards", Rewards)
+}

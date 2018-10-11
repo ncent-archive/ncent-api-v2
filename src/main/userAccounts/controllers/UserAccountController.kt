@@ -3,25 +3,25 @@ package main.userAccounts.controllers
 
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
-import kotlinserverless.framework.models.ApiUser
 import kotlinserverless.framework.services.SOAResult
 import main.userAccounts.models.UserAccount
 import kotlinserverless.framework.models.Request
+import kotlinserverless.main.users.models.User
 
-class UserAccountController: DefaultController<UserAccount>(), RestController<UserAccount, ApiUser> {
-    override fun findOne(user: ApiUser, id: Int): SOAResult<UserAccount> {
+class UserAccountController: DefaultController<UserAccount>(), RestController<UserAccount, User> {
+    override fun findOne(user: User, id: Int): SOAResult<UserAccount> {
         throw NotImplementedError()
     }
 
-    override fun create(user: ApiUser, element: UserAccount): SOAResult<UserAccount> {
+    override fun create(user: User, element: UserAccount): SOAResult<UserAccount> {
         throw NotImplementedError()
     }
 
-    fun login(user: ApiUser, request: Request): SOAResult<UserAccount> {
+    fun login(user: User, request: Request): SOAResult<UserAccount> {
         throw NotImplementedError()
     }
 
-    fun logout(user: ApiUser, request: Request): SOAResult<UserAccount> {
+    fun logout(user: User, request: Request): SOAResult<UserAccount> {
         throw NotImplementedError()
     }
 }
