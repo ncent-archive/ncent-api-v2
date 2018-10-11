@@ -45,6 +45,10 @@ object Challenges : BaseIntIdTable("challenges") {
  * @property maxRewards the number of times the reward can be claimed
  * @property maxDistributionFeeReward the number of times the distribution fee
  * can be rewarded
+ * @property maxSharesPerReceivedShare maximum times someone can share a challenge
+ * per unique share they recieve
+ * @property maxDepth the maximum depth of the providence chain
+ * @property maxNodes the maximum number of nodes in the entire share graph
  */
 class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings) {
     companion object : BaseIntEntityClass<ChallengeSetting>(ChallengeSettings)
@@ -86,7 +90,7 @@ class ResultVector(id: EntityID<Int>) : BaseIntEntity(id, ResultVectors) {
 
     var completionCriteria by ResultVectors.completionCriteria
     var reward by ResultVectors.reward
-    var distributionFeeReward by ResultVectors.reward
+    var distributionFeeReward by ResultVectors.distributionFeeReward
 }
 
 object ResultVectors : BaseIntIdTable("result_vectors") {
