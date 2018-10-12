@@ -1,6 +1,9 @@
 package main.transactions.models
 
-import kotlinserverless.framework.models.BaseModel
+import framework.models.BaseIntEntity
+import framework.models.BaseIntEntityClass
+import framework.models.BaseIntIdTable
+import org.jetbrains.exposed.dao.EntityID
 
 /**
  * Transaction represents the data that records any changes related to any
@@ -15,11 +18,18 @@ import kotlinserverless.framework.models.BaseModel
  * @property previousTransaction Optionally the previous transaction related to this transaction
  * example being: challenge sharing (providence chain)
  */
-data class Transaction<T>(
-        override var id: Int?,
-        var from: String,
-        var to: String?,
-        var action: Action<T>,
-        var previousTransaction: Transaction<T>?
+class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
+    companion object : BaseIntEntityClass<Transaction>(Transactions)
 
-) : BaseModel()
+    var from by Transactions.from
+    var to by Transactions.to
+    var action by Transactions.action
+    var previousTransaction by Transactions.previousTransaction
+}
+
+object Transactions : BaseIntIdTable("transactions") {
+    val from = varchar("from", 256)
+    val to = varchar("to", 256)
+    val action = reference("action", Actions)
+    val previousTransaction = reference("previous_transaction", Transactions)
+}

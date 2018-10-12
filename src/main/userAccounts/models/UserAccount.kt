@@ -17,7 +17,6 @@ import org.jetbrains.exposed.dao.*
  * @property apiCreds ApiCreds
  * @property session Sessions
  */
-
 class UserAccount(id: EntityID<Int>) : BaseIntEntity(id, UserAccounts) {
     companion object : BaseIntEntityClass<UserAccount>(UserAccounts)
 
@@ -28,10 +27,10 @@ class UserAccount(id: EntityID<Int>) : BaseIntEntity(id, UserAccounts) {
 }
 
 object UserAccounts : BaseIntIdTable("user_accounts") {
-    val userMetadata = reference("users", Users)
-    val cryptoKeyPair = reference("crypto_key_pairs", CryptoKeyPairs)
-    val apiCreds = reference("api_creds", ApiCreds)
-    val session = reference("sessions", Sessions)
+    val userMetadata = reference("user", Users)
+    val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
+    val apiCreds = reference("api_cred", ApiCreds)
+    val session = reference("session", Sessions)
 }
 
 /**

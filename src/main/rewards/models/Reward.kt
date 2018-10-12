@@ -1,6 +1,9 @@
 package main.rewards.models
 
-import kotlinserverless.framework.models.BaseModel
+import framework.models.BaseIntEntity
+import framework.models.BaseIntEntityClass
+import framework.models.BaseIntIdTable
+import org.jetbrains.exposed.dao.EntityID
 
 
 /**
@@ -10,8 +13,15 @@ import kotlinserverless.framework.models.BaseModel
  * @property type RewardType
  * @property pool List<RewardPool>
  */
-data class Reward(
-        override var id: Int?,
-        val type: RewardType,
-        val pool: List<RewardPool>
-) : BaseModel()
+class Reward(id: EntityID<Int>) : BaseIntEntity(id, Rewards) {
+    companion object : BaseIntEntityClass<Reward>(Rewards)
+
+    var type by Rewards.type
+    // TODO: change to use referrersOn
+    var pool by Rewards.pool
+}
+
+object Rewards : BaseIntIdTable("rewards") {
+    val type = reference("type", RewardTypes)
+    val pool = reference("pool", RewardPools)
+}
