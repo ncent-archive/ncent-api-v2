@@ -1,8 +1,10 @@
 package main.rewards.models
 
-import kotlinserverless.framework.models.BaseModel
-import main.tokens.models.Token
-import main.transactions.models.Transaction
+import framework.models.BaseIntEntity
+import framework.models.BaseIntEntityClass
+import framework.models.BaseIntIdTable
+import main.transactions.models.Transactions
+import org.jetbrains.exposed.dao.EntityID
 
 /**
  * RewardPool; model representing transactions related to a particular reward
@@ -10,10 +12,17 @@ import main.transactions.models.Transaction
  *
  * @property id
  * @property reward linking back to a particular reward
- * @property transaction particular transaction for this pool
+ * @property transactions particular transaction for this pool
  */
-data class RewardPool(
-        override var id: Int?,
-        val reward: Reward,
-        val transaction: Transaction<Token>
-) : BaseModel()
+class RewardPool(id: EntityID<Int>) : BaseIntEntity(id, RewardPools) {
+    companion object : BaseIntEntityClass<RewardPool>(RewardPools)
+
+    var reward by RewardPools.reward
+    // TODO: change to use referrersOn
+    var transactions by RewardPools.transactions
+}
+
+object RewardPools : BaseIntIdTable("reward_pools") {
+    val reward = reference("reward", Rewards)
+    val transactions = reference("transactions", Transactions)
+}

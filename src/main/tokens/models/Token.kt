@@ -1,6 +1,9 @@
 package main.tokens.models
 
-import kotlinserverless.framework.models.BaseModel
+import framework.models.BaseIntEntity
+import framework.models.BaseIntEntityClass
+import framework.models.BaseIntIdTable
+import org.jetbrains.exposed.dao.EntityID
 
 /**
  * Representation of a Token -- used when transfering/sharing tokens via transactions
@@ -9,9 +12,14 @@ import kotlinserverless.framework.models.BaseModel
  * @property amount
  * @property tokenType
  */
-data class Token(
-        override var id: Int?,
-        var amount: Int,
-        var tokenType: TokenType
+class Token(id: EntityID<Int>) : BaseIntEntity(id, Tokens) {
+    companion object : BaseIntEntityClass<Token>(Tokens)
 
-) : BaseModel()
+    var amount by Tokens.amount
+    var tokenType by Tokens.tokenType
+}
+
+object Tokens : BaseIntIdTable("tokens") {
+    val amount = integer("amount")
+    val tokenType = reference("token_type", TokenTypes)
+}

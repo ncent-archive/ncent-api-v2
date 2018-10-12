@@ -22,7 +22,9 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     companion object : BaseIntEntityClass<Challenge>(Challenges)
 
     var challengeSettings by Challenges.challengeSettings
+    // TODO: change to use referrersOn
     var asyncSubChallenges by Challenges.asyncSubChallenges
+    // TODO: change to use referrersOn
     var syncSubChallenges by Challenges.syncSubChallenges
     var resultVectors by Challenges.resultVectors
 }
@@ -67,7 +69,7 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
 object ChallengeSettings : BaseIntIdTable("challenge_settings") {
     var name = varchar("name", 100)
     var expiration = datetime("expiration")
-    var admin = reference("users", Users)
+    var admin = reference("admin", Users)
     var offChain = bool("off_chain").default(false)
     var maxRewards = integer("max_rewards").default(1)
     var maxDistributionFeeReward = integer("max_distribution_fee_reward").default(Integer.MAX_VALUE)
@@ -94,7 +96,7 @@ class ResultVector(id: EntityID<Int>) : BaseIntEntity(id, ResultVectors) {
 }
 
 object ResultVectors : BaseIntIdTable("result_vectors") {
-    var completionCriteria = reference("completion_criterias", CompletionCriterias)
-    var reward = reference("rewards", Rewards)
-    var distributionFeeReward = reference("rewards", Rewards)
+    var completionCriteria = reference("completion_criteria", CompletionCriterias)
+    var reward = reference("reward", Rewards)
+    var distributionFeeReward = reference("distribution_fee_reward", Rewards)
 }

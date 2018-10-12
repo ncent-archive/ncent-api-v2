@@ -1,6 +1,9 @@
 package main.completionCriterias.models
 
-import kotlinserverless.framework.models.BaseModel
+import framework.models.BaseIntEntity
+import framework.models.BaseIntEntityClass
+import framework.models.BaseIntIdTable
+import org.jetbrains.exposed.dao.EntityID
 
 /**
  * Currently only housing who can validate the completion of a challenge
@@ -9,8 +12,12 @@ import kotlinserverless.framework.models.BaseModel
  * @property id
  * @property address The address which can trigger validation of completion
  */
-data class CompletionCriteria(
-        override var id: Int?,
-        val address: String
+class CompletionCriteria(id: EntityID<Int>) : BaseIntEntity(id, CompletionCriterias) {
+    companion object : BaseIntEntityClass<CompletionCriteria>(CompletionCriterias)
 
-) : BaseModel()
+    var address by CompletionCriterias.address
+}
+
+object CompletionCriterias : BaseIntIdTable("completion_criterias") {
+    val address = varchar("address", 256)
+}
