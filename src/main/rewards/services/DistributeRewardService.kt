@@ -8,8 +8,8 @@ import main.transactions.models.Transaction
 /**
  * Transfer tokens based on rewards
  */
-class DistributeRewardService: SOAServiceInterface<Transaction<Reward>> {
-    override fun execute(caller: Int?, data: Transaction<Reward>?, params: Map<String, String>?) : SOAResult<Transaction<Reward>> {
+class DistributeRewardService: SOAServiceInterface<Transaction> {
+    override fun execute(caller: Int?, data: Transaction?, params: Map<String, String>?) : SOAResult<Transaction> {
         throw NotImplementedError()
     }
 }

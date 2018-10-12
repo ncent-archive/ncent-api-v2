@@ -10,8 +10,8 @@ import main.transactions.models.Transaction
  * Used to invalid a challenge
  * Check it's fees and rewards pools. If they are insufficient, invalidate the challenge
  */
-class InvalidateChallengeService: SOAServiceInterface<Transaction<Action<Challenge>>> {
-    override fun execute(caller: Int?, data: Transaction<Action<Challenge>>?, params: Map<String, String>?) : SOAResult<Transaction<Action<Challenge>>> {
+class InvalidateChallengeService: SOAServiceInterface<Transaction> {
+    override fun execute(caller: Int?, data: Transaction?, params: Map<String, String>?) : SOAResult<Transaction> {
         throw NotImplementedError()
     }
 }
