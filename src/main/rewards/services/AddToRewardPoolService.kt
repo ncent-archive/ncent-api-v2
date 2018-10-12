@@ -8,8 +8,8 @@ import main.transactions.models.Transaction
 /**
  * Transfer tokens to reward pool
  */
-class AddToRewardPoolService: SOAServiceInterface<Transaction<Reward>> {
-    override fun execute(caller: Int?, data: Transaction<Reward>?, params: Map<String, String>?) : SOAResult<Transaction<Reward>> {
+class AddToRewardPoolService: SOAServiceInterface<Transaction> {
+    override fun execute(caller: Int?, data: Transaction?, params: Map<String, String>?) : SOAResult<Transaction> {
         throw NotImplementedError()
     }
 }

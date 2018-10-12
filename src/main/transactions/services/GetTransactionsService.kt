@@ -7,8 +7,8 @@ import main.transactions.models.Transaction
 /**
  * Retrieve transactions by filter, such as from/to
  */
-class GetTransactionsService<T>: SOAServiceInterface<Transaction<T>> {
-    override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<List<Transaction<T>>> {
+class GetTransactionsService: SOAServiceInterface<Transaction> {
+    override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<List<Transaction>> {
         throw NotImplementedError()
     }
 }

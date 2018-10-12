@@ -9,8 +9,8 @@ import main.transactions.models.Transaction
 /**
  * Validate and complete the challenge based on the completion of challenge transaction passed.
  */
-class CompleteChallengeService: SOAServiceInterface<Transaction<Action<Challenge>>> {
-    override fun execute(caller: Int?, data: Transaction<Action<Challenge>>?, params: Map<String, String>?) : SOAResult<Transaction<Action<Challenge>>> {
+class CompleteChallengeService: SOAServiceInterface<Transaction> {
+    override fun execute(caller: Int?, data: Transaction?, params: Map<String, String>?) : SOAResult<Transaction> {
         throw NotImplementedError()
     }
 }
