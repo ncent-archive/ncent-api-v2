@@ -12,7 +12,9 @@ import kotlinserverless.framework.models.Handler
 import kotlinserverless.main.users.models.User
 import kotlinserverless.main.users.models.Users
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+
 
 @ExtendWith(MockKExtension::class)
 class UserModelTest : WordSpec() {
@@ -23,18 +25,40 @@ class UserModelTest : WordSpec() {
     init {
         "creating a user" should {
             "return a user with id" {
-                val user = transaction {
-                    SchemaUtils.create(Users)
-                    return@transaction User.new {
-                        email = "test@email.com"
-                        firstname = "defaultFirstName"
-                        lastname = "defaultLastName"
-                    }
-                }
+                val user = generateUser()
                 user.idValue shouldNotBe null
                 user.email shouldBe "test@email.com"
                 user.firstname shouldBe "defaultFirstName"
                 user.lastname shouldBe "defaultLastName"
+            }
+            "be queryable" {
+                val queryUser = transaction {
+                    generateUser()
+                    return@transaction User.all().first()
+                }
+                queryUser.idValue shouldNotBe null
+                queryUser.email shouldBe "test@email.com"
+                queryUser.firstname shouldBe "defaultFirstName"
+                queryUser.lastname shouldBe "defaultLastName"
+            }
+            "not be queryable for a non-existent user" {
+                val queryUserNonExists = transaction {
+                    generateUser()
+                    return@transaction User.find({ Users.id eq 100 }).empty()
+                }
+                queryUserNonExists shouldBe true
+            }
+        }
+    }
+
+    // TODO: might be able to do this better via some kind of sub before/after
+    fun generateUser() : User {
+        return transaction {
+            SchemaUtils.create(Users)
+            return@transaction User.new {
+                email = "test@email.com"
+                firstname = "defaultFirstName"
+                lastname = "defaultLastName"
             }
         }
     }
