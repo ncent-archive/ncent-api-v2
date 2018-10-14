@@ -1,4 +1,4 @@
-package main.rewards.models
+package main.daos
 
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass

@@ -1,9 +1,8 @@
-package main.rewards.models
+package main.daos
 
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
-import main.daos.Transactions
 import org.jetbrains.exposed.dao.EntityID
 
 /**
