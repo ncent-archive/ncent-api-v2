@@ -5,7 +5,7 @@ import kotlinserverless.framework.dispatchers.RequestDispatcher
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import framework.models.BaseIntEntity
-import kotlinserverless.main.users.models.User
+import kotlinserverless.main.daos.User
 import org.jetbrains.exposed.sql.Database
 
 open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {

@@ -9,8 +9,8 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlinserverless.framework.models.Handler
-import kotlinserverless.main.users.models.User
-import kotlinserverless.main.users.models.Users
+import kotlinserverless.main.daos.User
+import kotlinserverless.main.daos.Users
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 

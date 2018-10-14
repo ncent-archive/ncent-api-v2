@@ -10,7 +10,6 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.every
 import io.mockk.mockk
-import kotlinserverless.main.users.models.User
 
 @ExtendWith(MockKExtension::class)
 class HandlerTest : WordSpec() {

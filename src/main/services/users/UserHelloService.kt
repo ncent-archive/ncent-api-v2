@@ -1,4 +1,4 @@
-package kotlinserverless.main.users.services
+package kotlinserverless.main.services.users
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType

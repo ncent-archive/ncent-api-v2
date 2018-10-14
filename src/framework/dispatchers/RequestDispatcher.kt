@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.main.users.models.User
-import org.jetbrains.exposed.sql.Database
+import kotlinserverless.main.daos.User
 import kotlin.reflect.full.createInstance
 
 /**

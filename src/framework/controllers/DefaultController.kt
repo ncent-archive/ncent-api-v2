@@ -3,7 +3,7 @@ package kotlinserverless.framework.controllers
 import framework.models.BaseIntEntity
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
-import kotlinserverless.main.users.models.User
+import kotlinserverless.main.daos.User
 
 open class DefaultController<T: BaseIntEntity> : Controller<T> {
 	override fun <T : BaseIntEntity> defaultRouting(

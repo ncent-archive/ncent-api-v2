@@ -1,4 +1,4 @@
-package kotlinserverless.main.users.models
+package kotlinserverless.main.daos
 
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass

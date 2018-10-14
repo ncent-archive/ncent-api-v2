@@ -2,11 +2,10 @@ package kotlinserverless.framework.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.BaseIntEntity
-import framework.models.BaseIntIdTable
 import framework.models.idValue
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
-import kotlinserverless.main.users.models.User
+import kotlinserverless.main.daos.User
 import kotlin.math.ceil
 
 /**
