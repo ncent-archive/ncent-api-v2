@@ -3,7 +3,7 @@ package main.daos
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
-import kotlinserverless.main.users.models.Users
+import kotlinserverless.main.daos.Users
 import org.jetbrains.exposed.dao.*
 
 /**

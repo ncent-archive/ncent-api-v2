@@ -6,7 +6,7 @@ import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
 import main.daos.UserAccount
 import kotlinserverless.framework.models.Request
-import kotlinserverless.main.users.models.User
+import kotlinserverless.main.daos.User
 
 class UserAccountController: DefaultController<UserAccount>(), RestController<UserAccount, User> {
     override fun findOne(user: User, id: Int): SOAResult<UserAccount> {
