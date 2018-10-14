@@ -20,11 +20,11 @@ routes:
 # =========================
 
   - regex: '^/challenge(/*[a-zA-Z0-9]*)?'
-    model: main.challenges.models.Challenge
-    controller: main.challenges.controllers.ChallengeController
+    model: main.daos.Challenge
+    controller: main.controllers.ChallengeController
 
   - regex: '^/challenges(/*[a-zA-Z0-9]*)?'
-    model: main.challenges.models.Challenge
+    model: main.daos.Challenge
     controller: main.challenges.controllers.ChallengesController
 
 # =========================
@@ -32,8 +32,8 @@ routes:
 # =========================
 
   - regex: '^/completion(/*[a-zA-Z0-9]*)?'
-    model: main.completionCriterias.models.CompletionCriteria
-    controller: main.completionCriterias.controllers.CompletionCriteriaController
+    model: main.daos.CompletionCriteria
+    controller: main.controllers.CompletionCriteriaController
 
 # =========================
 # Rewards Microservice
@@ -48,11 +48,11 @@ routes:
 # =========================
 
   - regex: '^/token(/*[a-zA-Z0-9]*)?'
-    model: main.tokens.models.Token
-    controller: main.tokens.controllers.TokenController
+    model: main.daos.Token
+    controller: main.controllers.TokenController
 
   - regex: '^/tokens(/*[a-zA-Z0-9]*)?'
-    model: main.tokens.models.Token
+    model: main.daos.Token
     controller: main.tokens.controllers.TokensController
 
 # =========================
@@ -60,14 +60,14 @@ routes:
 # =========================
 
   - regex: '^/transaction(/*[a-zA-Z0-9]*)?'
-    model: main.transactions.models.Transaction
-    controller: main.transactions.controllers.TransactionController
+    model: main.daos.Transaction
+    controller: main.controllers.TransactionController
 
 # =========================
 # User Account Microservice
 # =========================
 
   - regex: '^/user_account(/*[a-zA-Z0-9]*)?'
-    model: main.userAccounts.models.UserAccount
+    model: main.daos.UserAccount
     controller: main.userAccounts.models.UserAccountController
 
