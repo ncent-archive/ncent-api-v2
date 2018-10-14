@@ -23,10 +23,6 @@ routes:
     model: main.daos.Challenge
     controller: main.controllers.ChallengeController
 
-  - regex: '^/challenges(/*[a-zA-Z0-9]*)?'
-    model: main.daos.Challenge
-    controller: main.challenges.controllers.ChallengesController
-
 # =========================
 # Completion Criteria Microservice
 # =========================
@@ -53,7 +49,7 @@ routes:
 
   - regex: '^/tokens(/*[a-zA-Z0-9]*)?'
     model: main.daos.Token
-    controller: main.tokens.controllers.TokensController
+    controller: main.controllers.TokensController
 
 # =========================
 # Transactions Microservice
@@ -69,5 +65,5 @@ routes:
 
   - regex: '^/user_account(/*[a-zA-Z0-9]*)?'
     model: main.daos.UserAccount
-    controller: main.userAccounts.models.UserAccountController
+    controller: main.controllers.UserAccountController
 

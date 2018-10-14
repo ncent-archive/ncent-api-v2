@@ -6,7 +6,7 @@ import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
 import main.daos.Token
 import kotlinserverless.framework.models.Request
-import kotlinserverless.main.users.models.User
+import kotlinserverless.main.daos.User
 
 class TokenController: DefaultController<Token>(), RestController<Token, User> {
     override fun findOne(user: User, id: Int): SOAResult<Token> {
