@@ -12,7 +12,6 @@ import kotlinserverless.framework.models.Handler
 import kotlinserverless.main.users.models.User
 import kotlinserverless.main.users.models.Users
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 

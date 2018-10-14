@@ -1,4 +1,4 @@
-package main.users.controllers
+package main.controllers
 
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController

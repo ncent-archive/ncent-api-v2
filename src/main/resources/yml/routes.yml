@@ -13,4 +13,4 @@ routes:
   
   - regex: '^/user(/*[a-zA-Z0-9]*)?'
     model: kotlinserverless.main.users.models.User
-    controller: main.users.controllers.UserController
+    controller: main.controllers.UserController
