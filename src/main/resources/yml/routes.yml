@@ -40,8 +40,8 @@ routes:
 # =========================
 
   - regex: '^/reward(/*[a-zA-Z0-9]*)?'
-    model: main.rewards.models.Reward
-    controller: main.rewards.controllers.RewardController
+    model: main.daos.Reward
+    controller: main.controllers.RewardController
 
 # =========================
 # Token Microservice

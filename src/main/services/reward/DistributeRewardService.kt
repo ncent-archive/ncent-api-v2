@@ -1,4 +1,4 @@
-package main.rewards.services
+package main.services.reward
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAServiceInterface

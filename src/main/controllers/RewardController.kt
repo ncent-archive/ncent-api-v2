@@ -1,10 +1,10 @@
-package main.rewards.controllers
+package main.controllers
 
 
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
-import main.rewards.models.Reward
+import main.daos.Reward
 import kotlinserverless.framework.models.Request
 import kotlinserverless.main.users.models.User
 

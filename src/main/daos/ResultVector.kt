@@ -3,7 +3,6 @@ package main.daos
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
-import main.rewards.models.Rewards
 import org.jetbrains.exposed.dao.EntityID
 
 /**
