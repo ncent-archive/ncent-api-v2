@@ -1,4 +1,4 @@
-package test.unit.models
+package test.unit.daos
 
 import framework.models.idValue
 import io.kotlintest.shouldBe
@@ -16,7 +16,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 
 @ExtendWith(MockKExtension::class)
-class UserModelTest : WordSpec() {
+class UserDaoTest : WordSpec() {
     override fun beforeTest(description: Description): Unit {
         Handler(mockk()).connectToDatabase()
     }
