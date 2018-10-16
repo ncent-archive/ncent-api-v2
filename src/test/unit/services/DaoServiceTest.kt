@@ -16,7 +16,7 @@ class DaoServiceTest : WordSpec() {
 
     override fun beforeTest(description: Description): Unit {
         service = DaoService()
-        Handler(mockk()).connectToDatabase()
+        Handler.connectToDatabase()
     }
 
     init {

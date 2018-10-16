@@ -30,15 +30,6 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     this.defaultUser = user
   }
 
-  fun connectToDatabase() {
-    val db = Database.connect(
-            System.getenv("database_url") ?: "jdbc:h2:mem:test",
-            driver = System.getenv("database_driver") ?: "org.h2.Driver",
-            user = System.getenv("database_user") ?: "",
-            password = System.getenv("database_password") ?: ""
-    )
-  }
-
   override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
 
     var status = 500
@@ -78,6 +69,19 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 		  rawBody = body.toString()
         headers = mapOf("X-Powered-By" to "AWS Lambda & Serverless")
       }
+    }
+  }
+
+  companion object {
+    val db: Database = connectToDatabase()
+
+    fun connectToDatabase(): Database {
+      return Database.connect(
+            System.getenv("database_url") ?: "jdbc:h2:mem:test",
+            driver = System.getenv("database_driver") ?: "org.h2.Driver",
+            user = System.getenv("database_user") ?: "",
+            password = System.getenv("database_password") ?: ""
+      )
     }
   }
 }

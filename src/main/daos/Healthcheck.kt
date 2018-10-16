@@ -6,9 +6,14 @@ import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.EntityID
 
 class Healthcheck(id: EntityID<Int>): BaseIntEntity(id, Healthchecks) {
-	companion object : BaseIntEntityClass<Healthcheck>(Healthchecks)
 	var status by Healthchecks.status
 	var message by Healthchecks.message
+
+	companion object: BaseIntEntityClass<Healthcheck>(Healthchecks) {
+		fun findByStatus(status: String): Healthcheck {
+			return Healthcheck.find { Healthchecks.status eq status }.first()
+		}
+	}
 }
 
 private object Healthchecks : BaseIntIdTable("healthchecks") {

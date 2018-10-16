@@ -18,7 +18,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @ExtendWith(MockKExtension::class)
 class UserDaoTest : WordSpec() {
     override fun beforeTest(description: Description): Unit {
-        Handler(mockk()).connectToDatabase()
+        Handler.connectToDatabase()
     }
 
     init {
