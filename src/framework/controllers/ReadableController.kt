@@ -2,7 +2,7 @@ package kotlinserverless.framework.controllers
 
 import kotlinserverless.framework.healthchecks.InvalidEndpoint
 import kotlinserverless.framework.models.*
-import kotlinserverless.framework.healthchecks.models.Healthcheck
+import main.daos.Healthcheck
 import kotlinserverless.framework.services.SOAResult
 
 /**

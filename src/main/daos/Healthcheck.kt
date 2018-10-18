@@ -1,4 +1,4 @@
-package kotlinserverless.framework.healthchecks.models
+package main.daos
 
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
@@ -16,7 +16,7 @@ class Healthcheck(id: EntityID<Int>): BaseIntEntity(id, Healthchecks) {
 	}
 }
 
-private object Healthchecks : BaseIntIdTable("healthchecks") {
+object Healthchecks : BaseIntIdTable("healthchecks") {
 	var status = varchar("status", 10)
 	var message = varchar("message", 100)
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.main.daos.User
+import main.daos.User
 import kotlin.reflect.full.createInstance
 
 /**

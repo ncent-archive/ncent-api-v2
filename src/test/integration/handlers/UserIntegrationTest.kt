@@ -8,7 +8,7 @@ import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
-import kotlinserverless.main.daos.User
+import main.daos.User
 
 @ExtendWith(MockKExtension::class)
 class UserIntegrationTest : WordSpec() {

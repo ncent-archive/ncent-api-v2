@@ -4,7 +4,7 @@ routes:
   # =========================
 
   - regex: '^/health(/*[a-zA-Z0-9]*)?'
-    model: kotlinserverless.main.daos.Healthcheck
+    model: main.daos.Healthcheck
     controller: kotlinserverless.main.controllers.HealthcheckController
     
   # =========================
@@ -12,5 +12,5 @@ routes:
   # =========================
   
   - regex: '^/user(/*[a-zA-Z0-9]*)?'
-    model: kotlinserverless.main.daos.User
+    model: main.daos.User
     controller: main.controllers.UserController

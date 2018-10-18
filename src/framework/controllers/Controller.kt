@@ -5,7 +5,7 @@ import framework.models.BaseIntEntity
 import framework.models.idValue
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
-import kotlinserverless.main.daos.User
+import main.daos.User
 import kotlin.math.ceil
 
 /**

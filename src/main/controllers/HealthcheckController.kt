@@ -3,10 +3,10 @@ package kotlinserverless.main.controllers
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.models.*
-import kotlinserverless.framework.healthchecks.models.Healthcheck
+import main.daos.Healthcheck
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.main.daos.User
+import main.daos.User
 
 class HealthcheckController: DefaultController<Healthcheck>(), RestController<Healthcheck, User> {
 

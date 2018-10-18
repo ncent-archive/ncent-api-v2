@@ -1,16 +1,15 @@
 package test.unit.daos
 
 import framework.models.idValue
-import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
+import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlinserverless.framework.models.Handler
-import kotlinserverless.main.daos.User
-import kotlinserverless.main.daos.Users
+import main.daos.User
+import main.daos.Users
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
