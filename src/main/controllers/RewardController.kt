@@ -6,7 +6,7 @@ import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
 import main.daos.Reward
 import kotlinserverless.framework.models.Request
-import kotlinserverless.main.daos.User
+import main.daos.User
 
 class RewardController: DefaultController<Reward>(), RestController<Reward, User> {
     override fun create(user: User, element: Reward): SOAResult<Reward> {

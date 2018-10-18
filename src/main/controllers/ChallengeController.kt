@@ -5,7 +5,7 @@ import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
 import main.daos.Challenge
 import kotlinserverless.framework.models.Request
-import kotlinserverless.main.daos.User
+import main.daos.User
 
 class ChallengeController: DefaultController<Challenge>(), RestController<Challenge, User> {
     override fun create(user: User, element: Challenge): SOAResult<Challenge> {
