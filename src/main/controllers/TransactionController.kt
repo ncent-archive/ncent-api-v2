@@ -3,7 +3,7 @@ package main.controllers
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
-import kotlinserverless.main.daos.User
+import main.daos.User
 import main.daos.Transaction
 
 class TransactionController: DefaultController<Transaction>(), RestController<Transaction, User> {
