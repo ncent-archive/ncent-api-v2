@@ -13,7 +13,7 @@ import main.services.user_account.GenerateUserAccountService
 
 @ExtendWith(MockKExtension::class)
 class GenerateUserAccountServiceTest : WordSpec() {
-    privateg var service = GenerateUserAccountService()
+    private var service = GenerateUserAccountService()
     private lateinit var userAccount: UserAccount
 
     override fun beforeTest(description: Description): Unit {
