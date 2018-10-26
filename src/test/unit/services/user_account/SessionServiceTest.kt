@@ -4,6 +4,8 @@ import framework.models.idValue
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
+import io.kotlintest.days
+import io.kotlintest.eventually
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.extension.ExtendWith
@@ -53,6 +55,14 @@ class SessionServiceTest : WordSpec() {
                 val result = startService.execute(userAccount.idValue, apiCred.apiKey, "WRONGSECRET")
                 result.result shouldBe SOAResultType.FAILURE
             }
+
+            "return failure when the session has expired" {
+                eventually(31.days) {
+                    var result = startService.execute(userAccount.idValue, apiCred.apiKey, secretKey)
+                    result.result shouldBe SOAResultType.FAILURE
+                    result.message shouldBe "Session has expired."
+                }
+            }
         }
 
         "!End session service" should {
@@ -68,7 +78,11 @@ class SessionServiceTest : WordSpec() {
             }
 
             "return failure when passing an expired session" {
-                // TODO figure out timecop
+                eventually(31.days) {
+                    var result = endService.execute(userAccount.idValue, apiCred.apiKey, secretKey)
+                    result.result shouldBe SOAResultType.FAILURE
+                    result.message shouldBe "Session has expired."
+                }
             }
         }
 
@@ -85,7 +99,11 @@ class SessionServiceTest : WordSpec() {
             }
 
             "return failure when passing an expired session" {
-                // TODO figure out timecop
+                eventually(31.days) {
+                    var result = validateService.execute(userAccount.idValue, apiCred.apiKey, secretKey)
+                    result.result shouldBe SOAResultType.FAILURE
+                    result.message shouldBe "Session has expired."
+                }
             }
         }
     }
