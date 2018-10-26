@@ -2,13 +2,13 @@ package main.services.user_account
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAServiceInterface
-import main.daos.UserAccount
+import main.daos.Session
 
 /**
  * Validate the session
  */
-class ValidateSessionService: SOAServiceInterface<UserAccount> {
-    override fun execute(caller: Int?, data: UserAccount?, params: Map<String, String>?) : SOAResult<UserAccount> {
+class ValidateSessionService: SOAServiceInterface<Session> {
+    override fun execute(caller: Int?, key: String?) : SOAResult<Session> {
         throw NotImplementedError()
     }
 }

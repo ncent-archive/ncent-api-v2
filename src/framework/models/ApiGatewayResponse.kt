@@ -22,7 +22,7 @@ class ApiGatewayResponse(
 
   companion object {
     inline fun build(block: Builder.() -> Unit) = Builder().apply(block).build()
-    val LOG = LogManager.getLogger(this::class.java) //TODO: figure out how to use the correct class name.
+    val LOG = LogManager.getLogger(this::class.java) //TODO: figure out how to user the correct class name.
   }
 	
   override fun toString(): String {

@@ -59,7 +59,7 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
      * Singleton that loads the routes once and keep them on memory
      */
     companion object BackendRouter {
-		// this is not ideal and should use get resources, but having issues getting
+		// this is not ideal and should user get resources, but having issues getting
 		// maven to load them properly
         private val FILE = File("src/main/resources/yml/routes.yml")
         val ROUTER: Routes = ObjectMapper(YAMLFactory()).readValue(FILE, Routes::class.java)
