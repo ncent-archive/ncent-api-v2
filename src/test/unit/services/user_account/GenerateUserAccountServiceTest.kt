@@ -13,11 +13,10 @@ import main.services.user_account.GenerateUserAccountService
 
 @ExtendWith(MockKExtension::class)
 class GenerateUserAccountServiceTest : WordSpec() {
-    private lateinit var service: GenerateUserAccountService
+    privateg var service = GenerateUserAccountService()
     private lateinit var userAccount: UserAccount
 
     override fun beforeTest(description: Description): Unit {
-        service = GenerateUserAccountService()
         userAccount = mockk()
     }
 
