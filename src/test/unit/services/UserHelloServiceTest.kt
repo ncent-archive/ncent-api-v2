@@ -2,7 +2,6 @@ package test.unit.services
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
-import io.kotlintest.Description
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlinserverless.framework.services.SOAResultType
@@ -10,11 +9,7 @@ import kotlinserverless.main.services.users.UserHelloService
 
 @ExtendWith(MockKExtension::class)
 class UserHelloServiceTest : WordSpec() {
-    private lateinit var service: UserHelloService
-
-    override fun beforeTest(description: Description): Unit {
-        service = UserHelloService()
-    }
+    private var service = UserHelloService()
 
     init {
         "calling hello on a User Service" should {
