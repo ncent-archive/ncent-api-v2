@@ -1,4 +1,4 @@
-package test.unit.services
+package test.unit.services.services
 
 import framework.services.DaoService
 import io.kotlintest.shouldBe

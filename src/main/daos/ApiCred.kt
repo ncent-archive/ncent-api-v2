@@ -11,7 +11,12 @@ import org.jetbrains.exposed.dao.EntityID
  * @property encryptedSecretKey
  */
 class ApiCred(id: EntityID<Int>) : BaseIntEntity(id, ApiCreds) {
-    companion object : BaseIntEntityClass<ApiCred>(ApiCreds)
+    companion object : BaseIntEntityClass<ApiCred>(ApiCreds) {
+        fun encryptSecretKey(secretKey: String) : String {
+            // TODO figure out encryption alg here
+            return secretKey
+        }
+    }
 
     var apiKey by ApiCreds.apiKey
     var encryptedSecretKey by ApiCreds.encryptedSecretKey

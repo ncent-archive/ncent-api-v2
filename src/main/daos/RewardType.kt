@@ -16,7 +16,7 @@ class RewardType(id: EntityID<Int>) : BaseIntEntity(id, RewardTypes) {
     companion object : BaseIntEntityClass<RewardType>(RewardTypes)
 
     var audience by RewardTypes.audience
-    // TODO: change to use referrersOn
+    // TODO: change to user referrersOn
     var type by RewardTypes.type
 }
 

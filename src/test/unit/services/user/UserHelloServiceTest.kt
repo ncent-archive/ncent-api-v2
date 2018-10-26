@@ -1,4 +1,4 @@
-package test.unit.services
+package test.unit.services.user
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec

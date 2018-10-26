@@ -19,9 +19,9 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     companion object : BaseIntEntityClass<Challenge>(Challenges)
 
     var challengeSettings by Challenges.challengeSettings
-    // TODO: change to use referrersOn
+    // TODO: change to user referrersOn
     var asyncSubChallenges by Challenges.asyncSubChallenges
-    // TODO: change to use referrersOn
+    // TODO: change to user referrersOn
     var syncSubChallenges by Challenges.syncSubChallenges
     var resultVectors by Challenges.resultVectors
 }
