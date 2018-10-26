@@ -18,20 +18,17 @@ import main.services.user_account.ValidateSessionService
 
 @ExtendWith(MockKExtension::class)
 class SessionServiceTest : WordSpec() {
-    private lateinit var startService: StartSessionService
-    private lateinit var endService: EndSessionService
-    private lateinit var validateService: ValidateSessionService
+    private var startService = StartSessionService()
+    private var endService = EndSessionService()
+    private var validateService = ValidateSessionService()
+    private val secretKey = "SomeSecretKey"
     private lateinit var userAccount: UserAccount
     private lateinit var apiCred: ApiCred
-    private var secretKey = "SomeSecretKey"
 
     override fun beforeTest(description: Description): Unit {
-        startService = StartSessionService()
-        endService = EndSessionService()
-        validateService = ValidateSessionService()
         apiCred = ApiCred.new {
             apiKey = "ASDF"
-            secretKey = secretKey
+            encryptedSecretKey = secretKey
         }
         // TODO fill this out with all of the info needed
         userAccount = UserAccount.new {
