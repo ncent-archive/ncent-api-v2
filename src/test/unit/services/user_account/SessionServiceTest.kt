@@ -23,16 +23,20 @@ class SessionServiceTest : WordSpec() {
     private lateinit var validateService: ValidateSessionService
     private lateinit var userAccount: UserAccount
     private lateinit var apiCred: ApiCred
-    private val secretKey = "SomeSecretKey"
+    private var secretKey = "SomeSecretKey"
 
     override fun beforeTest(description: Description): Unit {
         startService = StartSessionService()
         endService = EndSessionService()
         validateService = ValidateSessionService()
-        userAccount = mockk()
-        apiCred = mockk()
-        // TODO figure out how to set the encrypted secret
-        //apiCred.encryptedSecretKey = ApiCred.encryptSecretKey(secretKey)
+        apiCred = ApiCred.new {
+            apiKey = "ASDF"
+            secretKey = secretKey
+        }
+        // TODO fill this out with all of the info needed
+        userAccount = UserAccount.new {
+            apiCreds = apiCred.id
+        }
     }
 
     init {
