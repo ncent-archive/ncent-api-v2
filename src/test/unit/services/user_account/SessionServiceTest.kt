@@ -56,14 +56,6 @@ class SessionServiceTest : WordSpec() {
                 val result = startService.execute(userAccount.idValue, apiCred.apiKey, "WRONGSECRET")
                 result.result shouldBe SOAResultType.FAILURE
             }
-
-            "return failure when the session has expired" {
-                eventually(31.days) {
-                    var result = startService.execute(userAccount.idValue, apiCred.apiKey, secretKey)
-                    result.result shouldBe SOAResultType.FAILURE
-                    result.message shouldBe "Session has expired."
-                }
-            }
         }
 
         "!End session service" should {
@@ -74,13 +66,15 @@ class SessionServiceTest : WordSpec() {
             }
 
             "return failure when passing an invalid session" {
+                val session = startService.execute(userAccount.idValue, apiCred.apiKey, secretKey).data!!
                 val result = endService.execute(userAccount.idValue, "BADSESSIONKEY")
                 result.result shouldBe SOAResultType.FAILURE
             }
 
             "return failure when passing an expired session" {
+                val session = startService.execute(userAccount.idValue, apiCred.apiKey, secretKey).data!!
                 eventually(31.days) {
-                    var result = endService.execute(userAccount.idValue, apiCred.apiKey, secretKey)
+                    var result = endService.execute(userAccount.idValue, session.sessionKey)
                     result.result shouldBe SOAResultType.FAILURE
                     result.message shouldBe "Session has expired."
                 }
@@ -95,13 +89,15 @@ class SessionServiceTest : WordSpec() {
             }
 
             "return failure when passing an invalid session" {
+                val session = startService.execute(userAccount.idValue, apiCred.apiKey, secretKey).data!!
                 val result = validateService.execute(userAccount.idValue, "BADSESSIONKEY")
                 result.result shouldBe SOAResultType.FAILURE
             }
 
             "return failure when passing an expired session" {
+                val session = startService.execute(userAccount.idValue, apiCred.apiKey, secretKey).data!!
                 eventually(31.days) {
-                    var result = validateService.execute(userAccount.idValue, apiCred.apiKey, secretKey)
+                    var result = validateService.execute(userAccount.idValue, session.sessionKeyg)
                     result.result shouldBe SOAResultType.FAILURE
                     result.message shouldBe "Session has expired."
                 }
