@@ -33,3 +33,5 @@ object Transactions : BaseIntIdTable("transactions") {
     val action = reference("action", Actions)
     val previousTransaction = reference("previous_transaction", Transactions)
 }
+
+class TransactionList(val transactions: List<Transaction>)

@@ -22,3 +22,8 @@ object CryptoKeyPairs : BaseIntIdTable("crypto_key_pairs") {
     // TODO: look into how this can be done better
     val encryptedPrivateKey = varchar("encrypted_private_key", 256)
 }
+
+data class CryptoKeyPairNamespace(
+    val publicKey: String,
+    val encryptedPrivateKey: String
+)

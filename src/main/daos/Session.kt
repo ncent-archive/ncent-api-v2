@@ -4,6 +4,7 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.EntityID
+import org.joda.time.DateTime
 
 /**
  * Session Information
@@ -22,3 +23,5 @@ object Sessions : BaseIntIdTable("sessions") {
     // TODO: look into how this can be done better
     val expiration = datetime("expiration")
 }
+
+data class SessionNamespace(val sessionKey: String, val expiration: DateTime)

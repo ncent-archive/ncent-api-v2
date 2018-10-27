@@ -20,6 +20,10 @@ interface SOAServiceInterface<T> {
         throw InvalidEndpoint()
     }
 
+    fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<T> {
+        throw InvalidEndpoint()
+    }
+
     // GET/UPDATE a single result by id and filters
     fun execute(caller: Int?, id: Int?, params: Map<String, String>?) : SOAResult<T> {
         throw InvalidEndpoint()
@@ -27,11 +31,6 @@ interface SOAServiceInterface<T> {
 
     // GET/UPDATE a single result by key and filters
     fun execute(caller: Int?, key: String?, params: Map<String, String>?) : SOAResult<T> {
-        throw InvalidEndpoint()
-    }
-
-    // GET/UPDATE multiple results by filters
-    fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<List<T>> {
         throw InvalidEndpoint()
     }
 
