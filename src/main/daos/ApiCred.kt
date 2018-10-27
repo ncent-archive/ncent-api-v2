@@ -27,3 +27,5 @@ object ApiCreds : BaseIntIdTable("api_creds") {
     // TODO: look into how this can be done better
     val encryptedSecretKey = varchar("encrypted_secret_key", 256)
 }
+
+data class ApiCredNamespace(val apiKey: String, val encryptedSecretKey: String)

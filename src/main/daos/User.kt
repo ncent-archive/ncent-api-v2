@@ -33,3 +33,4 @@ object UsersMetadata : Table("users_to_metadatas") {
 	val user = reference("user_to_metadatas", Users).primaryKey(0)
 	val metadata = reference("metadata_to_transaction", Metadatas).primaryKey(1)
 }
+data class UserNamespace(val email: String, val firstname: String, val lastname: String)

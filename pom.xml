@@ -28,6 +28,10 @@
             <name>exposed</name>
             <url>https://dl.bintray.com/kotlin/exposed</url>
         </repository>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
    <dependencies>
@@ -107,6 +111,12 @@
            <groupId>com.h2database</groupId>
            <artifactId>h2</artifactId>
            <version>1.4.197</version>
+       </dependency>
+
+       <dependency>
+           <groupId>com.github.stellar</groupId>
+           <artifactId>java-stellar-sdk</artifactId>
+           <version>0.3.3</version>
        </dependency>
 
    </dependencies>
