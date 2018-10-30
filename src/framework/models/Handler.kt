@@ -5,8 +5,10 @@ import kotlinserverless.framework.dispatchers.RequestDispatcher
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import framework.models.BaseIntEntity
-import main.daos.User
+import main.daos.*
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.sql.Connection
 
 open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
@@ -77,6 +79,14 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     lateinit var db: Database
     lateinit var connection: Connection
 
+    fun connectAndBuildTables(): Database {
+      db = connectToDatabase()
+      transaction {
+        SchemaUtils.create(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts)
+      }
+      return db
+    }
+
     fun connectToDatabase(): Database {
       db = Database.connect(
               System.getenv("database_url") ?: "jdbc:h2:mem:test",
@@ -90,6 +100,13 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
     fun disconnectFromDatabase() {
       connection.close()
+    }
+
+    fun disconnectAndDropTables() {
+      transaction {
+        SchemaUtils.drop(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts)
+      }
+      disconnectFromDatabase()
     }
   }
 }

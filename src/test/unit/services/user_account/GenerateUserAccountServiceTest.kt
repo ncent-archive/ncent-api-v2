@@ -15,13 +15,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @ExtendWith(MockKExtension::class)
 class GenerateUserAccountServiceTest : WordSpec() {
     private var service = GenerateUserAccountService()
-    lateinit private var params: MutableMap<String, String>
+    private lateinit var params: MutableMap<String, String>
 
     override fun beforeTest(description: Description): Unit {
-        Handler.connectToDatabase()
-        transaction {
-            SchemaUtils.create(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts)
-        }
+        Handler.connectAndBuildTables()
         params = mutableMapOf(
             Pair("email", "dev@ncnt.io"),
             Pair("firstname", "dev"),
@@ -30,10 +27,7 @@ class GenerateUserAccountServiceTest : WordSpec() {
     }
 
     override fun afterTest(description: Description, result: TestResult) {
-        transaction {
-            SchemaUtils.drop(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts)
-        }
-        Handler.disconnectFromDatabase()
+        Handler.disconnectAndDropTables()
     }
 
     init {
