@@ -1,10 +1,12 @@
 package main.services.user_account
 
+import framework.models.idValue
 import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
+import main.services.transaction.GenerateTransactionService
 
 /**
  * This service will be used to generate a full User Account
@@ -44,12 +46,29 @@ class GenerateUserAccountService: SOAServiceInterface<UserAccount> {
                 sessionKey = sessionNamespace.sessionKey
                 expiration = sessionNamespace.expiration
             }
-            return@execute UserAccount.new {
+
+            val userAccount = UserAccount.new {
                 userMetadata = user.id
                 cryptoKeyPair = keyPair.id
                 apiCreds = apiCred.id
                 session = newSession.id
             }
+
+            val transactionResult = GenerateTransactionService().execute(
+                    userAccount!!.idValue,
+                    TransactionNamespace(
+                            keyPairNamespace.publicKey,
+                            null,
+                            ActionNamespace(
+                                    ActionType.CREATE,
+                                    userAccount.idValue,
+                                    UserAccount.javaClass.name
+                            ),
+                            null
+                    ), null
+            )
+
+            return@execute userAccount
         }
     }
 }

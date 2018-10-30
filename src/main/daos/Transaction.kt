@@ -29,9 +29,11 @@ class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
 
 object Transactions : BaseIntIdTable("transactions") {
     val from = varchar("from", 256)
-    val to = varchar("to", 256)
+    val to = varchar("to", 256).nullable()
     val action = reference("action", Actions)
-    val previousTransaction = reference("previous_transaction", Transactions)
+    val previousTransaction = reference("previous_transaction", Transactions).nullable()
 }
+
+data class TransactionNamespace(val from: String, val to: String?, val action: ActionNamespace, val previousTransaction: Int?)
 
 class TransactionList(val transactions: List<Transaction>)
