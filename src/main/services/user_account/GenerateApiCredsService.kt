@@ -12,6 +12,7 @@ import java.security.KeyPairGenerator
  */
 class GenerateApiCredsService: SOAServiceInterface<ApiCredNamespace> {
     override fun execute() : SOAResult<ApiCredNamespace> {
+        //TODO figure out best practices for apikey/secret key generation
         val key = KeyPair.random()
         //TODO look into encryption
         return SOAResult(

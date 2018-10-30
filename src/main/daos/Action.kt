@@ -12,7 +12,7 @@ import org.jetbrains.exposed.dao.EntityID
  * @property dataType This is the object type; ex: Token, Challenge.
  */
 class Action(id: EntityID<Int>) : BaseIntEntity(id, Actions) {
-    companion object : BaseIntEntityClass<TokenType>(Actions)
+    companion object : BaseIntEntityClass<Action>(Actions)
 
     var type by Actions.type
     var data by Actions.data
@@ -24,6 +24,8 @@ object Actions : BaseIntIdTable("actions") {
     val data = integer("data_id")
     val dataType = varchar("class_name", 100)
 }
+
+data class ActionNamespace(val type: ActionType, val data: Int, val dataType: String)
 
 enum class ActionType {
     TRANSFER, CREATE, SHARE, PAYOUT

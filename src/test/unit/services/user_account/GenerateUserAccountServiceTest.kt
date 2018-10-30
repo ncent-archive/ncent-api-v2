@@ -1,5 +1,6 @@
 package test.unit.services.user_account
 
+import framework.models.idValue
 import io.kotlintest.*
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.specs.WordSpec
@@ -32,9 +33,12 @@ class GenerateUserAccountServiceTest : WordSpec() {
 
     init {
         "calling execute with a valid user account" should {
-            "return a success result and new user account" {
+            "return a success result and new user account and generate a transaction" {
                 var result = service.execute(null, params)
                 result.result shouldBe SOAResultType.SUCCESS
+                val action = Action.all().first()
+                action.data shouldBe result.data!!.idValue
+                Transaction.all().first().action shouldBe action.id
             }
         }
 
