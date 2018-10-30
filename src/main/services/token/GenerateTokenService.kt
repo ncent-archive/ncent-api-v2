@@ -8,7 +8,7 @@ import main.daos.Token
  * Generate a token if it is valid
  */
 class GenerateTokenService: SOAServiceInterface<Token> {
-    override fun execute(caller: Int?, data: Token?, params: Map<String, String>?) : SOAResult<Token> {
+    override fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<Token> {
         throw NotImplementedError()
     }
 }

@@ -8,7 +8,7 @@ import main.daos.Transaction
  * Check that the challenge is expired, add an expiration transaction
  */
 class ExpireChallengeService: SOAServiceInterface<Transaction> {
-    override fun execute(caller: Int?, data: Transaction?, params: Map<String, String>?) : SOAResult<Transaction> {
+    override fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<Transaction> {
         throw NotImplementedError()
     }
 }

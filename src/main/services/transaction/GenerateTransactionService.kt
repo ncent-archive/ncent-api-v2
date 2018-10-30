@@ -2,6 +2,7 @@ package main.services.transaction
 
 import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
+import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.Action
 import main.daos.Transaction
@@ -23,10 +24,11 @@ class GenerateTransactionService: SOAServiceInterface<Transaction> {
             }
 
             val previousTxEntity: EntityID<Int>? =
-                    if(transactionNamespace.previousTransaction != null)
+                    if (transactionNamespace.previousTransaction != null)
                         EntityID(transactionNamespace.previousTransaction, Transactions)
                     else
                         null
+
             return@execute Transaction.new {
                 from = transactionNamespace.from
                 to = transactionNamespace.to
