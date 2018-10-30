@@ -15,8 +15,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
   var defaultUser: User
 
   constructor() {
-    db = connectToDatabase()
-    connection = db.connector.invoke()
+    connectToDatabase()
 
     defaultUser = User.new {
       email = "default"
@@ -67,8 +66,8 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
           objectBody = body
         else if (body is Collection<*>)
           listBody = body as List<Any>
-	    else
-		  rawBody = body.toString()
+        else
+          rawBody = body.toString()
         headers = mapOf("X-Powered-By" to "AWS Lambda & Serverless")
       }
     }
@@ -79,12 +78,18 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     lateinit var connection: Connection
 
     fun connectToDatabase(): Database {
-      return Database.connect(
-            System.getenv("database_url") ?: "jdbc:h2:mem:test",
-            driver = System.getenv("database_driver") ?: "org.h2.Driver",
-            user = System.getenv("database_user") ?: "",
-            password = System.getenv("database_password") ?: ""
+      db = Database.connect(
+              System.getenv("database_url") ?: "jdbc:h2:mem:test",
+              driver = System.getenv("database_driver") ?: "org.h2.Driver",
+              user = System.getenv("database_user") ?: "",
+              password = System.getenv("database_password") ?: ""
       )
+      connection = db.connector.invoke()
+      return db
+    }
+
+    fun disconnectFromDatabase() {
+      connection.close()
     }
   }
 }

@@ -18,7 +18,7 @@ class UserIntegrationTest : WordSpec() {
     private val map = mapOf("path" to "/user/hello")
 
     override fun beforeTest(description: Description): Unit {
-        user = mockk(relaxed = true)
+        user = mockk()
         handler = Handler(user)
         contxt = mockk()
     }
