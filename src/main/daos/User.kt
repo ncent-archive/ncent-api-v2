@@ -24,7 +24,7 @@ class User(id: EntityID<Int>) : BaseIntEntity(id, Users) {
 }
 
 object Users : BaseIntIdTable("users") {
-	val email = varchar("email", 50).uniqueIndex()
+	val email = varchar("email", 50).check { it like "%@%.%" }.uniqueIndex()
 	val firstname = varchar("firstname", 20)
 	val lastname = varchar("lastname", 20)
 }

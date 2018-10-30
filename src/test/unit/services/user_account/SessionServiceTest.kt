@@ -26,7 +26,14 @@ class SessionServiceTest : WordSpec() {
     private lateinit var apiCred: ApiCred
 
     override fun beforeTest(description: Description): Unit {
-//        g
+//        apiCred = ApiCred.new {
+//            apiKey = "ASDF"
+//            encryptedSecretKey = secretKey
+//        }
+//        // TODO fill this out with all of the info needed
+//        userAccount = UserAccount.new {
+//            apiCreds = apiCred.id
+//        }
     }
 
     init {
