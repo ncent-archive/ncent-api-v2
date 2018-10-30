@@ -39,6 +39,8 @@ class GenerateUserAccountServiceTest : WordSpec() {
                 transaction {
                     val action = Action.all().first()
                     action.data shouldBe result.data!!.idValue
+                    action.type shouldBe ActionType.CREATE
+                    action.dataType shouldBe "UserAccount"
                     Transaction.all().first().action shouldBe action.id
                 }
             }
