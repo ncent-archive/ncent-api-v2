@@ -62,7 +62,7 @@ class GenerateUserAccountService: SOAServiceInterface<UserAccount> {
                             ActionNamespace(
                                     ActionType.CREATE,
                                     userAccount.idValue,
-                                    UserAccount.javaClass.name
+                                    UserAccount::class.simpleName!!
                             ),
                             null
                     ), null
