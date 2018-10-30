@@ -8,19 +8,17 @@ import org.junit.jupiter.api.extension.ExtendWith
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.services.user_account.GenerateUserAccountService
-import org.jetbrains.exposed.sql.Database
+import kotlinserverless.framework.models.Handler
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.sql.Connection
 
 @ExtendWith(MockKExtension::class)
 class GenerateUserAccountServiceTest : WordSpec() {
     private var service = GenerateUserAccountService()
     lateinit private var params: MutableMap<String, String>
-    lateinit private var connection: Connection
 
     override fun beforeTest(description: Description): Unit {
-        val database = Database.connect("jdbc:h2:mem:test;MODE=MySQL", driver = "org.h2.Driver")
+        Handler.connectToDatabase()
         transaction {
             SchemaUtils.create(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts)
         }
@@ -29,14 +27,13 @@ class GenerateUserAccountServiceTest : WordSpec() {
             Pair("firstname", "dev"),
             Pair("lastname", "ncnt")
         )
-        connection = database.connector.invoke()
     }
 
     override fun afterTest(description: Description, result: TestResult) {
         transaction {
             SchemaUtils.drop(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts)
         }
-        connection.close()
+        Handler.disconnectFromDatabase()
     }
 
     init {
