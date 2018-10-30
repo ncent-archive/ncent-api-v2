@@ -4,6 +4,7 @@ import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.ApiCredNamespace
+import org.stellar.sdk.KeyPair
 import java.security.KeyPairGenerator
 
 /**
@@ -11,14 +12,14 @@ import java.security.KeyPairGenerator
  */
 class GenerateApiCredsService: SOAServiceInterface<ApiCredNamespace> {
     override fun execute() : SOAResult<ApiCredNamespace> {
-        val key = KeyPairGenerator.getInstance("AES").genKeyPair()
+        val key = KeyPair.random()
         //TODO look into encryption
         return SOAResult(
                 SOAResultType.SUCCESS,
                 null,
                 ApiCredNamespace(
-                        key.public.toString(),
-                        key.private.toString()
+                    key.publicKey.toString(),
+                    key.secretSeed.toString()
                 )
         )
     }

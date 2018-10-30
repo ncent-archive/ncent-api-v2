@@ -3,6 +3,7 @@ package framework.services
 import kotlinserverless.framework.models.ApiGatewayResponse
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
+import org.h2.jdbc.JdbcBatchUpdateException
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
