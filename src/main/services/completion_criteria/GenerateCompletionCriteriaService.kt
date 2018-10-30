@@ -8,7 +8,7 @@ import main.daos.CompletionCriteria
  * Generate a new completion criteria
  */
 class GenerateCompletionCriteriaService: SOAServiceInterface<CompletionCriteria> {
-    override fun execute(caller: Int?, data: CompletionCriteria?, params: Map<String, String>?) : SOAResult<CompletionCriteria> {
+    override fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<CompletionCriteria> {
         throw NotImplementedError()
     }
 }

@@ -8,7 +8,7 @@ import main.daos.CompletionCriteria
  * For the time being, just validate the caller is the criteria address
  */
 class ValidateCompletionCriteriaService: SOAServiceInterface<CompletionCriteria> {
-    override fun execute(caller: Int?, data: CompletionCriteria?, params: Map<String, String>?) : SOAResult<CompletionCriteria> {
+    override fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<CompletionCriteria> {
         throw NotImplementedError()
     }
 }
