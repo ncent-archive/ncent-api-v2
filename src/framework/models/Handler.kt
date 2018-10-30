@@ -7,6 +7,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler
 import framework.models.BaseIntEntity
 import main.daos.User
 import org.jetbrains.exposed.sql.Database
+import java.sql.Connection
 
 open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
@@ -14,7 +15,8 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
   var defaultUser: User
 
   constructor() {
-    connectToDatabase()
+    db = connectToDatabase()
+    connection = db.connector.invoke()
 
     defaultUser = User.new {
       email = "default"
@@ -73,7 +75,8 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
   }
 
   companion object {
-    val db: Database = connectToDatabase()
+    lateinit var db: Database
+    lateinit var connection: Connection
 
     fun connectToDatabase(): Database {
       return Database.connect(
