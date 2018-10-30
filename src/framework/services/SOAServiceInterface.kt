@@ -33,12 +33,12 @@ interface SOAServiceInterface<T> {
     }
 
     // CREATE/UPDATE a single object
-    fun execute(caller: Int?, data: T?, params: Map<String, String>?) : SOAResult<T> {
+    fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<T> {
         throw InvalidEndpoint()
     }
 
     // CREATE/UPDATE multiple objects
-    fun execute(caller: Int?, dataList: List<T>?, params: Map<String, String>?) : SOAResult<List<T>> {
+    fun execute(caller: Int?, dataList: List<Any>?, params: Map<String, String>?) : SOAResult<List<T>> {
         throw InvalidEndpoint()
     }
 }
