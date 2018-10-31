@@ -11,7 +11,12 @@ import org.jetbrains.exposed.dao.EntityID
  * @property encryptedPrivateKey
  */
 class CryptoKeyPair(id: EntityID<Int>) : BaseIntEntity(id, CryptoKeyPairs) {
-    companion object : BaseIntEntityClass<CryptoKeyPair>(CryptoKeyPairs)
+    companion object : BaseIntEntityClass<CryptoKeyPair>(CryptoKeyPairs) {
+        fun encryptPrivateKey(privateKey: String) : String {
+            // TODO figure out encryption alg here
+            return privateKey
+        }
+    }
 
     var publicKey by CryptoKeyPairs.publicKey
     var encryptedPrivateKey by CryptoKeyPairs.encryptedPrivateKey

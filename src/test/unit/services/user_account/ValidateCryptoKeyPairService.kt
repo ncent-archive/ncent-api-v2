@@ -9,18 +9,18 @@ import main.daos.*
 import kotlinserverless.framework.models.Handler
 import kotlinserverless.framework.services.SOAResultType
 import main.services.user_account.GenerateUserAccountService
-import main.services.user_account.ValidateApiKeyService
+import main.services.user_account.ValidateCryptoKeyPairService
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
-class ValidateApiKeyServiceTest : WordSpec() {
-    private var service = ValidateApiKeyService()
+class ValidateCryptoKeyPairServiceTest : WordSpec() {
+    private var service = ValidateCryptoKeyPairService()
     private var params = mutableMapOf(
             Pair("email", "dev@ncnt.io"),
             Pair("firstname", "dev"),
             Pair("lastname", "ncnt")
     )
-    private lateinit var apiCred: ApiCred
+    private lateinit var cryptoKeyPair: CryptoKeyPair
     private lateinit var user: UserAccount
 
     override fun beforeTest(description: Description): Unit {
@@ -32,34 +32,35 @@ class ValidateApiKeyServiceTest : WordSpec() {
     }
 
     init {
-        "executing validate api key service" should {
-            "should return valid for a valid api key/session key combo" {
+        "executing validate crypto key pair service" should {
+            "should return valid for a valid pub/priv key combo" {
                 transaction {
                     user = GenerateUserAccountService().execute(null, params).data!!
-                    apiCred = ApiCred.findById(user.apiCreds)!!
+                    cryptoKeyPair = CryptoKeyPair.findById(user.cryptoKeyPair)!!
                 }
 
                 // TODO change this to use a decrypted secret
-                var apiKeyParams = mutableMapOf(
-                    Pair("apiKey", apiCred.apiKey),
-                    Pair("secretKey", apiCred.encryptedSecretKey)
+                var cryptoKeyPairParams = mutableMapOf(
+                    Pair("publicKey", cryptoKeyPair.publicKey),
+                    Pair("privateKey", cryptoKeyPair.encryptedPrivateKey)
                 )
-                var result = service.execute(user.idValue, Any(), apiKeyParams)
+                var result = service.execute(user.idValue, Any(), cryptoKeyPairParams)
                 result.result shouldBe SOAResultType.SUCCESS
             }
             "should return invalid for an invalid secret" {
                 transaction {
                     user = GenerateUserAccountService().execute(null, params).data!!
-                    apiCred = ApiCred.findById(user.apiCreds)!!
+                    cryptoKeyPair = CryptoKeyPair.findById(user.cryptoKeyPair)!!
                 }
 
-                var apiKeyParams = mutableMapOf(
-                        Pair("apiKey", apiCred.apiKey),
-                        Pair("secretKey", "FAKESECRET")
+                // TODO change this to use a decrypted secret
+                var cryptoKeyPairParams = mutableMapOf(
+                        Pair("publicKey", cryptoKeyPair.publicKey),
+                        Pair("privateKey", "FAKEPRIVATEKEY")
                 )
-                var result = service.execute(user.idValue, Any(), apiKeyParams)
+                var result = service.execute(user.idValue, Any(), cryptoKeyPairParams)
                 result.result shouldBe SOAResultType.FAILURE
-                result.message shouldBe "Invalid api credentials"
+                result.message shouldBe "Invalid key pair"
             }
         }
     }
