@@ -11,7 +11,6 @@ import main.daos.*
 import kotlinserverless.framework.models.Handler
 import main.services.user_account.EndSessionService
 import main.services.user_account.GenerateUserAccountService
-import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 
@@ -35,17 +34,21 @@ class EndSessionServiceTest : WordSpec() {
     init {
         "calling execute with a valid session key" should {
             "should expire the session if it is not expired yet" {
+                // Create a user and session
                 val session = transaction {
                     return@transaction Session.findById(
                         GenerateUserAccountService().execute(null, params).data!!.session
                     )!!
                 }
+                // Validate that the created session ends in the future
                 transaction {
                     Session.findById(session.id)!!.expiration.millis
                             .shouldBeGreaterThan(DateTime.now().millis)
                 }
+                // End the session via the service
                 var result = service.execute(null, session.sessionKey)
                 result.result shouldBe SOAResultType.SUCCESS
+                // Refresh session and validate that it is now expired
                 transaction {
                     session.refresh(true)
                     session.expiration.millis
