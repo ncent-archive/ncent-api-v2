@@ -43,7 +43,9 @@ class GenerateTransactionServiceTest : WordSpec() {
                     action.data shouldBe 1
                     action.type shouldBe ActionType.CREATE
                     action.dataType shouldBe "UserAccount"
-                    Transaction.all().first().action shouldBe action.id
+                    val transaction = Transaction.all().first()
+                    transaction.action shouldBe action.id
+                    transaction.from shouldBe "ARYA"
                 }
             }
         }
