@@ -16,6 +16,7 @@ import org.jetbrains.exposed.dao.EntityID
  * @property to Optionally an address this transaction is sending to
  * @property action The action taking place
  * @property previousTransaction Optionally the previous transaction related to this transaction
+ * @property metadata Optionally can be used to keep track of additional data. (ex: max shares)
  * example being: challenge sharing (providence chain)
  */
 class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
@@ -25,6 +26,7 @@ class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
     var to by Transactions.to
     var action by Transactions.action
     var previousTransaction by Transactions.previousTransaction
+    var metadata by Transactions.metadata
 }
 
 object Transactions : BaseIntIdTable("transactions") {
@@ -32,8 +34,9 @@ object Transactions : BaseIntIdTable("transactions") {
     val to = varchar("to", 256).nullable()
     val action = reference("action", Actions)
     val previousTransaction = reference("previous_transaction", Transactions).nullable()
+    val metadata = reference("metadata", Metadatas).nullable()
 }
 
-data class TransactionNamespace(val from: String, val to: String?, val action: ActionNamespace, val previousTransaction: Int?)
+data class TransactionNamespace(val from: String, val to: String?, val action: ActionNamespace, val previousTransaction: Int?, val metadata: MetadatasNamespace?)
 
 class TransactionList(val transactions: List<Transaction>)
