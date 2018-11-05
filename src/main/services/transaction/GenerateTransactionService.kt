@@ -4,11 +4,9 @@ import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
-import main.daos.Action
-import main.daos.Transaction
-import main.daos.TransactionNamespace
-import main.daos.Transactions
+import main.daos.*
 import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.SizedCollection
 
 /**
  * Generate a transaction if it is valid
@@ -18,9 +16,9 @@ class GenerateTransactionService: SOAServiceInterface<Transaction> {
         val transactionNamespace = d!! as TransactionNamespace
         return DaoService<Transaction>().execute {
             val actionObj = Action.new {
-                type = transactionNamespace.action.type
-                data = transactionNamespace.action.data
-                dataType = transactionNamespace.action.dataType
+                type = transactionNamespace.action!!.type
+                data = transactionNamespace.action!!.data
+                dataType = transactionNamespace.action!!.dataType
             }
 
             val previousTxEntity: EntityID<Int>? =
@@ -34,6 +32,7 @@ class GenerateTransactionService: SOAServiceInterface<Transaction> {
                 to = transactionNamespace.to
                 action = actionObj.id
                 previousTransaction = previousTxEntity
+                metadatas = SizedCollection(listOf())
             }
         }
     }

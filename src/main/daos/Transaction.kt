@@ -4,6 +4,7 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.Table
 
 /**
  * Transaction represents the data that records any changes related to any
@@ -16,7 +17,7 @@ import org.jetbrains.exposed.dao.EntityID
  * @property to Optionally an address this transaction is sending to
  * @property action The action taking place
  * @property previousTransaction Optionally the previous transaction related to this transaction
- * @property metadata Optionally can be used to keep track of additional data. (ex: max shares)
+ * @property metadatas Optionally can be used to keep track of additional data. (ex: max shares)
  * example being: challenge sharing (providence chain)
  */
 class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
@@ -26,7 +27,7 @@ class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
     var to by Transactions.to
     var action by Transactions.action
     var previousTransaction by Transactions.previousTransaction
-    var metadata by Transactions.metadata
+    var metadatas by Metadata via TransactionsMetadata
 }
 
 object Transactions : BaseIntIdTable("transactions") {
@@ -34,9 +35,13 @@ object Transactions : BaseIntIdTable("transactions") {
     val to = varchar("to", 256).nullable()
     val action = reference("action", Actions)
     val previousTransaction = reference("previous_transaction", Transactions).nullable()
-    val metadata = reference("metadata", Metadatas).nullable()
 }
 
-data class TransactionNamespace(val from: String, val to: String?, val action: ActionNamespace, val previousTransaction: Int?, val metadata: MetadatasNamespace?)
+object TransactionsMetadata : Table() {
+    val transaction = reference("transaction", Transactions).primaryKey(0)
+    val metadata = reference("metadata", Metadatas).primaryKey(1)
+}
+
+data class TransactionNamespace(val from: String, val to: String?, val action: ActionNamespace?, val previousTransaction: Int?, val metadatas: MetadatasListNamespace?)
 
 class TransactionList(val transactions: List<Transaction>)

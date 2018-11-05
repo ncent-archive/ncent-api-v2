@@ -7,30 +7,26 @@ import org.junit.jupiter.api.extension.ExtendWith
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import kotlinserverless.framework.models.Handler
-import main.services.transaction.GenerateTransactionService
+import main.services.transaction.GetTransactionService
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
-class GenerateTransactionServiceTest : WordSpec() {
-    private var service = GenerateTransactionService()
+class GetTransactionServiceTest : WordSpec() {
+    private var service = GetTransactionService()
     private lateinit var transactionNamespace: TransactionNamespace
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
         transactionNamespace = TransactionNamespace(
-            from = "ARYA",
-            to = null,
-            action = ActionNamespace(
-                type = ActionType.CREATE,
-                data = 1,
-                dataType = "UserAccount"
-            ),
-            previousTransaction = null,
-            metadatas = MetadatasListNamespace(
-                listOf(
-                    MetadatasNamespace("city", "san carlos")
-                )
-            )
+                from = "ARYA",
+                to = null,
+                action = ActionNamespace(
+                        type = ActionType.CREATE,
+                        data = 1,
+                        dataType = "UserAccount"
+                ),
+                previousTransaction = null,
+                metadata = null
         )
     }
 
@@ -39,8 +35,8 @@ class GenerateTransactionServiceTest : WordSpec() {
     }
 
     init {
-        "calling execute with a valid transaction" should {
-            "generate the transaction and associated action" {
+        "calling execute with a valid transaction id" should {
+            "return the transaction and associated action" {
                 var result = service.execute(null, transactionNamespace, null)
                 result.result shouldBe SOAResultType.SUCCESS
                 transaction {
@@ -51,10 +47,6 @@ class GenerateTransactionServiceTest : WordSpec() {
                     val transaction = Transaction.all().first()
                     transaction.action shouldBe action.id
                     transaction.from shouldBe "ARYA"
-                    val metadatas = Metadata.all().first()
-                    transaction.metadatas shouldBe metadatas.id
-                    metadatas.key shouldBe "city"
-                    metadatas.value shouldBe "san carlos"
                 }
             }
         }
