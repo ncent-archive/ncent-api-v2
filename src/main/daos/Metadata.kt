@@ -26,8 +26,4 @@ object Metadatas : BaseIntIdTable("metadatas") {
 
 data class MetadatasNamespace(val key: String, val value: String)
 
-<<<<<<< HEAD
 data class MetadatasListNamespace(val metadatas: List<MetadatasNamespace>)
-=======
-data class MetadatasListNamespace(val metadatas: List<MetadatasNamespace>)
->>>>>>> Temporary progress on Getter services and also getting lists to work with the DB and query better
