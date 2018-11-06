@@ -28,7 +28,8 @@ class GenerateTransactionServiceTest : WordSpec() {
             previousTransaction = null,
             metadatas = MetadatasListNamespace(
                 listOf(
-                    MetadatasNamespace("city", "san carlos")
+                    MetadatasNamespace("city", "san carlos"),
+                    MetadatasNamespace("state", "california")
                 )
             )
         )
@@ -49,12 +50,12 @@ class GenerateTransactionServiceTest : WordSpec() {
                     action.type shouldBe ActionType.CREATE
                     action.dataType shouldBe "UserAccount"
                     val transaction = Transaction.all().first()
-                    transaction.action shouldBe action.id
+                    transaction.action.id shouldBe action.id
                     transaction.from shouldBe "ARYA"
-                    val metadatas = Metadata.all().first()
-                    transaction.metadatas shouldBe metadatas.id
-                    metadatas.key shouldBe "city"
-                    metadatas.value shouldBe "san carlos"
+                    Metadata.all().count() shouldBe 2
+                    Metadata.all().distinct().map {
+                        md -> Pair(md.key, md.value)
+                    } shouldBe listOf(Pair("city", "san carlos"), Pair("state", "california"))
                 }
             }
         }

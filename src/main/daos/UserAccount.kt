@@ -19,10 +19,10 @@ import org.jetbrains.exposed.dao.*
 class UserAccount(id: EntityID<Int>) : BaseIntEntity(id, UserAccounts) {
     companion object : BaseIntEntityClass<UserAccount>(UserAccounts)
 
-    var userMetadata by UserAccounts.userMetadata
-    var cryptoKeyPair by UserAccounts.cryptoKeyPair
-    var apiCreds by UserAccounts.apiCreds
-    var session by UserAccounts.session
+    var userMetadata by User referencedOn UserAccounts.userMetadata
+    var cryptoKeyPair by CryptoKeyPair referencedOn UserAccounts.cryptoKeyPair
+    var apiCreds by ApiCred referencedOn UserAccounts.apiCreds
+    var session by Session referencedOn UserAccounts.session
 }
 
 object UserAccounts : BaseIntIdTable("user_accounts") {

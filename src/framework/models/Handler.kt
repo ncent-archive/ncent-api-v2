@@ -82,7 +82,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     fun connectAndBuildTables(): Database {
       db = connectToDatabase()
       transaction {
-        SchemaUtils.create(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts, Actions, Transactions)
+        SchemaUtils.create(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts, Actions, Transactions, Metadatas, TransactionsMetadata)
       }
       return db
     }
@@ -104,7 +104,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
     fun disconnectAndDropTables() {
       transaction {
-        SchemaUtils.drop(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts, Actions, Transactions)
+        SchemaUtils.drop(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts, Actions, Transactions, Metadatas, TransactionsMetadata)
       }
       disconnectFromDatabase()
     }

@@ -21,10 +21,10 @@ class ValidateSessionService: SOAServiceInterface<Session> {
         )
         return transaction {
             val user = UserAccount.findById(caller!!)!!
-            val session = Session.findById(user.session)
+            val session = user.session
             if(session == null) {
                 result.message = "Session not found"
-            } else if(session!!.sessionKey != key!!) {
+            } else if(session.sessionKey != key!!) {
                 result.message = "Invalid Session"
             } else if(session!!.expiration <= DateTime.now()) {
                 result.message = "Session Expired"

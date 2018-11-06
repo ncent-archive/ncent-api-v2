@@ -36,7 +36,7 @@ class ValidateCryptoKeyPairServiceTest : WordSpec() {
             "should return valid for a valid pub/priv key combo" {
                 transaction {
                     user = GenerateUserAccountService().execute(null, params).data!!
-                    cryptoKeyPair = CryptoKeyPair.findById(user.cryptoKeyPair)!!
+                    cryptoKeyPair = user.cryptoKeyPair!!
                 }
 
                 // TODO change this to use a decrypted secret
@@ -50,7 +50,7 @@ class ValidateCryptoKeyPairServiceTest : WordSpec() {
             "should return invalid for an invalid secret" {
                 transaction {
                     user = GenerateUserAccountService().execute(null, params).data!!
-                    cryptoKeyPair = CryptoKeyPair.findById(user.cryptoKeyPair)!!
+                    cryptoKeyPair = user.cryptoKeyPair!!
                 }
 
                 // TODO change this to use a decrypted secret
