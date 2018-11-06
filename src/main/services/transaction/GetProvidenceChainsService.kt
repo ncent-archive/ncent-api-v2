@@ -33,7 +33,7 @@ class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
         }
         mainChain.reverse()
 
-        providenceChains.put(mainChain.last().idValue, mainChain)
+        providenceChains[mainChain.last().idValue] = mainChain
 
         while(providenceChains.any()) {
             var providenceChain = providenceChains.entries.first()
@@ -49,7 +49,7 @@ class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
                             var providenceChainNew = mutableListOf<Transaction>()
                             Collections.copy(providenceChainNew, providenceChain.value)
                             providenceChainNew.add(child)
-                            providenceChains.put(child.idValue, providenceChainNew)
+                            providenceChains[child.idValue] = providenceChainNew
                         } else {
                             providenceChain.value.add(child)
                         }
@@ -63,7 +63,7 @@ class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
         return SOAResult(SOAResultType.SUCCESS, null, providenceChainsFinal)
     }
 
-    fun getChildren(id: EntityID<Int>): SOAResult<List<Transaction>> {
+    private fun getChildren(id: EntityID<Int>): SOAResult<List<Transaction>> {
         return DaoService<List<Transaction>>().execute {
             Transaction.find {
                 Transactions.previousTransaction eq id
