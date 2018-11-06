@@ -1,6 +1,5 @@
 package test.unit.services.transaction
 
-import framework.models.idValue
 import io.kotlintest.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.specs.WordSpec
@@ -12,7 +11,6 @@ import kotlinserverless.framework.models.Handler
 import main.services.transaction.GenerateTransactionService
 import main.services.transaction.GetTransactionsService
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.function.Consumer
 
 @ExtendWith(MockKExtension::class)
 class GetTransactionsServiceTest : WordSpec() {
