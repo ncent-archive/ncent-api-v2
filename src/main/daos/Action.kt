@@ -27,6 +27,6 @@ object Actions : BaseIntIdTable("actions") {
 
 data class ActionNamespace(val type: ActionType, val data: Int, val dataType: String)
 
-enum class ActionType {
-    TRANSFER, CREATE, SHARE, PAYOUT
+enum class ActionType(val type: String) {
+    TRANSFER("transfer"), CREATE("create"), SHARE("share"), PAYOUT("payout")
 }
