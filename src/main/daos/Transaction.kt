@@ -25,8 +25,8 @@ class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
 
     var from by Transactions.from
     var to by Transactions.to
-    var action by Transactions.action
-    var previousTransaction by Transactions.previousTransaction
+    var action by Action referencedOn Transactions.action
+    var previousTransaction by Transaction optionalReferencedOn Transactions.previousTransaction
     var metadatas by Metadata via TransactionsMetadata
 }
 
@@ -34,12 +34,12 @@ object Transactions : BaseIntIdTable("transactions") {
     val from = varchar("from", 256)
     val to = varchar("to", 256).nullable()
     val action = reference("action", Actions)
-    val previousTransaction = reference("previous_transaction", Transactions).nullable()
+    val previousTransaction = optReference("previous_transaction", Transactions)
 }
 
-object TransactionsMetadata : Table() {
-    val transaction = reference("transaction", Transactions).primaryKey(0)
-    val metadata = reference("metadata", Metadatas).primaryKey(1)
+object TransactionsMetadata : Table("transactions_to_metadatas") {
+    val transaction = reference("transaction_to_metadatas", Transactions).primaryKey(0)
+    val metadata = reference("metadata_to_transaction", Metadatas).primaryKey(1)
 }
 
 data class TransactionNamespace(val from: String, val to: String?, val action: ActionNamespace?, val previousTransaction: Int?, val metadatas: MetadatasListNamespace?)

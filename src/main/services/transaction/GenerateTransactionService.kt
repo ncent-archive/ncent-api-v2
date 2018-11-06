@@ -2,7 +2,6 @@ package main.services.transaction
 
 import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
-import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import org.jetbrains.exposed.dao.EntityID
@@ -21,19 +20,33 @@ class GenerateTransactionService: SOAServiceInterface<Transaction> {
                 dataType = transactionNamespace.action!!.dataType
             }
 
-            val previousTxEntity: EntityID<Int>? =
+            val previousTxEntity: Transaction? =
                     if (transactionNamespace.previousTransaction != null)
-                        EntityID(transactionNamespace.previousTransaction, Transactions)
+                        Transaction.findById(transactionNamespace.previousTransaction!!)
                     else
                         null
 
-            return@execute Transaction.new {
+            val metadatasToAdd = if(transactionNamespace.metadatas != null) {
+                transactionNamespace.metadatas.metadatas.map {
+                    md -> Metadata.new {
+                        key = md.key
+                        value = md.value
+                    }
+                }
+            } else {
+                listOf()
+            }
+
+            var transaction =  Transaction.new {
                 from = transactionNamespace.from
                 to = transactionNamespace.to
-                action = actionObj.id
+                action = actionObj
                 previousTransaction = previousTxEntity
-                metadatas = SizedCollection(listOf())
             }
+
+            transaction.metadatas = SizedCollection(metadatasToAdd)
+
+            return@execute transaction
         }
     }
 }

@@ -37,7 +37,7 @@ class ValidateSessionServiceTest : WordSpec() {
             "should return valid for a valid session" {
                 transaction {
                     user = GenerateUserAccountService().execute(null, params).data!!
-                    session = Session.findById(user.session)!!
+                    session = user.session!!
                 }
 
                 var result = service.execute(user.idValue, session.sessionKey)
@@ -46,7 +46,7 @@ class ValidateSessionServiceTest : WordSpec() {
             "should return invalid for a sessionkey that is not associated with the caller" {
                 transaction {
                     user = GenerateUserAccountService().execute(null, params).data!!
-                    session = Session.findById(user.session)!!
+                    session = user.session!!
                 }
                 var result = service.execute(user.idValue, "SOMERANDOMKEY")
                 result.result shouldBe SOAResultType.FAILURE
@@ -55,7 +55,7 @@ class ValidateSessionServiceTest : WordSpec() {
             "should return invalid for an expired sessionkey" {
                 transaction {
                     user = GenerateUserAccountService().execute(null, params).data!!
-                    session = Session.findById(user.session)!!
+                    session = user.session!!
                 }
                 EndSessionService().execute(null, session.sessionKey)
                 var result = service.execute(user.idValue, session.sessionKey)

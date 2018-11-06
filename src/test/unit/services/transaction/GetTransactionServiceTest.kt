@@ -1,12 +1,16 @@
 package test.unit.services.transaction
 
+import framework.models.idValue
 import io.kotlintest.*
+import io.kotlintest.matchers.collections.shouldContainAll
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.specs.WordSpec
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import kotlinserverless.framework.models.Handler
+import main.services.transaction.GenerateTransactionService
 import main.services.transaction.GetTransactionService
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -26,7 +30,12 @@ class GetTransactionServiceTest : WordSpec() {
                         dataType = "UserAccount"
                 ),
                 previousTransaction = null,
-                metadata = null
+                metadatas = MetadatasListNamespace(
+                    listOf(
+                        MetadatasNamespace("city", "san carlos"),
+                        MetadatasNamespace("state", "california")
+                    )
+                )
         )
     }
 
@@ -36,17 +45,26 @@ class GetTransactionServiceTest : WordSpec() {
 
     init {
         "calling execute with a valid transaction id" should {
-            "return the transaction and associated action" {
-                var result = service.execute(null, transactionNamespace, null)
+            "return the transaction and associated objects" {
+                val txGenerateResult = GenerateTransactionService().execute(null, transactionNamespace, null)
+                val result = service.execute(null, txGenerateResult.data!!.idValue, null)
+
                 result.result shouldBe SOAResultType.SUCCESS
                 transaction {
-                    val action = Action.all().first()
-                    action.data shouldBe 1
-                    action.type shouldBe ActionType.CREATE
-                    action.dataType shouldBe "UserAccount"
-                    val transaction = Transaction.all().first()
-                    transaction.action shouldBe action.id
-                    transaction.from shouldBe "ARYA"
+                    val txs = result.data!!
+                    txs.transactions.count() shouldBe 1
+                    val tx = txs.transactions.first()
+                    tx.from shouldBe "ARYA"
+                    tx.previousTransaction shouldBe null
+                    tx.to shouldBe null
+                    tx.action.data shouldBe 1
+                    tx.action.dataType shouldBe "UserAccount"
+                    tx.action.type shouldBe ActionType.CREATE
+                    tx.metadatas.count() shouldBe 2
+                    tx.metadatas.map { md -> Pair(md.key, md.value) }
+                        .shouldContainExactly(
+                            listOf(Pair("city", "san carlos"), Pair("state", "california"))
+                        )
                 }
             }
         }

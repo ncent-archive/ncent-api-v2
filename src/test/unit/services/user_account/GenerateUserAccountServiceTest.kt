@@ -41,7 +41,7 @@ class GenerateUserAccountServiceTest : WordSpec() {
                     action.data shouldBe result.data!!.idValue
                     action.type shouldBe ActionType.CREATE
                     action.dataType shouldBe "UserAccount"
-                    Transaction.all().first().action shouldBe action.id
+                    Transaction.all().first().action.id shouldBe action.id
                 }
             }
         }

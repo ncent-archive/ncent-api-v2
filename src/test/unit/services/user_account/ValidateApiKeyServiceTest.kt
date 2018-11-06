@@ -36,7 +36,7 @@ class ValidateApiKeyServiceTest : WordSpec() {
             "should return valid for a valid api key/session key combo" {
                 transaction {
                     user = GenerateUserAccountService().execute(null, params).data!!
-                    apiCred = ApiCred.findById(user.apiCreds)!!
+                    apiCred = user.apiCreds
                 }
 
                 // TODO change this to use a decrypted secret
@@ -50,7 +50,7 @@ class ValidateApiKeyServiceTest : WordSpec() {
             "should return invalid for an invalid secret" {
                 transaction {
                     user = GenerateUserAccountService().execute(null, params).data!!
-                    apiCred = ApiCred.findById(user.apiCreds)!!
+                    apiCred = user.apiCreds
                 }
 
                 var apiKeyParams = mutableMapOf(

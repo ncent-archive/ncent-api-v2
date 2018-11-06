@@ -48,10 +48,10 @@ class GenerateUserAccountService: SOAServiceInterface<UserAccount> {
             }
 
             val userAccount = UserAccount.new {
-                userMetadata = user.id
-                cryptoKeyPair = keyPair.id
-                apiCreds = apiCred.id
-                session = newSession.id
+                userMetadata = user
+                cryptoKeyPair = keyPair
+                apiCreds = apiCred
+                session = newSession
             }
 
             val transactionResult = GenerateTransactionService().execute(
@@ -64,7 +64,7 @@ class GenerateUserAccountService: SOAServiceInterface<UserAccount> {
                                     userAccount.idValue,
                                     UserAccount::class.simpleName!!
                             ),
-                            null
+                            null, null
                     ), null
             )
 
