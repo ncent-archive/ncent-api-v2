@@ -1,5 +1,6 @@
 package main.services.transaction
 
+import framework.models.idValue
 import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
@@ -16,13 +17,14 @@ import org.jetbrains.exposed.dao.EntityID
  * Has multiple routes as children
  *
  */
-class GetTransactionChainService: SOAServiceInterface<TransactionList> {
-    override fun execute(caller: Int?, id: Int?) : SOAResult<TransactionList> {
+class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
+    override fun execute(caller: Int?, id: Int?) : SOAResult<List<TransactionList>> {
         val txResult = GetTransactionService().execute(caller, id)
         if(txResult.result != SOAResultType.SUCCESS)
             return SOAResult(txResult.result, txResult.message, null)
         var tx = txResult.data!!
-        var providenceChains = mutableListOf<List<Transaction>>()
+        var providenceChains = mutableMapOf<Int, List<Transaction>>()
+        var providenceChainsFinal = mutableListOf<TransactionList>()
         var mainChain = mutableListOf(tx)
         while(tx.previousTransaction != null) {
             mainChain.add(tx.previousTransaction!!)
@@ -30,17 +32,29 @@ class GetTransactionChainService: SOAServiceInterface<TransactionList> {
         }
         mainChain.reverse()
 
-        var childrenResult = getChildren(mainChain.last().id)
-        var children = childrenResult.data
-        while(childrenResult == SOAResultType.SUCCESS &&
-                children != null &&
-                children!!.any()) {
-            if(children.count() > 1) {
+        providenceChains.put(mainChain.last().idValue, mainChain)
 
-            } else {
-                
+        while(providenceChains.any()) {
+            val it = providenceChains.entries.first()
+            var childrenResult = getChildren(it.value.last().id)
+            var children = childrenResult.data
+            while(childrenResult == SOAResultType.SUCCESS &&
+                    children != null &&
+                    children!!.any()) {
+                if(children.count() > 1) {
+                    // TODO make copies of the 'it' children.count() times - 1 (original)
+                    // TODO push each child onto one of the new lists + include the original
+                    // TODO use child id as the key
+                    children.forEach {
+
+                    }
+                } else {
+                    providenceChainsFinal.add(TransactionList(it.value))
+                    providenceChains.remove(it.key)
+                }
             }
         }
+        return SOAResult(SOAResultType.SUCCESS, null, providenceChainsFinal)
     }
 
     fun getChildren(id: EntityID<Int>): SOAResult<List<Transaction>> {
