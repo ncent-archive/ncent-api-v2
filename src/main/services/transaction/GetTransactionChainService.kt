@@ -5,37 +5,49 @@ import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
+import org.jetbrains.exposed.dao.EntityID
 
 /**
  * Retrieve transactions by filter'd action
  * Specifically to be used to get a providence chain
  * Can do so by filtering for a specific action data and dataType
+ * Must be a challenge action type
+ * May return multiple chains in the case that a transaction
+ * Has multiple routes as children
+ *
  */
 class GetTransactionChainService: SOAServiceInterface<TransactionList> {
-    override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<TransactionList> {
-        if(params!!["data"] == null || params!!["dataType"] == null)
-            return SOAResult(SOAResultType.FAILURE, "data and dataType are required.", null)
-        val actionsResult = DaoService<List<Action>>().execute {
-            Action.find {
-                Actions.data eq Integer.valueOf(params!!["data"]!!)
-                Actions.dataType eq params!!["dataType"]!!
-            }.distinct()
+    override fun execute(caller: Int?, id: Int?) : SOAResult<TransactionList> {
+        val txResult = GetTransactionService().execute(caller, id)
+        if(txResult.result != SOAResultType.SUCCESS)
+            return SOAResult(txResult.result, txResult.message, null)
+        var tx = txResult.data!!
+        var providenceChains = mutableListOf<List<Transaction>>()
+        var mainChain = mutableListOf(tx)
+        while(tx.previousTransaction != null) {
+            mainChain.add(tx.previousTransaction!!)
+            tx = tx.previousTransaction!!
         }
-        if(actionsResult.result != SOAResultType.SUCCESS)
-            return SOAResult(actionsResult.result, actionsResult.message, null)
-        val actions = actionsResult.data!!
+        mainChain.reverse()
 
-        val transactionsResult = DaoService<List<Transaction>>().execute {
+        var childrenResult = getChildren(mainChain.last().id)
+        var children = childrenResult.data
+        while(childrenResult == SOAResultType.SUCCESS &&
+                children != null &&
+                children!!.any()) {
+            if(children.count() > 1) {
+
+            } else {
+                
+            }
+        }
+    }
+
+    fun getChildren(id: EntityID<Int>): SOAResult<List<Transaction>> {
+        return DaoService<List<Transaction>>().execute {
             Transaction.find {
-                Transactions.action inList actions.map { a -> a.id }
-            }.distinct()
+                Transactions.previousTransaction eq id
+            }.distinct().toList()
         }
-
-        // TODO may need to transform the transactions list returned to only
-        // include a subset of the transactions.
-
-        if(transactionsResult.result == SOAResultType.SUCCESS)
-            return SOAResult(SOAResultType.SUCCESS, null, TransactionList(transactionsResult.data!!.distinct()))
-        return SOAResult(transactionsResult.result, transactionsResult.message, null)
     }
 }

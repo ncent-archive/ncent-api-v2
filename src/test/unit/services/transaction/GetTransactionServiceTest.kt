@@ -68,9 +68,7 @@ class GetTransactionServiceTest : WordSpec() {
 
                 result.result shouldBe SOAResultType.SUCCESS
                 transaction {
-                    val txs = result.data!!
-                    txs.transactions.count() shouldBe 1
-                    val tx = txs.transactions.first()
+                    val tx = result.data!!
                     tx.from shouldBe "ARYA2"
                     tx.previousTransaction!!.from shouldBe "ARYA"
                     tx.previousTransaction!!.action.data shouldBe 1

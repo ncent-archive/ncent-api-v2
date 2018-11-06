@@ -29,6 +29,11 @@ interface SOAServiceInterface<T> {
         throw InvalidEndpoint()
     }
 
+    // GET multiple result by id
+    fun execute(caller: Int?, id: Int?) : SOAResult<T> {
+        throw InvalidEndpoint()
+    }
+
     // GET/UPDATE a single result by key and filters
     fun execute(caller: Int?, key: String?, params: Map<String, String>?) : SOAResult<T> {
         throw InvalidEndpoint()
