@@ -2,7 +2,6 @@ package test.unit.services.transaction
 
 import framework.models.idValue
 import io.kotlintest.*
-import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.specs.WordSpec
 import io.mockk.junit5.MockKExtension
