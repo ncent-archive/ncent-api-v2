@@ -17,24 +17,25 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class GetTransactionServiceTest : WordSpec() {
     private var service = GetTransactionService()
     private lateinit var transactionNamespace: TransactionNamespace
+    private lateinit var transaction2Namespace: TransactionNamespace
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
         transactionNamespace = TransactionNamespace(
-                from = "ARYA",
-                to = null,
-                action = ActionNamespace(
-                        type = ActionType.CREATE,
-                        data = 1,
-                        dataType = "UserAccount"
-                ),
-                previousTransaction = null,
-                metadatas = MetadatasListNamespace(
-                    listOf(
-                        MetadatasNamespace("city", "san carlos"),
-                        MetadatasNamespace("state", "california")
-                    )
+            from = "ARYA",
+            to = null,
+            action = ActionNamespace(
+                type = ActionType.CREATE,
+                data = 1,
+                dataType = "UserAccount"
+            ),
+            previousTransaction = null,
+            metadatas = MetadatasListNamespace(
+                listOf(
+                    MetadatasNamespace("city", "san carlos"),
+                    MetadatasNamespace("state", "california")
                 )
+            )
         )
     }
 
@@ -45,7 +46,24 @@ class GetTransactionServiceTest : WordSpec() {
     init {
         "calling execute with a valid transaction id" should {
             "return the transaction and associated objects" {
-                val txGenerateResult = GenerateTransactionService().execute(null, transactionNamespace, null)
+                var parentTxGenerateResult = GenerateTransactionService().execute(null, transactionNamespace, null)
+                transaction2Namespace = TransactionNamespace(
+                    from = "ARYA2",
+                    to = "MIKE",
+                    action = ActionNamespace(
+                        type = ActionType.CREATE,
+                        data = 2,
+                        dataType = "UserAccount"
+                    ),
+                    previousTransaction = parentTxGenerateResult.data!!.idValue,
+                    metadatas = MetadatasListNamespace(
+                        listOf(
+                            MetadatasNamespace("city", "san carlos"),
+                            MetadatasNamespace("state", "california")
+                        )
+                    )
+                )
+                val txGenerateResult = GenerateTransactionService().execute(null, transaction2Namespace, null)
                 val result = service.execute(null, txGenerateResult.data!!.idValue, null)
 
                 result.result shouldBe SOAResultType.SUCCESS
@@ -53,10 +71,11 @@ class GetTransactionServiceTest : WordSpec() {
                     val txs = result.data!!
                     txs.transactions.count() shouldBe 1
                     val tx = txs.transactions.first()
-                    tx.from shouldBe "ARYA"
-                    tx.previousTransaction shouldBe null
-                    tx.to shouldBe null
-                    tx.action.data shouldBe 1
+                    tx.from shouldBe "ARYA2"
+                    tx.previousTransaction!!.from shouldBe "ARYA"
+                    tx.previousTransaction!!.action.data shouldBe 1
+                    tx.to shouldBe "MIKE"
+                    tx.action.data shouldBe 2
                     tx.action.dataType shouldBe "UserAccount"
                     tx.action.type shouldBe ActionType.CREATE
                     tx.metadatas.count() shouldBe 2
