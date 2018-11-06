@@ -7,6 +7,7 @@ import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import org.jetbrains.exposed.dao.EntityID
+import java.util.*
 
 /**
  * Retrieve transactions by filter'd action
@@ -23,7 +24,7 @@ class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
         if(txResult.result != SOAResultType.SUCCESS)
             return SOAResult(txResult.result, txResult.message, null)
         var tx = txResult.data!!
-        var providenceChains = mutableMapOf<Int, List<Transaction>>()
+        var providenceChains = mutableMapOf<Int, MutableList<Transaction>>()
         var providenceChainsFinal = mutableListOf<TransactionList>()
         var mainChain = mutableListOf(tx)
         while(tx.previousTransaction != null) {
@@ -35,22 +36,27 @@ class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
         providenceChains.put(mainChain.last().idValue, mainChain)
 
         while(providenceChains.any()) {
-            val it = providenceChains.entries.first()
-            var childrenResult = getChildren(it.value.last().id)
+            var providenceChain = providenceChains.entries.first()
+            val currentLastIdInChain = providenceChain.value.last().id
+            var childrenResult = getChildren(currentLastIdInChain)
             var children = childrenResult.data
             while(childrenResult == SOAResultType.SUCCESS &&
                     children != null &&
                     children!!.any()) {
                 if(children.count() > 1) {
-                    // TODO make copies of the 'it' children.count() times - 1 (original)
-                    // TODO push each child onto one of the new lists + include the original
-                    // TODO use child id as the key
-                    children.forEach {
-
+                    children.forEach { child ->
+                        if(providenceChain.value.last().id != currentLastIdInChain) {
+                            var providenceChainNew = mutableListOf<Transaction>()
+                            Collections.copy(providenceChainNew, providenceChain.value)
+                            providenceChainNew.add(child)
+                            providenceChains.put(child.idValue, providenceChainNew)
+                        } else {
+                            providenceChain.value.add(child)
+                        }
                     }
                 } else {
-                    providenceChainsFinal.add(TransactionList(it.value))
-                    providenceChains.remove(it.key)
+                    providenceChainsFinal.add(TransactionList(providenceChain.value))
+                    providenceChains.remove(providenceChain.key)
                 }
             }
         }
