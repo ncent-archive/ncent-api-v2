@@ -16,7 +16,7 @@ class Token(id: EntityID<Int>) : BaseIntEntity(id, Tokens) {
     companion object : BaseIntEntityClass<Token>(Tokens)
 
     var amount by Tokens.amount
-    var tokenType by Tokens.tokenType
+    var tokenType by TokenType referencedOn Tokens.tokenType
 }
 
 object Tokens : BaseIntIdTable("tokens") {

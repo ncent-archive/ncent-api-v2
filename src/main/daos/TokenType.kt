@@ -19,7 +19,7 @@ class TokenType(id: EntityID<Int>) : BaseIntEntity(id, TokenTypes) {
     companion object : BaseIntEntityClass<TokenType>(TokenTypes)
 
     var name by TokenTypes.name
-    var parentToken by TokenTypes.parentToken
+    var parentToken by TokenType referencedOn TokenTypes.parentToken
     var parentTokenConversionRate by TokenTypes.parentTokenConversionRate
 }
 

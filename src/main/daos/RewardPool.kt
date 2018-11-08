@@ -3,6 +3,8 @@ package main.daos
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
+import main.daos.RewardsToTransactions.primaryKey
+import main.daos.TransactionsMetadata.primaryKey
 import org.jetbrains.exposed.dao.EntityID
 
 /**
@@ -16,12 +18,15 @@ import org.jetbrains.exposed.dao.EntityID
 class RewardPool(id: EntityID<Int>) : BaseIntEntity(id, RewardPools) {
     companion object : BaseIntEntityClass<RewardPool>(RewardPools)
 
-    var reward by RewardPools.reward
-    // TODO: change to user referrersOn
-    var transactions by RewardPools.transactions
+    var reward by Reward referencedOn RewardPools.reward
+    var transactions by Transaction via RewardsToTransactions
 }
 
 object RewardPools : BaseIntIdTable("reward_pools") {
-    val reward = reference("reward", Rewards)
-    val transactions = reference("transactions", Transactions)
+    val reward = RewardsToTransactions.reference("reward", Rewards)
+}
+
+object RewardsToTransactions : BaseIntIdTable("rewards_to_transactions") {
+    val reward = reference("reward_to_transaction", Rewards).primaryKey(0)
+    val transactions = reference("transaction_to_reward", Transactions).primaryKey(1)
 }
