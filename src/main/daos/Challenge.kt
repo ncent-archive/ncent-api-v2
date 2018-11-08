@@ -18,17 +18,22 @@ import org.jetbrains.exposed.dao.*
 class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     companion object : BaseIntEntityClass<Challenge>(Challenges)
 
-    var challengeSettings by Challenges.challengeSettings
-    // TODO: change to user referrersOn
-    var asyncSubChallenges by Challenges.asyncSubChallenges
-    // TODO: change to user referrersOn
-    var syncSubChallenges by Challenges.syncSubChallenges
-    var resultVectors by Challenges.resultVectors
+    var challengeSettings by ChallengeSetting referencedOn Challenges.challengeSettings
+    var asyncSubChallenges by Challenge via SubChallenges
+    var syncSubChallenges by Challenge via SubChallenges
+    var resultVectors by ResultVector via ResultVectors
 }
 
 object Challenges : BaseIntIdTable("challenges") {
     val challengeSettings = reference("challenge_settings", ChallengeSettings)
-    val asyncSubChallenges = reference("challenges", Challenges)
-    val syncSubChallenges = reference("challenges", Challenges)
-    val resultVectors = reference("result_vectors", ResultVectors)
+}
+
+object SubChallenges : BaseIntIdTable("sub_challenges") {
+    val parentChallenge = reference("parent_challenge", Challenges).primaryKey(0)
+    val subChallenge = reference("sub_challenge", Challenges).primaryKey(1)
+    val type = enumeration("sub_challenge_type", SubChallengeType::class)
+}
+
+enum class SubChallengeType {
+    SYNC, ASYNC
 }

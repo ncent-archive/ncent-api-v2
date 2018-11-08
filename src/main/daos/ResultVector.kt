@@ -17,12 +17,13 @@ import org.jetbrains.exposed.dao.EntityID
 class ResultVector(id: EntityID<Int>) : BaseIntEntity(id, ResultVectors) {
     companion object : BaseIntEntityClass<ResultVector>(ResultVectors)
 
-    var completionCriteria by ResultVectors.completionCriteria
-    var reward by ResultVectors.reward
-    var distributionFeeReward by ResultVectors.distributionFeeReward
+    var completionCriteria by CompletionCriteria referencedOn ResultVectors.completionCriteria
+    var reward by Reward referencedOn ResultVectors.reward
+    var distributionFeeReward by Reward referencedOn ResultVectors.distributionFeeReward
 }
 
 object ResultVectors : BaseIntIdTable("result_vectors") {
+    var challenge = reference("challenge_to_result_vector", Challenges)
     var completionCriteria = reference("completion_criteria", CompletionCriterias)
     var reward = reference("reward", Rewards)
     var distributionFeeReward = reference("distribution_fee_reward", Rewards)
