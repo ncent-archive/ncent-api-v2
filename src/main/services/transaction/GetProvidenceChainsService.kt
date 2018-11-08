@@ -30,22 +30,7 @@ class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
         // Once completed populating (no more children), a chain is moved to this list
         var providenceChainsFinal = mutableListOf<TransactionList>()
 
-        // This will keep track of the original chain (tx of parents only)
-        // Any transaction given will only have one chain of parents
-        // And once you start factoring in children you will only then have multiple
-        var mainChain = mutableListOf(tx)
-
-        // Populate the list with its chain, going up the chain
-        // Must put this in a transaction so we can access the deep objects
-        transaction {
-            while(tx.previousTransaction != null) {
-                mainChain.add(tx.previousTransaction!!)
-                tx = tx.previousTransaction!!
-            }
-        }
-
-        // Reverse in order to put it in the proper descending (towards children) chain order
-        mainChain.reverse()
+        var mainChain = GetProvidenceChainService().getHistoricChain(tx)
 
         // Add the main chain to the temporary map of 'all chains that are in progress'
         providenceChains[mainChain.last().idValue] = mainChain
@@ -57,7 +42,7 @@ class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
 
             val currentLastIdInChain = providenceChain.value.last().id
 
-            var childrenResult = getChildren(currentLastIdInChain)
+            var childrenResult = GetProvidenceChainService().getChildren(currentLastIdInChain)
 
             if(childrenResult.result != SOAResultType.SUCCESS)
                 return SOAResult(childrenResult.result, childrenResult.message, null)
@@ -92,13 +77,5 @@ class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
             }
         }
         return SOAResult(SOAResultType.SUCCESS, null, providenceChainsFinal)
-    }
-
-    private fun getChildren(id: EntityID<Int>): SOAResult<List<Transaction>> {
-        return DaoService<List<Transaction>>().execute {
-            Transaction.find {
-                Transactions.previousTransaction eq id
-            }?.distinct()?.toList()
-        }
     }
 }
