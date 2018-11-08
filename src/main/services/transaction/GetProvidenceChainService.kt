@@ -1,6 +1,5 @@
 package main.services.transaction
 
-import framework.models.idValue
 import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
