@@ -24,6 +24,7 @@ class GetProvidenceChainService: SOAServiceInterface<TransactionList> {
         var childrenResult = getChildren(tx.id)
         if (childrenResult.result != SOAResultType.SUCCESS)
             return SOAResult(childrenResult.result, childrenResult.message, null)
+        // TODO -- check weights -- if children weight is less than parent weight; it's a valid chain still
         if (childrenResult.data!!.any())
             return SOAResult(SOAResultType.FAILURE, "Must send a leaf node, must not have children", null)
 
