@@ -38,8 +38,8 @@ object Transactions : BaseIntIdTable("transactions") {
 }
 
 object TransactionsMetadata : Table("transactions_to_metadatas") {
-    val transaction = reference("transaction_to_metadatas", Transactions).primaryKey(0)
-    val metadata = reference("metadata_to_transaction", Metadatas).primaryKey(1)
+    val transaction = reference("transaction_to_metadatas", Transactions).primaryKey()
+    val metadata = reference("metadata_to_transaction", Metadatas).primaryKey()
 }
 
 data class TransactionNamespace(val from: String, val to: String?, val action: ActionNamespace?, val previousTransaction: Int?, val metadatas: MetadatasListNamespace?)

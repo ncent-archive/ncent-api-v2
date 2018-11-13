@@ -23,3 +23,5 @@ object Tokens : BaseIntIdTable("tokens") {
     val amount = integer("amount")
     val tokenType = reference("token_type", TokenTypes)
 }
+
+data class TokenNamespace(val amount: Int, val tokenType: TokenTypeNamespace)

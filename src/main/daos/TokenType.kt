@@ -19,12 +19,14 @@ class TokenType(id: EntityID<Int>) : BaseIntEntity(id, TokenTypes) {
     companion object : BaseIntEntityClass<TokenType>(TokenTypes)
 
     var name by TokenTypes.name
-    var parentToken by TokenType referencedOn TokenTypes.parentToken
+    var parentToken by TokenType optionalReferencedOn TokenTypes.parentToken
     var parentTokenConversionRate by TokenTypes.parentTokenConversionRate
 }
 
 object TokenTypes : BaseIntIdTable("token_types") {
-    val name = varchar("name", 100)
-    val parentToken = reference("parent_token", TokenTypes)
-    val parentTokenConversionRate = double("parent_token_conversion_rate")
+    val name = varchar("name", 100).uniqueIndex()
+    val parentToken = reference("parent_token", TokenTypes).nullable()
+    val parentTokenConversionRate = double("parent_token_conversion_rate").nullable()
 }
+
+data class TokenTypeNamespace(val id: Int?, val name: String, val parentToken: Int?, val parentTokenConversionRate: Double?)

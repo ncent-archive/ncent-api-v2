@@ -27,6 +27,6 @@ object RewardPools : BaseIntIdTable("reward_pools") {
 }
 
 object RewardsToTransactions : BaseIntIdTable("rewards_to_transactions") {
-    val reward = reference("reward_to_transaction", Rewards).primaryKey(0)
-    val transactions = reference("transaction_to_reward", Transactions).primaryKey(1)
+    val reward = reference("reward_to_transaction", Rewards).primaryKey()
+    val transactions = reference("transaction_to_reward", Transactions).primaryKey()
 }

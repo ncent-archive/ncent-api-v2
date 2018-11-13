@@ -29,8 +29,8 @@ object Challenges : BaseIntIdTable("challenges") {
 }
 
 object SubChallenges : BaseIntIdTable("sub_challenges") {
-    val parentChallenge = reference("parent_challenge", Challenges).primaryKey(0)
-    val subChallenge = reference("sub_challenge", Challenges).primaryKey(1)
+    val parentChallenge = reference("parent_challenge", Challenges).primaryKey()
+    val subChallenge = reference("sub_challenge", Challenges).primaryKey()
     val type = enumeration("sub_challenge_type", SubChallengeType::class)
 }
 
