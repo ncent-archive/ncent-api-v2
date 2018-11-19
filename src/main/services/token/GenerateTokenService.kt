@@ -17,6 +17,7 @@ class GenerateTokenService: SOAServiceInterface<Token> {
     override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Token> {
         val tokenNamespace = d!! as TokenNamespace
         return DaoService<Token>().execute {
+            // TODO -- should generate a transaction
             val tokenTypeObjId = if(tokenNamespace.tokenType.parentToken != null) {
                 TokenTypes.insertAndGetId {
                     it[name] = tokenNamespace.tokenType.name
