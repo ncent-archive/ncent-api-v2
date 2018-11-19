@@ -55,6 +55,11 @@ class GetTokenServiceTest : WordSpec() {
 
                     var result = service.execute(null, "eth")
                     result.result shouldBe SOAResultType.SUCCESS
+                    var ethtoken = result.data as Token
+                    ethtoken.amount shouldBe 1000
+                    ethtoken.tokenType.name shouldBe "eth"
+                    ethtoken.tokenType.parentTokenConversionRate shouldBe 10.0
+                    ethtoken.tokenType.parentToken!!.name shouldBe "nCent"
                 }
             }
         }
