@@ -19,8 +19,13 @@ class TransferTokenService: SOAServiceInterface<Transaction> {
         // TODO: verify that the to address exists
         // TODO: Add a transaction transfering funds
 
+        val userAccount = UserAccount.findById(caller!!)
+        if(userAccount == null)
+            return SOAResult(SOAResultType.FAILURE, "Could not find that user", null)
+        val address = userAccount!!.cryptoKeyPair.publicKey
+
         // verify that the caller is the from address
-        if(caller!! != Integer.valueOf(params!!["from"]))
+        if(address != params!!["from"])
             return SOAResult(SOAResultType.FAILURE, "Access denied. Caller and from address must match.", null)
 
         val tokenResult = GetTokenService().execute(caller, params!!["name"])
@@ -29,11 +34,11 @@ class TransferTokenService: SOAServiceInterface<Transaction> {
 
         return DaoService<SOAResult<Transaction>>().execute {
             val tokenId = tokenResult.data!!.tokenType.idValue
-            val callerTransferHistoryResult = getCallerTransferHistory(caller!!, tokenId)
+            val callerTransferHistoryResult = getCallerTransferHistory(address, tokenId)
             if(callerTransferHistoryResult.result != SOAResultType.SUCCESS)
                 return@execute SOAResult(callerTransferHistoryResult.result, callerTransferHistoryResult.message, null)
 
-            val callerBalance = calculateCallerBalance(callerTransferHistoryResult.data!!)
+            val callerBalance = calculateCallerBalance(address, callerTransferHistoryResult.data!!)
             if(callerBalance < Integer.valueOf(params!!["amount"]))
                 return@execute SOAResult(SOAResultType.FAILURE, "Insufficient funds", null)
             val metadatas = if(params!!["notes"] != null) {
@@ -56,11 +61,19 @@ class TransferTokenService: SOAServiceInterface<Transaction> {
     }
 
     // join from and to this caller
-    fun getCallerTransferHistory(caller: Int, tokenId: Int): SOAResult<List<Transaction>> {
-
+    fun getCallerTransferHistory(address: String, tokenId: Int): SOAResult<List<Transaction>> {
+        return SOAResult(SOAResultType.FAILURE, null, null)
     }
 
-    fun calculateCallerBalance(transfers: List<Transaction>): Double {
-
+    fun calculateCallerBalance(address: String, transfers: List<Transaction>): Double {
+        var balance = 0.0
+        transfers.forEach { transfer ->
+            if(transfer.from == address) {
+                balance -= transfer.metadatas.find { it.key == "amount" } as Double
+            } else if(transfer.to == address) {
+                balance += transfer.metadatas.find { it.key == "amount" } as Double
+            }
+        }
+        return balance
     }
 }

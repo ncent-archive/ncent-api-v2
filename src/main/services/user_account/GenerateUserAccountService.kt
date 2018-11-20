@@ -55,17 +55,17 @@ class GenerateUserAccountService: SOAServiceInterface<UserAccount> {
             }
 
             val transactionResult = GenerateTransactionService().execute(
-                    userAccount!!.idValue,
-                    TransactionNamespace(
-                            keyPairNamespace.publicKey,
-                            null,
-                            ActionNamespace(
-                                    ActionType.CREATE,
-                                    userAccount.idValue,
-                                    UserAccount::class.simpleName!!
-                            ),
-                            null, null
-                    ), null
+                userAccount!!.idValue,
+                TransactionNamespace(
+                    keyPairNamespace.publicKey,
+                    null,
+                    ActionNamespace(
+                        ActionType.CREATE,
+                        userAccount.idValue,
+                        UserAccount::class.simpleName!!
+                    ),
+                    null, null
+                ), null
             )
 
             return@execute userAccount
