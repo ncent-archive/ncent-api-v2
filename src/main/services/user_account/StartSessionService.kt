@@ -14,12 +14,12 @@ class StartSessionService: SOAServiceInterface<SessionNamespace> {
     override fun execute() : SOAResult<SessionNamespace> {
         //TODO look into encryption
         return SOAResult(
-                SOAResultType.SUCCESS,
-                null,
-                SessionNamespace(
-                    UUID.randomUUID().toString(),
-                    DateTime.now().plusHours(24)
-                )
+            SOAResultType.SUCCESS,
+            null,
+            SessionNamespace(
+                UUID.randomUUID().toString(),
+                DateTime.now().plusHours(24)
+            )
         )
     }
 }

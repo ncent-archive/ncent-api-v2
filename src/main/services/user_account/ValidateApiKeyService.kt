@@ -13,9 +13,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class ValidateApiKeyService: SOAServiceInterface<ApiCred> {
     override fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<ApiCred> {
         var result = SOAResult<ApiCred>(
-                SOAResultType.FAILURE,
-                "",
-                null
+            SOAResultType.FAILURE,
+            "",
+            null
         )
         val apiKeyParam = params!!["apiKey"]!!
         val secretKey = params!!["secretKey"]!!
