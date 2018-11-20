@@ -6,7 +6,11 @@ import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
+import main.daos.Transaction
 import main.services.transaction.GenerateTransactionService
+import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 /**
  * Transfer tokens from one address to another
@@ -62,7 +66,21 @@ class TransferTokenService: SOAServiceInterface<Transaction> {
 
     // join from and to this caller
     fun getCallerTransferHistory(address: String, tokenId: Int): SOAResult<List<Transaction>> {
-        return SOAResult(SOAResultType.FAILURE, null, null)
+        return DaoService<List<Transaction>>().execute {
+            val prevTxTable = Transactions.alias("previous_tx")
+            val query = Transactions
+                .innerJoin(Actions)
+                .leftJoin(prevTxTable, { Transactions.id }, {prevTxTable[Transactions.previousTransaction]})
+                .innerJoin(TransactionsMetadata)
+                .innerJoin(Metadatas)
+                .select {
+                    (Transactions.from.eq(address) or Transactions.to.eq(address)) and
+                    Actions.dataType.eq("Token") and
+                    Actions.data.eq(tokenId) and
+                    Actions.type.eq(ActionType.TRANSFER)
+                }.withDistinct()
+        Transaction.wrapRows(query).toList().distinct()
+        }
     }
 
     fun calculateCallerBalance(address: String, transfers: List<Transaction>): Double {
