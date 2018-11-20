@@ -17,6 +17,7 @@ class GetProvidenceChainService: SOAServiceInterface<TransactionList> {
     override fun execute(caller: Int?, id: Int?): SOAResult<TransactionList> {
         // Get the transaction in question
         val txResult = GetTransactionService().execute(caller, id, null)
+        // TODO -- verify that the transaction is a token type
         if (txResult.result != SOAResultType.SUCCESS)
             return SOAResult(txResult.result, txResult.message, null)
         var tx = txResult.data!!

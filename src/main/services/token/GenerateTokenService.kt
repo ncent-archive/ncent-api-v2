@@ -1,14 +1,15 @@
 package main.services.token
 
+import framework.models.idValue
 import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
+import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
-import main.daos.Token
-import main.daos.TokenNamespace
-import main.daos.TokenTypes
-import main.daos.Tokens
+import main.daos.*
+import main.services.transaction.GenerateTransactionService
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.insertAndGetId
+import java.lang.RuntimeException
 
 /**
  * Generate a token if it is valid
@@ -35,7 +36,28 @@ class GenerateTokenService: SOAServiceInterface<Token> {
                 it[tokenType] = EntityID(tokenTypeObjId!!.value, TokenTypes)
             }
 
-            return@execute Token.findById(tokenId!!)!!
+            // TODO -- add a test for this!
+            if(caller != null) {
+                val userAccount = UserAccount.findById(caller)
+                val result = GenerateTransactionService().execute(
+                    userAccount!!.idValue,
+                    TransactionNamespace(
+                        "DEFAULT",
+                        userAccount.cryptoKeyPair.publicKey,
+                        ActionNamespace(
+                            ActionType.TRANSFER,
+                            tokenId.value,
+                            Token::class.simpleName!!
+                        ),
+                        null,
+                        MetadatasListNamespace(listOf(MetadatasNamespace("amount", tokenNamespace.amount.toString())))
+                    ), null
+                )
+                if(result.result != SOAResultType.SUCCESS)
+                    throw RuntimeException("Failed to generate a transaction funding creator")
+            }
+
+            return@execute Token.findById(tokenId.value)!!
         }
     }
 }
