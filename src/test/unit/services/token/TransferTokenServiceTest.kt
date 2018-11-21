@@ -75,7 +75,7 @@ class TransferTokenServiceTest : WordSpec() {
                     tx.action.type shouldBe ActionType.TRANSFER
                     tx.action.dataType shouldBe Token::class.simpleName!!
                     tx.action.data shouldBe token.idValue
-                    tx.metadatas.first().value shouldBe "5"
+                    tx.metadatas.first().value shouldBe "5.0"
                 }
             }
         }
