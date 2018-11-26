@@ -45,9 +45,9 @@ class GenerateRewardServiceTest : WordSpec() {
                     reward.metadatas.count() shouldBe 1
                     reward.metadatas.first().key shouldBe "title"
                     reward.metadatas.first().value shouldBe "reward everyone"
-                    reward.type shouldBe rewardType.id
+                    reward.type.id shouldBe rewardType.id
                     val pool = RewardPool.all().first()
-                    reward.pool shouldBe pool.id
+                    reward.pool?.id shouldBe pool.id
                 }
             }
         }
