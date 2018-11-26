@@ -22,6 +22,8 @@ class ResultVector(id: EntityID<Int>) : BaseIntEntity(id, ResultVectors) {
     var distributionFeeReward by Reward referencedOn ResultVectors.distributionFeeReward
 }
 
+//TODO CHANGE rewards to be in completion critera -- and have one to many challenge to completion criterias
+
 object ResultVectors : BaseIntIdTable("result_vectors") {
     var challenge = reference("challenge_to_result_vector", Challenges)
     var completionCriteria = reference("completion_criteria", CompletionCriterias)

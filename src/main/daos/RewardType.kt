@@ -25,10 +25,12 @@ object RewardTypes : BaseIntIdTable("reward_types") {
     val type = enumeration("type", RewardTypeName::class)
 }
 
-enum class Audience {
-    PROVIDENCE, FULL
+enum class Audience(val str: String) {
+    PROVIDENCE("providence"), FULL("full")
 }
 
-enum class RewardTypeName {
-    SINGLE, EVEN, TIERED, LOGARITHMIC, EXPONENTIAL_UP, EXPONENTIAL_DOWN
+enum class RewardTypeName(val str: String) {
+    SINGLE("single"), EVEN("even"), TIERED("tiered"), LOGARITHMIC("log"), EXPONENTIAL_UP("exp up"), EXPONENTIAL_DOWN("exp down")
 }
+
+data class RewardTypeNamespace(val audience: Audience, val type: RewardTypeName)

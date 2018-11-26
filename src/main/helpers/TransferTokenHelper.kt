@@ -63,7 +63,7 @@ class TransferTokenHelper {
 
     // join from and to this caller and the token -- this will get the history of transfers
     // that this user was a part of for this particular token
-    fun getCallerTransferHistory(address: String, tokenId: Int): SOAResult<List<Transaction>> {
+    private fun getCallerTransferHistory(address: String, tokenId: Int): SOAResult<List<Transaction>> {
         return DaoService<List<Transaction>>().execute {
             val query = Transactions
                 .innerJoin(Actions)
