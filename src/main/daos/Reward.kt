@@ -17,9 +17,8 @@ import org.jetbrains.exposed.sql.Table
 class Reward(id: EntityID<Int>) : BaseIntEntity(id, Rewards) {
     companion object : BaseIntEntityClass<Reward>(Rewards)
 
-    var type by Rewards.type
-    // TODO: change to user referrersOn
-    var pool by Rewards.pool
+    var type by RewardType referencedOn Rewards.type
+    var pool by RewardPool referencedOn Rewards.pool
     var metadatas by Metadata via RewardsMetadata
 }
 
@@ -30,7 +29,7 @@ object RewardsMetadata : Table("rewards_to_metadatas") {
 
 object Rewards : BaseIntIdTable("rewards") {
     val type = reference("type", RewardTypes)
-    val pool = reference("pool", RewardPools).nullable()
+    val pool = reference("pool", RewardPools)
 }
 
 data class RewardNamespace(val type: RewardTypeNamespace, val metadatas: MetadatasListNamespace?)
