@@ -3,8 +3,6 @@ package main.daos
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
-import main.daos.RewardsToTransactions.primaryKey
-import main.daos.TransactionsMetadata.primaryKey
 import org.jetbrains.exposed.dao.EntityID
 
 /**
@@ -12,17 +10,20 @@ import org.jetbrains.exposed.dao.EntityID
  * The pool of all of the RewardPool (transactions) signifies the tokens available.
  *
  * @property id
+ * @property cryptoKeyPair public address, allowing the reward pool to do token transfers
  * @property reward linking back to a particular reward
  * @property transactions particular transaction for this pool
  */
 class RewardPool(id: EntityID<Int>) : BaseIntEntity(id, RewardPools) {
     companion object : BaseIntEntityClass<RewardPool>(RewardPools)
 
+    var cryptoKeyPair by CryptoKeyPair referencedOn RewardPools.cryptoKeyPair
     var reward by Reward referencedOn RewardPools.reward
     var transactions by Transaction via RewardsToTransactions
 }
 
 object RewardPools : BaseIntIdTable("reward_pools") {
+    val cryptoKeyPair = RewardsToTransactions.reference("crypto_key_pair", CryptoKeyPairs)
     val reward = RewardsToTransactions.reference("reward", Rewards)
 }
 
