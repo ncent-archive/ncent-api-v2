@@ -7,6 +7,7 @@ import org.h2.jdbc.JdbcBatchUpdateException
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.lang.RuntimeException
 import java.sql.SQLException
 
 class DaoService<T> {
@@ -23,7 +24,7 @@ class DaoService<T> {
             ApiGatewayResponse.LOG.error(e.message, e)
             println("There was a SQL error with a DaoService execution: " + e.message)
             result.message = e.message
-        } catch(e: Exception) {
+        } catch(e: Throwable) {
             ApiGatewayResponse.LOG.error(e.message, e)
             println("There was a general error with a DaoService execution: " + e.message)
             result.message = e.message
