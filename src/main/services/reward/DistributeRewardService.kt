@@ -9,6 +9,11 @@ import main.daos.Transaction
  */
 class DistributeRewardService: SOAServiceInterface<Transaction> {
     override fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<Transaction> {
+        // get the reward
+        // get the transaction that is triggering this
+        // validate the caller is internal (must come from challenge complete)
+        // get the reward pool and distribute to chain based on type
+
         throw NotImplementedError()
     }
 }
