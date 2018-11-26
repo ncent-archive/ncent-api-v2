@@ -82,7 +82,24 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     fun connectAndBuildTables(): Database {
       db = connectToDatabase()
       transaction {
-        SchemaUtils.create(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts, Actions, Transactions, Metadatas, TransactionsMetadata, Tokens, TokenTypes)
+        SchemaUtils.create(
+            Users,
+            CryptoKeyPairs,
+            ApiCreds,
+            Sessions,
+            UserAccounts,
+            Actions,
+            Transactions,
+            Metadatas,
+            TransactionsMetadata,
+            Tokens,
+            TokenTypes,
+            Rewards,
+            RewardPools,
+            RewardTypes,
+            RewardsToTransactions,
+            RewardsMetadata
+        )
       }
       return db
     }
@@ -104,7 +121,24 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
     fun disconnectAndDropTables() {
       transaction {
-        SchemaUtils.drop(Users, CryptoKeyPairs, ApiCreds, Sessions, UserAccounts, Actions, Transactions, Metadatas, TransactionsMetadata, Tokens, TokenTypes)
+        SchemaUtils.drop(
+            Users,
+            CryptoKeyPairs,
+            ApiCreds,
+            Sessions,
+            UserAccounts,
+            Actions,
+            Transactions,
+            Metadatas,
+            TransactionsMetadata,
+            Tokens,
+            TokenTypes,
+            Rewards,
+            RewardPools,
+            RewardTypes,
+            RewardsToTransactions,
+            RewardsMetadata
+        )
       }
       disconnectFromDatabase()
     }

@@ -18,16 +18,14 @@ class RewardPool(id: EntityID<Int>) : BaseIntEntity(id, RewardPools) {
     companion object : BaseIntEntityClass<RewardPool>(RewardPools)
 
     var cryptoKeyPair by CryptoKeyPair referencedOn RewardPools.cryptoKeyPair
-    var reward by Reward referencedOn RewardPools.reward
     var transactions by Transaction via RewardsToTransactions
 }
 
 object RewardPools : BaseIntIdTable("reward_pools") {
-    val cryptoKeyPair = RewardsToTransactions.reference("crypto_key_pair", CryptoKeyPairs)
-    val reward = RewardsToTransactions.reference("reward", Rewards)
+    val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
 }
 
 object RewardsToTransactions : BaseIntIdTable("rewards_to_transactions") {
-    val reward = reference("reward_to_transaction", Rewards).primaryKey()
+    val rewardPool = reference("reward_pool_to_transaction", RewardPools).primaryKey()
     val transactions = reference("transaction_to_reward", Transactions).primaryKey()
 }

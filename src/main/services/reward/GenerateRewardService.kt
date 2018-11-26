@@ -55,15 +55,14 @@ class GenerateRewardService: SOAServiceInterface<Reward> {
 
             val newReward = Reward.new {
                 type = rewardType.id
-                metadatas = SizedCollection(metadatasToAdd)
             }
 
             val rewardPool = RewardPool.new {
                 cryptoKeyPair = keyPair
-                reward = newReward
             }
 
             newReward.pool = rewardPool.id
+            newReward.metadatas = SizedCollection(metadatasToAdd)
 
             return@execute newReward
         }
