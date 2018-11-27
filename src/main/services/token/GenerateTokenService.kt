@@ -15,6 +15,8 @@ import java.lang.RuntimeException
  * Generate a token if it is valid
  */
 class GenerateTokenService: SOAServiceInterface<Token> {
+    private val generateTransactioNservice = GenerateTransactionService()
+
     override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Token> {
         val tokenNamespace = d!! as TokenNamespace
         return DaoService<Token>().execute {
@@ -39,7 +41,7 @@ class GenerateTokenService: SOAServiceInterface<Token> {
             // TODO -- add a test for this!
             if(caller != null) {
                 val userAccount = UserAccount.findById(caller)
-                val result = GenerateTransactionService().execute(
+                val result = generateTransactioNservice.execute(
                     userAccount!!.idValue,
                     TransactionNamespace(
                         "DEFAULT",

@@ -14,9 +14,11 @@ import org.jetbrains.exposed.sql.transactions.transaction
  *
  */
 class GetProvidenceChainService: SOAServiceInterface<TransactionList> {
+    private val transactionService = GetTransactionService()
+
     override fun execute(caller: Int?, id: Int?): SOAResult<TransactionList> {
         // Get the transaction in question
-        val txResult = GetTransactionService().execute(caller, id, null)
+        val txResult = transactionService.execute(caller, id, null)
         // TODO -- verify that the transaction is a token type
         if (txResult.result != SOAResultType.SUCCESS)
             return SOAResult(txResult.result, txResult.message, null)

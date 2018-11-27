@@ -12,23 +12,29 @@ import main.services.transaction.GenerateTransactionService
  * This service will be used to generate a full User Account
  */
 class GenerateUserAccountService: SOAServiceInterface<UserAccount> {
+    private val daoService = DaoService<UserAccount>()
+    private val keyPairService = GenerateCryptoKeyPairService()
+    private val apiCredsService = GenerateApiCredsService()
+    private val startSessionService = StartSessionService()
+    private val transactionService = GenerateTransactionService()
+
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<UserAccount> {
-        val keyPairResult = GenerateCryptoKeyPairService().execute()
+        val keyPairResult = keyPairService.execute()
         if(keyPairResult.result != SOAResultType.SUCCESS)
             return SOAResult(keyPairResult.result, keyPairResult.message, null)
         val keyPairNamespace: CryptoKeyPairNamespace = keyPairResult.data!!
 
-        val apiCredResult = GenerateApiCredsService().execute()
+        val apiCredResult = apiCredsService.execute()
         if(apiCredResult.result != SOAResultType.SUCCESS)
             return SOAResult(apiCredResult.result, apiCredResult.message, null)
         val apiCredNamespace: ApiCredNamespace = apiCredResult.data!!
 
-        val sessionResult = StartSessionService().execute()
+        val sessionResult = startSessionService.execute()
         if(sessionResult.result != SOAResultType.SUCCESS)
             return SOAResult(apiCredResult.result, sessionResult.message, null)
         val sessionNamespace: SessionNamespace = sessionResult.data!!
 
-        return DaoService<UserAccount>().execute {
+        return daoService.execute {
             val user = User.new {
                 email = params!!["email"]!!
                 firstname = params!!["firstname"]!!
@@ -54,7 +60,8 @@ class GenerateUserAccountService: SOAServiceInterface<UserAccount> {
                 session = newSession
             }
 
-            val transactionResult = GenerateTransactionService().execute(
+            // TODO log or error result?
+            val transactionResult = transactionService.execute(
                 userAccount!!.idValue,
                 TransactionNamespace(
                     keyPairNamespace.publicKey,

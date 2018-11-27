@@ -14,8 +14,10 @@ import org.jetbrains.exposed.sql.select
  * Retrieve a transaction and it's connecting objects
  */
 class GetTransactionService: SOAServiceInterface<Transaction> {
+    private val daoService = DaoService<List<Transaction>>()
+
     override fun execute(caller: Int?, id: Int?, params: Map<String, String>?) : SOAResult<Transaction> {
-        val transactionsResult = DaoService<List<Transaction>>().execute {
+        val transactionsResult = daoService.execute {
             val prevTxTable = Transactions.alias("previous_tx")
             val query = Transactions
                 .innerJoin(Actions)
