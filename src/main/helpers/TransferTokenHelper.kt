@@ -7,6 +7,7 @@ import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.services.token.GetTokenService
 import main.services.transaction.GenerateTransactionService
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.select
@@ -30,12 +31,12 @@ class TransferTokenHelper {
         return DaoService<SOAResult<Transaction>>().execute {
             val tokenId = tokenResult.data!!.tokenType.idValue
             // get the token transfer history for this address
-            val callerTransferHistoryResult = getCallerTransferHistory(from, tokenId)
+            val callerTransferHistoryResult = getTransferHistory(from, tokenId)
             if(callerTransferHistoryResult.result != SOAResultType.SUCCESS)
                 return@execute SOAResult(callerTransferHistoryResult.result, callerTransferHistoryResult.message, null)
 
             // get and validate the users balance vs what they wish to transfer
-            val callerBalance = calculateCallerBalance(from, callerTransferHistoryResult.data!!)
+            val callerBalance = calculateBalance(from, callerTransferHistoryResult.data!!)
             if(callerBalance < amount)
                 return@execute SOAResult(SOAResultType.FAILURE, "Insufficient funds", null)
 
@@ -63,24 +64,32 @@ class TransferTokenHelper {
 
     // join from and to this caller and the token -- this will get the history of transfers
     // that this user was a part of for this particular token
-    private fun getCallerTransferHistory(address: String, tokenId: Int): SOAResult<List<Transaction>> {
+    fun getTransferHistory(address: String, tokenId: Int?): SOAResult<List<Transaction>> {
         return DaoService<List<Transaction>>().execute {
+            val expression = if(tokenId != null) {
+                (Transactions.from.eq(address) or Transactions.to.eq(address)) and
+                    Actions.dataType.eq(Token::class.simpleName!!) and
+                    Actions.data.eq(tokenId) and
+                    Actions.type.eq(ActionType.TRANSFER)
+            } else {
+                (Transactions.from.eq(address) or Transactions.to.eq(address)) and
+                    Actions.dataType.eq(Token::class.simpleName!!) and
+                    Actions.type.eq(ActionType.TRANSFER)
+            }
             val query = Transactions
                 .innerJoin(Actions)
                 .innerJoin(TransactionsMetadata)
                 .innerJoin(Metadatas)
                 .select {
-                    (Transactions.from.eq(address) or Transactions.to.eq(address)) and
-                        Actions.dataType.eq(Token::class.simpleName!!) and
-                        Actions.data.eq(tokenId) and
-                        Actions.type.eq(ActionType.TRANSFER)
+                    expression
                 }.withDistinct()
         Transaction.wrapRows(query).toList().distinct()
         }
     }
 
     // calculate balance based on transfers
-    fun calculateCallerBalance(address: String, transfers: List<Transaction>): Double {
+    // must pass list of transactions for a particular currency only
+    fun calculateBalance(address: String, transfers: List<Transaction>): Double {
         var balance = 0.0
         transfers.forEach { transfer ->
             if(transfer.from == address) {
@@ -90,5 +99,23 @@ class TransferTokenHelper {
             }
         }
         return balance
+    }
+
+    fun getMapOfTransfersByCurrency(transfers: List<Transaction>): Map<Int, MutableList<Transaction>> {
+        var currencyToTransactions = mutableMapOf<Int, MutableList<Transaction>>()
+        transfers.forEach {
+            currencyToTransactions.putIfAbsent(it.action.data, mutableListOf())
+            currencyToTransactions[it.action.data]!!.add(it)
+        }
+        return currencyToTransactions
+    }
+
+    fun getMapOfBalancesByCurrency(address: String, mapOfTransfers: Map<Int, MutableList<Transaction>>): Map<Int, Double> {
+        var currencyToBalances = mutableMapOf<Int, Double>()
+        mapOfTransfers.forEach { t, u ->
+            currencyToBalances.putIfAbsent(t, 0.0)
+            currencyToBalances[t] = currencyToBalances[t]!! + calculateBalance(address, u)
+        }
+        return currencyToBalances
     }
 }
