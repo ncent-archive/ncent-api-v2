@@ -13,9 +13,12 @@ import java.lang.Exception
  * Generate a reward if it is valid
  */
 class GenerateRewardService: SOAServiceInterface<Reward> {
+    private val daoService = DaoService<Reward>()
+    private val cryptoKeyPairService = GenerateCryptoKeyPairService()
+
     override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Reward> {
         val tokenNamespace = d!! as RewardNamespace
-        return DaoService<Reward>().execute {
+        return daoService.execute {
             // TODO
             // find or create a reward type
             val rewardTypes = RewardType.find {
@@ -43,7 +46,7 @@ class GenerateRewardService: SOAServiceInterface<Reward> {
                 listOf()
             }
 
-            val keyPairResult = GenerateCryptoKeyPairService().execute()
+            val keyPairResult = cryptoKeyPairService.execute()
             if(keyPairResult.result != SOAResultType.SUCCESS)
                 return@execute throw Exception(keyPairResult.message)
             val keyPairNamespace: CryptoKeyPairNamespace = keyPairResult.data!!

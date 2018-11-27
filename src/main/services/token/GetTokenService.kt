@@ -15,8 +15,10 @@ import org.jetbrains.exposed.sql.select
  * Retrieve tokens based on a filtered type (value being the TokenType)
  */
 class GetTokenService: SOAServiceInterface<Token> {
+    private val daoService = DaoService<List<Token>>()
+
     override fun execute(caller: Int?, key: String?) : SOAResult<Token> {
-        val tokensResult = DaoService<List<Token>>().execute {
+        val tokensResult = daoService.execute {
             val parentTokenTypeTable = TokenTypes.alias("parent_token_type")
             val query = Tokens
                 .innerJoin(TokenTypes)

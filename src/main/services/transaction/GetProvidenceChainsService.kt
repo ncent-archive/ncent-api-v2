@@ -19,9 +19,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
  *
  */
 class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
+    private val transactionService = GetTransactionService()
+    private val providenceChainService = GetProvidenceChainService()
+
     override fun execute(caller: Int?, id: Int?) : SOAResult<List<TransactionList>> {
         // Get the transaction in question
-        val txResult = GetTransactionService().execute(caller, id, null)
+        val txResult = transactionService.execute(caller, id, null)
         if(txResult.result != SOAResultType.SUCCESS)
             return SOAResult(txResult.result, txResult.message, null)
         var tx = txResult.data!!
@@ -30,7 +33,7 @@ class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
         // Once completed populating (no more children), a chain is moved to this list
         var providenceChainsFinal = mutableListOf<TransactionList>()
 
-        var mainChain = GetProvidenceChainService().getHistoricChain(tx)
+        var mainChain = providenceChainService.getHistoricChain(tx)
 
         // Add the main chain to the temporary map of 'all chains that are in progress'
         providenceChains[mainChain.last().idValue] = mainChain
@@ -42,7 +45,7 @@ class GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
 
             val currentLastIdInChain = providenceChain.value.last().id
 
-            var childrenResult = GetProvidenceChainService().getChildren(currentLastIdInChain)
+            var childrenResult = providenceChainService.getChildren(currentLastIdInChain)
 
             if(childrenResult.result != SOAResultType.SUCCESS)
                 return SOAResult(childrenResult.result, childrenResult.message, null)

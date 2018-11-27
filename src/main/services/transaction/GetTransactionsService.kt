@@ -12,10 +12,13 @@ import org.jetbrains.exposed.dao.EntityID
  * "to" is required for now. need at least one field required
  */
 class GetTransactionsService: SOAServiceInterface<TransactionList> {
+    private val transactionDaoService = DaoService<List<Transaction>>()
+    private val actionDaoService = DaoService<Action>()
+
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<TransactionList> {
         var action: Action? = null
         if(params!!["data"] != null) {
-            val actionResult = DaoService<Action>().execute {
+            val actionResult = actionDaoService.execute {
                 Action.find {
                     Actions.data eq Integer.valueOf(params!!["data"]!!)
                     Actions.type eq ActionType.valueOf(params!!["type"]!!)
@@ -27,7 +30,7 @@ class GetTransactionsService: SOAServiceInterface<TransactionList> {
             action = actionResult.data!!
         }
 
-        val transactionsResult = DaoService<List<Transaction>>().execute {
+        val transactionsResult = transactionDaoService.execute {
             Transaction.find {
                 if(action != null)
                     Transactions.action eq action!!.id
