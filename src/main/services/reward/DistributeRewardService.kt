@@ -101,9 +101,11 @@ class DistributeRewardService: SOAServiceInterface<TransactionList> {
             }
             RewardTypeName.LOGARITHMIC -> {
                 // distribute reward in logarithmic pattern
+                throw NotImplementedError()
             }
             RewardTypeName.EXPONENTIAL -> {
                 // distribute reward in exponential pattern
+                throw NotImplementedError()
             }
             RewardTypeName.N_OVER_2 -> {
                 // distribute reward in n/2 pattern
