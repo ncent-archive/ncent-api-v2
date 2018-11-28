@@ -10,7 +10,7 @@ import org.jetbrains.exposed.dao.EntityID
  *
  * @property id
  * @property audience example: [PROVIDENCE, FULL]
- * @property type example: [SINGLE, EVEN, TIERED, LOGARITHMIC, EXPONENTIAL_UP, EXPONENTIAL_DOWN]
+ * @property type example: [SINGLE, EVEN, LOGARITHMIC, EXPONENTIAL]
  */
 class RewardType(id: EntityID<Int>) : BaseIntEntity(id, RewardTypes) {
     companion object : BaseIntEntityClass<RewardType>(RewardTypes)
@@ -30,7 +30,7 @@ enum class Audience(val str: String) {
 }
 
 enum class RewardTypeName(val str: String) {
-    SINGLE("single"), EVEN("even"), TIERED("tiered"), LOGARITHMIC("log"), EXPONENTIAL_UP("exp up"), EXPONENTIAL_DOWN("exp down")
+    SINGLE("single"), EVEN("even"), LOGARITHMIC("log"), EXPONENTIAL("exp"), N_OVER_2("nover2")
 }
 
 data class RewardTypeNamespace(val audience: Audience, val type: RewardTypeName)
