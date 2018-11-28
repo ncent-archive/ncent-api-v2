@@ -67,22 +67,61 @@ class DistributeRewardService: SOAServiceInterface<TransactionList> {
         var resultingTxs = mutableListOf<Transaction>()
         when(rewardTypeName) {
             RewardTypeName.EVEN -> {
-
+                // distribute reward evenly to everyone in the providence chain list
+                val size = providenceChain.transactions.size
+                val amount = balance / size
+                providenceChain.transactions.forEach { tx ->
+                    // TODO Add error handling for transfering.
+                    resultingTxs.add(transferTokenHelper.transferToken(
+                        null,
+                        address,
+                        tx.to!!,
+                        tokenId,
+                        amount,
+                        ActionType.PAYOUT,
+                        null,
+                        "Reward distribution"
+                    ).data!!)
+                }
             }
             RewardTypeName.SINGLE -> {
-
+                // distribute reward to first person in providence chain list
+                val tx = providenceChain.transactions.first()
+                // TODO Add error handling for transfering.
+                resultingTxs.add(transferTokenHelper.transferToken(
+                    null,
+                    address,
+                    tx.to!!,
+                    tokenId,
+                    balance,
+                    ActionType.PAYOUT,
+                    null,
+                    "Reward distribution"
+                ).data!!)
             }
             RewardTypeName.LOGARITHMIC -> {
-
+                // distribute reward in logarithmic pattern
             }
-            RewardTypeName.EXPONENTIAL_UP -> {
-
+            RewardTypeName.EXPONENTIAL -> {
+                // distribute reward in exponential pattern
             }
-            RewardTypeName.EXPONENTIAL_DOWN -> {
-
-            }
-            RewardTypeName.TIERED -> {
-
+            RewardTypeName.N_OVER_2 -> {
+                // distribute reward in n/2 pattern
+                var n_over_2 = balance / 2
+                providenceChain.transactions.forEach { tx ->
+                    // TODO Add error handling for transfering.
+                    resultingTxs.add(transferTokenHelper.transferToken(
+                            null,
+                            address,
+                            tx.to!!,
+                            tokenId,
+                            n_over_2,
+                            ActionType.PAYOUT,
+                            null,
+                            "Reward distribution"
+                    ).data!!)
+                    n_over_2 /= 2
+                }
             }
         }
         return resultingTxs
