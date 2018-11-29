@@ -10,12 +10,10 @@ import org.jetbrains.exposed.sql.SizedCollection
 /**
  * Generate a transaction if it is valid
  */
-class GenerateTransactionService: SOAServiceInterface<Transaction> {
-    private val daoService = DaoService<Transaction>()
-
+object GenerateTransactionService: SOAServiceInterface<Transaction> {
     override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Transaction> {
         val transactionNamespace = d!! as TransactionNamespace
-        return daoService.execute {
+        return DaoService.execute {
             val actionObj = Action.new {
                 type = transactionNamespace.action!!.type
                 data = transactionNamespace.action!!.data

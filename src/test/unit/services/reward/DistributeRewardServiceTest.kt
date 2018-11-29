@@ -18,10 +18,8 @@ import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class DistributeRewardServiceTest : WordSpec() {
-    private var service = DistributeRewardService()
     private lateinit var rewardId: EntityID<Int>
     private lateinit var providenceChainIds: List<EntityID<Int>>
-    private var helper = TestHelper()
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
@@ -34,10 +32,10 @@ class DistributeRewardServiceTest : WordSpec() {
     init {
         "calling execute with a valid transfer" should {
             "generate a list of transactions transferring to the providence chain evenly" {
-                rewardId = helper.buildGenericReward(Audience.PROVIDENCE, RewardTypeName.EVEN)
-                providenceChainIds = helper.buildGenericProvidenceChain()
+                rewardId = TestHelper.buildGenericReward(Audience.PROVIDENCE, RewardTypeName.EVEN)
+                providenceChainIds = TestHelper.buildGenericProvidenceChain()
 
-                val result = service.execute(
+                val result = DistributeRewardService.execute(
                     null,
                     mapOf(
                         Pair("reward_id", rewardId.value.toString()),
@@ -67,10 +65,10 @@ class DistributeRewardServiceTest : WordSpec() {
                 }
             }
             "generate a single transaction to one individual when reward type is single" {
-                rewardId = helper.buildGenericReward(Audience.PROVIDENCE, RewardTypeName.SINGLE)
-                providenceChainIds = helper.buildGenericProvidenceChain()
+                rewardId = TestHelper.buildGenericReward(Audience.PROVIDENCE, RewardTypeName.SINGLE)
+                providenceChainIds = TestHelper.buildGenericProvidenceChain()
 
-                val result = service.execute(
+                val result = DistributeRewardService.execute(
                     null,
                     mapOf(
                         Pair("reward_id", rewardId.value.toString()),
@@ -90,10 +88,10 @@ class DistributeRewardServiceTest : WordSpec() {
                 }
             }
             "generate a list of transactions transferring to the providence chain in n over 2" {
-                rewardId = helper.buildGenericReward(Audience.PROVIDENCE, RewardTypeName.N_OVER_2)
-                providenceChainIds = helper.buildGenericProvidenceChain()
+                rewardId = TestHelper.buildGenericReward(Audience.PROVIDENCE, RewardTypeName.N_OVER_2)
+                providenceChainIds = TestHelper.buildGenericProvidenceChain()
 
-                val result = service.execute(
+                val result = DistributeRewardService.execute(
                     null,
                     mapOf(
                         Pair("reward_id", rewardId.value.toString()),

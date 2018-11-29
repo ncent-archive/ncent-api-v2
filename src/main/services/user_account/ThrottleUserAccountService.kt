@@ -11,7 +11,7 @@ import main.daos.UserAccount
  * We should allow whitelists for specific users
  * We should allow editable limits for some as well
  */
-class ThrottleUserAccountService: SOAServiceInterface<UserAccount> {
+object ThrottleUserAccountService: SOAServiceInterface<UserAccount> {
     override fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<UserAccount> {
         throw NotImplementedError()
     }

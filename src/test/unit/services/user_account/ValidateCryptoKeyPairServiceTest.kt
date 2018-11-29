@@ -14,11 +14,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
 class ValidateCryptoKeyPairServiceTest : WordSpec() {
-    private var service = ValidateCryptoKeyPairService()
     private var params = mutableMapOf(
-            Pair("email", "dev@ncnt.io"),
-            Pair("firstname", "dev"),
-            Pair("lastname", "ncnt")
+        Pair("email", "dev@ncnt.io"),
+        Pair("firstname", "dev"),
+        Pair("lastname", "ncnt")
     )
     private lateinit var cryptoKeyPair: CryptoKeyPair
     private lateinit var user: UserAccount
@@ -35,7 +34,7 @@ class ValidateCryptoKeyPairServiceTest : WordSpec() {
         "executing validate crypto key pair service" should {
             "should return valid for a valid pub/priv key combo" {
                 transaction {
-                    user = GenerateUserAccountService().execute(null, params).data!!
+                    user = GenerateUserAccountService.execute(null, params).data!!
                     cryptoKeyPair = user.cryptoKeyPair!!
                 }
 
@@ -44,12 +43,12 @@ class ValidateCryptoKeyPairServiceTest : WordSpec() {
                     Pair("publicKey", cryptoKeyPair.publicKey),
                     Pair("privateKey", cryptoKeyPair.encryptedPrivateKey)
                 )
-                var result = service.execute(user.idValue, Any(), cryptoKeyPairParams)
+                var result = ValidateCryptoKeyPairService.execute(user.idValue, Any(), cryptoKeyPairParams)
                 result.result shouldBe SOAResultType.SUCCESS
             }
             "should return invalid for an invalid secret" {
                 transaction {
-                    user = GenerateUserAccountService().execute(null, params).data!!
+                    user = GenerateUserAccountService.execute(null, params).data!!
                     cryptoKeyPair = user.cryptoKeyPair!!
                 }
 
@@ -58,7 +57,7 @@ class ValidateCryptoKeyPairServiceTest : WordSpec() {
                         Pair("publicKey", cryptoKeyPair.publicKey),
                         Pair("privateKey", "FAKEPRIVATEKEY")
                 )
-                var result = service.execute(user.idValue, Any(), cryptoKeyPairParams)
+                var result = ValidateCryptoKeyPairService.execute(user.idValue, Any(), cryptoKeyPairParams)
                 result.result shouldBe SOAResultType.FAILURE
                 result.message shouldBe "Invalid key pair"
             }

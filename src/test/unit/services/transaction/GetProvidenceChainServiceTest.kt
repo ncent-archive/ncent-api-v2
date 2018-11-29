@@ -14,13 +14,12 @@ import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class GetProvidenceChainServiceTest : WordSpec() {
-    private var service = GetProvidenceChainService()
     private lateinit var endTransactionId: EntityID<Int>
     private lateinit var sideTransactionId: EntityID<Int>
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        val transactions = TestHelper().buildGenericProvidenceChain()
+        val transactions = TestHelper.buildGenericProvidenceChain()
         endTransactionId = transactions[5]
         sideTransactionId = transactions[3]
     }
@@ -32,7 +31,7 @@ class GetProvidenceChainServiceTest : WordSpec() {
     init {
         "calling execute with a valid transaction id" should {
             "return the providence chain" {
-                val result = service.execute(null, endTransactionId.value)
+                val result = GetProvidenceChainService.execute(null, endTransactionId.value)
 
                 result.result shouldBe SOAResultType.SUCCESS
 
@@ -46,7 +45,7 @@ class GetProvidenceChainServiceTest : WordSpec() {
         }
         "calling execute with an invalid transaction id" should {
             "return an error" {
-                val result = service.execute(null, sideTransactionId.value)
+                val result = GetProvidenceChainService.execute(null, sideTransactionId.value)
 
                 result.result shouldBe SOAResultType.FAILURE
                 result.message shouldBe "Must send a leaf node, must not have children"

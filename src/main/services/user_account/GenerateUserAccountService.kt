@@ -11,30 +11,24 @@ import main.services.transaction.GenerateTransactionService
 /**
  * This service will be used to generate a full User Account
  */
-class GenerateUserAccountService: SOAServiceInterface<UserAccount> {
-    private val daoService = DaoService<UserAccount>()
-    private val keyPairService = GenerateCryptoKeyPairService()
-    private val apiCredsService = GenerateApiCredsService()
-    private val startSessionService = StartSessionService()
-    private val transactionService = GenerateTransactionService()
-
+object GenerateUserAccountService: SOAServiceInterface<UserAccount> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<UserAccount> {
-        val keyPairResult = keyPairService.execute()
+        val keyPairResult = GenerateCryptoKeyPairService.execute()
         if(keyPairResult.result != SOAResultType.SUCCESS)
             return SOAResult(keyPairResult.result, keyPairResult.message, null)
         val keyPairNamespace: CryptoKeyPairNamespace = keyPairResult.data!!
 
-        val apiCredResult = apiCredsService.execute()
+        val apiCredResult = GenerateApiCredsService.execute()
         if(apiCredResult.result != SOAResultType.SUCCESS)
             return SOAResult(apiCredResult.result, apiCredResult.message, null)
         val apiCredNamespace: ApiCredNamespace = apiCredResult.data!!
 
-        val sessionResult = startSessionService.execute()
+        val sessionResult = StartSessionService.execute()
         if(sessionResult.result != SOAResultType.SUCCESS)
             return SOAResult(apiCredResult.result, sessionResult.message, null)
         val sessionNamespace: SessionNamespace = sessionResult.data!!
 
-        return daoService.execute {
+        return DaoService.execute {
             val user = User.new {
                 email = params!!["email"]!!
                 firstname = params!!["firstname"]!!
@@ -61,7 +55,7 @@ class GenerateUserAccountService: SOAServiceInterface<UserAccount> {
             }
 
             // TODO log or error result?
-            val transactionResult = transactionService.execute(
+            val transactionResult = GenerateTransactionService.execute(
                 userAccount!!.idValue,
                 TransactionNamespace(
                     keyPairNamespace.publicKey,

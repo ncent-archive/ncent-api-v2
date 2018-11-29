@@ -9,7 +9,7 @@ import org.stellar.sdk.KeyPair
 /**
  * This service will be used to generate crypto keypair
  */
-class GenerateCryptoKeyPairService: SOAServiceInterface<CryptoKeyPairNamespace> {
+object GenerateCryptoKeyPairService: SOAServiceInterface<CryptoKeyPairNamespace> {
     override fun execute() : SOAResult<CryptoKeyPairNamespace> {
         val key = KeyPair.random()
         //TODO look into encryption

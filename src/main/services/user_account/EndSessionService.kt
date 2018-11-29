@@ -10,10 +10,9 @@ import org.joda.time.DateTime
 /**
  * Used to end a session (cache)
  */
-class EndSessionService: SOAServiceInterface<Session> {
-    private val daoService = DaoService<Session>()
+object EndSessionService: SOAServiceInterface<Session> {
     override fun execute(caller: Int?, key: String?) : SOAResult<Session> {
-        return daoService.execute {
+        return DaoService.execute {
             var session = Session.find { Sessions.sessionKey eq key!! }.first()
             if(session.expiration > DateTime.now()) {
                 session.expiration = DateTime.now()

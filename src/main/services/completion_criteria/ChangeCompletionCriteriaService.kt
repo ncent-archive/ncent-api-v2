@@ -7,7 +7,7 @@ import main.daos.CompletionCriteria
 /**
  * Update the completion criteria address if the caller is the existing criteria address
  */
-class ChangeCompletionCriteriaService: SOAServiceInterface<CompletionCriteria> {
+object ChangeCompletionCriteriaService: SOAServiceInterface<CompletionCriteria> {
     override fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<CompletionCriteria> {
         throw NotImplementedError()
     }

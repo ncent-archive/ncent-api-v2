@@ -7,7 +7,7 @@ import main.daos.Transaction
 /**
  * Share a challenge.
  */
-class ShareChallengeService: SOAServiceInterface<Transaction> {
+object ShareChallengeService: SOAServiceInterface<Transaction> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<Transaction> {
         throw NotImplementedError()
     }

@@ -12,7 +12,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
 class GenerateTransactionServiceTest : WordSpec() {
-    private var service = GenerateTransactionService()
     private lateinit var transactionNamespace: TransactionNamespace
 
     override fun beforeTest(description: Description): Unit {
@@ -42,7 +41,7 @@ class GenerateTransactionServiceTest : WordSpec() {
     init {
         "calling execute with a valid transaction" should {
             "generate the transaction and associated action" {
-                var result = service.execute(null, transactionNamespace, null)
+                var result = GenerateTransactionService.execute(null, transactionNamespace, null)
                 result.result shouldBe SOAResultType.SUCCESS
                 transaction {
                     val action = Action.all().first()

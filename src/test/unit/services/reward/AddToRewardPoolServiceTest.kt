@@ -18,29 +18,28 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 class AddToRewardPoolServiceTest : WordSpec() {
-    private var service = AddToRewardPoolService()
     private lateinit var rewardNamespace: RewardNamespace
     private lateinit var nCentTokenNamespace: TokenNamespace
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
         rewardNamespace = RewardNamespace(
-                type = RewardTypeNamespace(
-                        audience = Audience.FULL,
-                        type = RewardTypeName.EVEN
-                ),
-                metadatas = MetadatasListNamespace(
-                        listOf(MetadatasNamespace("title", "reward everyone"))
-                )
+            type = RewardTypeNamespace(
+                audience = Audience.FULL,
+                type = RewardTypeName.EVEN
+            ),
+            metadatas = MetadatasListNamespace(
+                listOf(MetadatasNamespace("title", "reward everyone"))
+            )
         )
         nCentTokenNamespace = TokenNamespace(
-                amount = 100,
-                tokenType = TokenTypeNamespace(
-                        id = null,
-                        name = "nCent",
-                        parentToken = null,
-                        parentTokenConversionRate = null
-                )
+            amount = 100,
+            tokenType = TokenTypeNamespace(
+                id = null,
+                name = "nCent",
+                parentToken = null,
+                parentTokenConversionRate = null
+            )
         )
     }
 
@@ -52,7 +51,7 @@ class AddToRewardPoolServiceTest : WordSpec() {
         "calling execute with a valid transfer" should {
             "generate a transaction transfering to the pool" {
                 transaction {
-                    var newUserAccount = GenerateUserAccountService().execute(
+                    var newUserAccount = GenerateUserAccountService.execute(
                         null,
                         mapOf(
                             Pair("firstname", "Arya"),
@@ -60,9 +59,9 @@ class AddToRewardPoolServiceTest : WordSpec() {
                             Pair("email", "as@ncent.io")
                         )
                     ).data!!
-                    val token = GenerateTokenService().execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
-                    var reward = GenerateRewardService().execute(newUserAccount.idValue, rewardNamespace, null).data!!
-                    val result = service.execute(
+                    val token = GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
+                    var reward = GenerateRewardService.execute(newUserAccount.idValue, rewardNamespace, null).data!!
+                    val result = AddToRewardPoolService.execute(
                         newUserAccount.idValue,
                         mapOf(
                             Pair("reward_id", reward.idValue.toString()),

@@ -14,11 +14,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
 class ValidateApiKeyServiceTest : WordSpec() {
-    private var service = ValidateApiKeyService()
     private var params = mutableMapOf(
-            Pair("email", "dev@ncnt.io"),
-            Pair("firstname", "dev"),
-            Pair("lastname", "ncnt")
+        Pair("email", "dev@ncnt.io"),
+        Pair("firstname", "dev"),
+        Pair("lastname", "ncnt")
     )
     private lateinit var apiCred: ApiCred
     private lateinit var user: UserAccount
@@ -35,7 +34,7 @@ class ValidateApiKeyServiceTest : WordSpec() {
         "executing validate api key service" should {
             "should return valid for a valid api key/session key combo" {
                 transaction {
-                    user = GenerateUserAccountService().execute(null, params).data!!
+                    user = GenerateUserAccountService.execute(null, params).data!!
                     apiCred = user.apiCreds
                 }
 
@@ -44,20 +43,20 @@ class ValidateApiKeyServiceTest : WordSpec() {
                     Pair("apiKey", apiCred.apiKey),
                     Pair("secretKey", apiCred.encryptedSecretKey)
                 )
-                var result = service.execute(user.idValue, Any(), apiKeyParams)
+                var result = ValidateApiKeyService.execute(user.idValue, Any(), apiKeyParams)
                 result.result shouldBe SOAResultType.SUCCESS
             }
             "should return invalid for an invalid secret" {
                 transaction {
-                    user = GenerateUserAccountService().execute(null, params).data!!
+                    user = GenerateUserAccountService.execute(null, params).data!!
                     apiCred = user.apiCreds
                 }
 
                 var apiKeyParams = mutableMapOf(
-                        Pair("apiKey", apiCred.apiKey),
-                        Pair("secretKey", "FAKESECRET")
+                    Pair("apiKey", apiCred.apiKey),
+                    Pair("secretKey", "FAKESECRET")
                 )
-                var result = service.execute(user.idValue, Any(), apiKeyParams)
+                var result = ValidateApiKeyService.execute(user.idValue, Any(), apiKeyParams)
                 result.result shouldBe SOAResultType.FAILURE
                 result.message shouldBe "Invalid api credentials"
             }

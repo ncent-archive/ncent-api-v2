@@ -10,7 +10,7 @@ import java.security.KeyPairGenerator
 /**
  * This service will be used to generate Api credentials
  */
-class GenerateApiCredsService: SOAServiceInterface<ApiCredNamespace> {
+object GenerateApiCredsService: SOAServiceInterface<ApiCredNamespace> {
     override fun execute() : SOAResult<ApiCredNamespace> {
         //TODO figure out best practices for apikey/secret key generation
         val key = KeyPair.random()

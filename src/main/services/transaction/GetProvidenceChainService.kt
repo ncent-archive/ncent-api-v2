@@ -13,12 +13,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
  * The transaction queried must NOT have children and must be a leaf node
  *
  */
-class GetProvidenceChainService: SOAServiceInterface<TransactionList> {
-    private val transactionService = GetTransactionService()
-
+object GetProvidenceChainService: SOAServiceInterface<TransactionList> {
     override fun execute(caller: Int?, id: Int?): SOAResult<TransactionList> {
         // Get the transaction in question
-        val txResult = transactionService.execute(caller, id, null)
+        val txResult = GetTransactionService.execute(caller, id, null)
         // TODO -- verify that the transaction is a token type
         if (txResult.result != SOAResultType.SUCCESS)
             return SOAResult(txResult.result, txResult.message, null)
@@ -37,7 +35,7 @@ class GetProvidenceChainService: SOAServiceInterface<TransactionList> {
     }
 
     fun getChildren(id: EntityID<Int>): SOAResult<List<Transaction>> {
-        return DaoService<List<Transaction>>().execute {
+        return DaoService.execute {
             Transaction.find {
                 Transactions.previousTransaction eq id
             }?.distinct()?.toList()

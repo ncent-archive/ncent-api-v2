@@ -13,7 +13,6 @@ import kotlinserverless.framework.models.Handler
 
 @ExtendWith(MockKExtension::class)
 class DaoServiceTest : WordSpec() {
-
     override fun beforeTest(description: Description): Unit {
         Handler.connectToDatabase()
     }
