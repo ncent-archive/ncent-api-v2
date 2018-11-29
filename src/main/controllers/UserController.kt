@@ -9,6 +9,6 @@ import kotlinserverless.main.services.users.UserHelloService
 
 class UserController: DefaultController<User>(), RestController<User, User> {
     fun hello(user: User, request: Request): SOAResult<String> {
-        return UserHelloService().execute(123, "HELLO", HashMap())
+        return UserHelloService.execute(123, "HELLO", HashMap())
     }
 }

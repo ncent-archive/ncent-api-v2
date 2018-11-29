@@ -12,16 +12,10 @@ import main.services.healthchecks.CheckDatabaseHealthService
 
 @ExtendWith(MockKExtension::class)
 class CheckDatabaseHealthTest : WordSpec() {
-    private lateinit var service: CheckDatabaseHealthService
-
-    override fun beforeTest(description: Description): Unit {
-        service = CheckDatabaseHealthService()
-    }
-
     init {
         "calling execute on a Database Health Check Service" should {
             "return healthy if the database connection works" {
-                var result = service.execute()
+                var result = CheckDatabaseHealthService.execute()
                 result.result shouldBe SOAResultType.SUCCESS
                 result.message shouldBe "Successfully connected to database"
                 result.data shouldBe true

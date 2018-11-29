@@ -8,8 +8,8 @@ import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.sql.SQLException
 
-class DaoService<T> {
-    fun execute(query: () -> T): SOAResult<T> {
+object DaoService {
+    fun <T> execute(query: () -> T): SOAResult<T> {
         var result: SOAResult<T> = SOAResult(SOAResultType.FAILURE, "", null)
         try {
             val tx = transaction {
