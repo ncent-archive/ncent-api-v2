@@ -13,13 +13,12 @@ import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class GetProvidenceChainsServiceTest : WordSpec() {
-    private var service = GetProvidenceChainsService()
     private lateinit var middleTransactionId: EntityID<Int>
     private lateinit var sideTransactionId: EntityID<Int>
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        val transactions = TestHelper().buildGenericProvidenceChain()
+        val transactions = TestHelper.buildGenericProvidenceChain()
         sideTransactionId = transactions[2]
         middleTransactionId = transactions[1]
     }
@@ -31,7 +30,7 @@ class GetProvidenceChainsServiceTest : WordSpec() {
     init {
         "calling execute with a valid transaction id" should {
             "return the list of all possible chains if there are many children nodes involved" {
-                val result = service.execute(null, middleTransactionId.value)
+                val result = GetProvidenceChainsService.execute(null, middleTransactionId.value)
 
                 result.result shouldBe SOAResultType.SUCCESS
                 result.data!!.count() shouldBe 3
@@ -54,7 +53,7 @@ class GetProvidenceChainsServiceTest : WordSpec() {
                 }.shouldContainExactly(expectedResult)
             }
             "return a single chain if there are no children node involved" {
-                val result = service.execute(null, sideTransactionId.value)
+                val result = GetProvidenceChainsService.execute(null, sideTransactionId.value)
 
                 result.result shouldBe SOAResultType.SUCCESS
                 result.data!!.count() shouldBe 1

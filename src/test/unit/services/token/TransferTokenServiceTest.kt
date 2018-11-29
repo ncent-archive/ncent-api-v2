@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 class TransferTokenServiceTest : WordSpec() {
-    private var service = TransferTokenService()
     private lateinit var nCentTokenNamespace: TokenNamespace
 
     override fun beforeTest(description: Description): Unit {
@@ -41,7 +40,7 @@ class TransferTokenServiceTest : WordSpec() {
     init {
         "calling execute with a user transfer, having sufficient funds" should {
             "return the transaction generated" {
-                var newUserAccount = GenerateUserAccountService().execute(
+                var newUserAccount = GenerateUserAccountService.execute(
                     null,
                     mapOf(
                         Pair("firstname", "Arya"),
@@ -50,7 +49,7 @@ class TransferTokenServiceTest : WordSpec() {
                     )
                 ).data!!
 
-                var newUserAccount2 = GenerateUserAccountService().execute(
+                var newUserAccount2 = GenerateUserAccountService.execute(
                     null,
                     mapOf(
                         Pair("firstname", "Adam"),
@@ -59,10 +58,10 @@ class TransferTokenServiceTest : WordSpec() {
                     )
                 ).data!!
 
-                val token = GenerateTokenService().execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
+                val token = GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
 
                 transaction {
-                    var result = service.execute(newUserAccount.idValue, mapOf(
+                    var result = TransferTokenService.execute(newUserAccount.idValue, mapOf(
                         Pair("to", newUserAccount2.cryptoKeyPair.publicKey),
                         Pair("from", newUserAccount.cryptoKeyPair.publicKey),
                         Pair("name", "nCent"),
@@ -82,7 +81,7 @@ class TransferTokenServiceTest : WordSpec() {
 
         "calling execute with a user transfer, having insufficient funds" should {
             "return failure" {
-                var newUserAccount = GenerateUserAccountService().execute(
+                var newUserAccount = GenerateUserAccountService.execute(
                     null,
                     mapOf(
                         Pair("firstname", "Arya"),
@@ -91,7 +90,7 @@ class TransferTokenServiceTest : WordSpec() {
                     )
                 ).data!!
 
-                var newUserAccount2 = GenerateUserAccountService().execute(
+                var newUserAccount2 = GenerateUserAccountService.execute(
                     null,
                     mapOf(
                         Pair("firstname", "Adam"),
@@ -100,10 +99,10 @@ class TransferTokenServiceTest : WordSpec() {
                     )
                 ).data!!
 
-                GenerateTokenService().execute(newUserAccount.idValue, nCentTokenNamespace, null)
+                GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null)
 
                 transaction {
-                    var result = service.execute(newUserAccount.idValue, mapOf(
+                    var result = TransferTokenService.execute(newUserAccount.idValue, mapOf(
                         Pair("to", newUserAccount2.cryptoKeyPair.publicKey),
                         Pair("from", newUserAccount.cryptoKeyPair.publicKey),
                         Pair("name", "nCent"),

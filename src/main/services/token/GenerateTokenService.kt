@@ -14,12 +14,10 @@ import java.lang.RuntimeException
 /**
  * Generate a token if it is valid
  */
-class GenerateTokenService: SOAServiceInterface<Token> {
-    private val generateTransactioNservice = GenerateTransactionService()
-
+object GenerateTokenService: SOAServiceInterface<Token> {
     override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Token> {
         val tokenNamespace = d!! as TokenNamespace
-        return DaoService<Token>().execute {
+        return DaoService.execute {
             // TODO -- should generate a transaction
             val tokenTypeObjId = if(tokenNamespace.tokenType.parentToken != null) {
                 TokenTypes.insertAndGetId {
@@ -41,7 +39,7 @@ class GenerateTokenService: SOAServiceInterface<Token> {
             // TODO -- add a test for this!
             if(caller != null) {
                 val userAccount = UserAccount.findById(caller)
-                val result = generateTransactioNservice.execute(
+                val result = GenerateTransactionService.execute(
                     userAccount!!.idValue,
                     TransactionNamespace(
                         "DEFAULT",

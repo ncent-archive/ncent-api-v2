@@ -12,7 +12,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
 class GenerateRewardServiceTest : WordSpec() {
-    private var service = GenerateRewardService()
     private lateinit var rewardNamespace: RewardNamespace
 
     override fun beforeTest(description: Description): Unit {
@@ -35,7 +34,7 @@ class GenerateRewardServiceTest : WordSpec() {
     init {
         "calling execute with a valid reward" should {
             "generate the reward and associated reward type and pool" {
-                var result = service.execute(null, rewardNamespace, null)
+                var result = GenerateRewardService.execute(null, rewardNamespace, null)
                 result.result shouldBe SOAResultType.SUCCESS
                 transaction {
                     val rewardType = RewardType.all().first()

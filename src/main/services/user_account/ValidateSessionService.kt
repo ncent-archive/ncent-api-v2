@@ -11,7 +11,7 @@ import org.joda.time.DateTime
 /**
  * Validate the session
  */
-class ValidateSessionService: SOAServiceInterface<Session> {
+object ValidateSessionService: SOAServiceInterface<Session> {
     override fun execute(caller: Int?, key: String?) : SOAResult<Session> {
         var result = SOAResult<Session>(
             SOAResultType.FAILURE,

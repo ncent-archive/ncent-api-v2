@@ -10,9 +10,7 @@ import main.helpers.TransferTokenHelper
 /**
  * Transfer tokens from one address to another
  */
-class TransferTokenService: SOAServiceInterface<Transaction> {
-    private val transferTokenHelper = TransferTokenHelper()
-
+object TransferTokenService: SOAServiceInterface<Transaction> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<Transaction> {
         val userAccount = UserAccount.findById(caller!!)
         // get the user account so we can get the address
@@ -24,7 +22,7 @@ class TransferTokenService: SOAServiceInterface<Transaction> {
         if(address != params!!["from"])
             return SOAResult(SOAResultType.FAILURE, "Access denied. Caller and from address must match.", null)
 
-        return transferTokenHelper.transferToken(
+        return TransferTokenHelper.transferToken(
             caller,
             params!!["from"]!!,
             params!!["to"]!!,

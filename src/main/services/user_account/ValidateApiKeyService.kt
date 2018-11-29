@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * Validate the accuracy of the passed ApiKey and Secret key in the UserAccount
  */
-class ValidateApiKeyService: SOAServiceInterface<ApiCred> {
+object ValidateApiKeyService: SOAServiceInterface<ApiCred> {
     override fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<ApiCred> {
         var result = SOAResult<ApiCred>(
             SOAResultType.FAILURE,

@@ -16,7 +16,6 @@ import org.joda.time.DateTime
 
 @ExtendWith(MockKExtension::class)
 class EndSessionServiceTest : WordSpec() {
-    private var service = EndSessionService()
     private var params = mutableMapOf(
             Pair("email", "dev@ncnt.io"),
             Pair("firstname", "dev"),
@@ -36,14 +35,14 @@ class EndSessionServiceTest : WordSpec() {
             "should expire the session if it is not expired yet" {
                 transaction {
                     // Create a user and session
-                    val session = GenerateUserAccountService().execute(null, params).data!!.session
+                    val session = GenerateUserAccountService.execute(null, params).data!!.session
                     // Validate that the created session ends in the future
 
                     Session.findById(session.id)!!.expiration.millis
                             .shouldBeGreaterThan(DateTime.now().millis)
 
                     // End the session via the service
-                    var result = service.execute(null, session.sessionKey)
+                    var result = EndSessionService.execute(null, session.sessionKey)
                     result.result shouldBe SOAResultType.SUCCESS
                     // Refresh session and validate that it is now expired
 

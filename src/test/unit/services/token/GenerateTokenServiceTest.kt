@@ -12,7 +12,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
 class GenerateTokenServiceTest : WordSpec() {
-    private var service = GenerateTokenService()
     private lateinit var nCentTokenNamespace: TokenNamespace
     private lateinit var ethTokenNamespace: TokenNamespace
 
@@ -36,7 +35,7 @@ class GenerateTokenServiceTest : WordSpec() {
     init {
         "calling execute with a valid token" should {
             "generate the tokens and associated tokenType" {
-                var result = service.execute(null, nCentTokenNamespace, null)
+                var result = GenerateTokenService.execute(null, nCentTokenNamespace, null)
                 result.result shouldBe SOAResultType.SUCCESS
                 transaction {
                     val tokenType = TokenType.all().first()
@@ -56,7 +55,7 @@ class GenerateTokenServiceTest : WordSpec() {
                             parentTokenConversionRate = 10.0
                         )
                     )
-                    result = service.execute(null, ethTokenNamespace, null)
+                    result = GenerateTokenService.execute(null, ethTokenNamespace, null)
                     result.result shouldBe SOAResultType.SUCCESS
                 }
             }

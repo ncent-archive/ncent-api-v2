@@ -11,14 +11,11 @@ import org.jetbrains.exposed.dao.EntityID
  * Retrieve transactions by filter, such as from/to
  * "to" is required for now. need at least one field required
  */
-class GetTransactionsService: SOAServiceInterface<TransactionList> {
-    private val transactionDaoService = DaoService<List<Transaction>>()
-    private val actionDaoService = DaoService<Action>()
-
+object GetTransactionsService: SOAServiceInterface<TransactionList> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<TransactionList> {
         var action: Action? = null
         if(params!!["data"] != null) {
-            val actionResult = actionDaoService.execute {
+            val actionResult = DaoService.execute {
                 Action.find {
                     Actions.data eq Integer.valueOf(params!!["data"]!!)
                     Actions.type eq ActionType.valueOf(params!!["type"]!!)
@@ -30,7 +27,7 @@ class GetTransactionsService: SOAServiceInterface<TransactionList> {
             action = actionResult.data!!
         }
 
-        val transactionsResult = transactionDaoService.execute {
+        val transactionsResult = DaoService.execute {
             Transaction.find {
                 if(action != null)
                     Transactions.action eq action!!.id

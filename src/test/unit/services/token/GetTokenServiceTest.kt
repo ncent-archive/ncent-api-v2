@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 class GetTokenServiceTest : WordSpec() {
-    private var service = GetTokenService()
     private lateinit var nCentTokenNamespace: TokenNamespace
     private lateinit var ethTokenNamespace: TokenNamespace
 
@@ -39,7 +38,7 @@ class GetTokenServiceTest : WordSpec() {
     init {
         "calling execute with a valid token name" should {
             "return the token and its parent" {
-                var newTokenResult = GenerateTokenService().execute(null, nCentTokenNamespace, null)
+                var newTokenResult = GenerateTokenService.execute(null, nCentTokenNamespace, null)
 
                 transaction {
                     ethTokenNamespace = TokenNamespace(
@@ -51,9 +50,9 @@ class GetTokenServiceTest : WordSpec() {
                             parentTokenConversionRate = 10.0
                         )
                     )
-                    GenerateTokenService().execute(null, ethTokenNamespace, null)
+                    GenerateTokenService.execute(null, ethTokenNamespace, null)
 
-                    var result = service.execute(null, "eth")
+                    var result = GetTokenService.execute(null, "eth")
                     result.result shouldBe SOAResultType.SUCCESS
                     var ethtoken = result.data as Token
                     ethtoken.amount shouldBe 1000

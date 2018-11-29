@@ -10,7 +10,7 @@ import java.util.*
 /**
  * Used to start a session (login cache)
  */
-class StartSessionService: SOAServiceInterface<SessionNamespace> {
+object StartSessionService: SOAServiceInterface<SessionNamespace> {
     override fun execute() : SOAResult<SessionNamespace> {
         //TODO look into encryption
         return SOAResult(

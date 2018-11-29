@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.select
 
-class TransferTokenHelper {
+object TransferTokenHelper {
 
     fun transferToken(
         caller: Int?,
@@ -24,16 +24,16 @@ class TransferTokenHelper {
         previousTransactionId: Int?,
         notes: String?): SOAResult<Transaction> {
 
-        return DaoService<SOAResult<Transaction>>().execute {
+        return DaoService.execute {
             // get the token transfer history for this address
             val callerTransferHistoryResult = getTransferHistory(from, tokenId)
             if(callerTransferHistoryResult.result != SOAResultType.SUCCESS)
-                return@execute SOAResult(callerTransferHistoryResult.result, callerTransferHistoryResult.message, null)
+                return@execute SOAResult<Transaction>(callerTransferHistoryResult.result, callerTransferHistoryResult.message, null)
 
             // get and validate the users balance vs what they wish to transfer
             val callerBalance = calculateBalance(from, callerTransferHistoryResult.data!!)
             if(callerBalance < amount)
-                return@execute SOAResult(SOAResultType.FAILURE, "Insufficient funds", null)
+                return@execute SOAResult<Transaction>(SOAResultType.FAILURE, "Insufficient funds", null)
 
             var metadataList = mutableListOf(MetadatasNamespace("amount", amount.toString()))
             if(notes != null)
@@ -53,7 +53,7 @@ class TransferTokenHelper {
                     previousTransaction = previousTransactionId,
                     metadatas = MetadatasListNamespace(metadataList)
             )
-            return@execute GenerateTransactionService().execute(caller, transactionNamespace, null)
+            return@execute GenerateTransactionService.execute(caller, transactionNamespace, null)
         }.data!!
     }
 
@@ -67,7 +67,7 @@ class TransferTokenHelper {
         previousTransactionId: Int?,
         notes: String?): SOAResult<Transaction> {
         // get the token type we wish to transfer
-        val tokenResult = GetTokenService().execute(caller, tokenName)
+        val tokenResult = GetTokenService.execute(caller, tokenName)
         if(tokenResult.result != SOAResultType.SUCCESS)
             return SOAResult(tokenResult.result, tokenResult.message, null)
         val tokenId = tokenResult.data!!.tokenType.idValue
@@ -77,7 +77,7 @@ class TransferTokenHelper {
     // join from and to this caller and the token -- this will get the history of transfers
     // that this user was a part of for this particular token
     fun getTransferHistory(address: String, tokenId: Int?): SOAResult<List<Transaction>> {
-        return DaoService<List<Transaction>>().execute {
+        return DaoService.execute {
             val expression = if(tokenId != null) {
                 (Transactions.from.eq(address) or Transactions.to.eq(address)) and
                     Actions.dataType.eq(Token::class.simpleName!!) and

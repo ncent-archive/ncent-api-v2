@@ -14,7 +14,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import java.sql.Time
 
-class TestHelper {
+object TestHelper {
 
     /**
      * Building a tree:
@@ -43,17 +43,17 @@ class TestHelper {
 
         return transaction {
             var transactionNamespace = TransactionNamespace(from = "ARYA", to = "MIKE", action = action, previousTransaction = null, metadatas = metadatas)
-            var tx1 = GenerateTransactionService().execute(null, transactionNamespace, null).data!!
+            var tx1 = GenerateTransactionService.execute(null, transactionNamespace, null).data!!
             var transaction2Namespace = TransactionNamespace(from = "ARYA2", to = "MIKE2", action = action, previousTransaction = tx1.idValue, metadatas = metadatas)
-            var tx2 = GenerateTransactionService().execute(null, transaction2Namespace, null).data!!
+            var tx2 = GenerateTransactionService.execute(null, transaction2Namespace, null).data!!
             var transaction3Namespace = TransactionNamespace(from = "ARYA3", to = "MIKE3", action = action, previousTransaction = tx2.idValue, metadatas = metadatas)
             var transaction4Namespace = TransactionNamespace(from = "ARYA4", to = "MIKE4", action = action, previousTransaction = tx2.idValue, metadatas = metadatas)
-            var tx3 = GenerateTransactionService().execute(null, transaction3Namespace, null).data!!
-            var tx4 = GenerateTransactionService().execute(null, transaction4Namespace, null).data!!
+            var tx3 = GenerateTransactionService.execute(null, transaction3Namespace, null).data!!
+            var tx4 = GenerateTransactionService.execute(null, transaction4Namespace, null).data!!
             var transaction5Namespace = TransactionNamespace(from = "ARYA5", to = "MIKE5", action = action, previousTransaction = tx4.idValue, metadatas = metadatas)
             var transaction6Namespace = TransactionNamespace(from = "ARYA6", to = "MIKE6", action = action, previousTransaction = tx4.idValue, metadatas = metadatas)
-            var tx5 = GenerateTransactionService().execute(null, transaction5Namespace, null).data!!
-            var tx6 = GenerateTransactionService().execute(null, transaction6Namespace, null).data!!
+            var tx5 = GenerateTransactionService.execute(null, transaction5Namespace, null).data!!
+            var tx6 = GenerateTransactionService.execute(null, transaction6Namespace, null).data!!
             return@transaction listOf(tx1.id, tx2.id, tx3.id, tx4.id, tx5.id, tx6.id)
         }
     }
@@ -84,7 +84,7 @@ class TestHelper {
         // Create a user, token, reward, and add to the pool
         // Create a fake providence chain
         return transaction {
-            var newUserAccount = GenerateUserAccountService().execute(
+            var newUserAccount = GenerateUserAccountService.execute(
                 null,
                 mapOf(
                     Pair("firstname", "Arya"),
@@ -93,9 +93,9 @@ class TestHelper {
                 )
             ).data!!
 
-            val token = GenerateTokenService().execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
-            var rewards = GenerateRewardService().execute(newUserAccount.idValue, rewardNamespace, null).data!!
-            val rewardPoolTx = AddToRewardPoolService().execute(
+            val token = GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
+            var rewards = GenerateRewardService.execute(newUserAccount.idValue, rewardNamespace, null).data!!
+            val rewardPoolTx = AddToRewardPoolService.execute(
                 newUserAccount.idValue,
                 mapOf(
                     Pair("reward_id", rewards.idValue.toString()),

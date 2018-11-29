@@ -11,7 +11,7 @@ import main.services.healthchecks.CheckDatabaseHealthService
 
 class HealthcheckController: DefaultController<Healthcheck>(), RestController<Healthcheck, User> {
     override fun health(user: User, request: Request?): SOAResult<Healthcheck> {
-        val isDatabaseHealthyCheck = CheckDatabaseHealthService().execute()
+        val isDatabaseHealthyCheck = CheckDatabaseHealthService.execute()
         if (isDatabaseHealthyCheck.result == SOAResultType.FAILURE) {
             return SOAResult(SOAResultType.FAILURE, "Failed to connect", null)
         }

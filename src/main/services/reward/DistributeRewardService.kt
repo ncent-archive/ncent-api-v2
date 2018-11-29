@@ -11,14 +11,9 @@ import main.services.transaction.GetProvidenceChainService
 /**
  * Transfer tokens based on rewards
  */
-class DistributeRewardService: SOAServiceInterface<TransactionList> {
-
-    private val transferTokenHelper = TransferTokenHelper()
-    private val daoService = DaoService<TransactionList>()
-    private val providenceChainService = GetProvidenceChainService()
-
+object DistributeRewardService: SOAServiceInterface<TransactionList> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<TransactionList> {
-        return daoService.execute {
+        return DaoService.execute {
             val reward = Reward.findById(params!!["reward_id"]!!.toInt())!!
             val address = reward.pool.cryptoKeyPair.publicKey
 
@@ -26,16 +21,16 @@ class DistributeRewardService: SOAServiceInterface<TransactionList> {
             // get all the transactions -- verify they have not been spent
             // check that there are no outbount tx from the completion criteria -- if there are deduct
 
-            val transactionsResult = transferTokenHelper.getTransferHistory(address, null)
+            val transactionsResult = TransferTokenHelper.getTransferHistory(address, null)
             if(transactionsResult.result != SOAResultType.SUCCESS)
                 throw Exception(transactionsResult.message)
 
-            val mapOfTransfers = transferTokenHelper.getMapOfTransfersByCurrency(transactionsResult.data!!)
-            val mapOfBalances = transferTokenHelper.getMapOfBalancesByCurrency(address, mapOfTransfers)
+            val mapOfTransfers = TransferTokenHelper.getMapOfTransfersByCurrency(transactionsResult.data!!)
+            val mapOfBalances = TransferTokenHelper.getMapOfBalancesByCurrency(address, mapOfTransfers)
 
             //TODO what should we do if any of the balances are negative but some are positive?
             //TODO handle 'ALL' type reward audience -- get all chains
-            val providenceChainResult = providenceChainService.execute(caller, params!!["transaction_id"]!!.toInt())
+            val providenceChainResult = GetProvidenceChainService.execute(caller, params!!["transaction_id"]!!.toInt())
             if(providenceChainResult.result != SOAResultType.SUCCESS)
                 throw Exception(providenceChainResult.message)
 
@@ -71,7 +66,7 @@ class DistributeRewardService: SOAServiceInterface<TransactionList> {
                 val amount = balance / size
                 leafToParentProvidenceChain.forEach { tx ->
                     // TODO Add error handling for transfering.
-                    resultingTxs.add(transferTokenHelper.transferToken(
+                    resultingTxs.add(TransferTokenHelper.transferToken(
                         null,
                         address,
                         tx.to!!,
@@ -87,7 +82,7 @@ class DistributeRewardService: SOAServiceInterface<TransactionList> {
                 // distribute reward to first person in providence chain list
                 val tx = leafToParentProvidenceChain.first()
                 // TODO Add error handling for transfering.
-                resultingTxs.add(transferTokenHelper.transferToken(
+                resultingTxs.add(TransferTokenHelper.transferToken(
                     null,
                     address,
                     tx.to!!,
@@ -111,7 +106,7 @@ class DistributeRewardService: SOAServiceInterface<TransactionList> {
                 var n_over_2 = balance / 2
                 leafToParentProvidenceChain.forEach { tx ->
                     // TODO Add error handling for transfering.
-                    resultingTxs.add(transferTokenHelper.transferToken(
+                    resultingTxs.add(TransferTokenHelper.transferToken(
                             null,
                             address,
                             tx.to!!,

@@ -9,12 +9,10 @@ import kotlinserverless.main.services.users.UserHelloService
 
 @ExtendWith(MockKExtension::class)
 class UserHelloServiceTest : WordSpec() {
-    private var service = UserHelloService()
-
     init {
         "calling hello on a User Service" should {
             "return HELLO WORLD" {
-                var result = service.execute(123, "HELLO", HashMap())
+                var result = UserHelloService.execute(123, "HELLO", HashMap())
                 result.result shouldBe SOAResultType.SUCCESS
                 result.data shouldBe "HELLO WORLD"
             }

@@ -15,7 +15,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
 class GetTransactionServiceTest : WordSpec() {
-    private var service = GetTransactionService()
     private lateinit var transactionNamespace: TransactionNamespace
     private lateinit var transaction2Namespace: TransactionNamespace
 
@@ -46,7 +45,7 @@ class GetTransactionServiceTest : WordSpec() {
     init {
         "calling execute with a valid transaction id" should {
             "return the transaction and associated objects" {
-                var parentTxGenerateResult = GenerateTransactionService().execute(null, transactionNamespace, null)
+                var parentTxGenerateResult = GenerateTransactionService.execute(null, transactionNamespace, null)
                 transaction2Namespace = TransactionNamespace(
                     from = "ARYA2",
                     to = "MIKE",
@@ -63,8 +62,8 @@ class GetTransactionServiceTest : WordSpec() {
                         )
                     )
                 )
-                val txGenerateResult = GenerateTransactionService().execute(null, transaction2Namespace, null)
-                val result = service.execute(null, txGenerateResult.data!!.idValue, null)
+                val txGenerateResult = GenerateTransactionService.execute(null, transaction2Namespace, null)
+                val result = GetTransactionService.execute(null, txGenerateResult.data!!.idValue, null)
 
                 result.result shouldBe SOAResultType.SUCCESS
                 transaction {
