@@ -20,9 +20,7 @@ class DistributeRewardService: SOAServiceInterface<TransactionList> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<TransactionList> {
         return daoService.execute {
             val reward = Reward.findById(params!!["reward_id"]!!.toInt())!!
-            val address = CompletionCriteria.find {
-                CompletionCriterias.reward eq reward.id
-            }.first().address
+            val address = reward.pool.cryptoKeyPair.publicKey
 
             // calculate rewards
             // get all the transactions -- verify they have not been spent
@@ -65,12 +63,13 @@ class DistributeRewardService: SOAServiceInterface<TransactionList> {
         address: String
     ): List<Transaction> {
         var resultingTxs = mutableListOf<Transaction>()
+        val leafToParentProvidenceChain = providenceChain.transactions.asReversed()
         when(rewardTypeName) {
             RewardTypeName.EVEN -> {
                 // distribute reward evenly to everyone in the providence chain list
-                val size = providenceChain.transactions.size
+                val size = leafToParentProvidenceChain.size
                 val amount = balance / size
-                providenceChain.transactions.forEach { tx ->
+                leafToParentProvidenceChain.forEach { tx ->
                     // TODO Add error handling for transfering.
                     resultingTxs.add(transferTokenHelper.transferToken(
                         null,
@@ -86,7 +85,7 @@ class DistributeRewardService: SOAServiceInterface<TransactionList> {
             }
             RewardTypeName.SINGLE -> {
                 // distribute reward to first person in providence chain list
-                val tx = providenceChain.transactions.first()
+                val tx = leafToParentProvidenceChain.first()
                 // TODO Add error handling for transfering.
                 resultingTxs.add(transferTokenHelper.transferToken(
                     null,
@@ -110,7 +109,7 @@ class DistributeRewardService: SOAServiceInterface<TransactionList> {
             RewardTypeName.N_OVER_2 -> {
                 // distribute reward in n/2 pattern
                 var n_over_2 = balance / 2
-                providenceChain.transactions.forEach { tx ->
+                leafToParentProvidenceChain.forEach { tx ->
                     // TODO Add error handling for transfering.
                     resultingTxs.add(transferTokenHelper.transferToken(
                             null,

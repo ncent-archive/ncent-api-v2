@@ -98,7 +98,8 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
             RewardPools,
             RewardTypes,
             RewardsToTransactions,
-            RewardsMetadata
+            RewardsMetadata,
+            CompletionCriterias
         )
       }
       return db
@@ -137,7 +138,8 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
             RewardPools,
             RewardTypes,
             RewardsToTransactions,
-            RewardsMetadata
+            RewardsMetadata,
+            CompletionCriterias
         )
       }
       disconnectFromDatabase()

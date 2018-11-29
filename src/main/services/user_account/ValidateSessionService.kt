@@ -1,6 +1,5 @@
 package main.services.user_account
 
-import framework.models.idValue
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
@@ -12,7 +11,7 @@ import org.joda.time.DateTime
 /**
  * Validate the session
  */
-class gValidateSessionService: SOAServiceInterface<Session> {
+class ValidateSessionService: SOAServiceInterface<Session> {
     override fun execute(caller: Int?, key: String?) : SOAResult<Session> {
         var result = SOAResult<Session>(
             SOAResultType.FAILURE,
