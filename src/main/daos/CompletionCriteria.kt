@@ -4,7 +4,9 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.Table
+import org.joda.time.DateTime
 
 /**
  * Currently only housing who can validate the completion of a challenge
@@ -19,7 +21,7 @@ import org.jetbrains.exposed.sql.Table
 class CompletionCriteria(id: EntityID<Int>) : BaseIntEntity(id, CompletionCriterias) {
     companion object : BaseIntEntityClass<CompletionCriteria>(CompletionCriterias)
 
-    var cryptoKeyPair by CryptoKeyPair referencedOn CompletionCriterias.cryptoKeyPair
+    var address by CompletionCriterias.address
     var reward by CompletionCriterias.reward
     var expiration by CompletionCriterias.expiration
     var prereq by CompletionCriteria via PrerequisiteCompletionCriterias
@@ -31,7 +33,9 @@ object PrerequisiteCompletionCriterias : Table("prerequisite_completion_criteria
 }
 
 object CompletionCriterias : BaseIntIdTable("completion_criterias") {
+    val address = varchar("address", 256)
     val reward = reference("reward", Rewards)
     val expiration = datetime("expiration")
-    val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
 }
+
+data class CompletionCriteriaNamespace(val address: String?, val rewardNamespace: RewardNamespace, val expiration: DateTime, val preReqCompletionCriteriaIds: SizedIterable<Int>?)

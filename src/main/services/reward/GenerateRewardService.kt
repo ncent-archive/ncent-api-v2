@@ -14,26 +14,26 @@ import java.lang.Exception
  */
 object GenerateRewardService: SOAServiceInterface<Reward> {
     override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Reward> {
-        val tokenNamespace = d!! as RewardNamespace
+        val rewardNamespace = d!! as RewardNamespace
         return DaoService.execute {
             // TODO
             // find or create a reward type
             val rewardTypes = RewardType.find {
-                RewardTypes.audience eq tokenNamespace.type.audience
-                RewardTypes.type eq tokenNamespace.type.type
+                RewardTypes.audience eq rewardNamespace.type.audience
+                RewardTypes.type eq rewardNamespace.type.type
             }
 
             val rewardType = if(rewardTypes.empty()) {
                 RewardType.new {
-                    audience = tokenNamespace.type.audience
-                    type = tokenNamespace.type.type
+                    audience = rewardNamespace.type.audience
+                    type = rewardNamespace.type.type
                 }
             } else {
                 rewardTypes.first()
             }
 
-            val metadatasToAdd = if(tokenNamespace.metadatas != null) {
-                tokenNamespace.metadatas.metadatas.map {
+            val metadatasToAdd = if(rewardNamespace.metadatas != null) {
+                rewardNamespace.metadatas.metadatas.map {
                         md -> Metadata.new {
                         key = md.key
                         value = md.value
@@ -46,11 +46,10 @@ object GenerateRewardService: SOAServiceInterface<Reward> {
             val keyPairResult = GenerateCryptoKeyPairService.execute()
             if(keyPairResult.result != SOAResultType.SUCCESS)
                 return@execute throw Exception(keyPairResult.message)
-            val keyPairNamespace: CryptoKeyPairNamespace = keyPairResult.data!!
 
             val keyPair = CryptoKeyPair.new {
-                publicKey = keyPairNamespace.publicKey
-                encryptedPrivateKey = keyPairNamespace.encryptedPrivateKey
+                publicKey = keyPairResult.data!!.publicKey
+                encryptedPrivateKey = keyPairResult.data!!.encryptedPrivateKey
             }
 
             val newReward = Reward.new {

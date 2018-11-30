@@ -13,10 +13,6 @@ import main.services.transaction.GenerateTransactionService
  */
 object GenerateUserAccountService: SOAServiceInterface<UserAccount> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<UserAccount> {
-        val keyPairResult = GenerateCryptoKeyPairService.execute()
-        if(keyPairResult.result != SOAResultType.SUCCESS)
-            return SOAResult(keyPairResult.result, keyPairResult.message, null)
-        val keyPairNamespace: CryptoKeyPairNamespace = keyPairResult.data!!
 
         val apiCredResult = GenerateApiCredsService.execute()
         if(apiCredResult.result != SOAResultType.SUCCESS)
@@ -34,10 +30,6 @@ object GenerateUserAccountService: SOAServiceInterface<UserAccount> {
                 firstname = params!!["firstname"]!!
                 lastname = params!!["lastname"]!!
             }
-            val keyPair = CryptoKeyPair.new {
-                publicKey = keyPairNamespace.publicKey
-                encryptedPrivateKey = keyPairNamespace.encryptedPrivateKey
-            }
             val apiCred = ApiCred.new {
                 apiKey = apiCredNamespace.apiKey
                 encryptedSecretKey = apiCredNamespace.encryptedSecretKey
@@ -47,9 +39,13 @@ object GenerateUserAccountService: SOAServiceInterface<UserAccount> {
                 expiration = sessionNamespace.expiration
             }
 
+            val keyPairResult = GenerateCryptoKeyPairService.execute()
+            if(keyPairResult.result != SOAResultType.SUCCESS)
+                throw Exception(keyPairResult.message)
+
             val userAccount = UserAccount.new {
                 userMetadata = user
-                cryptoKeyPair = keyPair
+                cryptoKeyPair = keyPairResult.data!!
                 apiCreds = apiCred
                 session = newSession
             }
@@ -58,7 +54,7 @@ object GenerateUserAccountService: SOAServiceInterface<UserAccount> {
             val transactionResult = GenerateTransactionService.execute(
                 userAccount!!.idValue,
                 TransactionNamespace(
-                    keyPairNamespace.publicKey,
+                    keyPairResult.data!!.publicKey,
                     null,
                     ActionNamespace(
                         ActionType.CREATE,

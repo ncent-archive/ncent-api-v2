@@ -3,6 +3,7 @@ package test
 import framework.models.idValue
 import io.kotlintest.days
 import main.daos.*
+import main.services.completion_criteria.GenerateCompletionCriteriaService
 import main.services.reward.AddToRewardPoolService
 import main.services.reward.GenerateRewardService
 import main.services.token.GenerateTokenService
@@ -82,6 +83,13 @@ object TestHelper {
             )
         )
 
+        var completionCriteriaNamespace = CompletionCriteriaNamespace(
+            address = null,
+            rewardNamespace = rewardNamespace,
+            expiration = DateTime.now().plusDays(100),
+            preReqCompletionCriteriaIds = null
+        )
+
         // Create a user, token, reward, and add to the pool
         // Create a fake providence chain
         return transaction {
@@ -105,18 +113,7 @@ object TestHelper {
                 )
             ).data!!
 
-            //TODO check that this works
-            val keyPairNamespace = GenerateCryptoKeyPairService.execute().data!!
-            val keyPair = CryptoKeyPair.new {
-                publicKey = keyPairNamespace.publicKey
-                encryptedPrivateKey = keyPairNamespace.encryptedPrivateKey
-            }
-            // TODO change this to use generation service once its done
-            CompletionCriteria.new {
-                cryptoKeyPair = keyPair
-                expiration = DateTime.now() + 5.days.toMillis()
-                reward = rewards.id
-            }
+            GenerateCompletionCriteriaService.execute(newUserAccount.idValue, completionCriteriaNamespace, null).data!!
             return@transaction rewards.id
         }
     }
