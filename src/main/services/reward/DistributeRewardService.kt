@@ -13,6 +13,7 @@ import main.services.transaction.GetProvidenceChainService
  */
 object DistributeRewardService: SOAServiceInterface<TransactionList> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<TransactionList> {
+        // TODO check that the caller is the completion criteria address?
         return DaoService.execute {
             val reward = Reward.findById(params!!["reward_id"]!!.toInt())!!
             val address = reward.pool.cryptoKeyPair.publicKey

@@ -7,6 +7,7 @@ import main.services.reward.AddToRewardPoolService
 import main.services.reward.GenerateRewardService
 import main.services.token.GenerateTokenService
 import main.services.transaction.GenerateTransactionService
+import main.services.user_account.GenerateCryptoKeyPairService
 import main.services.user_account.GenerateUserAccountService
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.dateTimeParam
@@ -104,9 +105,15 @@ object TestHelper {
                 )
             ).data!!
 
+            //TODO check that this works
+            val keyPairNamespace = GenerateCryptoKeyPairService.execute().data!!
+            val keyPair = CryptoKeyPair.new {
+                publicKey = keyPairNamespace.publicKey
+                encryptedPrivateKey = keyPairNamespace.encryptedPrivateKey
+            }
             // TODO change this to use generation service once its done
             CompletionCriteria.new {
-                address = "CCTESTADDRESS" + DateTime.now().millis
+                cryptoKeyPair = keyPair
                 expiration = DateTime.now() + 5.days.toMillis()
                 reward = rewards.id
             }

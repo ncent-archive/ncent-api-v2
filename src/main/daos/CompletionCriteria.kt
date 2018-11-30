@@ -19,7 +19,7 @@ import org.jetbrains.exposed.sql.Table
 class CompletionCriteria(id: EntityID<Int>) : BaseIntEntity(id, CompletionCriterias) {
     companion object : BaseIntEntityClass<CompletionCriteria>(CompletionCriterias)
 
-    var address by CompletionCriterias.address
+    var cryptoKeyPair by CryptoKeyPair referencedOn CompletionCriterias.cryptoKeyPair
     var reward by CompletionCriterias.reward
     var expiration by CompletionCriterias.expiration
     var prereq by CompletionCriteria via PrerequisiteCompletionCriterias
@@ -31,7 +31,7 @@ object PrerequisiteCompletionCriterias : Table("prerequisite_completion_criteria
 }
 
 object CompletionCriterias : BaseIntIdTable("completion_criterias") {
-    val address = varchar("address", 256).uniqueIndex()
     val reward = reference("reward", Rewards)
     val expiration = datetime("expiration")
+    val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
 }
