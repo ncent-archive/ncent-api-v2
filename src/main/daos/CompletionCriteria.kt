@@ -22,7 +22,7 @@ class CompletionCriteria(id: EntityID<Int>) : BaseIntEntity(id, CompletionCriter
     companion object : BaseIntEntityClass<CompletionCriteria>(CompletionCriterias)
 
     var address by CompletionCriterias.address
-    var reward by CompletionCriterias.reward
+    var reward by Reward referencedOn CompletionCriterias.reward
     var expiration by CompletionCriterias.expiration
     var prereq by CompletionCriteria via PrerequisiteCompletionCriterias
 }

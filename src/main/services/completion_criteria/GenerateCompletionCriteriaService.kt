@@ -32,14 +32,14 @@ object GenerateCompletionCriteriaService: SOAServiceInterface<CompletionCriteria
                 }
                 return@execute CompletionCriteria.new {
                     address = completionAddress
-                    reward = rewardResult.data!!.id
+                    reward = rewardResult.data!!
                     expiration = completionCriteriaNamespace.expiration
                     prereq = prereqCompletionCriterias
                 }
             } else {
                 return@execute CompletionCriteria.new {
                     address = completionAddress
-                    reward = rewardResult.data!!.id
+                    reward = rewardResult.data!!
                     expiration = completionCriteriaNamespace.expiration
                 }
             }
