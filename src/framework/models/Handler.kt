@@ -86,26 +86,26 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       return db
     }
 
-    fun buildTables() {
+    private fun buildTables() {
       transaction {
         SchemaUtils.create(
-              Users,
-              CryptoKeyPairs,
-              ApiCreds,
-              Sessions,
-              UserAccounts,
-              Actions,
-              Transactions,
-              Metadatas,
-              TransactionsMetadata,
-              Tokens,
-              TokenTypes,
-              Rewards,
-              RewardPools,
-              RewardTypes,
-              RewardsToTransactions,
-              RewardsMetadata,
-              CompletionCriterias
+            Users,
+            CryptoKeyPairs,
+            ApiCreds,
+            Sessions,
+            UserAccounts,
+            Actions,
+            Transactions,
+            Metadatas,
+            TransactionsMetadata,
+            Tokens,
+            TokenTypes,
+            Rewards,
+            RewardPools,
+            RewardTypes,
+            RewardsToTransactions,
+            RewardsMetadata,
+            CompletionCriterias
         )
       }
     }
@@ -133,23 +133,23 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     private fun dropTables() {
       transaction {
         SchemaUtils.drop(
-              Users,
-              CryptoKeyPairs,
-              ApiCreds,
-              Sessions,
-              UserAccounts,
-              Actions,
-              Transactions,
-              Metadatas,
-              TransactionsMetadata,
-              Tokens,
-              TokenTypes,
-              Rewards,
-              RewardPools,
-              RewardTypes,
-              RewardsToTransactions,
-              RewardsMetadata,
-              CompletionCriterias
+            Users,
+            CryptoKeyPairs,
+            ApiCreds,
+            Sessions,
+            UserAccounts,
+            Actions,
+            Transactions,
+            Metadatas,
+            TransactionsMetadata,
+            Tokens,
+            TokenTypes,
+            Rewards,
+            RewardPools,
+            RewardTypes,
+            RewardsToTransactions,
+            RewardsMetadata,
+            CompletionCriterias
         )
       }
     }
