@@ -31,7 +31,7 @@ class GenerateCompletionCriteriaServiceTest : WordSpec() {
             address = address,
             rewardNamespace =  rewardNamespace,
             expiration = DateTime.now().plusMonths(5),
-            preReqCompletionCriteriaIds = null
+            preReqCompletionCriteriaIds = listOf()
         )
     }
 
@@ -40,8 +40,8 @@ class GenerateCompletionCriteriaServiceTest : WordSpec() {
     }
 
     init {
-        "calling execute with a valid reward" should {
-            "generate the reward and associated reward type and pool" {
+        "calling execute with a valid completion criteria" should {
+            "generate the reward and associated reward type and pool and completion criteria" {
                 var result = GenerateCompletionCriteriaService.execute(null, completionCriteriaNamespace, null)
                 result.result shouldBe SOAResultType.SUCCESS
                 transaction {

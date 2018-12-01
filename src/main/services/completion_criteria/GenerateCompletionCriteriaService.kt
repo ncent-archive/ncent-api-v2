@@ -26,7 +26,7 @@ object GenerateCompletionCriteriaService: SOAServiceInterface<CompletionCriteria
                 UserAccount.findById(caller!!)!!.cryptoKeyPair.publicKey
             }
 
-            if(completionCriteriaNamespace.preReqCompletionCriteriaIds != null) {
+            if(completionCriteriaNamespace.preReqCompletionCriteriaIds.any()) {
                 val prereqCompletionCriterias = CompletionCriteria.find {
                     CompletionCriterias.id inList completionCriteriaNamespace.preReqCompletionCriteriaIds!!
                 }

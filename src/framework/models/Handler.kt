@@ -81,6 +81,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
     fun connectAndBuildTables(): Database {
       db = connectToDatabase()
+      dropTables()
       transaction {
         SchemaUtils.create(
             Users,
@@ -121,28 +122,32 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     }
 
     fun disconnectAndDropTables() {
+      dropTables()
+      disconnectFromDatabase()
+    }
+
+    private fun dropTables() {
       transaction {
         SchemaUtils.drop(
-            Users,
-            CryptoKeyPairs,
-            ApiCreds,
-            Sessions,
-            UserAccounts,
-            Actions,
-            Transactions,
-            Metadatas,
-            TransactionsMetadata,
-            Tokens,
-            TokenTypes,
-            Rewards,
-            RewardPools,
-            RewardTypes,
-            RewardsToTransactions,
-            RewardsMetadata,
-            CompletionCriterias
+              Users,
+              CryptoKeyPairs,
+              ApiCreds,
+              Sessions,
+              UserAccounts,
+              Actions,
+              Transactions,
+              Metadatas,
+              TransactionsMetadata,
+              Tokens,
+              TokenTypes,
+              Rewards,
+              RewardPools,
+              RewardTypes,
+              RewardsToTransactions,
+              RewardsMetadata,
+              CompletionCriterias
         )
       }
-      disconnectFromDatabase()
     }
   }
 }

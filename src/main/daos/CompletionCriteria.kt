@@ -38,4 +38,4 @@ object CompletionCriterias : BaseIntIdTable("completion_criterias") {
     val expiration = datetime("expiration")
 }
 
-data class CompletionCriteriaNamespace(val address: String?, val rewardNamespace: RewardNamespace, val expiration: DateTime, val preReqCompletionCriteriaIds: SizedIterable<Int>?)
+data class CompletionCriteriaNamespace(val address: String?, val rewardNamespace: RewardNamespace, val expiration: DateTime, val preReqCompletionCriteriaIds: List<Int>)

@@ -87,7 +87,7 @@ object TestHelper {
             address = null,
             rewardNamespace = rewardNamespace,
             expiration = DateTime.now().plusDays(100),
-            preReqCompletionCriteriaIds = null
+            preReqCompletionCriteriaIds = listOf()
         )
 
         // Create a user, token, reward, and add to the pool
