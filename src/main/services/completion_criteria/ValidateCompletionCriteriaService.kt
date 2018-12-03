@@ -13,6 +13,9 @@ object ValidateCompletionCriteriaService: SOAServiceInterface<Boolean> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<Boolean> {
         return DaoService.execute {
             val cc = CompletionCriteria.findById(params!!["completion_criteria_id"]!!.toInt())!!
+            // TODO -- eventually move this logic to the completion criteria
+            // TODO -- in future there will be different completion criteria types, and
+            // TODO -- the object should decide if it is valid or not
             return@execute UserAccount.findById(caller!!)!!.cryptoKeyPair.publicKey == cc.address
         }
     }
