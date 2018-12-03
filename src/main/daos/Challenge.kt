@@ -83,22 +83,25 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
 
     val stateChangeActionTypes = setOf(ActionType.CREATE, ActionType.ACTIVATE, ActionType.COMPLETE, ActionType.INVALIDATE, ActionType.EXPIRE)
 
-    fun getLastStateChangeTransaction(): Transaction? {
-        val transactions = GetTransactionsService.execute(
+    private fun getTransactions(): List<Transaction>? {
+        return GetTransactionsService.execute(
             null,
             mapOf(
                 Pair("dataType", "Challenge"),
                 Pair("data", idValue.toString())
             )
         ).data?.transactions
-        transactions?.forEach {
+    }
+
+    fun getLastStateChangeTransaction(): Transaction? {
+        getTransactions()?.forEach {
             if(stateChangeActionTypes.contains(it.action.type))
                 return it
         }
         return null
     }
 
-    fun logAndGenerateTransaction(stateTransition: StateMachine.Transition<ChallengeState, ChallengeEvent, ChallengeSideEffect>, state: ActionType): Transaction {
+    private fun logAndGenerateTransaction(stateTransition: StateMachine.Transition<ChallengeState, ChallengeEvent, ChallengeSideEffect>, state: ActionType): Transaction {
         val previousTransactionId = getLastStateChangeTransaction()?.idValue
         val transactionResult = DaoService.execute {
             val transactionNamespace = TransactionNamespace(
