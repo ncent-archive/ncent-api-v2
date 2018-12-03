@@ -15,6 +15,7 @@ import main.services.token.TransferTokenService
 import main.services.user_account.GenerateUserAccountService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.extension.ExtendWith
+import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class TransferTokenServiceTest : WordSpec() {
@@ -40,23 +41,9 @@ class TransferTokenServiceTest : WordSpec() {
     init {
         "calling execute with a user transfer, having sufficient funds" should {
             "return the transaction generated" {
-                var newUserAccount = GenerateUserAccountService.execute(
-                    null,
-                    mapOf(
-                        Pair("firstname", "Arya"),
-                        Pair("lastname", "Soltanieh"),
-                        Pair("email", "as@ncent.io")
-                    )
-                ).data!!
-
-                var newUserAccount2 = GenerateUserAccountService.execute(
-                    null,
-                    mapOf(
-                        Pair("firstname", "Adam"),
-                        Pair("lastname", "Foos"),
-                        Pair("email", "af@ncent.io")
-                    )
-                ).data!!
+                val userAccounts = TestHelper.generateUserAccounts(2)
+                val newUserAccount = userAccounts[0]
+                val newUserAccount2 = userAccounts[1]
 
                 val token = GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
 
@@ -81,23 +68,9 @@ class TransferTokenServiceTest : WordSpec() {
 
         "calling execute with a user transfer, having insufficient funds" should {
             "return failure" {
-                var newUserAccount = GenerateUserAccountService.execute(
-                    null,
-                    mapOf(
-                        Pair("firstname", "Arya"),
-                        Pair("lastname", "Soltanieh"),
-                        Pair("email", "as@ncent.io")
-                    )
-                ).data!!
-
-                var newUserAccount2 = GenerateUserAccountService.execute(
-                    null,
-                    mapOf(
-                        Pair("firstname", "Adam"),
-                        Pair("lastname", "Foos"),
-                        Pair("email", "af@ncent.io")
-                    )
-                ).data!!
+                val userAccounts = TestHelper.generateUserAccounts(2)
+                val newUserAccount = userAccounts[0]
+                val newUserAccount2 = userAccounts[1]
 
                 GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null)
 

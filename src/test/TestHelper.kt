@@ -2,6 +2,8 @@ package test
 
 import framework.models.idValue
 import io.kotlintest.days
+import io.kotlintest.forExactly
+import io.kotlintest.properties.forAll
 import main.daos.*
 import main.services.completion_criteria.GenerateCompletionCriteriaService
 import main.services.reward.AddToRewardPoolService
@@ -116,5 +118,17 @@ object TestHelper {
             GenerateCompletionCriteriaService.execute(newUserAccount.idValue, completionCriteriaNamespace, null).data!!
             return@transaction rewards.id
         }
+    }
+
+    fun generateUserAccounts(count: Int): List<UserAccount> {
+        var userAccounts = mutableListOf<UserAccount>()
+        for(i in 0..(count - 1)) {
+            userAccounts[i] = GenerateUserAccountService.execute(null, mutableMapOf(
+                Pair("email", "dev$i@ncnt.io"),
+                Pair("firstname", "dev$i"),
+                Pair("lastname", "ncnt$i")
+            )).data!!
+        }
+        return userAccounts
     }
 }

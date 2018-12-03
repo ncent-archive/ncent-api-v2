@@ -15,6 +15,7 @@ import main.services.token.GenerateTokenService
 import main.services.user_account.GenerateUserAccountService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.extension.ExtendWith
+import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class AddToRewardPoolServiceTest : WordSpec() {
@@ -51,14 +52,7 @@ class AddToRewardPoolServiceTest : WordSpec() {
         "calling execute with a valid transfer" should {
             "generate a transaction transfering to the pool" {
                 transaction {
-                    var newUserAccount = GenerateUserAccountService.execute(
-                        null,
-                        mapOf(
-                            Pair("firstname", "Arya"),
-                            Pair("lastname", "Soltanieh"),
-                            Pair("email", "as@ncent.io")
-                        )
-                    ).data!!
+                    var newUserAccount = TestHelper.generateUserAccounts(1).first()
                     val token = GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
                     var reward = GenerateRewardService.execute(newUserAccount.idValue, rewardNamespace, null).data!!
                     val result = AddToRewardPoolService.execute(
