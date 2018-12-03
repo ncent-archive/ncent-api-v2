@@ -1,5 +1,6 @@
 package main.services.transaction
 
+import framework.models.idValue
 import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
@@ -19,7 +20,7 @@ object GetTransactionsService: SOAServiceInterface<TransactionList> {
                 Action.find {
                     Actions.data eq Integer.valueOf(params!!["data"]!!)
                     Actions.type eq ActionType.valueOf(params!!["type"]!!)
-                    Actions.dataType eq params!!["type"]!!
+                    Actions.dataType eq params!!["dataType"]!!
                 }.first()
             }
             if(actionResult.result != SOAResultType.SUCCESS)
@@ -40,7 +41,7 @@ object GetTransactionsService: SOAServiceInterface<TransactionList> {
                     )
                 }
                 Transactions.to eq params!!["to"]!!
-            }.distinct()
+            }.distinct().sortedByDescending { it.idValue }
         }
 
         if(transactionsResult.result == SOAResultType.SUCCESS)

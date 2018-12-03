@@ -32,6 +32,10 @@
             <id>jitpack</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
    <dependencies>
@@ -119,6 +123,11 @@
            <version>0.3.3</version>
        </dependency>
 
+       <dependency>
+           <groupId>com.github.tinder</groupId>
+           <artifactId>statemachine</artifactId>
+           <version>0.1.2</version>
+       </dependency>
    </dependencies>
 
     <pluginRepositories>

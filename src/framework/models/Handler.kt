@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import framework.models.BaseIntEntity
 import main.daos.*
+import org.apache.log4j.Logger
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -84,6 +85,10 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       dropTables()
       buildTables()
       return db
+    }
+
+    fun log(): Logger {
+      return LOG
     }
 
     private fun buildTables() {
