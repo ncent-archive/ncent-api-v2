@@ -36,3 +36,6 @@ Todo:
    
 ## Contributing
 Feel free to create merge requests
+
+## Author
+Arya Soltanieh
