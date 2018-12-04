@@ -123,11 +123,11 @@ object TestHelper {
     fun generateUserAccounts(count: Int): List<UserAccount> {
         var userAccounts = mutableListOf<UserAccount>()
         for(i in 0..(count - 1)) {
-            userAccounts[i] = GenerateUserAccountService.execute(null, mutableMapOf(
+            userAccounts.add(GenerateUserAccountService.execute(null, mutableMapOf(
                 Pair("email", "dev$i@ncnt.io"),
                 Pair("firstname", "dev$i"),
                 Pair("lastname", "ncnt$i")
-            )).data!!
+            )).data!!)
         }
         return userAccounts
     }
