@@ -5,12 +5,19 @@ import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.ChallengeList
 
 /**
- * Retrieve a single providence chain.
- * The transaction queried must NOT have children and must be a leaf node
+ *
+ * Retrieve one or more challenges based on filters
  *
  */
 object GetChallengesService: SOAServiceInterface<ChallengeList> {
-    override fun execute(caller: Int?, id: Int?): SOAResult<ChallengeList> {
+
+    // get challenges by filter
+    override fun execute(caller: Int?, params: Map<String, String>?): SOAResult<ChallengeList> {
+        throw NotImplementedError()
+    }
+
+    // get challenges for a caller
+    override fun execute(caller: Int?): SOAResult<ChallengeList> {
         throw NotImplementedError()
     }
 }
