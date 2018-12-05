@@ -18,6 +18,7 @@ import org.jetbrains.exposed.dao.*
  * store the state for a challenge over the lifecycle of that challenge
  *
  * @property id
+ * @property parentChallenge the parent of this challenge, typically this challenge must be completed before the parent
  * @property challengeSettings ChallengeSettings
  * @property asyncSubChallenges sub challenges that can be completed in any order
  * @property syncSubChallenges sub challenges that must be completed in order
@@ -26,6 +27,7 @@ import org.jetbrains.exposed.dao.*
 class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     companion object : BaseIntEntityClass<Challenge>(Challenges)
 
+    var parentChallenge by Challenge optionalReferencedOn Challenges.parentChallenge
     var challengeSettings by ChallengeSetting referencedOn Challenges.challengeSettings
     var asyncSubChallenges by SubChallenge via SubChallenges
     var syncSubChallenges by SubChallenge via SubChallenges
@@ -137,6 +139,7 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
 }
 
 object Challenges : BaseIntIdTable("challenges") {
+    val parentChallenge = reference("parent_challenge", Challenges).nullable()
     val challengeSettings = reference("challenge_settings", ChallengeSettings)
     val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
 }
@@ -156,6 +159,7 @@ object SubChallenges : BaseIntIdTable("sub_challenges") {
 }
 
 data class ChallengeNamespace(
+    val parentChallenge: Int?,
     val challengeSettings: ChallengeSettingNamespace,
     val asyncSubChallenges: List<Pair<Int, SubChallengeType>>,
     val syncSubChallenges: List<Pair<Int, SubChallengeType>>,

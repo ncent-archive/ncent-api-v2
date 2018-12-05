@@ -30,43 +30,43 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
                 maxDepth = challengeNamespace.challengeSettings.maxDepth
                 maxNodes = challengeNamespace.challengeSettings.maxNodes
             }
-            
+
             val keyPairGenerated = GenerateCryptoKeyPairService.execute()
             if(keyPairGenerated.result != SOAResultType.SUCCESS)
                 throw Exception(keyPairGenerated.message)
 
+            val optionalParentChallenge = if(challengeNamespace.parentChallenge != null)
+                Challenge.findById(challengeNamespace.parentChallenge)
+            else
+                null
+
             val challenge = Challenge.new {
+                parentChallenge = optionalParentChallenge
                 challengeSettings = settings
                 cryptoKeyPair = keyPairGenerated.data!!
             }
 
             if(challengeNamespace.asyncSubChallenges.any()) {
-                var asyncSubChallengesList = mutableListOf<SubChallenge>()
-                challengeNamespace.asyncSubChallenges.forEach {
-                    asyncSubChallengesList.add(SubChallenge.new {
-                        parentChallenge = challenge.id
-                        subChallenge = EntityID(it.first, Challenges)
-                        type = it.second
-                    })
-                }
-
-                challenge.asyncSubChallenges = SizedCollection(asyncSubChallengesList)
+                challenge.asyncSubChallenges = createSubChallengesList(challenge.id, challengeNamespace.asyncSubChallenges)
             }
 
             if(challengeNamespace.syncSubChallenges.any()) {
-                var syncSubChallengesList = mutableListOf<SubChallenge>()
-                challengeNamespace.syncSubChallenges.forEach {
-                    syncSubChallengesList.add(SubChallenge.new {
-                        parentChallenge = challenge.id
-                        subChallenge = EntityID(it.first, Challenges)
-                        type = it.second
-                    })
-                }
-
-                challenge.asyncSubChallenges = SizedCollection(syncSubChallengesList)
+                challenge.asyncSubChallenges = createSubChallengesList(challenge.id, challengeNamespace.syncSubChallenges)
             }
 
             return@execute challenge
         }
+    }
+
+    private fun createSubChallengesList(challengeId: EntityID<Int>, subChallengeIdsAndTypes: List<Pair<Int, SubChallengeType>>) : SizedCollection<SubChallenge> {
+        var subChallenges = mutableListOf<SubChallenge>()
+        subChallengeIdsAndTypes.forEach {
+            subChallenges.add(SubChallenge.new {
+                parentChallenge = challengeId
+                subChallenge = EntityID(it.first, Challenges)
+                type = it.second
+            })
+        }
+        return SizedCollection(subChallenges)
     }
 }
