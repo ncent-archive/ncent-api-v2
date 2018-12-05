@@ -27,8 +27,8 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     companion object : BaseIntEntityClass<Challenge>(Challenges)
 
     var challengeSettings by ChallengeSetting referencedOn Challenges.challengeSettings
-    var asyncSubChallenges by Challenge via SubChallenges
-    var syncSubChallenges by Challenge via SubChallenges
+    var asyncSubChallenges by SubChallenge via SubChallenges
+    var syncSubChallenges by SubChallenge via SubChallenges
     var resultVectors by ResultVector via ResultVectors
     var cryptoKeyPair by CryptoKeyPair referencedOn Challenges.cryptoKeyPair
 
@@ -141,11 +141,26 @@ object Challenges : BaseIntIdTable("challenges") {
     val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
 }
 
+class SubChallenge(id: EntityID<Int>) : BaseIntEntity(id, SubChallenges) {
+    companion object : BaseIntEntityClass<SubChallenge>(SubChallenges)
+
+    var parentChallenge by SubChallenges.parentChallenge
+    var subChallenge by SubChallenges.subChallenge
+    var type by SubChallenges.type
+}
+
 object SubChallenges : BaseIntIdTable("sub_challenges") {
     val parentChallenge = reference("parent_challenge", Challenges).primaryKey()
     val subChallenge = reference("sub_challenge", Challenges).primaryKey()
     val type = enumeration("sub_challenge_type", SubChallengeType::class)
 }
+
+data class ChallengeNamespace(
+    val challengeSettings: ChallengeSettingNamespace,
+    val asyncSubChallenges: List<Pair<Int, SubChallengeType>>,
+    val syncSubChallenges: List<Pair<Int, SubChallengeType>>,
+    val resultVectors: List<ResultVectorNamespace>
+)
 
 enum class SubChallengeType {
     SYNC, ASYNC

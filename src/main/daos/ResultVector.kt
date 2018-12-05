@@ -30,3 +30,5 @@ object ResultVectors : BaseIntIdTable("result_vectors") {
     val challenge = reference("challenge_to_result_vector", Challenges)
     val distributionFeeReward = reference("distribution_fee_reward", Rewards)
 }
+
+data class ResultVectorNamespace(val completionCriterias: List<CompletionCriteriaNamespace>, val distributionFeeReward: RewardNamespace)

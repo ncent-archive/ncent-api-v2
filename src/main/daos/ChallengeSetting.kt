@@ -4,12 +4,16 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.EntityID
+import org.joda.time.DateTime
 
 /**
  * Used to represent challenges settings that are initially setup for every challenge
  *
  * @property name
  * @property expiration
+ * @property description
+ * @property imageUrl
+ * @property sponsorName
  * @property admin address of owner of this challenge
  * @property offChain optionally set this challenge to allow off-chain sharing
  * @property maxRewards the number of times the reward can be claimed
@@ -24,6 +28,9 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
     companion object : BaseIntEntityClass<ChallengeSetting>(ChallengeSettings)
 
     var name by ChallengeSettings.name
+    var description by ChallengeSettings.description
+    var imageUrl by ChallengeSettings.imageUrl
+    var sponsorName by ChallengeSettings.sponsorName
     var expiration by ChallengeSettings.expiration
     var admin by ChallengeSettings.admin
     var offChain by ChallengeSettings.offChain
@@ -36,12 +43,30 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
 
 object ChallengeSettings : BaseIntIdTable("challenge_settings") {
     var name = varchar("name", 100)
+    var description = varchar("description", 1000)
+    var imageUrl = varchar("imageUrl", 100)
+    var sponsorName = varchar("sponsorName", 100)
     var expiration = datetime("expiration")
-    var admin = reference("admin", Users)
-    var offChain = bool("off_chain").default(false)
-    var maxRewards = integer("max_rewards").default(1)
-    var maxDistributionFeeReward = integer("max_distribution_fee_reward").default(Integer.MAX_VALUE)
-    var maxSharesPerReceivedShare = integer("max_shares_per_received_share").default(Integer.MAX_VALUE)
-    var maxDepth = integer("max_depth").default(Integer.MAX_VALUE)
-    var maxNodes = integer("max_nodes").default(Integer.MAX_VALUE)
+    var admin = reference("admin", UserAccounts)
+    var offChain = bool("off_chain").default(false).nullable()
+    var maxRewards = integer("max_rewards").default(1).nullable()
+    var maxDistributionFeeReward = integer("max_distribution_fee_reward").default(Integer.MAX_VALUE).nullable()
+    var maxSharesPerReceivedShare = integer("max_shares_per_received_share").default(Integer.MAX_VALUE).nullable()
+    var maxDepth = integer("max_depth").default(Integer.MAX_VALUE).nullable()
+    var maxNodes = integer("max_nodes").default(Integer.MAX_VALUE).nullable()
 }
+
+data class ChallengeSettingNamespace(
+    val name: String,
+    val description: String,
+    val imageUrl: String,
+    val sponsorName: String,
+    val expiration: DateTime,
+    val admin: Int,
+    val offChain: Boolean?,
+    val maxRewards: Int?,
+    val maxDistributionFeeReward: Int?,
+    val maxSharesPerReceivedShare: Int?,
+    val maxDepth: Int?,
+    val maxNodes: Int?
+)
