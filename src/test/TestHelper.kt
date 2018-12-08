@@ -149,7 +149,26 @@ object TestHelper {
     }
 
     fun generateChallengeSettingsNamespace(userAccount: UserAccount, count: Int = 1): List<ChallengeSettingNamespace> {
-
+        var challengeSettingsList = mutableListOf<ChallengeSettingNamespace>()
+        for(i in 0..count) {
+            challengeSettingsList.add(
+                ChallengeSettingNamespace(
+                    name = "TESTname$i",
+                    description = "TESTdescription$i",
+                    imageUrl = "TESTimageUrl$i",
+                    sponsorName = "TESTsponsorName$i",
+                    expiration = DateTime.now().plusDays(1),
+                    admin = userAccount.idValue,
+                    offChain = null,
+                    maxRewards = null,
+                    maxDistributionFeeReward = null,
+                    maxSharesPerReceivedShare = null,
+                    maxDepth = null,
+                    maxNodes = null
+                )
+            )
+        }
+        return challengeSettingsList.toList()
     }
 
     fun generateResultVectorNamespace(userAccount: UserAccount, count: Int = 1): List<ResultVectorNamespace> {

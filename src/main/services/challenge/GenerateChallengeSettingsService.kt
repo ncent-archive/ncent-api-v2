@@ -16,7 +16,6 @@ object GenerateChallengeSettingsService: SOAServiceInterface<ChallengeSetting> {
             return@execute ChallengeSetting.new {
                 name = challengeSettingNamespace.name
                 description = challengeSettingNamespace.description
-                description = challengeSettingNamespace.description
                 imageUrl = challengeSettingNamespace.imageUrl
                 sponsorName = challengeSettingNamespace.sponsorName
                 expiration = challengeSettingNamespace.expiration
