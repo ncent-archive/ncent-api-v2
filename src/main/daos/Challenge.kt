@@ -163,8 +163,8 @@ object SubChallenges : BaseIntIdTable("sub_challenges") {
 data class ChallengeNamespace(
     val parentChallenge: Int?,
     val challengeSettings: ChallengeSettingNamespace,
-    val asyncSubChallenges: List<Pair<Int, SubChallengeType>>,
-    val syncSubChallenges: List<Pair<Int, SubChallengeType>>,
+    val asyncSubChallenges: List<Int>,
+    val syncSubChallenges: List<Int>,
     val resultVectors: List<ResultVectorNamespace>
 )
 

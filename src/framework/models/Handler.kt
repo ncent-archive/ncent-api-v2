@@ -110,7 +110,11 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
             RewardTypes,
             RewardsToTransactions,
             RewardsMetadata,
-            CompletionCriterias
+            CompletionCriterias,
+            Challenges,
+            ChallengeSettings,
+            SubChallenges,
+            ResultVectors
         )
       }
     }
@@ -154,7 +158,11 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
             RewardTypes,
             RewardsToTransactions,
             RewardsMetadata,
-            CompletionCriterias
+            CompletionCriterias,
+            Challenges,
+            ChallengeSettings,
+            SubChallenges,
+            ResultVectors
         )
       }
     }

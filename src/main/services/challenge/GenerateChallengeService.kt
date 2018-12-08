@@ -47,24 +47,24 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
             }
 
             if(challengeNamespace.asyncSubChallenges.any()) {
-                challenge.asyncSubChallenges = createSubChallengesList(challenge.id, challengeNamespace.asyncSubChallenges)
+                challenge.asyncSubChallenges = createSubChallengesList(challenge.id, challengeNamespace.asyncSubChallenges, SubChallengeType.ASYNC)
             }
 
             if(challengeNamespace.syncSubChallenges.any()) {
-                challenge.asyncSubChallenges = createSubChallengesList(challenge.id, challengeNamespace.syncSubChallenges)
+                challenge.asyncSubChallenges = createSubChallengesList(challenge.id, challengeNamespace.syncSubChallenges, SubChallengeType.SYNC)
             }
 
             return@execute challenge
         }
     }
 
-    private fun createSubChallengesList(challengeId: EntityID<Int>, subChallengeIdsAndTypes: List<Pair<Int, SubChallengeType>>) : SizedCollection<SubChallenge> {
+    private fun createSubChallengesList(challengeId: EntityID<Int>, subChallengeIds: List<Int>, subChallengeType: SubChallengeType) : SizedCollection<SubChallenge> {
         var subChallenges = mutableListOf<SubChallenge>()
-        subChallengeIdsAndTypes.forEach {
+        subChallengeIds.forEach {
             subChallenges.add(SubChallenge.new {
                 parentChallenge = challengeId
-                subChallenge = EntityID(it.first, Challenges)
-                type = it.second
+                subChallenge = EntityID(it, Challenges)
+                type = subChallengeType
             })
         }
         return SizedCollection(subChallenges)

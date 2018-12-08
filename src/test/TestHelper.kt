@@ -1,10 +1,12 @@
 package test
 
 import framework.models.idValue
+import framework.services.DaoService
 import io.kotlintest.days
 import io.kotlintest.forExactly
 import io.kotlintest.properties.forAll
 import main.daos.*
+import main.services.challenge.GenerateChallengeSettingsService
 import main.services.completion_criteria.GenerateCompletionCriteriaService
 import main.services.reward.AddToRewardPoolService
 import main.services.reward.GenerateRewardService
@@ -120,7 +122,7 @@ object TestHelper {
         }
     }
 
-    fun generateUserAccounts(count: Int): List<UserAccount> {
+    fun generateUserAccounts(count: Int = 1): List<UserAccount> {
         var userAccounts = mutableListOf<UserAccount>()
         for(i in 0..(count - 1)) {
             userAccounts.add(GenerateUserAccountService.execute(null, mutableMapOf(
@@ -130,5 +132,27 @@ object TestHelper {
             )).data!!)
         }
         return userAccounts
+    }
+
+    fun generateChallenge(userAccount: UserAccount, count: Int = 1): List<Challenge> {
+        var challengeSettingsList = generateChallengeSettingsNamespace(userAccount, count)
+        return DaoService.execute {
+            var challenges = mutableListOf<Challenge>()
+            for(i in 0..count) {
+                challenges.add(Challenge.new {
+                    challengeSettings = GenerateChallengeSettingsService.execute(null, challengeSettingsList[i], null).data!!
+                    cryptoKeyPair = GenerateCryptoKeyPairService.execute().data!!
+                })
+            }
+            return@execute challenges
+        }.data!!
+    }
+
+    fun generateChallengeSettingsNamespace(userAccount: UserAccount, count: Int = 1): List<ChallengeSettingNamespace> {
+
+    }
+
+    fun generateResultVectorNamespace(userAccount: UserAccount, count: Int = 1): List<ResultVectorNamespace> {
+
     }
 }
