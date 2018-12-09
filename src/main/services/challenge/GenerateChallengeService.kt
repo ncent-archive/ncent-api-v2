@@ -5,6 +5,8 @@ import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
+import main.services.completion_criteria.GenerateCompletionCriteriaService
+import main.services.reward.GenerateRewardService
 import main.services.user_account.GenerateCryptoKeyPairService
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.SizedCollection
@@ -40,33 +42,52 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
             else
                 null
 
+            val distributionFeeRewardResult = GenerateRewardService.execute(null, challengeNamespace.distributionFeeReward, null)
+
+            // TODO add reward to pool?
             val challenge = Challenge.new {
                 parentChallenge = optionalParentChallenge
                 challengeSettings = settings
                 cryptoKeyPair = keyPairGenerated.data!!
+                distributionFeeReward = distributionFeeRewardResult.data!!
             }
 
+            challenge.completionCriterias = createCompletionCriteriasList(challengeNamespace.completionCriterias)
+
             if(challengeNamespace.asyncSubChallenges.any()) {
-                challenge.asyncSubChallenges = createSubChallengesList(challenge.id, challengeNamespace.asyncSubChallenges, SubChallengeType.ASYNC)
+                challenge.asyncSubChallenges = createSubChallengesList(challengeNamespace.asyncSubChallenges, SubChallengeType.ASYNC)
             }
 
             if(challengeNamespace.syncSubChallenges.any()) {
-                challenge.asyncSubChallenges = createSubChallengesList(challenge.id, challengeNamespace.syncSubChallenges, SubChallengeType.SYNC)
+                challenge.asyncSubChallenges = createSubChallengesList(challengeNamespace.syncSubChallenges, SubChallengeType.SYNC)
             }
 
             return@execute challenge
         }
     }
 
-    private fun createSubChallengesList(challengeId: EntityID<Int>, subChallengeIds: List<Int>, subChallengeType: SubChallengeType) : SizedCollection<SubChallenge> {
+    private fun createSubChallengesList(subChallengeIds: List<Int>, subChallengeType: SubChallengeType) : SizedCollection<SubChallenge> {
         var subChallenges = mutableListOf<SubChallenge>()
         subChallengeIds.forEach {
             subChallenges.add(SubChallenge.new {
-                parentChallenge = challengeId
                 subChallenge = EntityID(it, Challenges)
                 type = subChallengeType
             })
         }
         return SizedCollection(subChallenges)
+    }
+
+    private fun createCompletionCriteriasList(completionCriteriaNamespaces: List<CompletionCriteriaNamespace>) : SizedCollection<CompletionCriteria> {
+        var completionCriterias = mutableListOf<CompletionCriteria>()
+
+        // TODO think about how we handle generating completion criteria
+        // TODO should this happen AFTER a challenge is created?
+        // TODO how and when will the pool be populated
+        completionCriteriaNamespaces.forEach {
+            completionCriterias.add(
+                GenerateCompletionCriteriaService.execute(null, it, null).data!!
+            )
+        }
+        return SizedCollection(completionCriterias)
     }
 }

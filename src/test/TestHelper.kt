@@ -136,12 +136,14 @@ object TestHelper {
 
     fun generateChallenge(userAccount: UserAccount, count: Int = 1): List<Challenge> {
         var challengeSettingsList = generateChallengeSettingsNamespace(userAccount, count)
+        var challengeDistributionReward = generateRewardNamespace(RewardTypeName.SINGLE)
         return DaoService.execute {
             var challenges = mutableListOf<Challenge>()
             for(i in 0..count) {
                 challenges.add(Challenge.new {
                     challengeSettings = GenerateChallengeSettingsService.execute(null, challengeSettingsList[i], null).data!!
                     cryptoKeyPair = GenerateCryptoKeyPairService.execute().data!!
+                    distributionFeeReward = GenerateRewardService.execute(null, challengeDistributionReward, null).data!!
                 })
             }
             return@execute challenges
@@ -171,7 +173,26 @@ object TestHelper {
         return challengeSettingsList.toList()
     }
 
-    fun generateResultVectorNamespace(userAccount: UserAccount, count: Int = 1): List<ResultVectorNamespace> {
+    fun generateCompletionCriteriaNamespace(userAccount: UserAccount, count: Int = 1): List<CompletionCriteriaNamespace> {
+        var completionCriteriaNamespaces = mutableListOf<CompletionCriteriaNamespace>()
+        for(i in 0..count) {
+            completionCriteriaNamespaces.add(
+                CompletionCriteriaNamespace(
+                    address = userAccount.cryptoKeyPair.publicKey,
+                    rewardNamespace = generateRewardNamespace(),
+                    expiration = DateTime.now().plusDays(1)
+                )
+            )
+        }
+        return completionCriteriaNamespaces
+    }
 
+    fun generateRewardNamespace(rewardTypeName: RewardTypeName = RewardTypeName.EVEN): RewardNamespace {
+        return RewardNamespace(
+            type = RewardTypeNamespace(
+                audience = Audience.PROVIDENCE,
+                type = rewardTypeName
+            ), metadatas = null
+        )
     }
 }

@@ -22,17 +22,20 @@ import org.jetbrains.exposed.dao.*
  * @property challengeSettings ChallengeSettings
  * @property asyncSubChallenges sub challenges that can be completed in any order
  * @property syncSubChallenges sub challenges that must be completed in order
- * @property resultVectors ResultVectors
+ * @property completionCriterias CompletionCriterias
+ * @property distributionFeeReward the distribution fees and the pool. this is the
+ * pool that will be drawn on if anybody 'opts-out' of attempting to help.
  */
 class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     companion object : BaseIntEntityClass<Challenge>(Challenges)
 
     var parentChallenge by Challenge optionalReferencedOn Challenges.parentChallenge
     var challengeSettings by ChallengeSetting referencedOn Challenges.challengeSettings
-    var asyncSubChallenges by SubChallenge via SubChallenges
-    var syncSubChallenges by SubChallenge via SubChallenges
-    var resultVectors by ResultVector via ResultVectors
+    var asyncSubChallenges by SubChallenge via ChallengeToSubChallenges
+    var syncSubChallenges by SubChallenge via ChallengeToSubChallenges
+    var completionCriterias by CompletionCriteria via ChallengeToCompletionCriterias
     var cryptoKeyPair by CryptoKeyPair referencedOn Challenges.cryptoKeyPair
+    var distributionFeeReward by Reward referencedOn Challenges.distributionFeeReward
 
     val stateMachine = StateMachine.create<ChallengeState, ChallengeEvent, ChallengeSideEffect> {
         initialState(ChallengeState.CREATED)
@@ -144,19 +147,28 @@ object Challenges : BaseIntIdTable("challenges") {
     val parentChallenge = reference("parent_challenge", Challenges).nullable()
     val challengeSettings = reference("challenge_settings", ChallengeSettings)
     val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
+    val distributionFeeReward = reference("distribution_fee_reward", Rewards)
 }
 
 class SubChallenge(id: EntityID<Int>) : BaseIntEntity(id, SubChallenges) {
     companion object : BaseIntEntityClass<SubChallenge>(SubChallenges)
 
-    var parentChallenge by SubChallenges.parentChallenge
     var subChallenge by SubChallenges.subChallenge
     var type by SubChallenges.type
 }
 
-object SubChallenges : BaseIntIdTable("sub_challenges") {
-    val parentChallenge = reference("parent_challenge", Challenges).primaryKey()
-    val subChallenge = reference("sub_challenge", Challenges).primaryKey()
+object ChallengeToCompletionCriterias : BaseIntIdTable("challenge_to_completion_criteria") {
+    val challenge = reference("challenge_to_completion_criteria", Challenges).primaryKey()
+    val completionCriteria = reference("completion_criteria_to_challenge", CompletionCriterias).primaryKey()
+}
+
+object ChallengeToSubChallenges : BaseIntIdTable("challenge_to_sub_challenges") {
+    val challenge = reference("challenge_to_sub_challenge", Challenges).primaryKey()
+    val subChallenge = reference("sub_challenge_to_challenge", SubChallenges).primaryKey()
+}
+
+object SubChallenges : BaseIntIdTable("sub_challenge") {
+    val subChallenge = reference("sub_challenge_to_challenge", Challenges).primaryKey()
     val type = enumeration("sub_challenge_type", SubChallengeType::class)
 }
 
@@ -165,7 +177,8 @@ data class ChallengeNamespace(
     val challengeSettings: ChallengeSettingNamespace,
     val asyncSubChallenges: List<Int>,
     val syncSubChallenges: List<Int>,
-    val resultVectors: List<ResultVectorNamespace>
+    val completionCriterias: List<CompletionCriteriaNamespace>,
+    val distributionFeeReward: RewardNamespace
 )
 
 enum class SubChallengeType {
