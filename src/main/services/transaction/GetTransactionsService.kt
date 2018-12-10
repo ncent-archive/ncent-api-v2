@@ -15,11 +15,13 @@ import org.jetbrains.exposed.dao.EntityID
 object GetTransactionsService: SOAServiceInterface<TransactionList> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<TransactionList> {
         var action: Action? = null
-        if(params!!["data"] != null) {
+        if(params!!["dataType"] != null) {
             val actionResult = DaoService.execute {
                 Action.find {
-                    Actions.data eq Integer.valueOf(params!!["data"]!!)
-                    Actions.type eq ActionType.valueOf(params!!["type"]!!)
+                    if(params!!["data"] != null)
+                        Actions.data eq Integer.valueOf(params!!["data"]!!)
+                    if(params!!["type"] != null)
+                        Actions.type eq ActionType.valueOf(params!!["type"]!!)
                     Actions.dataType eq params!!["dataType"]!!
                 }.first()
             }

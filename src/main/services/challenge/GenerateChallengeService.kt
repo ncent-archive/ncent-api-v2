@@ -61,6 +61,8 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
             if(challengeNamespace.syncSubChallenges.any()) {
                 challenge.asyncSubChallenges = createSubChallengesList(challengeNamespace.syncSubChallenges, SubChallengeType.SYNC)
             }
+            // TODO create a transaction for challenge creation state
+            // TODO create a transaction for tokens received?
 
             return@execute challenge
         }

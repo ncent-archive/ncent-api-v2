@@ -15,8 +15,8 @@ object GenerateTransactionService: SOAServiceInterface<Transaction> {
         val transactionNamespace = d!! as TransactionNamespace
         return DaoService.execute {
             val actionObj = Action.new {
-                type = transactionNamespace.action!!.type
-                data = transactionNamespace.action!!.data
+                type = transactionNamespace.action!!.type!!
+                data = transactionNamespace.action!!.data!!
                 dataType = transactionNamespace.action!!.dataType
             }
 
@@ -38,7 +38,7 @@ object GenerateTransactionService: SOAServiceInterface<Transaction> {
             }
 
             var transaction =  Transaction.new {
-                from = transactionNamespace.from
+                from = transactionNamespace.from!!
                 to = transactionNamespace.to
                 action = actionObj
                 previousTransaction = previousTxEntity

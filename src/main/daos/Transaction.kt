@@ -42,6 +42,6 @@ object TransactionsMetadata : Table("transactions_to_metadatas") {
     val metadata = reference("metadata_to_transaction", Metadatas).primaryKey()
 }
 
-data class TransactionNamespace(val from: String, val to: String?, val action: ActionNamespace?, val previousTransaction: Int?, val metadatas: MetadatasListNamespace?)
+data class TransactionNamespace(val from: String?, val to: String?, val action: ActionNamespace?, val previousTransaction: Int?, val metadatas: MetadatasListNamespace?)
 
 class TransactionList(val transactions: List<Transaction>)
