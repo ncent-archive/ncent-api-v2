@@ -38,8 +38,14 @@ class GenerateChallengeServiceTest : WordSpec() {
             challengeNamespace = ChallengeNamespace(
                 parentChallenge = parentChallenge.idValue,
                 challengeSettings = challengeSettingNamespace,
-                asyncSubChallenges = listOf(asyncSubChallenge1, asyncSubChallenge2, asyncSubChallenge3).map { it.idValue },
-                syncSubChallenges = listOf(syncSubChallenge1, syncSubChallenge2, syncSubChallenge3).map { it.idValue },
+                subChallenges = listOf(
+                        Pair(asyncSubChallenge1, SubChallengeType.ASYNC),
+                        Pair(asyncSubChallenge2, SubChallengeType.ASYNC),
+                        Pair(asyncSubChallenge3, SubChallengeType.ASYNC),
+                        Pair(syncSubChallenge1, SubChallengeType.SYNC),
+                        Pair(syncSubChallenge2, SubChallengeType.SYNC),
+                        Pair(syncSubChallenge3, SubChallengeType.SYNC)
+                ).map { Pair(it.first.idValue, it.second) },
                 completionCriterias = listOf(completionCriteria1, completionCriteria2),
                 distributionFeeReward = distributionFeeRewardNamespace
             )
@@ -59,8 +65,9 @@ class GenerateChallengeServiceTest : WordSpec() {
                     val challenge = result.data!!
                     challenge.cryptoKeyPair shouldNotBe null
                     challenge.challengeSettings.name shouldBe "TESTname0"
-                    challenge.asyncSubChallenges.count() shouldBe 3
-                    challenge.syncSubChallenges.count() shouldBe 3
+                    challenge.subChallenges.count() shouldBe 6
+                    challenge.subChallenges.filter { it.type == SubChallengeType.ASYNC }.count() shouldBe 3
+                    challenge.subChallenges.filter { it.type == SubChallengeType.SYNC }.count() shouldBe 3
                     challenge.parentChallenge!!.idValue shouldBe parentChallenge.idValue
                     challenge.completionCriterias.count() shouldBe 2
                     challenge.completionCriterias.first().address shouldBe userAccount.cryptoKeyPair.publicKey

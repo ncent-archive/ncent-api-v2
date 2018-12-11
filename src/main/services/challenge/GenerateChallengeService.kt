@@ -58,12 +58,8 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
 
             challenge.completionCriterias = createCompletionCriteriasList(challengeNamespace.completionCriterias)
 
-            if(challengeNamespace.asyncSubChallenges.any()) {
-                challenge.asyncSubChallenges = createSubChallengesList(challengeNamespace.asyncSubChallenges, SubChallengeType.ASYNC)
-            }
-
-            if(challengeNamespace.syncSubChallenges.any()) {
-                challenge.asyncSubChallenges = createSubChallengesList(challengeNamespace.syncSubChallenges, SubChallengeType.SYNC)
+            if(challengeNamespace.subChallenges.any()) {
+                challenge.subChallenges = createSubChallengesList(challengeNamespace.subChallenges)
             }
 
             // create a transaction for challenge creation state
@@ -104,12 +100,12 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
         }
     }
 
-    private fun createSubChallengesList(subChallengeIds: List<Int>, subChallengeType: SubChallengeType) : SizedCollection<SubChallenge> {
+    private fun createSubChallengesList(subChallengeIds: List<Pair<Int, SubChallengeType>>) : SizedCollection<SubChallenge> {
         var subChallenges = mutableListOf<SubChallenge>()
         subChallengeIds.forEach {
             subChallenges.add(SubChallenge.new {
-                subChallenge = EntityID(it, Challenges)
-                type = subChallengeType
+                subChallenge = EntityID(it.first, Challenges)
+                type = it.second
             })
         }
         return SizedCollection(subChallenges)

@@ -20,8 +20,7 @@ import org.jetbrains.exposed.dao.*
  * @property id
  * @property parentChallenge the parent of this challenge, typically this challenge must be completed before the parent
  * @property challengeSettings ChallengeSettings
- * @property asyncSubChallenges sub challenges that can be completed in any order
- * @property syncSubChallenges sub challenges that must be completed in order
+ * @property subChallenges sub challenges
  * @property completionCriterias CompletionCriterias
  * @property distributionFeeReward the distribution fees and the pool. this is the
  * pool that will be drawn on if anybody 'opts-out' of attempting to help.
@@ -31,8 +30,7 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
 
     var parentChallenge by Challenge optionalReferencedOn Challenges.parentChallenge
     var challengeSettings by ChallengeSetting referencedOn Challenges.challengeSettings
-    var asyncSubChallenges by SubChallenge via ChallengeToSubChallenges
-    var syncSubChallenges by SubChallenge via ChallengeToSubChallenges
+    var subChallenges by SubChallenge via ChallengeToSubChallenges
     var completionCriterias by CompletionCriteria via ChallengeToCompletionCriterias
     var cryptoKeyPair by CryptoKeyPair referencedOn Challenges.cryptoKeyPair
     var distributionFeeReward by Reward referencedOn Challenges.distributionFeeReward
@@ -175,8 +173,7 @@ object SubChallenges : BaseIntIdTable("sub_challenge") {
 data class ChallengeNamespace(
     val parentChallenge: Int?,
     val challengeSettings: ChallengeSettingNamespace,
-    val asyncSubChallenges: List<Int>,
-    val syncSubChallenges: List<Int>,
+    val subChallenges: List<Pair<Int, SubChallengeType>>,
     val completionCriterias: List<CompletionCriteriaNamespace>,
     val distributionFeeReward: RewardNamespace
 )

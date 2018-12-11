@@ -7,8 +7,6 @@ import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.Tokens
 import main.daos.TokenTypes
 import main.daos.Token
-import org.jetbrains.exposed.sql.alias
-import org.jetbrains.exposed.sql.leftJoin
 import org.jetbrains.exposed.sql.select
 
 /**
@@ -17,10 +15,8 @@ import org.jetbrains.exposed.sql.select
 object GetTokenService: SOAServiceInterface<Token> {
     override fun execute(caller: Int?, key: String?) : SOAResult<Token> {
         val tokensResult = DaoService.execute {
-            val parentTokenTypeTable = TokenTypes.alias("parent_token_type")
             val query = Tokens
                 .innerJoin(TokenTypes)
-                .leftJoin(parentTokenTypeTable, { TokenTypes.id }, {parentTokenTypeTable[TokenTypes.parentToken]})
                 .select {
                     TokenTypes.name eq key!!
                 }.withDistinct()

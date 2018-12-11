@@ -7,8 +7,10 @@ import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.transaction.GetTransactionsService
 import org.jetbrains.exposed.sql.alias
+import org.jetbrains.exposed.sql.innerJoin
 import org.jetbrains.exposed.sql.leftJoin
 import org.jetbrains.exposed.sql.select
+import javax.ws.rs.NotFoundException
 
 /**
  *
@@ -28,25 +30,23 @@ object GetChallengesService: SOAServiceInterface<ChallengeList> {
                 )
             )
 
-            val challengeIds = transactionResult.data!!.transactions
-                .map { tx -> tx.metadatas }.flatten()
-                .filter { md -> md.value == "challengeId" }
-                .map { md -> md.value.toInt() }
-                .distinct()
-
             if(transactionResult.result != SOAResultType.SUCCESS)
                 throw Exception(transactionResult.message)
 
-            val parentChallengeTable = Challenges.alias("parent")
-            val challengeSettingTable = ChallengeSettings.alias("settings")
-            val keyPairTable = CryptoKeyPairs.alias("keyPair")
-            val distributionFeeRewardTable = Rewards.alias("feeReward")
+            val challengeIds = transactionResult.data!!.transactions
+                .map { tx -> tx.metadatas }.flatten()
+                .filter { md -> md.key == "challengeId" }
+                .map { md -> md.value.toInt() }
+                .distinct()
+
+            if(!challengeIds.any())
+                throw NotFoundException("No Challenges found for this user")
+
+            val challengeToSubChallengeTable = ChallengeToSubChallenges.alias("challenge_to_sub_challenge")
+            val subChallengeTable = SubChallenges.alias("sub_challenge")
             val query = Challenges
-                    .innerJoin(SubChallenges)
-                    .leftJoin(parentChallengeTable, { Challenges.id }, {parentChallengeTable[Challenges.parentChallenge]})
-                    .leftJoin(challengeSettingTable, { ChallengeSettings.id }, {challengeSettingTable[Challenges.challengeSettings]})
-                    .leftJoin(keyPairTable, { CryptoKeyPairs.id }, {keyPairTable[Challenges.cryptoKeyPair]})
-                    .leftJoin(distributionFeeRewardTable, { Rewards.id }, {distributionFeeRewardTable[Challenges.distributionFeeReward]})
+                    .leftJoin(challengeToSubChallengeTable, { Challenges.id }, { challengeToSubChallengeTable[ChallengeToSubChallenges.challenge] })
+                    .leftJoin(subChallengeTable, { challengeToSubChallengeTable[ChallengeToSubChallenges.subChallenge] }, { subChallengeTable[SubChallenges.id] })
                     .select {
                         Challenges.id inList challengeIds
                     }.withDistinct()

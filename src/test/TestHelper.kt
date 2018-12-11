@@ -6,6 +6,7 @@ import io.kotlintest.days
 import io.kotlintest.forExactly
 import io.kotlintest.properties.forAll
 import main.daos.*
+import main.services.challenge.GenerateChallengeService
 import main.services.challenge.GenerateChallengeSettingsService
 import main.services.completion_criteria.GenerateCompletionCriteriaService
 import main.services.reward.AddToRewardPoolService
@@ -134,17 +135,50 @@ object TestHelper {
         return userAccounts
     }
 
+    fun generateFullChallenge(userAccount: UserAccount, subChallengeUserAccount: UserAccount, count: Int = 1): List<Challenge> {
+        return DaoService.execute {
+            var challengesToReturn = mutableListOf<Challenge>()
+
+            for(i in 0..(count - 1)) {
+                val challenges = generateChallenge(subChallengeUserAccount, 3)
+                val parentChallenge = challenges[0]
+                var subChallengeList = mutableListOf<Pair<Challenge, SubChallengeType>>()
+                subChallengeList.add(Pair(challenges[1], SubChallengeType.SYNC))
+                subChallengeList.add(Pair(challenges[2], SubChallengeType.ASYNC))
+                val distributionFeeRewardNamespace = TestHelper.generateRewardNamespace(RewardTypeName.SINGLE)
+                val challengeSettingNamespace = TestHelper.generateChallengeSettingsNamespace(userAccount).first()
+                val completionCriteriasNamespace = TestHelper.generateCompletionCriteriaNamespace(userAccount, 2)
+                val completionCriteria1 = completionCriteriasNamespace[0]
+                val completionCriteria2 = completionCriteriasNamespace[1]
+                val challengeNamespace = ChallengeNamespace(
+                    parentChallenge = parentChallenge.idValue,
+                    challengeSettings = challengeSettingNamespace,
+                    subChallenges = subChallengeList.map { Pair(it.first.idValue, it.second) },
+                    completionCriterias = listOf(completionCriteria1, completionCriteria2),
+                    distributionFeeReward = distributionFeeRewardNamespace
+                )
+                val challengeResult = GenerateChallengeService.execute(userAccount.idValue, challengeNamespace, null)
+                challengesToReturn.add(challengeResult.data!!)
+            }
+            return@execute challengesToReturn
+        }.data!!
+    }
+
     fun generateChallenge(userAccount: UserAccount, count: Int = 1): List<Challenge> {
         var challengeSettingsList = generateChallengeSettingsNamespace(userAccount, count)
         var challengeDistributionReward = generateRewardNamespace(RewardTypeName.SINGLE)
         return DaoService.execute {
             var challenges = mutableListOf<Challenge>()
-            for(i in 0..count) {
-                challenges.add(Challenge.new {
-                    challengeSettings = GenerateChallengeSettingsService.execute(null, challengeSettingsList[i], null).data!!
-                    cryptoKeyPair = GenerateCryptoKeyPairService.execute().data!!
-                    distributionFeeReward = GenerateRewardService.execute(null, challengeDistributionReward, null).data!!
-                })
+
+            for(i in 0..(count - 1)) {
+                val challengeResult = GenerateChallengeService.execute(userAccount.idValue, ChallengeNamespace(
+                    parentChallenge = null,
+                    challengeSettings = challengeSettingsList[i],
+                    distributionFeeReward = challengeDistributionReward,
+                    subChallenges = listOf(),
+                    completionCriterias = listOf()
+                ), null)
+                challenges.add(challengeResult.data!!)
             }
             return@execute challenges
         }.data!!
@@ -152,7 +186,7 @@ object TestHelper {
 
     fun generateChallengeSettingsNamespace(userAccount: UserAccount, count: Int = 1): List<ChallengeSettingNamespace> {
         var challengeSettingsList = mutableListOf<ChallengeSettingNamespace>()
-        for(i in 0..count) {
+        for(i in 0..(count - 1)) {
             challengeSettingsList.add(
                 ChallengeSettingNamespace(
                     name = "TESTname$i",
@@ -176,7 +210,7 @@ object TestHelper {
 
     fun generateCompletionCriteriaNamespace(userAccount: UserAccount, count: Int = 1): List<CompletionCriteriaNamespace> {
         var completionCriteriaNamespaces = mutableListOf<CompletionCriteriaNamespace>()
-        for(i in 0..count) {
+        for(i in 0..(count - 1)) {
             completionCriteriaNamespaces.add(
                 CompletionCriteriaNamespace(
                     address = userAccount.cryptoKeyPair.publicKey,

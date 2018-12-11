@@ -6,8 +6,6 @@ import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.sql.alias
-import org.jetbrains.exposed.sql.leftJoin
 import org.jetbrains.exposed.sql.select
 
 /**
@@ -16,10 +14,8 @@ import org.jetbrains.exposed.sql.select
 object GetTransactionService: SOAServiceInterface<Transaction> {
     override fun execute(caller: Int?, id: Int?, params: Map<String, String>?) : SOAResult<Transaction> {
         val transactionsResult = DaoService.execute {
-            val prevTxTable = Transactions.alias("previous_tx")
             val query = Transactions
                 .innerJoin(Actions)
-                .leftJoin(prevTxTable, { Transactions.id }, {prevTxTable[Transactions.previousTransaction]})
                 .innerJoin(TransactionsMetadata)
                 .innerJoin(Metadatas)
             .select {
