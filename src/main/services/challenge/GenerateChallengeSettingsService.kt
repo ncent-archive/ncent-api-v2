@@ -21,6 +21,7 @@ object GenerateChallengeSettingsService: SOAServiceInterface<ChallengeSetting> {
                 expiration = challengeSettingNamespace.expiration
                 admin = EntityID(challengeSettingNamespace.admin, ChallengeSettings)
                 offChain = challengeSettingNamespace.offChain
+                maxShares = challengeSettingNamespace.maxShares
                 maxRewards = challengeSettingNamespace.maxRewards
                 maxDistributionFeeReward = challengeSettingNamespace.maxDistributionFeeReward
                 maxSharesPerReceivedShare = challengeSettingNamespace.maxSharesPerReceivedShare

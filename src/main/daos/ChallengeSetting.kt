@@ -34,6 +34,7 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
     var expiration by ChallengeSettings.expiration
     var admin by ChallengeSettings.admin
     var offChain by ChallengeSettings.offChain
+    var maxShares by ChallengeSettings.maxShares
     var maxRewards by ChallengeSettings.maxRewards
     var maxDistributionFeeReward by ChallengeSettings.maxDistributionFeeReward
     var maxSharesPerReceivedShare by ChallengeSettings.maxSharesPerReceivedShare
@@ -48,7 +49,8 @@ object ChallengeSettings : BaseIntIdTable("challenge_settings") {
     var sponsorName = varchar("sponsorName", 100)
     var expiration = datetime("expiration")
     var admin = reference("admin", UserAccounts)
-    var offChain = bool("off_chain").default(false).nullable()
+    var offChain = bool("off_chain").default(false)
+    var maxShares = integer("max_shares")
     var maxRewards = integer("max_rewards").default(1).nullable()
     var maxDistributionFeeReward = integer("max_distribution_fee_reward").default(Integer.MAX_VALUE).nullable()
     var maxSharesPerReceivedShare = integer("max_shares_per_received_share").default(Integer.MAX_VALUE).nullable()
@@ -63,7 +65,8 @@ data class ChallengeSettingNamespace(
     val sponsorName: String,
     val expiration: DateTime,
     val admin: Int,
-    val offChain: Boolean?,
+    val maxShares: Int,
+    val offChain: Boolean,
     val maxRewards: Int?,
     val maxDistributionFeeReward: Int?,
     val maxSharesPerReceivedShare: Int?,

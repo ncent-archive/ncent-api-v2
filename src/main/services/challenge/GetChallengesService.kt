@@ -30,7 +30,7 @@ object GetChallengesService: SOAServiceInterface<ChallengeList> {
 
             val challengeIds = transactionResult.data!!.transactions
                 .map { tx -> tx.metadatas }.flatten()
-                .filter { md -> md.value == "challenge_id" }
+                .filter { md -> md.value == "challengeId" }
                 .map { md -> md.value.toInt() }
                 .distinct()
 

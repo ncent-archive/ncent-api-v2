@@ -4,6 +4,7 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.EntityID
+import kotlin.reflect.full.primaryConstructor
 
 /**
  * Metadata will be a key-value store

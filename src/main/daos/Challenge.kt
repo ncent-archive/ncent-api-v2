@@ -186,6 +186,27 @@ enum class SubChallengeType {
 }
 
 /**
+ * This data type will be used to generate a map for transaction metadata
+ * when generating a challenge based transaction
+ * This will store information about that particular transaction ex:
+ * when receiving a shared challenge the transaction data will hold how many shares you have available to make
+ */
+data class ChallengeMetadata(
+    val challengeId: Int,
+    val offChain: Boolean,
+    val maxShares: Int?
+) {
+    fun getChallengeMetadataNamespaces(): List<MetadatasNamespace> {
+        var challengeMetadatas = mutableListOf<MetadatasNamespace>()
+        challengeMetadatas.add(MetadatasNamespace("challengeId", challengeId.toString()))
+        challengeMetadatas.add(MetadatasNamespace("offChain", offChain.toString()))
+        if(maxShares != null)
+            challengeMetadatas.add(MetadatasNamespace("maxShares", maxShares.toString()))
+        return challengeMetadatas
+    }
+}
+
+/**
  * CREATED -- initial state for a challenge
  * ACTIVE -- on starting a challenge, this is the 'initial' started state
  * COMPLETE -- [final]

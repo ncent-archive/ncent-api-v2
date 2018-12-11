@@ -1,5 +1,6 @@
 package main.services.challenge
 
+import framework.models.idValue
 import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
@@ -7,6 +8,7 @@ import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.completion_criteria.GenerateCompletionCriteriaService
 import main.services.reward.GenerateRewardService
+import main.services.transaction.GenerateTransactionService
 import main.services.user_account.GenerateCryptoKeyPairService
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.SizedCollection
@@ -18,14 +20,16 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
     override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Challenge> {
         val challengeNamespace = d!! as ChallengeNamespace
         return DaoService.execute {
+            val userAccount = UserAccount.findById(challengeNamespace.challengeSettings.admin)!!
             val settings = ChallengeSetting.new {
                 name = challengeNamespace.challengeSettings.name
                 description = challengeNamespace.challengeSettings.description
                 imageUrl = challengeNamespace.challengeSettings.imageUrl
                 sponsorName = challengeNamespace.challengeSettings.sponsorName
                 expiration = challengeNamespace.challengeSettings.expiration
-                admin = EntityID(challengeNamespace.challengeSettings.admin, UserAccounts)
+                admin = userAccount.id
                 offChain = challengeNamespace.challengeSettings.offChain
+                maxShares = challengeNamespace.challengeSettings.maxShares
                 maxRewards = challengeNamespace.challengeSettings.maxRewards
                 maxDistributionFeeReward = challengeNamespace.challengeSettings.maxDistributionFeeReward
                 maxSharesPerReceivedShare = challengeNamespace.challengeSettings.maxSharesPerReceivedShare
@@ -61,8 +65,40 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
             if(challengeNamespace.syncSubChallenges.any()) {
                 challenge.asyncSubChallenges = createSubChallengesList(challengeNamespace.syncSubChallenges, SubChallengeType.SYNC)
             }
-            // TODO create a transaction for challenge creation state
-            // TODO create a transaction for tokens received?
+
+            // create a transaction for challenge creation state
+            val createChallengeTx = GenerateTransactionService.execute(caller, TransactionNamespace(
+                from = challenge.cryptoKeyPair.publicKey,
+                to = userAccount.cryptoKeyPair.publicKey,
+                previousTransaction = null,
+                metadatas = null,
+                action = ActionNamespace(
+                    type = ActionType.CREATE,
+                    data = challenge.idValue,
+                    dataType = Challenge::class.simpleName!!
+                )
+            ), null)
+            if(createChallengeTx.result != SOAResultType.SUCCESS)
+                throw Exception(createChallengeTx.message)
+
+            // create a transaction for tokens received?
+            GenerateTransactionService.execute(caller, TransactionNamespace(
+                from = challenge.cryptoKeyPair.publicKey,
+                to = userAccount.cryptoKeyPair.publicKey,
+                previousTransaction = null,
+                metadatas = MetadatasListNamespace(
+                    ChallengeMetadata(
+                        challenge.idValue,
+                        challenge.challengeSettings.offChain,
+                        challenge.challengeSettings.maxShares
+                    ).getChallengeMetadataNamespaces()
+                ),
+                action = ActionNamespace(
+                    type = ActionType.SHARE,
+                    data = challenge.idValue,
+                    dataType = Challenge::class.simpleName!!
+                )
+            ), null)
 
             return@execute challenge
         }
