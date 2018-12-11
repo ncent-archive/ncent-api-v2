@@ -47,6 +47,7 @@ class GetChallengesServiceTest : WordSpec() {
                     // thus calling generateFullChallenge with 2 -- generates 8
                     // only two of with are associated to the main userAccount
                     Challenge.all().count() shouldBe 16
+                    // TODO should probably also share challenge with this user and test if it is part of the list
                 }
             }
         }
