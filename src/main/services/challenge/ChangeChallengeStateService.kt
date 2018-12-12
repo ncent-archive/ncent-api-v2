@@ -25,6 +25,7 @@ object ChangeChallengeStateService: SOAServiceInterface<Transaction> {
             if(!challenge.canTransitionState(oldState, newState))
                 throw Exception("Cannot transition from ${oldState.type} to ${newState.type}")
 
+            // TODO check if challenge should be invalidated/expired
             val txResult = GenerateTransactionService.execute(caller, TransactionNamespace(
                 from = challenge.cryptoKeyPair.publicKey,
                 to = challenge.cryptoKeyPair.publicKey,
