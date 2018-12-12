@@ -26,6 +26,8 @@ object GenerateCompletionCriteriaService: SOAServiceInterface<CompletionCriteria
                 UserAccount.findById(caller!!)!!.cryptoKeyPair.publicKey
             }
 
+            // TODO generate a transaction
+
             if(completionCriteriaNamespace.preReqCompletionCriteriaIds.any()) {
                 val prereqCompletionCriterias = CompletionCriteria.find {
                     CompletionCriterias.id inList completionCriteriaNamespace.preReqCompletionCriteriaIds!!

@@ -14,7 +14,6 @@ import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class GetChallengesServiceTest : WordSpec() {
-    private lateinit var challenge: Challenge
     private lateinit var userAccount: UserAccount
 
     override fun beforeTest(description: Description) {
@@ -22,7 +21,7 @@ class GetChallengesServiceTest : WordSpec() {
         transaction {
             val userAccounts = TestHelper.generateUserAccounts(2)
             userAccount = userAccounts[0]
-            challenge = TestHelper.generateFullChallenge(userAccount, userAccounts[1],2)[0]
+            TestHelper.generateFullChallenge(userAccount, userAccounts[1],2)
             TestHelper.generateFullChallenge(userAccounts[1], userAccounts[1],2)
         }
     }
@@ -32,8 +31,8 @@ class GetChallengesServiceTest : WordSpec() {
     }
 
     init {
-        "calling execute with a valid completion criteria" should {
-            "generate the reward and associated reward type and pool and completion criteria" {
+        "calling execute with a valid user who has challenges" should {
+            "return the challenges" {
                 var result = GetChallengesService.execute(userAccount.idValue)
                 result.result shouldBe SOAResultType.SUCCESS
                 transaction {
