@@ -165,23 +165,34 @@ object TestHelper {
     }
 
     fun generateChallenge(userAccount: UserAccount, count: Int = 1): List<Challenge> {
-        var challengeSettingsList = generateChallengeSettingsNamespace(userAccount, count)
-        var challengeDistributionReward = generateRewardNamespace(RewardTypeName.SINGLE)
+        var challengeNamespaces = generateChallengeNamespace(userAccount, count)
         return DaoService.execute {
             var challenges = mutableListOf<Challenge>()
 
-            for(i in 0..(count - 1)) {
-                val challengeResult = GenerateChallengeService.execute(userAccount.idValue, ChallengeNamespace(
-                    parentChallenge = null,
-                    challengeSettings = challengeSettingsList[i],
-                    distributionFeeReward = challengeDistributionReward,
-                    subChallenges = listOf(),
-                    completionCriterias = listOf()
-                ), null)
+            challengeNamespaces.forEach {
+                val challengeResult = GenerateChallengeService.execute(userAccount.idValue, it, null)
                 challenges.add(challengeResult.data!!)
             }
             return@execute challenges
         }.data!!
+    }
+
+    fun generateChallengeNamespace(userAccount: UserAccount, count: Int = 1): List<ChallengeNamespace> {
+        var challengeSettingsList = generateChallengeSettingsNamespace(userAccount, count)
+        var challengeDistributionReward = generateRewardNamespace(RewardTypeName.SINGLE)
+        var challengeNamespaces = mutableListOf<ChallengeNamespace>()
+
+        for(i in 0..(count - 1)) {
+            val challengeNamespace = ChallengeNamespace(
+                parentChallenge = null,
+                challengeSettings = challengeSettingsList[i],
+                distributionFeeReward = challengeDistributionReward,
+                subChallenges = listOf(),
+                completionCriterias = listOf()
+            )
+            challengeNamespaces.add(challengeNamespace)
+        }
+        return challengeNamespaces
     }
 
     fun generateChallengeSettingsNamespace(userAccount: UserAccount, count: Int = 1): List<ChallengeSettingNamespace> {
