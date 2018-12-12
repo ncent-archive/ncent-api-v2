@@ -118,7 +118,8 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
             null,
             mapOf(
                 Pair("dataType", "Challenge"),
-                Pair("data", idValue.toString())
+                Pair("data", idValue.toString()),
+                Pair("to", cryptoKeyPair.publicKey)
             )
         ).data?.transactions
     }

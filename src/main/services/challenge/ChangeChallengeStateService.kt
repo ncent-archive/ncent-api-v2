@@ -27,7 +27,7 @@ object ChangeChallengeStateService: SOAServiceInterface<Transaction> {
 
             val txResult = GenerateTransactionService.execute(caller, TransactionNamespace(
                 from = challenge.cryptoKeyPair.publicKey,
-                to = userAccount.cryptoKeyPair.publicKey,
+                to = challenge.cryptoKeyPair.publicKey,
                 previousTransaction = oldTx.idValue,
                 metadatas = null,
                 action = ActionNamespace(

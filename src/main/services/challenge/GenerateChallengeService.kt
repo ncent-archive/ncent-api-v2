@@ -65,7 +65,7 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
             // create a transaction for challenge creation state
             val createChallengeTx = GenerateTransactionService.execute(caller, TransactionNamespace(
                 from = challenge.cryptoKeyPair.publicKey,
-                to = userAccount.cryptoKeyPair.publicKey,
+                to = challenge.cryptoKeyPair.publicKey,
                 previousTransaction = null,
                 metadatas = null,
                 action = ActionNamespace(
