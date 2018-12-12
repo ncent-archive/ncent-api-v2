@@ -34,7 +34,6 @@ class GenerateChallengeServiceTest : WordSpec() {
             val challengeSettingNamespace = TestHelper.generateChallengeSettingsNamespace(userAccount).first()
             val completionCriteriasNamespace = TestHelper.generateCompletionCriteriaNamespace(userAccount, 2)
             val completionCriteria1 = completionCriteriasNamespace[0]
-            val completionCriteria2 = completionCriteriasNamespace[1]
             challengeNamespace = ChallengeNamespace(
                 parentChallenge = parentChallenge.idValue,
                 challengeSettings = challengeSettingNamespace,
@@ -46,7 +45,7 @@ class GenerateChallengeServiceTest : WordSpec() {
                         Pair(syncSubChallenge2, SubChallengeType.SYNC),
                         Pair(syncSubChallenge3, SubChallengeType.SYNC)
                 ).map { Pair(it.first.idValue, it.second) },
-                completionCriterias = listOf(completionCriteria1, completionCriteria2),
+                completionCriteria = completionCriteria1,
                 distributionFeeReward = distributionFeeRewardNamespace
             )
         }
@@ -69,9 +68,8 @@ class GenerateChallengeServiceTest : WordSpec() {
                     challenge.subChallenges.filter { it.type == SubChallengeType.ASYNC }.count() shouldBe 3
                     challenge.subChallenges.filter { it.type == SubChallengeType.SYNC }.count() shouldBe 3
                     challenge.parentChallenge!!.idValue shouldBe parentChallenge.idValue
-                    challenge.completionCriterias.count() shouldBe 2
-                    challenge.completionCriterias.first().address shouldBe userAccount.cryptoKeyPair.publicKey
-                    challenge.completionCriterias.first().reward.pool shouldNotBe null
+                    challenge.completionCriterias.address shouldBe userAccount.cryptoKeyPair.publicKey
+                    challenge.completionCriterias.reward.pool shouldNotBe null
                 }
             }
         }

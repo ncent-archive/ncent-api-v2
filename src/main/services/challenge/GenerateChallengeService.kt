@@ -56,7 +56,7 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
                 distributionFeeReward = distributionFeeRewardResult.data!!
             }
 
-            challenge.completionCriterias = createCompletionCriteriasList(challengeNamespace.completionCriterias)
+            challenge.completionCriterias = createCompletionCriteria(challengeNamespace.completionCriteria)
 
             if(challengeNamespace.subChallenges.any()) {
                 challenge.subChallenges = createSubChallengesList(challengeNamespace.subChallenges)
@@ -111,17 +111,11 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
         return SizedCollection(subChallenges)
     }
 
-    private fun createCompletionCriteriasList(completionCriteriaNamespaces: List<CompletionCriteriaNamespace>) : SizedCollection<CompletionCriteria> {
-        var completionCriterias = mutableListOf<CompletionCriteria>()
-
+    private fun createCompletionCriteria(completionCriteriaNamespace: CompletionCriteriaNamespace) : CompletionCriteria {
         // TODO think about how we handle generating completion criteria
         // TODO should this happen AFTER a challenge is created?
         // TODO how and when will the pool be populated
-        completionCriteriaNamespaces.forEach {
-            completionCriterias.add(
-                GenerateCompletionCriteriaService.execute(null, it, null).data!!
-            )
-        }
-        return SizedCollection(completionCriterias)
+
+        return GenerateCompletionCriteriaService.execute(null, completionCriteriaNamespace, null).data!!
     }
 }

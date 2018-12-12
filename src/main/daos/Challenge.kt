@@ -31,7 +31,7 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     var parentChallenge by Challenge optionalReferencedOn Challenges.parentChallenge
     var challengeSettings by ChallengeSetting referencedOn Challenges.challengeSettings
     var subChallenges by SubChallenge via ChallengeToSubChallenges
-    var completionCriterias by CompletionCriteria via ChallengeToCompletionCriterias
+    var completionCriterias by CompletionCriteria referencedOn Challenges.completionCriteria
     var cryptoKeyPair by CryptoKeyPair referencedOn Challenges.cryptoKeyPair
     var distributionFeeReward by Reward referencedOn Challenges.distributionFeeReward
 
@@ -146,6 +146,7 @@ object Challenges : BaseIntIdTable("challenges") {
     val challengeSettings = reference("challenge_settings", ChallengeSettings)
     val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
     val distributionFeeReward = reference("distribution_fee_reward", Rewards)
+    val completionCriteria = reference("completion_criteria", CompletionCriterias)
 }
 
 class SubChallenge(id: EntityID<Int>) : BaseIntEntity(id, SubChallenges) {
@@ -153,11 +154,6 @@ class SubChallenge(id: EntityID<Int>) : BaseIntEntity(id, SubChallenges) {
 
     var subChallenge by SubChallenges.subChallenge
     var type by SubChallenges.type
-}
-
-object ChallengeToCompletionCriterias : BaseIntIdTable("challenge_to_completion_criteria") {
-    val challenge = reference("challenge_to_completion_criteria", Challenges).primaryKey()
-    val completionCriteria = reference("completion_criteria_to_challenge", CompletionCriterias).primaryKey()
 }
 
 object ChallengeToSubChallenges : BaseIntIdTable("challenge_to_sub_challenges") {
@@ -174,7 +170,7 @@ data class ChallengeNamespace(
     val parentChallenge: Int?,
     val challengeSettings: ChallengeSettingNamespace,
     val subChallenges: List<Pair<Int, SubChallengeType>>,
-    val completionCriterias: List<CompletionCriteriaNamespace>,
+    val completionCriteria: CompletionCriteriaNamespace,
     val distributionFeeReward: RewardNamespace
 )
 

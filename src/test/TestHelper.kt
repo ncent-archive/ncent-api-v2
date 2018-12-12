@@ -149,12 +149,11 @@ object TestHelper {
                 val challengeSettingNamespace = TestHelper.generateChallengeSettingsNamespace(userAccount).first()
                 val completionCriteriasNamespace = TestHelper.generateCompletionCriteriaNamespace(userAccount, 2)
                 val completionCriteria1 = completionCriteriasNamespace[0]
-                val completionCriteria2 = completionCriteriasNamespace[1]
                 val challengeNamespace = ChallengeNamespace(
                     parentChallenge = parentChallenge.idValue,
                     challengeSettings = challengeSettingNamespace,
                     subChallenges = subChallengeList.map { Pair(it.first.idValue, it.second) },
-                    completionCriterias = listOf(completionCriteria1, completionCriteria2),
+                    completionCriteria = completionCriteria1,
                     distributionFeeReward = distributionFeeRewardNamespace
                 )
                 val challengeResult = GenerateChallengeService.execute(userAccount.idValue, challengeNamespace, null)
@@ -181,6 +180,7 @@ object TestHelper {
         var challengeSettingsList = generateChallengeSettingsNamespace(userAccount, count)
         var challengeDistributionReward = generateRewardNamespace(RewardTypeName.SINGLE)
         var challengeNamespaces = mutableListOf<ChallengeNamespace>()
+        var completionCriteriaNamespace = generateCompletionCriteriaNamespace(userAccount)
 
         for(i in 0..(count - 1)) {
             val challengeNamespace = ChallengeNamespace(
@@ -188,7 +188,7 @@ object TestHelper {
                 challengeSettings = challengeSettingsList[i],
                 distributionFeeReward = challengeDistributionReward,
                 subChallenges = listOf(),
-                completionCriterias = listOf()
+                completionCriteria = completionCriteriaNamespace.first()
             )
             challengeNamespaces.add(challengeNamespace)
         }

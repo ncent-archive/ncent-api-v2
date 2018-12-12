@@ -39,7 +39,6 @@ class GetChallengesServiceTest : WordSpec() {
                     val challenges = result.data!!.challenges
                     challenges.count() shouldBe 2
                     challenges.first().subChallenges.count() shouldBe 2
-                    challenges.first().completionCriterias.count() shouldBe 2
                     // the challenges + sub challenges + parent challenges
                     // the generateFullChallenge generates 1 parent, 1 challenge, 2 sub challenges
                     // so 4 challenges per generateFullChallenge challenge

@@ -114,8 +114,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
             Challenges,
             ChallengeSettings,
             SubChallenges,
-            ChallengeToSubChallenges,
-            ChallengeToCompletionCriterias
+            ChallengeToSubChallenges
         )
       }
     }
@@ -163,8 +162,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
             Challenges,
             ChallengeSettings,
             SubChallenges,
-            ChallengeToSubChallenges,
-            ChallengeToCompletionCriterias
+            ChallengeToSubChallenges
         )
       }
     }

@@ -32,17 +32,6 @@ object GenerateRewardService: SOAServiceInterface<Reward> {
                 rewardTypes.first()
             }
 
-            val metadatasToAdd = if(rewardNamespace.metadatas != null) {
-                rewardNamespace.metadatas.metadatas.map {
-                        md -> Metadata.new {
-                        key = md.key
-                        value = md.value
-                    }
-                }
-            } else {
-                listOf()
-            }
-
             val keyPairResult = GenerateCryptoKeyPairService.execute()
             if(keyPairResult.result != SOAResultType.SUCCESS)
                 return@execute throw Exception(keyPairResult.message)
@@ -61,7 +50,15 @@ object GenerateRewardService: SOAServiceInterface<Reward> {
             }
 
             newReward.pool = rewardPool
-            newReward.metadatas = SizedCollection(metadatasToAdd)
+
+            if(rewardNamespace.metadatas != null) {
+                newReward.metadatas = SizedCollection(rewardNamespace.metadatas.metadatas.map {
+                        md -> Metadata.new {
+                        key = md.key
+                        value = md.value
+                    }
+                })
+            }
 
             return@execute newReward
         }
