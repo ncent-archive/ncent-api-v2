@@ -45,3 +45,5 @@ object TransactionsMetadata : Table("transactions_to_metadatas") {
 data class TransactionNamespace(val from: String?, val to: String?, val action: ActionNamespace?, val previousTransaction: Int?, val metadatas: MetadatasListNamespace?)
 
 class TransactionList(val transactions: List<Transaction>)
+
+class ShareTransactionList(val transactionsToShares: List<Pair<Transaction, Int>>)
