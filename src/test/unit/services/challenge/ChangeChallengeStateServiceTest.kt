@@ -57,6 +57,7 @@ class ChangeChallengeStateServiceTest : WordSpec() {
                         )
                     )
                     result.result shouldBe SOAResultType.SUCCESS
+                    result.data!!.action.type shouldBe ActionType.ACTIVATE
                     // change to invalid successfully
                     result = ChangeChallengeStateService.execute(
                         userAccount.idValue,
@@ -66,6 +67,7 @@ class ChangeChallengeStateServiceTest : WordSpec() {
                         )
                     )
                     result.result shouldBe SOAResultType.SUCCESS
+                    result.data!!.action.type shouldBe ActionType.INVALIDATE
                     // change to active successfully
                     result = ChangeChallengeStateService.execute(
                         userAccount.idValue,
@@ -75,6 +77,7 @@ class ChangeChallengeStateServiceTest : WordSpec() {
                         )
                     )
                     result.result shouldBe SOAResultType.SUCCESS
+                    result.data!!.action.type shouldBe ActionType.ACTIVATE
                     // change to complete successfully
                     result = ChangeChallengeStateService.execute(
                         userAccount.idValue,
@@ -84,6 +87,7 @@ class ChangeChallengeStateServiceTest : WordSpec() {
                         )
                     )
                     result.result shouldBe SOAResultType.SUCCESS
+                    result.data!!.action.type shouldBe ActionType.COMPLETE
 
                     // start state is created
                     // change to active successfully
@@ -95,6 +99,7 @@ class ChangeChallengeStateServiceTest : WordSpec() {
                         )
                     )
                     result.result shouldBe SOAResultType.SUCCESS
+                    result.data!!.action.type shouldBe ActionType.ACTIVATE
                     // change to expired successfully
                     result = ChangeChallengeStateService.execute(
                         userAccount.idValue,
@@ -104,6 +109,7 @@ class ChangeChallengeStateServiceTest : WordSpec() {
                         )
                     )
                     result.result shouldBe SOAResultType.SUCCESS
+                    result.data!!.action.type shouldBe ActionType.EXPIRE
                     // change to completed fails
                     result = ChangeChallengeStateService.execute(
                         userAccount.idValue,
