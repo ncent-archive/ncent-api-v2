@@ -26,6 +26,7 @@ object GetChallengesService: SOAServiceInterface<ChallengeList> {
                 caller,
                 mapOf(
                     Pair("to", publicKey),
+                    Pair("type", "SHARE"),
                     Pair("dataType", "Challenge")
                 )
             )

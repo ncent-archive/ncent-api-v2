@@ -23,11 +23,11 @@ object DaoService {
         } catch(e: SQLException) {
             ApiGatewayResponse.LOG.error(e.message, e)
             println("There was a SQL error with a DaoService execution: " + e.message)
-            result.message = e.message
+            result.message = if(e.message != null) e.message else e.toString()
         } catch(e: Throwable) {
             ApiGatewayResponse.LOG.error(e.message, e)
             println("There was a general error with a DaoService execution: " + e.message)
-            result.message = e.message
+            result.message = if(e.message != null) e.message else e.toString()
         } finally {
             return result
         }

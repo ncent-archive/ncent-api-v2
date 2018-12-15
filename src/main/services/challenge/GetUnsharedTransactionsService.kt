@@ -7,11 +7,6 @@ import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.transaction.GetTransactionsService
-import org.jetbrains.exposed.sql.alias
-import org.jetbrains.exposed.sql.innerJoin
-import org.jetbrains.exposed.sql.leftJoin
-import org.jetbrains.exposed.sql.select
-import javax.ws.rs.NotFoundException
 
 /**
  *
@@ -52,11 +47,13 @@ object GetUnsharedTransactionsService: SOAServiceInterface<ShareTransactionList>
             val receivedShares = receivedTransactionResult.data!!.transactions
 
             var sharedTransactionCount = mutableMapOf<Int, Int>()
-            sharedTransactionResult.data!!.transactions.forEach {
-                val shares = it.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
-                val key = it.previousTransaction!!.idValue
-                val sharesPlusExistingShares = sharedTransactionCount.getOrDefault(key, 0) + shares
-                sharedTransactionCount[key] = sharesPlusExistingShares
+            sharedTransactionResult.data!!.transactions.forEach { tx ->
+                val shares = tx.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
+                tx.previousTransaction?.let {
+                    val key = it.previousTransaction!!.idValue
+                    val sharesPlusExistingShares = sharedTransactionCount.getOrDefault(key, 0) + shares
+                    sharedTransactionCount[key] = sharesPlusExistingShares
+                }
             }
 
             var unsharedTransactions = mutableListOf<Pair<Transaction, Int>>()
@@ -66,7 +63,7 @@ object GetUnsharedTransactionsService: SOAServiceInterface<ShareTransactionList>
                 val availableShares = shares - sharedTransactionCount.getOrDefault(receivedShare.idValue, 0)
                 if(availableShares > 0) {
                     unsharedTransactions.add(Pair(receivedShare, availableShares))
-                }g
+                }
             }
 
             return@execute unsharedTransactions
