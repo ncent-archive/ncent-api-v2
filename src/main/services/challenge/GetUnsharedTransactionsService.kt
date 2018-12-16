@@ -49,10 +49,9 @@ object GetUnsharedTransactionsService: SOAServiceInterface<ShareTransactionList>
             var sharedTransactionCount = mutableMapOf<Int, Int>()
             sharedTransactionResult.data!!.transactions.forEach { tx ->
                 val shares = tx.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
-                tx.previousTransaction?.let {
-                    val key = it.previousTransaction!!.idValue
-                    val sharesPlusExistingShares = sharedTransactionCount.getOrDefault(key, 0) + shares
-                    sharedTransactionCount[key] = sharesPlusExistingShares
+                tx.previousTransaction?.let { prevTx ->
+                    val sharesPlusExistingShares = sharedTransactionCount.getOrDefault(prevTx.idValue, 0) + shares
+                    sharedTransactionCount[prevTx.idValue] = sharesPlusExistingShares
                 }
             }
 

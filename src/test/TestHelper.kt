@@ -241,4 +241,24 @@ object TestHelper {
             ), metadatas = null
         )
     }
+
+    fun generateShareTransaction(challenge: Challenge, fromAccount: UserAccount, toAccount: UserAccount, previousTransaction: Transaction, amount: Int): Transaction {
+        return GenerateTransactionService.execute(fromAccount.idValue, TransactionNamespace(
+            from = fromAccount.cryptoKeyPair.publicKey,
+            to = toAccount.cryptoKeyPair.publicKey,
+            previousTransaction = previousTransaction.idValue,
+            metadatas = MetadatasListNamespace(
+                ChallengeMetadata(
+                    challenge.idValue,
+                    challenge.challengeSettings.offChain,
+                    amount
+                ).getChallengeMetadataNamespaces()
+            ),
+            action = ActionNamespace(
+                type = ActionType.SHARE,
+                data = challenge.idValue,
+                dataType = Challenge::class.simpleName!!
+            )
+        ), null).data!!
+    }
 }
