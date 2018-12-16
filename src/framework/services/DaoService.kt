@@ -15,7 +15,9 @@ object DaoService {
         var result: SOAResult<T> = SOAResult(SOAResultType.FAILURE, "", null)
         try {
             val tx = transaction {
-                addLogger(StdOutSqlLogger)
+                // TODO figure out why logger is repeating
+                // TODO this slows down execution by 4x
+                //addLogger(StdOutSqlLogger)
                 return@transaction query()
             }
             result.data = tx
