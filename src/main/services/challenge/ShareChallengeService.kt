@@ -21,7 +21,7 @@ object ShareChallengeService: SOAServiceInterface<TransactionList> {
 //            val userToShareWith = UserAccount.find {
 //                UserAccounts.cryptoKeyPair eq keyPairToShareWith.idValue
 //            }.first()
-            g
+            
             // validate users exist
             val challenge = Challenge.findById(params!!["challengeId"]!!.toInt())!!
 
