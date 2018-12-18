@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import main.daos.*
 import kotlinserverless.framework.models.Handler
 import kotlinserverless.framework.services.SOAResultType
+import main.services.challenge.GetUnsharedTransactionsService
 import main.services.challenge.ShareChallengeService
 import org.jetbrains.exposed.sql.transactions.transaction
 import test.TestHelper
@@ -35,6 +36,7 @@ class ShareChallengeServiceTest : WordSpec() {
     }
 
     init {
+        // TODO test off chain
         "calling execute with enough shares available in one tx" should {
             "generate a single transaction sharing to the user" {
                 transaction {
@@ -45,6 +47,11 @@ class ShareChallengeServiceTest : WordSpec() {
                     ))
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.transactions.count() shouldBe 1
+
+                    val result2 = GetUnsharedTransactionsService.execute(userAccount1.idValue, mapOf(
+                        Pair("challengeId", challenge.idValue.toString())
+                    ))
+                    result2.data!!.transactionsToShares.map { it.second }.sum() shouldBe 50
                 }
             }
         }
@@ -62,6 +69,11 @@ class ShareChallengeServiceTest : WordSpec() {
                         Pair("challengeId", challenge.idValue.toString()),
                         Pair("shares", 30.toString())
                     ))
+                    val result2 = GetUnsharedTransactionsService.execute(userAccount1.idValue, mapOf(
+                            Pair("challengeId", challenge.idValue.toString())
+                    ))
+                    result2.data!!.transactionsToShares.map { it.second }.sum() shouldBe 20
+
                     var result = ShareChallengeService.execute(userAccount2.idValue, mapOf(
                         Pair("publicKeyToShareWith", userAccount3.cryptoKeyPair.publicKey),
                         Pair("challengeId", challenge.idValue.toString()),
@@ -75,6 +87,11 @@ class ShareChallengeServiceTest : WordSpec() {
                     ))
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.transactions.count() shouldBe 2
+
+                    val result3 = GetUnsharedTransactionsService.execute(userAccount3.idValue, mapOf(
+                            Pair("challengeId", challenge.idValue.toString())
+                    ))
+                    result3.data!!.transactionsToShares.map { it.second }.sum() shouldBe 80
                 }
             }
         }
