@@ -17,6 +17,7 @@ import javax.ws.rs.NotFoundException
  * Retrieve one or more challenges based on filters
  *
  */
+// TODO maybe include how many shares available??
 object GetChallengesService: SOAServiceInterface<ChallengeList> {
     // get challenges for a caller
     override fun execute(caller: Int?): SOAResult<ChallengeList> {

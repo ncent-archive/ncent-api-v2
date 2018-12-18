@@ -29,6 +29,7 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     var cryptoKeyPair by CryptoKeyPair referencedOn Challenges.cryptoKeyPair
     var distributionFeeReward by Reward referencedOn Challenges.distributionFeeReward
 
+    // TODO check expiration
     fun canTransitionState(fromState: ActionType, toState: ActionType): Boolean {
         return when(fromState) {
             ActionType.COMPLETE -> {
