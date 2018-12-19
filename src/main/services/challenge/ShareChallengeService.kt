@@ -28,25 +28,20 @@ object ShareChallengeService: SOAServiceInterface<TransactionList> {
             var shares = params!!["shares"]?.toInt()
             // if on chain -- validate the user has enough shares
             if(!challenge.challengeSettings.offChain) {
-                val unsharedTransactions = GetUnsharedTransactionsService.execute(
-                    caller,
-                    mapOf(Pair("challengeId", challenge.idValue.toString()))
-                )
+                val sharabilityResult = ValidateShareService.execute(caller, mapOf(
+                    Pair("challengeId", challenge.idValue.toString()),
+                    Pair("shares", shares!!.toString())
+                ))
+                if(sharabilityResult.result != SOAResultType.SUCCESS || !sharabilityResult.data!!.first)
+                    throw Exception(sharabilityResult.message)
 
-                if(unsharedTransactions.result != SOAResultType.SUCCESS)
-                    throw Exception(unsharedTransactions.message)
-
-                val availableShares = unsharedTransactions.data!!.transactionsToShares.map { it.second }.sum()
-
-                shares = shares!!.toInt()
-                if(shares > availableShares)
-                    throw Exception("You do not have enough shares available: $availableShares")
+                val unsharedTransactions = sharabilityResult.data!!.second!!
 
                 // loop sharing new tx until all spent that is needed
                 // TODO look into partial share -- if one tx fails what happens
                 var txs = mutableListOf<Transaction>()
                 var shared = 0
-                unsharedTransactions.data!!.transactionsToShares.forEach {
+                unsharedTransactions.transactionsToShares.forEach {
                     if(shared >= shares)
                         return@forEach
                     val ustx = it.first

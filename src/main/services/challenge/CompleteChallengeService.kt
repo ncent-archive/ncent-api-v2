@@ -40,17 +40,18 @@ object CompleteChallengeService: SOAServiceInterface<TransactionList> {
             val userToCompleteWith = UserAccount.find {
                 UserAccounts.cryptoKeyPair eq completingKeyPair.idValue
             }.first()
-            val unsharedTransactions = GetUnsharedTransactionsService.execute(
-                userToCompleteWith.idValue,
-                mapOf(Pair("challengeId", challenge.idValue.toString()))
-            )
 
-            if(unsharedTransactions.result != SOAResultType.SUCCESS)
-                throw Exception(unsharedTransactions.message)
+            val sharabilityResult = ValidateShareService.execute(userToCompleteWith.idValue, mapOf(
+                Pair("challengeId", challenge.idValue.toString())
+            ))
 
-            val availableShares = unsharedTransactions.data!!.transactionsToShares.map { it.second }.sum()
-            if(availableShares <= 0)
+            if(sharabilityResult.result != SOAResultType.SUCCESS)
+                throw Exception(sharabilityResult.message)
+
+            if(!sharabilityResult.data!!.first)
                 throw Exception("User must have a share in order to complete")
+
+            val unsharedTransactions = sharabilityResult.data!!.second!!
 
             // transition state
             newParams["state"] = "COMPLETE"
@@ -60,7 +61,7 @@ object CompleteChallengeService: SOAServiceInterface<TransactionList> {
                 throw Exception(stateChangeResult.message)
 
             // decide which transaction to use ( TODO for now the first unshared tx?)
-            val firstUnspentTx = unsharedTransactions.data!!.transactionsToShares.first().first.idValue
+            val firstUnspentTx = unsharedTransactions.transactionsToShares.first().first.idValue
 
             // payout winner
             val rewardResult = DistributeRewardService.execute(
