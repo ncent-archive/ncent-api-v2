@@ -22,12 +22,13 @@ object GetProvidenceChainService: SOAServiceInterface<TransactionList> {
             return SOAResult(txResult.result, txResult.message, null)
         var tx = txResult.data!!
         // verify no children exist
-        var childrenResult = getChildren(tx.id)
-        if (childrenResult.result != SOAResultType.SUCCESS)
-            return SOAResult(childrenResult.result, childrenResult.message, null)
-        // TODO -- check weights -- if children weight is less than parent weight; it's a valid chain still
-        if (childrenResult.data!!.any())
-            return SOAResult(SOAResultType.FAILURE, "Must send a leaf node, must not have children", null)
+        // TODO we may not need this check
+//        var childrenResult = getChildren(tx.id)
+//        if (childrenResult.result != SOAResultType.SUCCESS)
+//            return SOAResult(childrenResult.result, childrenResult.message, null)
+//        // TODO -- check weights -- if children weight is less than parent weight; it's a valid chain still
+//        if (childrenResult.data!!.any())
+//            return SOAResult(SOAResultType.FAILURE, "Must send a leaf node, must not have children", null)
 
         val mainChain = getHistoricChain(tx)
 

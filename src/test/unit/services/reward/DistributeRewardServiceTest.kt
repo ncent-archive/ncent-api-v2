@@ -32,20 +32,20 @@ class DistributeRewardServiceTest : WordSpec() {
     init {
         "calling execute with a valid transfer" should {
             "generate a list of transactions transferring to the providence chain evenly" {
-                rewardId = TestHelper.buildGenericReward(Audience.PROVIDENCE, RewardTypeName.EVEN)
-                providenceChainIds = TestHelper.buildGenericProvidenceChain()
-
-                val result = DistributeRewardService.execute(
-                    null,
-                    mapOf(
-                        Pair("reward_id", rewardId.value.toString()),
-                        Pair("transaction_id", providenceChainIds.last().value.toString())
-                    )
-                )
-
-                result.result shouldBe SOAResultType.SUCCESS
-
                 transaction {
+                    rewardId = TestHelper.buildGenericReward(null, Audience.PROVIDENCE, RewardTypeName.EVEN).id
+                    providenceChainIds = TestHelper.buildGenericProvidenceChain()
+
+                    val result = DistributeRewardService.execute(
+                        null,
+                        mapOf(
+                            Pair("reward_id", rewardId.value.toString()),
+                            Pair("transaction_id", providenceChainIds.last().value.toString())
+                        )
+                    )
+
+                    result.result shouldBe SOAResultType.SUCCESS
+
                     val payoutTransactions = result.data!!.transactions
                     payoutTransactions.count() shouldBe 4
 
@@ -64,21 +64,22 @@ class DistributeRewardServiceTest : WordSpec() {
                     }
                 }
             }
+
             "generate a single transaction to one individual when reward type is single" {
-                rewardId = TestHelper.buildGenericReward(Audience.PROVIDENCE, RewardTypeName.SINGLE)
-                providenceChainIds = TestHelper.buildGenericProvidenceChain()
-
-                val result = DistributeRewardService.execute(
-                    null,
-                    mapOf(
-                        Pair("reward_id", rewardId.value.toString()),
-                        Pair("transaction_id", providenceChainIds.last().value.toString())
-                    )
-                )
-
-                result.result shouldBe SOAResultType.SUCCESS
-
                 transaction {
+                    rewardId = TestHelper.buildGenericReward(null, Audience.PROVIDENCE, RewardTypeName.SINGLE).id
+                    providenceChainIds = TestHelper.buildGenericProvidenceChain()
+
+                    val result = DistributeRewardService.execute(
+                        null,
+                        mapOf(
+                            Pair("reward_id", rewardId.value.toString()),
+                            Pair("transaction_id", providenceChainIds.last().value.toString())
+                        )
+                    )
+
+                    result.result shouldBe SOAResultType.SUCCESS
+
                     val payoutTransactions = result.data!!.transactions
                     payoutTransactions.count() shouldBe 1
 
@@ -88,20 +89,20 @@ class DistributeRewardServiceTest : WordSpec() {
                 }
             }
             "generate a list of transactions transferring to the providence chain in n over 2" {
-                rewardId = TestHelper.buildGenericReward(Audience.PROVIDENCE, RewardTypeName.N_OVER_2)
-                providenceChainIds = TestHelper.buildGenericProvidenceChain()
-
-                val result = DistributeRewardService.execute(
-                    null,
-                    mapOf(
-                        Pair("reward_id", rewardId.value.toString()),
-                        Pair("transaction_id", providenceChainIds.last().value.toString())
-                    )
-                )
-
-                result.result shouldBe SOAResultType.SUCCESS
-
                 transaction {
+                    rewardId = TestHelper.buildGenericReward(null, Audience.PROVIDENCE, RewardTypeName.N_OVER_2).id
+                    providenceChainIds = TestHelper.buildGenericProvidenceChain()
+
+                    val result = DistributeRewardService.execute(
+                        null,
+                        mapOf(
+                            Pair("reward_id", rewardId.value.toString()),
+                            Pair("transaction_id", providenceChainIds.last().value.toString())
+                        )
+                    )
+
+                    result.result shouldBe SOAResultType.SUCCESS
+
                     val payoutTransactions = result.data!!.transactions
                     payoutTransactions.count() shouldBe 4
 

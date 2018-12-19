@@ -2,24 +2,17 @@ package test
 
 import framework.models.idValue
 import framework.services.DaoService
-import io.kotlintest.days
-import io.kotlintest.forExactly
-import io.kotlintest.properties.forAll
 import main.daos.*
 import main.services.challenge.GenerateChallengeService
-import main.services.challenge.GenerateChallengeSettingsService
 import main.services.completion_criteria.GenerateCompletionCriteriaService
 import main.services.reward.AddToRewardPoolService
 import main.services.reward.GenerateRewardService
 import main.services.token.GenerateTokenService
 import main.services.transaction.GenerateTransactionService
-import main.services.user_account.GenerateCryptoKeyPairService
 import main.services.user_account.GenerateUserAccountService
 import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.sql.dateTimeParam
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
-import java.sql.Time
 
 object TestHelper {
 
@@ -66,9 +59,10 @@ object TestHelper {
     }
 
     fun buildGenericReward(
+        userAccount: UserAccount? = null,
         audience: Audience = Audience.PROVIDENCE,
         type: RewardTypeName = RewardTypeName.EVEN
-    ): EntityID<Int> {
+    ): Reward {
         var rewardNamespace = RewardNamespace(
             type = RewardTypeNamespace(
                 audience = audience,
@@ -98,28 +92,34 @@ object TestHelper {
         // Create a user, token, reward, and add to the pool
         // Create a fake providence chain
         return transaction {
-            var newUserAccount = GenerateUserAccountService.execute(
-                null,
-                mapOf(
-                    Pair("firstname", "Arya"),
-                    Pair("lastname", "Soltanieh"),
-                    Pair("email", "as" + DateTime.now().millis + "@ncent.io")
-                )
-            ).data!!
+            var newUserAccount = if(userAccount == null) {
+                GenerateUserAccountService.execute(
+                    null,
+                    mapOf(
+                        Pair("firstname", "Arya"),
+                        Pair("lastname", "Soltanieh"),
+                        Pair("email", "as" + DateTime.now().millis + "@ncent.io")
+                    )
+                ).data!!
+            } else {
+                userAccount
+            }
 
             val token = GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
-            var rewards = GenerateRewardService.execute(newUserAccount.idValue, rewardNamespace, null).data!!
+            var reward = GenerateRewardService.execute(newUserAccount.idValue, rewardNamespace, null).data!!
             val rewardPoolTx = AddToRewardPoolService.execute(
                 newUserAccount.idValue,
                 mapOf(
-                    Pair("reward_id", rewards.idValue.toString()),
+                    Pair("reward_id", reward.idValue.toString()),
                     Pair("name", token.tokenType.name),
                     Pair("amount", "10")
                 )
             ).data!!
 
-            GenerateCompletionCriteriaService.execute(newUserAccount.idValue, completionCriteriaNamespace, null).data!!
-            return@transaction rewards.id
+            var completionCriteria = GenerateCompletionCriteriaService.execute(newUserAccount.idValue, completionCriteriaNamespace, null).data!!
+            completionCriteria.reward = reward
+
+            return@transaction reward
         }
     }
 
@@ -135,7 +135,7 @@ object TestHelper {
         return userAccounts
     }
 
-    fun generateFullChallenge(userAccount: UserAccount, subChallengeUserAccount: UserAccount, count: Int = 1): List<Challenge> {
+    fun generateFullChallenge(userAccount: UserAccount, subChallengeUserAccount: UserAccount, count: Int = 1, withReward: Boolean = false): List<Challenge> {
         return DaoService.execute {
             var challengesToReturn = mutableListOf<Challenge>()
 
@@ -157,7 +157,11 @@ object TestHelper {
                     distributionFeeReward = distributionFeeRewardNamespace
                 )
                 val challengeResult = GenerateChallengeService.execute(userAccount.idValue, challengeNamespace, null)
-                challengesToReturn.add(challengeResult.data!!)
+                val challenge = challengeResult.data!!
+                if(withReward) {
+                    challenge.completionCriterias = CompletionCriteria.find { CompletionCriterias.reward eq buildGenericReward(userAccount).id }.first()
+                }
+                challengesToReturn.add(challenge)
             }
             return@execute challengesToReturn
         }.data!!

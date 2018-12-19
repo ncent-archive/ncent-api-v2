@@ -33,19 +33,41 @@ object CompleteChallengeService: SOAServiceInterface<TransactionList> {
             val oldState = oldTx.action.type
             if(!challenge.canTransitionState(oldState, newState))
                 throw Exception("Cannot transition from ${oldState.type} to ${newState.type}")
-            newParams["state"] = "COMPLETE"
+
+            // validate user has any shares available -- without any they cannot complete
+            val completingUserPublicKey = params!!["completingUserPublicKey"]!!
+            val completingKeyPair = CryptoKeyPair.find { CryptoKeyPairs.publicKey eq completingUserPublicKey }.first()
+            val userToCompleteWith = UserAccount.find {
+                UserAccounts.cryptoKeyPair eq completingKeyPair.idValue
+            }.first()
+            val unsharedTransactions = GetUnsharedTransactionsService.execute(
+                userToCompleteWith.idValue,
+                mapOf(Pair("challengeId", challenge.idValue.toString()))
+            )
+
+            if(unsharedTransactions.result != SOAResultType.SUCCESS)
+                throw Exception(unsharedTransactions.message)
+
+            val availableShares = unsharedTransactions.data!!.transactionsToShares.map { it.second }.sum()
+            if(availableShares <= 0)
+                throw Exception("User must have a share in order to complete")
 
             // transition state
+            newParams["state"] = "COMPLETE"
+            newParams["challengeId"] = challenge.idValue.toString()
             val stateChangeResult = ChangeChallengeStateService.execute(caller, newParams)
             if(stateChangeResult.result != SOAResultType.SUCCESS)
                 throw Exception(stateChangeResult.message)
+
+            // decide which transaction to use ( TODO for now the first unshared tx?)
+            val firstUnspentTx = unsharedTransactions.data!!.transactionsToShares.first().first.idValue
 
             // payout winner
             val rewardResult = DistributeRewardService.execute(
                 caller,
                 mapOf(
                     Pair("reward_id", challenge.completionCriterias.reward.idValue.toString()),
-                    Pair("transaction_id", params["transactionId"]!!)
+                    Pair("transaction_id", firstUnspentTx.toString())
                 ))
             if(rewardResult.result != SOAResultType.SUCCESS)
                 throw Exception(rewardResult.message)
@@ -56,6 +78,5 @@ object CompleteChallengeService: SOAServiceInterface<TransactionList> {
         if(result.data!!.result != SOAResultType.SUCCESS)
             return SOAResult(result.data!!.result, result.data!!.message, null)
         return SOAResult(SOAResultType.SUCCESS, null, result.data!!.data)
-
     }
 }
