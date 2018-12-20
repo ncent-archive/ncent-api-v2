@@ -5,6 +5,7 @@ import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.SessionNamespace
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import java.util.*
 
 /**
@@ -18,7 +19,7 @@ object StartSessionService: SOAServiceInterface<SessionNamespace> {
             null,
             SessionNamespace(
                 UUID.randomUUID().toString(),
-                DateTime.now().plusHours(24)
+                DateTime.now(DateTimeZone.UTC).plusHours(24)
             )
         )
     }

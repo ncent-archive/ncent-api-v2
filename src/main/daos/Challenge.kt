@@ -6,6 +6,8 @@ import framework.models.BaseIntIdTable
 import framework.models.idValue
 import main.services.transaction.GetTransactionsService
 import org.jetbrains.exposed.dao.*
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 
 /**
  * Used to represent challenges and store pointers to models that
@@ -31,7 +33,7 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
 
     // TODO check expiration
     fun canTransitionState(fromState: ActionType, toState: ActionType): Boolean {
-        return when(fromState) {
+        val result =  when(fromState) {
             ActionType.COMPLETE -> {
                 false
             }
@@ -59,6 +61,11 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
                 ).contains(toState)
             }
             else -> throw Exception("Could not find challenge state to move to for ${fromState.type}")
+        }
+        if(result && toState == ActionType.EXPIRE) {
+            return result && challengeSettings.expiration < DateTime.now(DateTimeZone.UTC)
+        } else {
+            return result
         }
     }
 

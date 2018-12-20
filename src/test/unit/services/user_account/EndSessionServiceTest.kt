@@ -13,6 +13,7 @@ import main.services.user_account.EndSessionService
 import main.services.user_account.GenerateUserAccountService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 
 @ExtendWith(MockKExtension::class)
 class EndSessionServiceTest : WordSpec() {
@@ -39,7 +40,7 @@ class EndSessionServiceTest : WordSpec() {
                     // Validate that the created session ends in the future
 
                     Session.findById(session.id)!!.expiration.millis
-                            .shouldBeGreaterThan(DateTime.now().millis)
+                            .shouldBeGreaterThan(DateTime.now(DateTimeZone.UTC).millis)
 
                     // End the session via the service
                     var result = EndSessionService.execute(null, session.sessionKey)
@@ -48,7 +49,7 @@ class EndSessionServiceTest : WordSpec() {
 
                     session.refresh(true)
                     session.expiration.millis
-                            .shouldBeLessThanOrEqual(DateTime.now().millis)
+                            .shouldBeLessThanOrEqual(DateTime.now(DateTimeZone.UTC).millis)
                 }
             }
         }

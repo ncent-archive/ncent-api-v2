@@ -13,6 +13,7 @@ import main.services.user_account.GenerateUserAccountService
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 
 object TestHelper {
 
@@ -76,7 +77,7 @@ object TestHelper {
             amount = 100,
             tokenType = TokenTypeNamespace(
                 id = null,
-                name = "nCent" + DateTime.now().millis,
+                name = "nCent" + DateTime.now(DateTimeZone.UTC).millis,
                 parentToken = null,
                 parentTokenConversionRate = null
             )
@@ -97,7 +98,7 @@ object TestHelper {
                     mapOf(
                         Pair("firstname", "Arya"),
                         Pair("lastname", "Soltanieh"),
-                        Pair("email", "as" + DateTime.now().millis + "@ncent.io")
+                        Pair("email", "as" + DateTime.now(DateTimeZone.UTC).millis + "@ncent.io")
                     )
                 ).data!!
             } else {
@@ -209,7 +210,7 @@ object TestHelper {
                     description = "TESTdescription$i",
                     imageUrl = "TESTimageUrl$i",
                     sponsorName = "TESTsponsorName$i",
-                    expiration = DateTime.now().plusDays(1),
+                    expiration = DateTime.now(DateTimeZone.UTC).plusDays(1),
                     admin = userAccount.idValue,
                     maxShares = 100,
                     offChain = false,
