@@ -62,10 +62,10 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
             }
             else -> throw Exception("Could not find challenge state to move to for ${fromState.type}")
         }
-        if(result && toState == ActionType.EXPIRE) {
-            return result && challengeSettings.expiration < DateTime.now(DateTimeZone.UTC)
+        return if(result && toState == ActionType.EXPIRE) {
+            result && challengeSettings.expiration < DateTime.now(DateTimeZone.UTC)
         } else {
-            return result
+            result
         }
     }
 
