@@ -61,12 +61,12 @@ class GetTransactionsServiceTest : WordSpec() {
     init {
         "calling execute with a valid transaction id" should {
             "return the transaction and associated objects" {
-                GenerateTransactionService.execute(null, transactionNamespace, null)
-                GenerateTransactionService.execute(null, transaction2Namespace, null)
-                val result = GetTransactionsService.execute(null, mapOf(Pair("to", "MIKE")))
-
-                result.result shouldBe SOAResultType.SUCCESS
                 transaction {
+                    GenerateTransactionService.execute(null, transactionNamespace, null)
+                    GenerateTransactionService.execute(null, transaction2Namespace, null)
+                    val result = GetTransactionsService.execute(null, mapOf(Pair("to", "MIKE")))
+
+                    result.result shouldBe SOAResultType.SUCCESS
                     val txs = result.data!!
                     txs.transactions.count() shouldBe 2
                     txs.transactions.forEach {

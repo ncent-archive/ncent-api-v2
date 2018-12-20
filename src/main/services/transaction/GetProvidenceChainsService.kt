@@ -1,13 +1,10 @@
 package main.services.transaction
 
 import framework.models.idValue
-import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
-import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
  * Retrieve transactions by filter'd action
@@ -42,12 +39,7 @@ object GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
 
             val currentLastIdInChain = providenceChain.value.last().id
 
-            var childrenResult = GetProvidenceChainService.getChildren(currentLastIdInChain)
-
-            if(childrenResult.result != SOAResultType.SUCCESS)
-                return SOAResult(childrenResult.result, childrenResult.message, null)
-
-            var children = childrenResult.data
+            val children = GetProvidenceChainService.getChildren(currentLastIdInChain)
 
             // if this chain has no children, we can just finalize it
             if(children == null || children.isEmpty()) {

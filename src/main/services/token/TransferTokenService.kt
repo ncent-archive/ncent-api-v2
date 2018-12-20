@@ -14,8 +14,7 @@ object TransferTokenService: SOAServiceInterface<Transaction> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<Transaction> {
         val userAccount = UserAccount.findById(caller!!)
         // get the user account so we can get the address
-        if(userAccount == null)
-            return SOAResult(SOAResultType.FAILURE, "Could not find that user", null)
+        userAccount ?: return SOAResult(SOAResultType.FAILURE, "Could not find that user", null)
         val address = userAccount!!.cryptoKeyPair.publicKey
 
         // verify that the caller is the from address

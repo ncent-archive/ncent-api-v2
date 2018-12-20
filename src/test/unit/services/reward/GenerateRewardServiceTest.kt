@@ -34,9 +34,9 @@ class GenerateRewardServiceTest : WordSpec() {
     init {
         "calling execute with a valid reward" should {
             "generate the reward and associated reward type and pool" {
-                var result = GenerateRewardService.execute(null, rewardNamespace, null)
-                result.result shouldBe SOAResultType.SUCCESS
                 transaction {
+                    var result = GenerateRewardService.execute(null, rewardNamespace, null)
+                    result.result shouldBe SOAResultType.SUCCESS
                     val rewardType = RewardType.all().first()
                     rewardType.audience shouldBe Audience.FULL
                     rewardType.type shouldBe RewardTypeName.EVEN

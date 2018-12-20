@@ -41,9 +41,9 @@ class GenerateTransactionServiceTest : WordSpec() {
     init {
         "calling execute with a valid transaction" should {
             "generate the transaction and associated action" {
-                var result = GenerateTransactionService.execute(null, transactionNamespace, null)
-                result.result shouldBe SOAResultType.SUCCESS
                 transaction {
+                    var result = GenerateTransactionService.execute(null, transactionNamespace, null)
+                    result.result shouldBe SOAResultType.SUCCESS
                     val action = Action.all().first()
                     action.data shouldBe 1
                     action.type shouldBe ActionType.CREATE

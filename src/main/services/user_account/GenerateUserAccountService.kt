@@ -13,7 +13,6 @@ import main.services.transaction.GenerateTransactionService
  */
 object GenerateUserAccountService: SOAServiceInterface<UserAccount> {
     override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<UserAccount> {
-
         val apiCredResult = GenerateApiCredsService.execute()
         if(apiCredResult.result != SOAResultType.SUCCESS)
             return SOAResult(apiCredResult.result, apiCredResult.message, null)

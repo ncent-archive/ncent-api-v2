@@ -1,12 +1,10 @@
 package main.services.transaction
 
-import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
  * Retrieve a single providence chain.
@@ -35,12 +33,10 @@ object GetProvidenceChainService: SOAServiceInterface<TransactionList> {
         return SOAResult(SOAResultType.SUCCESS, null, TransactionList(mainChain))
     }
 
-    fun getChildren(id: EntityID<Int>): SOAResult<List<Transaction>> {
-        return DaoService.execute {
-            Transaction.find {
-                Transactions.previousTransaction eq id
-            }?.distinct()?.toList()
-        }
+    fun getChildren(id: EntityID<Int>): List<Transaction> {
+        return Transaction.find {
+            Transactions.previousTransaction eq id
+        }?.distinct()?.toList()
     }
 
     fun getHistoricChain(transaction: Transaction): MutableList<Transaction> {
@@ -52,11 +48,9 @@ object GetProvidenceChainService: SOAServiceInterface<TransactionList> {
 
         // Populate the list with its chain, going up the chain
         // Must put this in a transaction so we can access the deep objects
-        transaction {
-            while (tx.previousTransaction != null) {
-                mainChain.add(tx.previousTransaction!!)
-                tx = tx.previousTransaction!!
-            }
+        while (tx.previousTransaction != null) {
+            mainChain.add(tx.previousTransaction!!)
+            tx = tx.previousTransaction!!
         }
 
         // Reverse in order to put it in the proper descending (towards children) chain order

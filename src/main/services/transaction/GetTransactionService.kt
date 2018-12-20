@@ -1,6 +1,5 @@
 package main.services.transaction
 
-import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
@@ -13,19 +12,14 @@ import org.jetbrains.exposed.sql.select
  */
 object GetTransactionService: SOAServiceInterface<Transaction> {
     override fun execute(caller: Int?, id: Int?, params: Map<String, String>?) : SOAResult<Transaction> {
-        val transactionsResult = DaoService.execute {
-            val query = Transactions
-                .innerJoin(Actions)
-                .innerJoin(TransactionsMetadata)
-                .innerJoin(Metadatas)
-            .select {
-                Transactions.id eq EntityID(id!!, Transactions)
-            }.withDistinct()
-            Transaction.wrapRows(query).toList().distinct()
-        }
-
-        if(transactionsResult.result != SOAResultType.SUCCESS)
-            return SOAResult(transactionsResult.result, transactionsResult.message, null)
-        return SOAResult(SOAResultType.SUCCESS, null, transactionsResult.data!!.first())
+        val query = Transactions
+            .innerJoin(Actions)
+            .innerJoin(TransactionsMetadata)
+            .innerJoin(Metadatas)
+        .select {
+            Transactions.id eq EntityID(id!!, Transactions)
+        }.withDistinct()
+        val tx = Transaction.wrapRows(query).toList().distinct()
+        return SOAResult(SOAResultType.SUCCESS, null, tx.first())
     }
 }

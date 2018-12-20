@@ -35,9 +35,9 @@ class GenerateTokenServiceTest : WordSpec() {
     init {
         "calling execute with a valid token" should {
             "generate the tokens and associated tokenType" {
-                var result = GenerateTokenService.execute(null, nCentTokenNamespace, null)
-                result.result shouldBe SOAResultType.SUCCESS
                 transaction {
+                    var result = GenerateTokenService.execute(null, nCentTokenNamespace, null)
+                    result.result shouldBe SOAResultType.SUCCESS
                     val tokenType = TokenType.all().first()
                     tokenType.name shouldBe "nCent"
                     tokenType.parentToken shouldBe null

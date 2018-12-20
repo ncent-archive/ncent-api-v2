@@ -10,6 +10,7 @@ import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.models.Handler
 import main.services.transaction.GetProvidenceChainService
 import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.transactions.transaction
 import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
@@ -31,16 +32,18 @@ class GetProvidenceChainServiceTest : WordSpec() {
     init {
         "calling execute with a valid transaction id" should {
             "return the providence chain" {
-                val result = GetProvidenceChainService.execute(null, endTransactionId.value)
+                transaction {
+                    val result = GetProvidenceChainService.execute(null, endTransactionId.value)
 
-                result.result shouldBe SOAResultType.SUCCESS
+                    result.result shouldBe SOAResultType.SUCCESS
 
-                val expectedResult = mutableListOf(
-                    "ARYA", "ARYA2", "ARYA4", "ARYA6"
-                )
+                    val expectedResult = mutableListOf(
+                        "ARYA", "ARYA2", "ARYA4", "ARYA6"
+                    )
 
-                result.data!!.transactions.map { t -> t.from }
-                    .shouldContainExactly(expectedResult)
+                    result.data!!.transactions.map { t -> t.from }
+                        .shouldContainExactly(expectedResult)
+                }
             }
         }
         // TODO decide if we need this later

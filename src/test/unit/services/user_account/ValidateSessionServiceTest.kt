@@ -37,29 +37,29 @@ class ValidateSessionServiceTest : WordSpec() {
                 transaction {
                     user = GenerateUserAccountService.execute(null, params).data!!
                     session = user.session!!
-                }
 
-                var result = ValidateSessionService.execute(user.idValue, session.sessionKey)
-                result.result shouldBe SOAResultType.SUCCESS
+                    var result = ValidateSessionService.execute(user.idValue, session.sessionKey)
+                    result.result shouldBe SOAResultType.SUCCESS
+                }
             }
             "should return invalid for a sessionkey that is not associated with the caller" {
                 transaction {
                     user = GenerateUserAccountService.execute(null, params).data!!
                     session = user.session!!
+                    var result = ValidateSessionService.execute(user.idValue, "SOMERANDOMKEY")
+                    result.result shouldBe SOAResultType.FAILURE
+                    result.message shouldBe "Invalid Session"
                 }
-                var result = ValidateSessionService.execute(user.idValue, "SOMERANDOMKEY")
-                result.result shouldBe SOAResultType.FAILURE
-                result.message shouldBe "Invalid Session"
             }
             "should return invalid for an expired sessionkey" {
                 transaction {
                     user = GenerateUserAccountService.execute(null, params).data!!
                     session = user.session!!
+                    EndSessionService.execute(null, session.sessionKey)
+                    var result = ValidateSessionService.execute(user.idValue, session.sessionKey)
+                    result.result shouldBe SOAResultType.FAILURE
+                    result.message shouldBe "Session Expired"
                 }
-                EndSessionService.execute(null, session.sessionKey)
-                var result = ValidateSessionService.execute(user.idValue, session.sessionKey)
-                result.result shouldBe SOAResultType.FAILURE
-                result.message shouldBe "Session Expired"
             }
         }
     }

@@ -18,20 +18,18 @@ object ValidateSessionService: SOAServiceInterface<Session> {
             "",
             null
         )
-        return transaction {
-            val user = UserAccount.findById(caller!!)!!
-            val session = user.session
-            if(session == null) {
-                result.message = "Session not found"
-            } else if(session.sessionKey != key!!) {
-                result.message = "Invalid Session"
-            } else if(session!!.expiration <= DateTime.now()) {
-                result.message = "Session Expired"
-            } else {
-                result.data = session
-                result.result = SOAResultType.SUCCESS
-            }
-            return@transaction result
+        val user = UserAccount.findById(caller!!)!!
+        val session = user.session
+        if(session == null) {
+            result.message = "Session not found"
+        } else if(session.sessionKey != key!!) {
+            result.message = "Invalid Session"
+        } else if(session!!.expiration <= DateTime.now()) {
+            result.message = "Session Expired"
+        } else {
+            result.data = session
+            result.result = SOAResultType.SUCCESS
         }
+        return result
     }
 }

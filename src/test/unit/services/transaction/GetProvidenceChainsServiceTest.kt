@@ -9,6 +9,7 @@ import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.models.Handler
 import main.services.transaction.GetProvidenceChainsService
 import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.transactions.transaction
 import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
@@ -30,44 +31,48 @@ class GetProvidenceChainsServiceTest : WordSpec() {
     init {
         "calling execute with a valid transaction id" should {
             "return the list of all possible chains if there are many children nodes involved" {
-                val result = GetProvidenceChainsService.execute(null, middleTransactionId.value)
+                transaction {
+                    val result = GetProvidenceChainsService.execute(null, middleTransactionId.value)
 
-                result.result shouldBe SOAResultType.SUCCESS
-                result.data!!.count() shouldBe 3
+                    result.result shouldBe SOAResultType.SUCCESS
+                    result.data!!.count() shouldBe 3
 
-                val expectedResult = mutableListOf<List<String>>()
-                expectedResult.add(mutableListOf(
-                    "ARYA", "ARYA2", "ARYA3"
-                ))
-                expectedResult.add(mutableListOf(
-                    "ARYA", "ARYA2", "ARYA4", "ARYA5"
-                ))
-                expectedResult.add(mutableListOf(
-                    "ARYA", "ARYA2", "ARYA4", "ARYA6"
-                ))
+                    val expectedResult = mutableListOf<List<String>>()
+                    expectedResult.add(mutableListOf(
+                        "ARYA", "ARYA2", "ARYA3"
+                    ))
+                    expectedResult.add(mutableListOf(
+                        "ARYA", "ARYA2", "ARYA4", "ARYA5"
+                    ))
+                    expectedResult.add(mutableListOf(
+                        "ARYA", "ARYA2", "ARYA4", "ARYA6"
+                    ))
 
-                result.data!!.map { tl ->
-                    tl.transactions.map { t ->
-                        t.from
-                    }
-                }.shouldContainExactly(expectedResult)
+                    result.data!!.map { tl ->
+                        tl.transactions.map { t ->
+                            t.from
+                        }
+                    }.shouldContainExactly(expectedResult)
+                }
             }
             "return a single chain if there are no children node involved" {
-                val result = GetProvidenceChainsService.execute(null, sideTransactionId.value)
+                transaction {
+                    val result = GetProvidenceChainsService.execute(null, sideTransactionId.value)
 
-                result.result shouldBe SOAResultType.SUCCESS
-                result.data!!.count() shouldBe 1
+                    result.result shouldBe SOAResultType.SUCCESS
+                    result.data!!.count() shouldBe 1
 
-                val expectedResult = mutableListOf<List<String>>()
-                expectedResult.add(mutableListOf(
+                    val expectedResult = mutableListOf<List<String>>()
+                    expectedResult.add(mutableListOf(
                         "ARYA", "ARYA2", "ARYA3"
-                ))
+                    ))
 
-                result.data!!.map { tl ->
-                    tl.transactions.map { t ->
-                        t.from
-                    }
-                }.shouldContainExactly(expectedResult)
+                    result.data!!.map { tl ->
+                        tl.transactions.map { t ->
+                            t.from
+                        }
+                    }.shouldContainExactly(expectedResult)
+                }
             }
         }
     }

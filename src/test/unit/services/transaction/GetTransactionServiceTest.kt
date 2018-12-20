@@ -45,28 +45,28 @@ class GetTransactionServiceTest : WordSpec() {
     init {
         "calling execute with a valid transaction id" should {
             "return the transaction and associated objects" {
-                var parentTxGenerateResult = GenerateTransactionService.execute(null, transactionNamespace, null)
-                transaction2Namespace = TransactionNamespace(
-                    from = "ARYA2",
-                    to = "MIKE",
-                    action = ActionNamespace(
-                        type = ActionType.CREATE,
-                        data = 2,
-                        dataType = "UserAccount"
-                    ),
-                    previousTransaction = parentTxGenerateResult.data!!.idValue,
-                    metadatas = MetadatasListNamespace(
-                        listOf(
-                            MetadatasNamespace("city", "san carlos"),
-                            MetadatasNamespace("state", "california")
+                transaction {
+                    var parentTxGenerateResult = GenerateTransactionService.execute(null, transactionNamespace, null)
+                    transaction2Namespace = TransactionNamespace(
+                        from = "ARYA2",
+                        to = "MIKE",
+                        action = ActionNamespace(
+                            type = ActionType.CREATE,
+                            data = 2,
+                            dataType = "UserAccount"
+                        ),
+                        previousTransaction = parentTxGenerateResult.data!!.idValue,
+                        metadatas = MetadatasListNamespace(
+                            listOf(
+                                MetadatasNamespace("city", "san carlos"),
+                                MetadatasNamespace("state", "california")
+                            )
                         )
                     )
-                )
-                val txGenerateResult = GenerateTransactionService.execute(null, transaction2Namespace, null)
-                val result = GetTransactionService.execute(null, txGenerateResult.data!!.idValue, null)
+                    val txGenerateResult = GenerateTransactionService.execute(null, transaction2Namespace, null)
+                    val result = GetTransactionService.execute(null, txGenerateResult.data!!.idValue, null)
 
-                result.result shouldBe SOAResultType.SUCCESS
-                transaction {
+                    result.result shouldBe SOAResultType.SUCCESS
                     val tx = result.data!!
                     tx.from shouldBe "ARYA2"
                     tx.previousTransaction!!.from shouldBe "ARYA"

@@ -33,9 +33,9 @@ class GetChallengesServiceTest : WordSpec() {
     init {
         "calling execute with a valid user who has challenges" should {
             "return the challenges" {
-                var result = GetChallengesService.execute(userAccount.idValue)
-                result.result shouldBe SOAResultType.SUCCESS
                 transaction {
+                    var result = GetChallengesService.execute(userAccount.idValue)
+                    result.result shouldBe SOAResultType.SUCCESS
                     val challenges = result.data!!.challenges
                     challenges.count() shouldBe 2
                     challenges.first().subChallenges.count() shouldBe 2

@@ -1,7 +1,6 @@
 package main.services.challenge
 
 import framework.models.idValue
-import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
@@ -19,85 +18,83 @@ import org.jetbrains.exposed.sql.SizedCollection
 object GenerateChallengeService: SOAServiceInterface<Challenge> {
     override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Challenge> {
         val challengeNamespace = d!! as ChallengeNamespace
-        return DaoService.execute {
-            val userAccount = UserAccount.findById(challengeNamespace.challengeSettings.admin)!!
-            val settings = ChallengeSetting.new {
-                name = challengeNamespace.challengeSettings.name
-                description = challengeNamespace.challengeSettings.description
-                imageUrl = challengeNamespace.challengeSettings.imageUrl
-                sponsorName = challengeNamespace.challengeSettings.sponsorName
-                expiration = challengeNamespace.challengeSettings.expiration
-                admin = userAccount.id
-                offChain = challengeNamespace.challengeSettings.offChain
-                maxShares = challengeNamespace.challengeSettings.maxShares
-                maxRewards = challengeNamespace.challengeSettings.maxRewards
-                maxDistributionFeeReward = challengeNamespace.challengeSettings.maxDistributionFeeReward
-                maxSharesPerReceivedShare = challengeNamespace.challengeSettings.maxSharesPerReceivedShare
-                maxDepth = challengeNamespace.challengeSettings.maxDepth
-                maxNodes = challengeNamespace.challengeSettings.maxNodes
-            }
-
-            val keyPairGenerated = GenerateCryptoKeyPairService.execute()
-            if(keyPairGenerated.result != SOAResultType.SUCCESS)
-                throw Exception(keyPairGenerated.message)
-
-            val optionalParentChallenge = if(challengeNamespace.parentChallenge != null)
-                Challenge.findById(challengeNamespace.parentChallenge)
-            else
-                null
-
-            val distributionFeeRewardResult = GenerateRewardService.execute(null, challengeNamespace.distributionFeeReward, null)
-
-            // TODO add reward to pool?
-            val challenge = Challenge.new {
-                parentChallenge = optionalParentChallenge
-                challengeSettings = settings
-                cryptoKeyPair = keyPairGenerated.data!!
-                distributionFeeReward = distributionFeeRewardResult.data!!
-            }
-
-            challenge.completionCriterias = createCompletionCriteria(challengeNamespace.completionCriteria)
-
-            if(challengeNamespace.subChallenges.any()) {
-                challenge.subChallenges = createSubChallengesList(challengeNamespace.subChallenges)
-            }
-
-            // create a transaction for challenge creation state
-            val createChallengeTx = GenerateTransactionService.execute(caller, TransactionNamespace(
-                from = challenge.cryptoKeyPair.publicKey,
-                to = challenge.cryptoKeyPair.publicKey,
-                previousTransaction = null,
-                metadatas = null,
-                action = ActionNamespace(
-                    type = ActionType.CREATE,
-                    data = challenge.idValue,
-                    dataType = Challenge::class.simpleName!!
-                )
-            ), null)
-            if(createChallengeTx.result != SOAResultType.SUCCESS)
-                throw Exception(createChallengeTx.message)
-
-            // create a transaction for tokens received?
-            GenerateTransactionService.execute(caller, TransactionNamespace(
-                from = challenge.cryptoKeyPair.publicKey,
-                to = userAccount.cryptoKeyPair.publicKey,
-                previousTransaction = null,
-                metadatas = MetadatasListNamespace(
-                    ChallengeMetadata(
-                        challenge.idValue,
-                        challenge.challengeSettings.offChain,
-                        challenge.challengeSettings.maxShares
-                    ).getChallengeMetadataNamespaces()
-                ),
-                action = ActionNamespace(
-                    type = ActionType.SHARE,
-                    data = challenge.idValue,
-                    dataType = Challenge::class.simpleName!!
-                )
-            ), null)
-
-            return@execute challenge
+        val userAccount = UserAccount.findById(challengeNamespace.challengeSettings.admin)!!
+        val settings = ChallengeSetting.new {
+            name = challengeNamespace.challengeSettings.name
+            description = challengeNamespace.challengeSettings.description
+            imageUrl = challengeNamespace.challengeSettings.imageUrl
+            sponsorName = challengeNamespace.challengeSettings.sponsorName
+            expiration = challengeNamespace.challengeSettings.expiration
+            admin = userAccount.id
+            offChain = challengeNamespace.challengeSettings.offChain
+            maxShares = challengeNamespace.challengeSettings.maxShares
+            maxRewards = challengeNamespace.challengeSettings.maxRewards
+            maxDistributionFeeReward = challengeNamespace.challengeSettings.maxDistributionFeeReward
+            maxSharesPerReceivedShare = challengeNamespace.challengeSettings.maxSharesPerReceivedShare
+            maxDepth = challengeNamespace.challengeSettings.maxDepth
+            maxNodes = challengeNamespace.challengeSettings.maxNodes
         }
+
+        val keyPairGenerated = GenerateCryptoKeyPairService.execute()
+        if(keyPairGenerated.result != SOAResultType.SUCCESS)
+            return SOAResult(SOAResultType.FAILURE, keyPairGenerated.message)
+
+        val optionalParentChallenge = if(challengeNamespace.parentChallenge != null)
+            Challenge.findById(challengeNamespace.parentChallenge)
+        else
+            null
+
+        val distributionFeeRewardResult = GenerateRewardService.execute(null, challengeNamespace.distributionFeeReward, null)
+
+        // TODO add reward to pool?
+        val challenge = Challenge.new {
+            parentChallenge = optionalParentChallenge
+            challengeSettings = settings
+            cryptoKeyPair = keyPairGenerated.data!!
+            distributionFeeReward = distributionFeeRewardResult.data!!
+        }
+
+        challenge.completionCriterias = createCompletionCriteria(challengeNamespace.completionCriteria)
+
+        if(challengeNamespace.subChallenges.any()) {
+            challenge.subChallenges = createSubChallengesList(challengeNamespace.subChallenges)
+        }
+
+        // create a transaction for challenge creation state
+        val createChallengeTx = GenerateTransactionService.execute(caller, TransactionNamespace(
+            from = challenge.cryptoKeyPair.publicKey,
+            to = challenge.cryptoKeyPair.publicKey,
+            previousTransaction = null,
+            metadatas = null,
+            action = ActionNamespace(
+                type = ActionType.CREATE,
+                data = challenge.idValue,
+                dataType = Challenge::class.simpleName!!
+            )
+        ), null)
+        if(createChallengeTx.result != SOAResultType.SUCCESS)
+            return SOAResult(SOAResultType.FAILURE, createChallengeTx.message)
+
+        // create a transaction for tokens received?
+        GenerateTransactionService.execute(caller, TransactionNamespace(
+            from = challenge.cryptoKeyPair.publicKey,
+            to = userAccount.cryptoKeyPair.publicKey,
+            previousTransaction = null,
+            metadatas = MetadatasListNamespace(
+                ChallengeMetadata(
+                    challenge.idValue,
+                    challenge.challengeSettings.offChain,
+                    challenge.challengeSettings.maxShares
+                ).getChallengeMetadataNamespaces()
+            ),
+            action = ActionNamespace(
+                type = ActionType.SHARE,
+                data = challenge.idValue,
+                dataType = Challenge::class.simpleName!!
+            )
+        ), null)
+
+        return SOAResult(SOAResultType.SUCCESS, null, challenge)
     }
 
     private fun createSubChallengesList(subChallengeIds: List<Pair<Int, SubChallengeType>>) : SizedCollection<SubChallenge> {

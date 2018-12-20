@@ -36,29 +36,29 @@ class ValidateApiKeyServiceTest : WordSpec() {
                 transaction {
                     user = GenerateUserAccountService.execute(null, params).data!!
                     apiCred = user.apiCreds
-                }
 
-                // TODO change this to use a decrypted secret
-                var apiKeyParams = mutableMapOf(
-                    Pair("apiKey", apiCred.apiKey),
-                    Pair("secretKey", apiCred.encryptedSecretKey)
-                )
-                var result = ValidateApiKeyService.execute(user.idValue, Any(), apiKeyParams)
-                result.result shouldBe SOAResultType.SUCCESS
+                    // TODO change this to use a decrypted secret
+                    var apiKeyParams = mutableMapOf(
+                        Pair("apiKey", apiCred.apiKey),
+                        Pair("secretKey", apiCred.encryptedSecretKey)
+                    )
+                    var result = ValidateApiKeyService.execute(user.idValue, Any(), apiKeyParams)
+                    result.result shouldBe SOAResultType.SUCCESS
+                }
             }
             "should return invalid for an invalid secret" {
                 transaction {
                     user = GenerateUserAccountService.execute(null, params).data!!
                     apiCred = user.apiCreds
-                }
 
-                var apiKeyParams = mutableMapOf(
-                    Pair("apiKey", apiCred.apiKey),
-                    Pair("secretKey", "FAKESECRET")
-                )
-                var result = ValidateApiKeyService.execute(user.idValue, Any(), apiKeyParams)
-                result.result shouldBe SOAResultType.FAILURE
-                result.message shouldBe "Invalid api credentials"
+                    var apiKeyParams = mutableMapOf(
+                        Pair("apiKey", apiCred.apiKey),
+                        Pair("secretKey", "FAKESECRET")
+                    )
+                    var result = ValidateApiKeyService.execute(user.idValue, Any(), apiKeyParams)
+                    result.result shouldBe SOAResultType.FAILURE
+                    result.message shouldBe "Invalid api credentials"
+                }
             }
         }
     }

@@ -4,7 +4,6 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.Table
 import org.joda.time.DateTime
 
@@ -15,7 +14,6 @@ import org.joda.time.DateTime
  * @property id
  * @property address The address which can trigger validation of completion
  * @property reward the reward amount and it's pool
- * @property expiration
  * @property prereq If this completion criteria can only be completed if another is completed
  */
 class CompletionCriteria(id: EntityID<Int>) : BaseIntEntity(id, CompletionCriterias) {
@@ -23,20 +21,18 @@ class CompletionCriteria(id: EntityID<Int>) : BaseIntEntity(id, CompletionCriter
 
     var address by CompletionCriterias.address
     var reward by Reward referencedOn CompletionCriterias.reward
-    var expiration by CompletionCriterias.expiration
-    var prereq by CompletionCriteria via PrerequisiteCompletionCriterias
+    var prereq by Challenge via PrerequisiteChallenge
 }
 
 // TODO figure out how we will get prereq's added -- will this be when generating and adding sub challenges?
-object PrerequisiteCompletionCriterias : Table("prerequisite_completion_criterias") {
+object PrerequisiteChallenge : Table("prerequisite_challenge") {
     var completionCriteria = reference("completion_criteria_to_prereq", CompletionCriterias).primaryKey()
-    var prereqCompletionCriteria = reference("prereq_to_completion_criteria", CompletionCriterias).primaryKey()
+    var prereqChallenge = reference("prereq_to_completion_criteria", Challenges).primaryKey()
 }
 
 object CompletionCriterias : BaseIntIdTable("completion_criterias") {
     val address = varchar("address", 256)
     val reward = reference("reward", Rewards)
-    val expiration = datetime("expiration")
 }
 
-data class CompletionCriteriaNamespace(val address: String?, val rewardNamespace: RewardNamespace, val expiration: DateTime, val preReqCompletionCriteriaIds: List<Int> = listOf())
+data class CompletionCriteriaNamespace(val address: String?, val rewardNamespace: RewardNamespace, val preReqChallengeIds: List<Int> = listOf())

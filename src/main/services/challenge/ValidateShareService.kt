@@ -16,7 +16,7 @@ object ValidateShareService: SOAServiceInterface<Pair<Boolean, ShareTransactionL
         )
 
         if(unsharedTransactions.result != SOAResultType.SUCCESS)
-            throw Exception(unsharedTransactions.message)
+            return SOAResult(SOAResultType.FAILURE, unsharedTransactions.message)
 
         val availableShares = unsharedTransactions.data!!.transactionsToShares.map { it.second }.sum()
 

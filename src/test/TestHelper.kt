@@ -85,8 +85,7 @@ object TestHelper {
         var completionCriteriaNamespace = CompletionCriteriaNamespace(
             address = null,
             rewardNamespace = rewardNamespace,
-            expiration = DateTime.now().plusDays(100),
-            preReqCompletionCriteriaIds = listOf()
+            preReqChallengeIds = listOf()
         )
 
         // Create a user, token, reward, and add to the pool
@@ -126,11 +125,13 @@ object TestHelper {
     fun generateUserAccounts(count: Int = 1): List<UserAccount> {
         var userAccounts = mutableListOf<UserAccount>()
         for(i in 0..(count - 1)) {
-            userAccounts.add(GenerateUserAccountService.execute(null, mutableMapOf(
-                Pair("email", "dev$i@ncnt.io"),
-                Pair("firstname", "dev$i"),
-                Pair("lastname", "ncnt$i")
-            )).data!!)
+            transaction {
+                userAccounts.add(GenerateUserAccountService.execute(null, mutableMapOf(
+                    Pair("email", "dev$i@ncnt.io"),
+                    Pair("firstname", "dev$i"),
+                    Pair("lastname", "ncnt$i")
+                )).data!!)
+            }
         }
         return userAccounts
     }
@@ -229,8 +230,7 @@ object TestHelper {
             completionCriteriaNamespaces.add(
                 CompletionCriteriaNamespace(
                     address = userAccount.cryptoKeyPair.publicKey,
-                    rewardNamespace = generateRewardNamespace(),
-                    expiration = DateTime.now().plusDays(1)
+                    rewardNamespace = generateRewardNamespace()
                 )
             )
         }

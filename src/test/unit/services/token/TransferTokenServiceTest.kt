@@ -43,9 +43,9 @@ class TransferTokenServiceTest : WordSpec() {
                 val newUserAccount = userAccounts[0]
                 val newUserAccount2 = userAccounts[1]
 
-                val token = GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
-
                 transaction {
+                    val token = GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
+
                     var result = TransferTokenService.execute(newUserAccount.idValue, mapOf(
                         Pair("to", newUserAccount2.cryptoKeyPair.publicKey),
                         Pair("from", newUserAccount.cryptoKeyPair.publicKey),
@@ -70,9 +70,9 @@ class TransferTokenServiceTest : WordSpec() {
                 val newUserAccount = userAccounts[0]
                 val newUserAccount2 = userAccounts[1]
 
-                GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null)
-
                 transaction {
+                    GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null)
+
                     var result = TransferTokenService.execute(newUserAccount.idValue, mapOf(
                         Pair("to", newUserAccount2.cryptoKeyPair.publicKey),
                         Pair("from", newUserAccount.cryptoKeyPair.publicKey),

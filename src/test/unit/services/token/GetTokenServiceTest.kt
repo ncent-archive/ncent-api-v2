@@ -38,9 +38,8 @@ class GetTokenServiceTest : WordSpec() {
     init {
         "calling execute with a valid token name" should {
             "return the token and its parent" {
-                var newTokenResult = GenerateTokenService.execute(null, nCentTokenNamespace, null)
-
                 transaction {
+                    var newTokenResult = GenerateTokenService.execute(null, nCentTokenNamespace, null)
                     ethTokenNamespace = TokenNamespace(
                         amount = 1000,
                         tokenType = TokenTypeNamespace(

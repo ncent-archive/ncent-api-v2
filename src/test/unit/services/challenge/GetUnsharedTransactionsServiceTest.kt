@@ -32,14 +32,14 @@ class GetUnsharedTransactionsServiceTest : WordSpec() {
     init {
         "calling execute with a valid challenge" should {
             "return the users unshared transactions" {
-                var result = GetUnsharedTransactionsService.execute(
-                    userAccounts[0].idValue,
-                    mapOf(
-                        Pair("challengeId", challenge.idValue.toString())
-                    )
-                )
-                result.result shouldBe SOAResultType.SUCCESS
                 transaction {
+                    var result = GetUnsharedTransactionsService.execute(
+                        userAccounts[0].idValue,
+                        mapOf(
+                            Pair("challengeId", challenge.idValue.toString())
+                        )
+                    )
+                    result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.transactionsToShares.count() shouldBe 1
                     result.data!!.transactionsToShares.first().second shouldBe 100
                     TestHelper.generateShareTransaction(

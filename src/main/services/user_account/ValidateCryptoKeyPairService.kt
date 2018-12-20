@@ -18,19 +18,17 @@ object ValidateCryptoKeyPairService: SOAServiceInterface<CryptoKeyPair> {
         )
         val publicKey = params!!["publicKey"]!!
         val privateKey = params!!["privateKey"]!!
-        return transaction {
-            val cryptoKeyPair = CryptoKeyPair.find {
-                CryptoKeyPairs.publicKey eq publicKey
-                CryptoKeyPairs.encryptedPrivateKey eq CryptoKeyPair.encryptPrivateKey(privateKey)
-            }
-            if(cryptoKeyPair.empty()) {
-                result.message = "Invalid key pair"
-            } else {
-                // TODO: figure out decrypting when sending back the secret
-                result.data = cryptoKeyPair.first()
-                result.result = SOAResultType.SUCCESS
-            }
-            return@transaction result
+        val cryptoKeyPair = CryptoKeyPair.find {
+            CryptoKeyPairs.publicKey eq publicKey
+            CryptoKeyPairs.encryptedPrivateKey eq CryptoKeyPair.encryptPrivateKey(privateKey)
         }
+        if(cryptoKeyPair.empty()) {
+            result.message = "Invalid key pair"
+        } else {
+            // TODO: figure out decrypting when sending back the secret
+            result.data = cryptoKeyPair.first()
+            result.result = SOAResultType.SUCCESS
+        }
+        return result
     }
 }

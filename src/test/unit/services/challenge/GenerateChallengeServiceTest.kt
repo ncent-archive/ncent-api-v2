@@ -58,9 +58,9 @@ class GenerateChallengeServiceTest : WordSpec() {
     init {
         "calling execute with a valid completion criteria" should {
             "generate the reward and associated reward type and pool and completion criteria" {
-                var result = GenerateChallengeService.execute(null, challengeNamespace, null)
-                result.result shouldBe SOAResultType.SUCCESS
                 transaction {
+                    var result = GenerateChallengeService.execute(null, challengeNamespace, null)
+                    result.result shouldBe SOAResultType.SUCCESS
                     val challenge = result.data!!
                     challenge.cryptoKeyPair shouldNotBe null
                     challenge.challengeSettings.name shouldBe "TESTname0"
