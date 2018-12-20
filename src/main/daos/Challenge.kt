@@ -181,6 +181,8 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
 
 class ChallengeList(val challenges: List<Challenge>)
 
+class ChallengeToUnsharedTransactionsList(val challengeToUnsharedTransactions: List<Pair<Challenge, ShareTransactionList>>)
+
 object Challenges : BaseIntIdTable("challenges") {
     val parentChallenge = reference("parent_challenge", Challenges).nullable()
     val challengeSettings = reference("challenge_settings", ChallengeSettings)

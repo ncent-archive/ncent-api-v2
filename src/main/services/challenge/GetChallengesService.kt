@@ -1,5 +1,6 @@
 package main.services.challenge
 
+import framework.models.idValue
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
@@ -15,9 +16,9 @@ import org.jetbrains.exposed.sql.select
  *
  */
 // TODO maybe include how many shares available??
-object GetChallengesService: SOAServiceInterface<ChallengeList> {
+object GetChallengesService: SOAServiceInterface<ChallengeToUnsharedTransactionsList> {
     // get challenges for a caller
-    override fun execute(caller: Int?): SOAResult<ChallengeList> {
+    override fun execute(caller: Int?): SOAResult<ChallengeToUnsharedTransactionsList> {
         val publicKey = UserAccount.findById(caller!!)!!.cryptoKeyPair.publicKey
         val transactionResult = GetTransactionsService.execute(
             caller,
@@ -49,6 +50,15 @@ object GetChallengesService: SOAServiceInterface<ChallengeList> {
                 Challenges.id inList challengeIds
             }.withDistinct()
         val challengeResult = Challenge.wrapRows(query).toList().distinct()
-        return SOAResult(SOAResultType.SUCCESS, null, ChallengeList(challengeResult))
+
+        var challengeToUnsharedTransactionsList = mutableListOf<Pair<Challenge, ShareTransactionList>>()
+        challengeResult.forEach {
+            val sharesForChallenge = GetUnsharedTransactionsService.execute(
+                caller,
+                mapOf(Pair("challengeId", it.idValue.toString()))
+            ).data!!
+            challengeToUnsharedTransactionsList.add(Pair(it, sharesForChallenge))
+        }
+        return SOAResult(SOAResultType.SUCCESS, null, ChallengeToUnsharedTransactionsList(challengeToUnsharedTransactionsList))
     }
 }
