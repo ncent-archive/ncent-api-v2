@@ -31,7 +31,6 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     var cryptoKeyPair by CryptoKeyPair referencedOn Challenges.cryptoKeyPair
     var distributionFeeReward by Reward referencedOn Challenges.distributionFeeReward
 
-    // TODO check expiration
     fun canTransitionState(fromState: ActionType, toState: ActionType): Boolean {
         val result =  when(fromState) {
             ActionType.COMPLETE -> {
@@ -63,10 +62,14 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
             else -> throw Exception("Could not find challenge state to move to for ${fromState.type}")
         }
         return if(result && toState == ActionType.EXPIRE) {
-            result && challengeSettings.expiration < DateTime.now(DateTimeZone.UTC)
+            result && shouldExpire()
         } else {
             result
         }
+    }
+
+    fun shouldExpire(): Boolean {
+        return challengeSettings.expiration < DateTime.now(DateTimeZone.UTC)
     }
 
 // TODO Look into how we can use the state machine

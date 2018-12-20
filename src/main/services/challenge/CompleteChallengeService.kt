@@ -61,6 +61,8 @@ object CompleteChallengeService: SOAServiceInterface<TransactionList> {
         // decide which transaction to use ( TODO for now the first unshared tx?)
         val firstUnspentTx = unsharedTransactions.transactionsToShares.first().first.idValue
 
+        // TODO: generate a tx moving the share to the completion contract
+
         // payout winner
         return DistributeRewardService.execute(
             caller,

@@ -13,7 +13,6 @@ import org.jetbrains.exposed.sql.SizedCollection
 object GenerateRewardService: SOAServiceInterface<Reward> {
     override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Reward> {
         val rewardNamespace = d!! as RewardNamespace
-        // TODO
         // find or create a reward type
         val rewardTypes = RewardType.find {
             RewardTypes.audience eq rewardNamespace.type.audience

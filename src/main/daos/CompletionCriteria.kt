@@ -24,7 +24,6 @@ class CompletionCriteria(id: EntityID<Int>) : BaseIntEntity(id, CompletionCriter
     var prereq by Challenge via PrerequisiteChallenge
 }
 
-// TODO figure out how we will get prereq's added -- will this be when generating and adding sub challenges?
 object PrerequisiteChallenge : Table("prerequisite_challenge") {
     var completionCriteria = reference("completion_criteria_to_prereq", CompletionCriterias).primaryKey()
     var prereqChallenge = reference("prereq_to_completion_criteria", Challenges).primaryKey()

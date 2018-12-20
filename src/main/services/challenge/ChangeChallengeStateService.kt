@@ -16,14 +16,16 @@ object ChangeChallengeStateService: SOAServiceInterface<Transaction> {
         val challenge = Challenge.findById(params!!["challengeId"]!!.toInt())!!
         if(challenge.challengeSettings.admin != userAccount.id)
             return SOAResult(SOAResultType.FAILURE, "This user cannot change the challenge state")
-        val newState = ActionType.valueOf(params!!["state"]!!)
+        var newState = ActionType.valueOf(params!!["state"]!!)
         val oldTx = challenge.getLastStateChangeTransaction()!!
         val oldState = oldTx.action.type
 
         if(!challenge.canTransitionState(oldState, newState))
             return SOAResult(SOAResultType.FAILURE, "Cannot transition from ${oldState.type} to ${newState.type}")
 
-        // TODO check if challenge should be invalidated/expired
+        if(challenge.shouldExpire() && challenge.canTransitionState(oldState, ActionType.EXPIRE)) {
+            newState = ActionType.EXPIRE
+        }
         return GenerateTransactionService.execute(caller, TransactionNamespace(
             from = challenge.cryptoKeyPair.publicKey,
             to = challenge.cryptoKeyPair.publicKey,

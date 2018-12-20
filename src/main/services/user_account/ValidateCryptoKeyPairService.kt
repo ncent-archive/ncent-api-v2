@@ -25,7 +25,6 @@ object ValidateCryptoKeyPairService: SOAServiceInterface<CryptoKeyPair> {
         if(cryptoKeyPair.empty()) {
             result.message = "Invalid key pair"
         } else {
-            // TODO: figure out decrypting when sending back the secret
             result.data = cryptoKeyPair.first()
             result.result = SOAResultType.SUCCESS
         }

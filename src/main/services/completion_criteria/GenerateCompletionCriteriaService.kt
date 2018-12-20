@@ -24,17 +24,17 @@ object GenerateCompletionCriteriaService: SOAServiceInterface<CompletionCriteria
 
         // TODO generate a transaction
 
-        if(completionCriteriaNamespace.preReqChallengeIds.any()) {
+        return if(completionCriteriaNamespace.preReqChallengeIds.any()) {
             val prereqChallenges = Challenge.find {
                 Challenges.id inList completionCriteriaNamespace.preReqChallengeIds!!
             }
-            return SOAResult(SOAResultType.SUCCESS, null, CompletionCriteria.new {
+            SOAResult(SOAResultType.SUCCESS, null, CompletionCriteria.new {
                 address = completionAddress
                 reward = rewardResult.data!!
                 prereq = prereqChallenges
             })
         } else {
-            return SOAResult(SOAResultType.SUCCESS, null, CompletionCriteria.new {
+            SOAResult(SOAResultType.SUCCESS, null, CompletionCriteria.new {
                 address = completionAddress
                 reward = rewardResult.data!!
             })

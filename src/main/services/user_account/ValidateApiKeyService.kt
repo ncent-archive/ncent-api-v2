@@ -25,7 +25,6 @@ object ValidateApiKeyService: SOAServiceInterface<ApiCred> {
         if(apiCred.empty()) {
             result.message = "Invalid api credentials"
         } else {
-            // TODO: figure out decrypting when sending back the secret
             result.data = apiCred.first()
             result.result = SOAResultType.SUCCESS
         }
