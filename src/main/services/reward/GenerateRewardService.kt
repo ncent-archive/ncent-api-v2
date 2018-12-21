@@ -34,7 +34,7 @@ object GenerateRewardService: SOAServiceInterface<Reward> {
 
         val keyPair = CryptoKeyPair.new {
             publicKey = keyPairResult.data!!.publicKey
-            encryptedPrivateKey = keyPairResult.data!!.encryptedPrivateKey
+            privateKey = keyPairResult.data!!.privateKey
         }
 
         val newReward = Reward.new {

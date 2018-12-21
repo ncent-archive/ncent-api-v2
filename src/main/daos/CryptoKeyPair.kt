@@ -3,32 +3,30 @@ package main.daos
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
+import main.helpers.EncryptionHelper
 import org.jetbrains.exposed.dao.EntityID
 
 /**
  * Api credentials
  * @property publicKey
- * @property encryptedPrivateKey
+ * @property privateKey
  */
 class CryptoKeyPair(id: EntityID<Int>) : BaseIntEntity(id, CryptoKeyPairs) {
-    companion object : BaseIntEntityClass<CryptoKeyPair>(CryptoKeyPairs) {
-        fun encryptPrivateKey(privateKey: String) : String {
-            // TODO figure out encryption alg here
-            return privateKey
-        }
-    }
+    companion object : BaseIntEntityClass<CryptoKeyPair>(CryptoKeyPairs)
 
     var publicKey by CryptoKeyPairs.publicKey
-    var encryptedPrivateKey by CryptoKeyPairs.encryptedPrivateKey
+    var _privateKey by CryptoKeyPairs.privateKey
+    var privateKey : String
+        get() = _privateKey
+        set(value) { _privateKey = EncryptionHelper.encrypt(CryptoKeyPairs, "privateKey", value) }
 }
 
 object CryptoKeyPairs : BaseIntIdTable("crypto_key_pairs") {
     val publicKey = varchar("public_key", 256)
-    // TODO: look into how this can be done better
-    val encryptedPrivateKey = varchar("encrypted_private_key", 256)
+    val privateKey = varchar("privateKey", 256)
 }
 
 data class CryptoKeyPairNamespace(
     val publicKey: String,
-    val encryptedPrivateKey: String
+    val privateKey: String
 )

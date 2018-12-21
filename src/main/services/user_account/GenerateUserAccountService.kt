@@ -31,7 +31,7 @@ object GenerateUserAccountService: SOAServiceInterface<UserAccount> {
             }
             val apiCred = ApiCred.new {
                 apiKey = apiCredNamespace.apiKey
-                encryptedSecretKey = apiCredNamespace.encryptedSecretKey
+                secretKey = apiCredNamespace.secretKey
             }
             val newSession = Session.new {
                 sessionKey = sessionNamespace.sessionKey

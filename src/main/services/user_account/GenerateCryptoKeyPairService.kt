@@ -14,7 +14,7 @@ object GenerateCryptoKeyPairService: SOAServiceInterface<CryptoKeyPair> {
         val key = KeyPair.random()
         return SOAResult(SOAResultType.SUCCESS, null, CryptoKeyPair.new {
             publicKey = key.publicKey.toString()
-            encryptedPrivateKey = CryptoKeyPair.encryptPrivateKey(key.secretSeed.toString())
+            privateKey = key.secretSeed.toString()
         })
         //TODO look into encryption
     }

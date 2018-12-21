@@ -40,7 +40,7 @@ class ValidateApiKeyServiceTest : WordSpec() {
                     // TODO change this to use a decrypted secret
                     var apiKeyParams = mutableMapOf(
                         Pair("apiKey", apiCred.apiKey),
-                        Pair("secretKey", apiCred.encryptedSecretKey)
+                        Pair("secretKey", apiCred.secretKey)
                     )
                     var result = ValidateApiKeyService.execute(user.idValue, Any(), apiKeyParams)
                     result.result shouldBe SOAResultType.SUCCESS

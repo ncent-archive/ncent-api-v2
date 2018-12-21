@@ -40,7 +40,7 @@ class ValidateCryptoKeyPairServiceTest : WordSpec() {
                     // TODO change this to use a decrypted secret
                     var cryptoKeyPairParams = mutableMapOf(
                         Pair("publicKey", cryptoKeyPair.publicKey),
-                        Pair("privateKey", cryptoKeyPair.encryptedPrivateKey)
+                        Pair("privateKey", cryptoKeyPair.privateKey)
                     )
                     var result = ValidateCryptoKeyPairService.execute(user.idValue, Any(), cryptoKeyPairParams)
                     result.result shouldBe SOAResultType.SUCCESS
