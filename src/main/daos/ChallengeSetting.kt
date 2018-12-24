@@ -11,6 +11,7 @@ import org.joda.time.DateTime
  *
  * @property name
  * @property expiration
+ * @property shareExpiration
  * @property description
  * @property imageUrl
  * @property sponsorName
@@ -32,6 +33,7 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
     var imageUrl by ChallengeSettings.imageUrl
     var sponsorName by ChallengeSettings.sponsorName
     var expiration by ChallengeSettings.expiration
+    var shareExpiration by ChallengeSettings.shareExpiration
     var admin by ChallengeSettings.admin
     var offChain by ChallengeSettings.offChain
     var maxShares by ChallengeSettings.maxShares
@@ -48,6 +50,7 @@ object ChallengeSettings : BaseIntIdTable("challenge_settings") {
     var imageUrl = varchar("imageUrl", 100)
     var sponsorName = varchar("sponsorName", 100)
     var expiration = datetime("expiration")
+    var shareExpiration = datetime("shareExpiration")
     var admin = reference("admin", UserAccounts)
     var offChain = bool("off_chain").default(false)
     var maxShares = integer("max_shares")
@@ -64,6 +67,7 @@ data class ChallengeSettingNamespace(
     val imageUrl: String,
     val sponsorName: String,
     val expiration: DateTime,
+    val shareExpiration: DateTime,
     val admin: Int,
     val maxShares: Int,
     val offChain: Boolean,

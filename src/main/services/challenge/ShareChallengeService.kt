@@ -7,6 +7,7 @@ import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.transaction.GenerateTransactionService
 import main.services.transaction.GetTransactionsService
+import org.joda.time.DateTime
 
 /**
  * Share a challenge.
@@ -24,6 +25,9 @@ object ShareChallengeService: SOAServiceInterface<TransactionList> {
         val challenge = Challenge.findById(params!!["challengeId"]!!.toInt())!!
 
         var shares = params!!["shares"]?.toInt()
+        // TODO look into using a datetime formatter
+        val expiration = params!!["expiration"] ?: challenge.challengeSettings.shareExpiration.toString()
+
         // if on chain -- validate the user has enough shares
         if(!challenge.challengeSettings.offChain) {
             val sharabilityResult = ValidateShareService.execute(caller, mapOf(
@@ -53,6 +57,7 @@ object ShareChallengeService: SOAServiceInterface<TransactionList> {
                         ChallengeMetadata(
                             challenge.idValue,
                             challenge.challengeSettings.offChain,
+                            expiration,
                             Math.min(shares, amount)
                         ).getChallengeMetadataNamespaces()
                     ),
@@ -83,14 +88,17 @@ object ShareChallengeService: SOAServiceInterface<TransactionList> {
             if(receivedTransactionResult.result != SOAResultType.SUCCESS)
                 return SOAResult(SOAResultType.FAILURE, receivedTransactionResult.message)
 
+            val previousTx = receivedTransactionResult.data!!.transactions?.first()
+
             val txResult = GenerateTransactionService.execute(caller, TransactionNamespace(
                 from = userAccount.cryptoKeyPair.publicKey,
                 to = publicKeyToShareWith,
-                previousTransaction = receivedTransactionResult.data!!.transactions?.first()?.idValue,
+                previousTransaction = previousTx?.idValue,
                 metadatas = MetadatasListNamespace(
                     ChallengeMetadata(
                         challenge.idValue,
                         challenge.challengeSettings.offChain,
+                        expiration,
                         shares ?: challenge.challengeSettings.maxSharesPerReceivedShare
                     ).getChallengeMetadataNamespaces()
                 ),

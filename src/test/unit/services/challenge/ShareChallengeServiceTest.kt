@@ -7,10 +7,13 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import main.daos.*
 import kotlinserverless.framework.models.Handler
+import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.services.challenge.GetUnsharedTransactionsService
 import main.services.challenge.ShareChallengeService
+import main.services.challenge.ValidateShareService
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
 import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
@@ -102,6 +105,28 @@ class ShareChallengeServiceTest : WordSpec() {
                         Pair("publicKeyToShareWith", userAccount2.cryptoKeyPair.publicKey),
                         Pair("challengeId", challenge.idValue.toString()),
                         Pair("shares", 2000.toString())
+                    ))
+                    result.result shouldBe SOAResultType.FAILURE
+                }
+            }
+        }
+        "calling execute with an expired share" should {
+            "fails to generate any new transactions" {
+                transaction {
+                    val unsharedTransactions = ValidateShareService.execute(userAccount1.idValue, mapOf(
+                        Pair("challengeId", challenge.idValue.toString()),
+                        Pair("shares", 1.toString())
+                    )).data!!.second!!
+
+                    // Set the expiration for shares to one day earlier.
+                    unsharedTransactions.transactionsToShares.forEach {
+                        it.first.metadatas.filter { it.key == "shareExpiration" }.first().value = DateTime.now().minusDays(1).toString()
+                    }
+
+                    val result = ShareChallengeService.execute(userAccount1.idValue, mapOf(
+                        Pair("publicKeyToShareWith", userAccount2.cryptoKeyPair.publicKey),
+                        Pair("challengeId", challenge.idValue.toString()),
+                        Pair("shares", 1.toString())
                     ))
                     result.result shouldBe SOAResultType.FAILURE
                 }
