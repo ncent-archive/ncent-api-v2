@@ -35,30 +35,33 @@ class ValidateSessionServiceTest : WordSpec() {
         "executing validate session service" should {
             "should return valid for a valid session" {
                 transaction {
-                    user = GenerateUserAccountService.execute(null, params).data!!
+                    val result = GenerateUserAccountService.execute(null, params).data!!
+                    user = result.value
                     session = user.session!!
 
-                    var result = ValidateSessionService.execute(user.idValue, session.sessionKey)
-                    result.result shouldBe SOAResultType.SUCCESS
+                    var result2 = ValidateSessionService.execute(user.idValue, session.sessionKey)
+                    result2.result shouldBe SOAResultType.SUCCESS
                 }
             }
             "should return invalid for a sessionkey that is not associated with the caller" {
                 transaction {
-                    user = GenerateUserAccountService.execute(null, params).data!!
+                    val result = GenerateUserAccountService.execute(null, params).data!!
+                    user = result.value
                     session = user.session!!
-                    var result = ValidateSessionService.execute(user.idValue, "SOMERANDOMKEY")
-                    result.result shouldBe SOAResultType.FAILURE
-                    result.message shouldBe "Invalid Session"
+                    var result2 = ValidateSessionService.execute(user.idValue, "SOMERANDOMKEY")
+                    result2.result shouldBe SOAResultType.FAILURE
+                    result2.message shouldBe "Invalid Session"
                 }
             }
             "should return invalid for an expired sessionkey" {
                 transaction {
-                    user = GenerateUserAccountService.execute(null, params).data!!
+                    val result = GenerateUserAccountService.execute(null, params).data!!
+                    user = result.value
                     session = user.session!!
                     EndSessionService.execute(null, session.sessionKey)
-                    var result = ValidateSessionService.execute(user.idValue, session.sessionKey)
-                    result.result shouldBe SOAResultType.FAILURE
-                    result.message shouldBe "Session Expired"
+                    var result2 = ValidateSessionService.execute(user.idValue, session.sessionKey)
+                    result2.result shouldBe SOAResultType.FAILURE
+                    result2.message shouldBe "Session Expired"
                 }
             }
         }

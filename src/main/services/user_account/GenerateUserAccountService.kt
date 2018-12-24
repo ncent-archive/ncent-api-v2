@@ -11,8 +11,8 @@ import main.services.transaction.GenerateTransactionService
 /**
  * This service will be used to generate a full User Account
  */
-object GenerateUserAccountService: SOAServiceInterface<UserAccount> {
-    override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<UserAccount> {
+object GenerateUserAccountService: SOAServiceInterface<NewUserAccount> {
+    override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<NewUserAccount> {
         val apiCredResult = GenerateApiCredsService.execute()
         if(apiCredResult.result != SOAResultType.SUCCESS)
             return SOAResult(apiCredResult.result, apiCredResult.message, null)
@@ -42,9 +42,10 @@ object GenerateUserAccountService: SOAServiceInterface<UserAccount> {
             if(keyPairResult.result != SOAResultType.SUCCESS)
                 throw Exception(keyPairResult.message)
 
+            val keyPairData = keyPairResult.data!!
             val userAccount = UserAccount.new {
                 userMetadata = user
-                cryptoKeyPair = keyPairResult.data!!
+                cryptoKeyPair = keyPairData.value
                 apiCreds = apiCred
                 session = newSession
             }
@@ -53,7 +54,7 @@ object GenerateUserAccountService: SOAServiceInterface<UserAccount> {
             val transactionResult = GenerateTransactionService.execute(
                 userAccount!!.idValue,
                 TransactionNamespace(
-                    keyPairResult.data!!.publicKey,
+                    keyPairData.value.publicKey,
                     null,
                     ActionNamespace(
                         ActionType.CREATE,
@@ -64,7 +65,11 @@ object GenerateUserAccountService: SOAServiceInterface<UserAccount> {
                 ), null
             )
 
-            return@execute userAccount
+            return@execute NewUserAccount(
+                userAccount,
+                keyPairData.secret,
+                apiCredNamespace.secretKey
+            )
         }
     }
 }

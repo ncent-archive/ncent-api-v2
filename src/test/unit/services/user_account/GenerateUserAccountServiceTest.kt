@@ -37,7 +37,7 @@ class GenerateUserAccountServiceTest : WordSpec() {
                     var result = GenerateUserAccountService.execute(null, params)
                     result.result shouldBe SOAResultType.SUCCESS
                     val action = Action.all().first()
-                    action.data shouldBe result.data!!.idValue
+                    action.data shouldBe result.data!!.value.idValue
                     action.type shouldBe ActionType.CREATE
                     action.dataType shouldBe "UserAccount"
                     Transaction.all().first().action.id shouldBe action.id

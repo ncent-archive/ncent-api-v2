@@ -34,21 +34,23 @@ class ValidateCryptoKeyPairServiceTest : WordSpec() {
         "executing validate crypto key pair service" should {
             "should return valid for a valid pub/priv key combo" {
                 transaction {
-                    user = GenerateUserAccountService.execute(null, params).data!!
+                    val result = GenerateUserAccountService.execute(null, params).data!!
+                    user = result.value
                     cryptoKeyPair = user.cryptoKeyPair!!
 
                     // TODO change this to use a decrypted secret
                     var cryptoKeyPairParams = mutableMapOf(
                         Pair("publicKey", cryptoKeyPair.publicKey),
-                        Pair("privateKey", cryptoKeyPair.privateKey)
+                        Pair("privateKey", result.privateKey)
                     )
-                    var result = ValidateCryptoKeyPairService.execute(user.idValue, Any(), cryptoKeyPairParams)
-                    result.result shouldBe SOAResultType.SUCCESS
+                    var result2 = ValidateCryptoKeyPairService.execute(user.idValue, Any(), cryptoKeyPairParams)
+                    result2.result shouldBe SOAResultType.SUCCESS
                 }
             }
             "should return invalid for an invalid secret" {
                 transaction {
-                    user = GenerateUserAccountService.execute(null, params).data!!
+                    val result = GenerateUserAccountService.execute(null, params).data!!
+                    user = result.value
                     cryptoKeyPair = user.cryptoKeyPair!!
 
                     // TODO change this to use a decrypted secret
@@ -56,9 +58,9 @@ class ValidateCryptoKeyPairServiceTest : WordSpec() {
                         Pair("publicKey", cryptoKeyPair.publicKey),
                         Pair("privateKey", "FAKEPRIVATEKEY")
                     )
-                    var result = ValidateCryptoKeyPairService.execute(user.idValue, Any(), cryptoKeyPairParams)
-                    result.result shouldBe SOAResultType.FAILURE
-                    result.message shouldBe "Invalid key pair"
+                    var result2 = ValidateCryptoKeyPairService.execute(user.idValue, Any(), cryptoKeyPairParams)
+                    result2.result shouldBe SOAResultType.FAILURE
+                    result2.message shouldBe "Invalid key pair"
                 }
             }
         }

@@ -100,7 +100,7 @@ object TestHelper {
                         Pair("lastname", "Soltanieh"),
                         Pair("email", "as" + DateTime.now(DateTimeZone.UTC).millis + "@ncent.io")
                     )
-                ).data!!
+                ).data!!.value
             } else {
                 userAccount
             }
@@ -131,7 +131,7 @@ object TestHelper {
                     Pair("email", "dev$i@ncnt.io"),
                     Pair("firstname", "dev$i"),
                     Pair("lastname", "ncnt$i")
-                )).data!!)
+                )).data!!.value)
             }
         }
         return userAccounts

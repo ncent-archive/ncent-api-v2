@@ -36,3 +36,8 @@ data class CryptoKeyPairNamespace(
     val publicKey: String,
     val privateKey: String
 )
+
+data class NewCryptoKeyPair(
+    val value: CryptoKeyPair,
+    val secret: String
+)

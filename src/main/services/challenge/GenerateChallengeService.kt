@@ -50,7 +50,7 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
         val challenge = Challenge.new {
             parentChallenge = optionalParentChallenge
             challengeSettings = settings
-            cryptoKeyPair = keyPairGenerated.data!!
+            cryptoKeyPair = keyPairGenerated.data!!.value
             distributionFeeReward = distributionFeeRewardResult.data!!
         }
 

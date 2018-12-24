@@ -33,8 +33,8 @@ object GenerateRewardService: SOAServiceInterface<Reward> {
             return SOAResult(SOAResultType.FAILURE, keyPairResult.message)
 
         val keyPair = CryptoKeyPair.new {
-            publicKey = keyPairResult.data!!.publicKey
-            privateKey = keyPairResult.data!!.privateKey
+            publicKey = keyPairResult.data!!.value.publicKey
+            privateKey = keyPairResult.data!!.value.privateKey
         }
 
         val newReward = Reward.new {

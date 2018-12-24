@@ -31,3 +31,5 @@ object UserAccounts : BaseIntIdTable("user_accounts") {
     val apiCreds = reference("api_cred", ApiCreds)
     val session = reference("session", Sessions)
 }
+
+data class NewUserAccount(val value: UserAccount, val privateKey: String, val secretKey: String)
