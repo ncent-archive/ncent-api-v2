@@ -5,7 +5,6 @@ import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.ApiCredNamespace
 import org.stellar.sdk.KeyPair
-import java.security.KeyPairGenerator
 
 /**
  * This service will be used to generate Api credentials

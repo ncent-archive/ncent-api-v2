@@ -1,9 +1,22 @@
 package main.helpers
 
-import framework.models.BaseIntIdTable
+import org.mindrot.jbcrypt.BCrypt
 
 object EncryptionHelper {
-    fun encrypt(table: BaseIntIdTable, columnName: String, value: String): String {
-        return value
+    fun encrypt(
+        value: String,
+        salt: String = BCrypt.gensalt(
+            System.getenv("BCRYPTSALTROUNDS")?.toInt() ?: 4
+        )
+    ): Pair<String, String> {
+        return Pair(BCrypt.hashpw(value, salt), salt)
+    }
+
+    fun validateEncryption(
+        value: String,
+        salt: String,
+        encryptedValue: String
+    ): Boolean {
+        return encrypt(value, salt).first == encryptedValue
     }
 }

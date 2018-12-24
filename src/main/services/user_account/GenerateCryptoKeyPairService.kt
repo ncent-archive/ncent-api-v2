@@ -16,6 +16,5 @@ object GenerateCryptoKeyPairService: SOAServiceInterface<CryptoKeyPair> {
             publicKey = key.publicKey.toString()
             privateKey = key.secretSeed.toString()
         })
-        //TODO look into encryption
     }
 }

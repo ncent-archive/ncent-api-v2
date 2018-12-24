@@ -21,9 +21,12 @@ object ValidateApiKeyService: SOAServiceInterface<ApiCred> {
         val secretKey = params!!["secretKey"]!!
         val apiCred = ApiCred.find {
             ApiCreds.apiKey eq apiKeyParam
-            ApiCreds.secretKey eq EncryptionHelper.encrypt(ApiCreds, "secretKey", secretKey)
         }
-        if(apiCred.empty()) {
+        if(apiCred.empty() ||
+            !EncryptionHelper.validateEncryption(
+                secretKey,
+                apiCred.first()._secretKeySalt,
+                apiCred.first()._secretKey)) {
             result.message = "Invalid api credentials"
         } else {
             result.data = apiCred.first()

@@ -18,13 +18,19 @@ class ApiCred(id: EntityID<Int>) : BaseIntEntity(id, ApiCreds) {
     var _secretKey by ApiCreds.secretKey
     var secretKey : String
         get() = _secretKey
-        set(value) { _secretKey = EncryptionHelper.encrypt(CryptoKeyPairs, "secretKey", value) }
+        set(value) {
+            val encryption = EncryptionHelper.encrypt(value)
+            _secretKey = encryption.first
+            _secretKeySalt = encryption.second
+        }
+    var _secretKeySalt by ApiCreds.secretKeySalt
 }
 
 object ApiCreds : BaseIntIdTable("api_creds") {
     val apiKey = varchar("api_key", 256)
     // TODO: look into how this can be done better
     val secretKey = varchar("secretKey", 256)
+    val secretKeySalt = varchar("secretKeySalt", 256)
 }
 
 data class ApiCredNamespace(val apiKey: String, val secretKey: String)
