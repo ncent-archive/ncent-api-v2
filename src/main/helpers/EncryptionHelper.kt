@@ -5,6 +5,7 @@ import org.mindrot.jbcrypt.BCrypt
 object EncryptionHelper {
     fun encrypt(
         value: String,
+        // TODO -- BCRYPTSALTROUNDS env var should always be set to 12 or more in prod!!
         salt: String = BCrypt.gensalt(
             System.getenv("BCRYPTSALTROUNDS")?.toInt() ?: 4
         )
