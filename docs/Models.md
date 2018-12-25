@@ -181,6 +181,10 @@ The ChallengeSetting model stores all of the relevant metadata pertaining to a c
    * integer
    * default value of max integer value
    * Optional field
+1. shareExpiration
+   * The amount of time that a user can hold onto a challenge that has been shared with them. If a user does not either share the challenge or try and redeem it before the expiration, it will get sent back to the user from which they received it.
+   * datetime
+   * Optional field
 
 ## CompletionCriteria
 
