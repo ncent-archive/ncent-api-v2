@@ -45,8 +45,8 @@ interface Controller<M> {
             emptyMap()
     }
 
-    fun getResource(request: Request): String {
-        return request.input["resource"] as String
+    fun getResource(request: Request): String? {
+        return request.input["resource"] as String?
     }
 
     fun getHeaders(request: Request) : Map<String, Any> {
@@ -100,7 +100,7 @@ interface Controller<M> {
      * @param service CRUD service to execute
      */
     fun <T : BaseIntEntity> defaultRouting(cls: Class<T>, request: Request, user: User, restController: RestController<T, User>): SOAResult<T> {
-		val resource: String = getResource(request)
+		val resource = getResource(request)
         val headers: Map<String, Any> = getHeaders(request)
         val pathParameters: Map<String, Any> = getPathParameters(request)
         val queryParameters: Map<String, Any> = getQueryStringParameters(request)
@@ -108,7 +108,7 @@ interface Controller<M> {
         return when((request.input[HTTP_METHOD] as String).toLowerCase()) {
             HTTP_GET -> {
                 when {
-                    resource.endsWith("findOne", true) -> restController.findOne(user, queryParameters)
+                    resource != null && resource.endsWith("findOne", true) -> restController.findOne(user, queryParameters)
                     pathParameters.containsKey("id") -> {
                         val id = pathParameters["id"]
 

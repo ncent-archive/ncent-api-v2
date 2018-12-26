@@ -13,16 +13,18 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
             restController: RestController<T, User>
     ): SOAResult<T> {
 		val path = request.input["path"].toString().removePrefix("/").split("/")
-		val function = path[1]
-		val func = restController::class.members.find { it.name == function }
-		if(path.size > 1 && func != null) {
-			try {
-				return func.call(restController, user, request) as SOAResult<T>
-			}
-			catch(e: Exception) {
-				println("There was an error routing!")
-				println(e)
-				return super.defaultRouting(cls, request, user, restController)
+
+		if(path.size > 1) {
+			val func = restController::class.members.find { it.name == path[1] }
+			if(func != null) {
+				try {
+					return func.call(restController, user, request) as SOAResult<T>
+				}
+				catch(e: Exception) {
+					println("There was an error routing!")
+					println(e)
+					return super.defaultRouting(cls, request, user, restController)
+				}
 			}
 		}
 		return super.defaultRouting(cls, request, user, restController)
