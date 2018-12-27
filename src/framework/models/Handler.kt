@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import framework.models.BaseIntEntity
 import main.daos.*
+import main.services.user_account.GenerateUserAccountService
 import org.apache.log4j.Logger
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -15,20 +16,20 @@ import java.sql.Connection
 open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
   var requestDispatcher: RequestDispatcher = RequestDispatcher()
-  var defaultUser: User
+  var defaultUser: UserAccount
 
   constructor() {
     connectToDatabase()
 
-    defaultUser = User.new {
-      email = "default"
-      firstname = "default"
-      lastname = "default"
-    }
+    defaultUser = GenerateUserAccountService.execute(null, mapOf(
+        Pair("email", "default"),
+        Pair("firstname", "default"),
+        Pair("lastname", "default")
+    )).data!!.value
     this.requestDispatcher.defaultUser = defaultUser
   }
 
-  constructor(user: User) {
+  constructor(user: UserAccount) {
     connectToDatabase()
     this.requestDispatcher.defaultUser = user
     this.defaultUser = user
@@ -120,13 +121,17 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     }
 
     fun connectToDatabase(): Database {
-      db = Database.connect(
-              System.getenv("database_url") ?: "jdbc:h2:mem:test",
-              driver = System.getenv("database_driver") ?: "org.h2.Driver",
-              user = System.getenv("database_user") ?: "",
-              password = System.getenv("database_password") ?: ""
-      )
-      connection = db.connector.invoke()
+      try {
+        db = Database.connect(
+                System.getenv("database_url") ?: "jdbc:h2:mem:test",
+                driver = System.getenv("database_driver") ?: "org.h2.Driver",
+                user = System.getenv("database_user") ?: "",
+                password = System.getenv("database_password") ?: ""
+        )
+        connection = db.connector.invoke()
+      } catch(e: Exception) {
+        println(e.message)
+      }
       return db
     }
 

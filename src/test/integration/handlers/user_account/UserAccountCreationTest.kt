@@ -4,34 +4,48 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import com.amazonaws.services.lambda.runtime.Context
+import com.beust.klaxon.Json
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.google.gson.JsonParser
 import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
+import jdk.internal.org.objectweb.asm.TypeReference
+import main.daos.NewUserAccount
 import main.daos.User
+import main.daos.UserAccount
 
 @ExtendWith(MockKExtension::class)
 class UserAccountCreationTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
-    private lateinit var user: User
-    private lateinit var map: Map<String, Any>
+    private lateinit var user: UserAccount
+    private val map = mutableMapOf(
+        Pair("path", "/user_account/"),
+        Pair("httpMethod", "POST"),
+        Pair("body", mapOf(
+            Pair("email", "dev@ncnt.io"),
+            Pair("firstname", "dev"),
+            Pair("lastname", "ncnt")
+        ))
+    )
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
         user = mockk()
+        handler = Handler(user)
         contxt = mockk()
-        map = mapOf(
-            Pair("path", "user_account"),
-            Pair("httpMethod", "POST")
-        )
     }
 
     init {
         "correct path" should {
-            "should return HELLO WORLD in the response body" {
-                val response = contxt.let { handler.handleRequest(map, it) }
+            "should return a valid new user account" {
+                val response = handler.handleRequest(map, contxt)
                 response.statusCode shouldBe 200
+                // todo parse the body to a json obj to test that it returns expected results
             }
         }
     }

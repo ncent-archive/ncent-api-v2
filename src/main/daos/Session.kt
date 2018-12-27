@@ -16,6 +16,14 @@ class Session(id: EntityID<Int>) : BaseIntEntity(id, Sessions) {
 
     var sessionKey by Sessions.sessionKey
     var expiration by Sessions.expiration
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("sessionKey", sessionKey)
+        map.put("expiration", expiration.toString())
+        return map
+    }
+
 }
 
 object Sessions : BaseIntIdTable("sessions") {

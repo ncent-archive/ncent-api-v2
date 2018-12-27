@@ -36,6 +36,15 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>jcenter</id>
+            <name>JCenter</name>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
+        <repository>
+            <id>spring-plugins</id>
+            <url>http://repo.spring.io/plugins-release/</url>
+        </repository>
     </repositories>
 
    <dependencies>
@@ -84,6 +93,11 @@
         	<artifactId>jackson-dataformat-yaml</artifactId>
         	<version>${com.fasterxml.jackson}</version>
         </dependency>
+       <dependency>
+           <groupId>com.fasterxml.jackson.module</groupId>
+           <artifactId>jackson-module-kotlin</artifactId>
+           <version>${com.fasterxml.jackson}</version>
+       </dependency>
         <dependency>
         	<groupId>org.jetbrains.kotlin</groupId>
         	<artifactId>kotlin-reflect</artifactId>
@@ -134,15 +148,15 @@
            <artifactId>jbcrypt</artifactId>
            <version>0.4</version>
        </dependency>
-   </dependencies>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jcenter</id>
-            <name>JCenter</name>
-            <url>https://jcenter.bintray.com/</url>
-        </pluginRepository>
-    </pluginRepositories>
+       <!-- https://mvnrepository.com/artifact/com.beust/klaxon -->
+       <dependency>
+           <groupId>com.beust</groupId>
+           <artifactId>klaxon</artifactId>
+           <version>4.0.2</version>
+       </dependency>
+
+   </dependencies>
 
     <build>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>

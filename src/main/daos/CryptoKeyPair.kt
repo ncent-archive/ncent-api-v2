@@ -1,5 +1,6 @@
 package main.daos
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
@@ -24,6 +25,12 @@ class CryptoKeyPair(id: EntityID<Int>) : BaseIntEntity(id, CryptoKeyPairs) {
             _privateKeySalt = encryption.second
         }
     var _privateKeySalt by CryptoKeyPairs.privateKeySalt
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("publicKey", publicKey)
+        return map
+    }
 }
 
 object CryptoKeyPairs : BaseIntIdTable("crypto_key_pairs") {

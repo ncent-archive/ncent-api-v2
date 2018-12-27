@@ -24,6 +24,12 @@ class ApiCred(id: EntityID<Int>) : BaseIntEntity(id, ApiCreds) {
             _secretKeySalt = encryption.second
         }
     var _secretKeySalt by ApiCreds.secretKeySalt
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("apiKey", apiKey)
+        return map
+    }
 }
 
 object ApiCreds : BaseIntIdTable("api_creds") {

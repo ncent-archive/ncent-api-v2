@@ -16,7 +16,7 @@ interface WritableController<T, U> {
      * @param user [U] User who is requesting (to verify permissions)
      * @param element [T] that is going to be saved
      */
-    fun create(user: U, element: T): SOAResult<T> {
+    fun create(user: U, params: Map<String, String>): SOAResult<*> {
         throw InvalidEndpoint()
     }
 
@@ -25,7 +25,7 @@ interface WritableController<T, U> {
      * @param user [U] User who is requesting (to verify permissions)
      * @param element [T] that is going to be updated
      */
-    fun update(user: U, element: T): SOAResult<T> {
+    fun update(user: U, params: Map<String, String>): SOAResult<T> {
         throw InvalidEndpoint()
     }
 

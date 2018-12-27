@@ -5,34 +5,34 @@ import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
 import main.daos.Challenge
 import kotlinserverless.framework.models.Request
-import main.daos.User
+import main.daos.UserAccount
 
-class ChallengeController: DefaultController<Challenge>(), RestController<Challenge, User> {
-    override fun create(user: User, element: Challenge): SOAResult<Challenge> {
+class ChallengeController: DefaultController<Challenge>(), RestController<Challenge, UserAccount> {
+    override fun create(user: UserAccount, params: Map<String, String>): SOAResult<*> {
         throw NotImplementedError()
     }
 
-    override fun findOne(user: User, id: Int): SOAResult<Challenge> {
+    override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {
         throw NotImplementedError()
     }
 
-    fun expire(user: User, request: Request): SOAResult<Challenge> {
+    fun expire(user: UserAccount, request: Request): SOAResult<Challenge> {
         throw NotImplementedError()
     }
 
-    fun invalidate(user: User, request: Request): SOAResult<Challenge> {
+    fun invalidate(user: UserAccount, request: Request): SOAResult<Challenge> {
         throw NotImplementedError()
     }
 
-    fun validate(user: User, request: Request): SOAResult<Boolean> {
+    fun validate(user: UserAccount, request: Request): SOAResult<Boolean> {
         throw NotImplementedError()
     }
 
-    fun complete(user: User, request: Request): SOAResult<Challenge> {
+    fun complete(user: UserAccount, request: Request): SOAResult<Challenge> {
         throw NotImplementedError()
     }
 
-    fun share(user: User, request: Request): SOAResult<Challenge> {
+    fun share(user: UserAccount, request: Request): SOAResult<Challenge> {
         throw NotImplementedError()
     }
 }

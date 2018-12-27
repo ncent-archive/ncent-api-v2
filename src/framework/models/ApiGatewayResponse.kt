@@ -50,10 +50,7 @@ class ApiGatewayResponse(
       when {
         rawBody != null -> body = rawBody as String
         objectBody != null || (listBody != null && listBody!!.isNotEmpty()) -> try {
-          body = when {
-            objectBody != null -> objectMapper.writeValueAsString(objectBody)
-            else -> objectMapper.writeValueAsString(listBody)
-          }
+          body = body.toString()
         } catch (e: JsonProcessingException) {
           LOG.error("Failed to serialize object", e)
           throw RuntimeException(e)

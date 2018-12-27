@@ -9,12 +9,13 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
 import main.daos.User
+import main.daos.UserAccount
 
 @ExtendWith(MockKExtension::class)
 class UserIntegrationTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
-    private lateinit var user: User
+    private lateinit var user: UserAccount
     private val map = mapOf("path" to "/user/hello")
 
     override fun beforeTest(description: Description): Unit {

@@ -1,5 +1,6 @@
 package main.daos
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
@@ -23,6 +24,15 @@ class UserAccount(id: EntityID<Int>) : BaseIntEntity(id, UserAccounts) {
     var cryptoKeyPair by CryptoKeyPair referencedOn UserAccounts.cryptoKeyPair
     var apiCreds by ApiCred referencedOn UserAccounts.apiCreds
     var session by Session referencedOn UserAccounts.session
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        // TODO figure out how to load this map.put("userMetadata", userMetadata.toString())
+        map.put("cryptoKeyPair", cryptoKeyPair.toMap())
+        map.put("apiCreds", apiCreds.toMap())
+        map.put("session", session.toMap())
+        return map
+    }
 }
 
 object UserAccounts : BaseIntIdTable("user_accounts") {
@@ -32,4 +42,12 @@ object UserAccounts : BaseIntIdTable("user_accounts") {
     val session = reference("session", Sessions)
 }
 
-data class NewUserAccount(val value: UserAccount, val privateKey: String, val secretKey: String)
+data class NewUserAccount(val value: UserAccount, val privateKey: String, val secretKey: String) {
+    override fun toString(): String {
+        return ObjectMapper().writeValueAsString(mapOf(
+            Pair("value", value.toString()),
+            Pair("privateKey", privateKey),
+            Pair("secretKey", secretKey)
+        ))
+    }
+}

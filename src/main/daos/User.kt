@@ -1,5 +1,6 @@
 package main.daos
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
@@ -21,6 +22,15 @@ class User(id: EntityID<Int>) : BaseIntEntity(id, Users) {
 	var firstname by Users.firstname
 	var lastname by Users.lastname
 	var metadatas by Metadata via UsersMetadata
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("email", email)
+        map.put("firstname", firstname)
+        map.put("lastname", lastname)
+        map.put("metadatas", metadatas.toString())
+        return map
+    }
 }
 
 object Users : BaseIntIdTable("users") {
