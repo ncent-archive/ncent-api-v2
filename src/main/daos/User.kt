@@ -28,7 +28,7 @@ class User(id: EntityID<Int>) : BaseIntEntity(id, Users) {
         map.put("email", email)
         map.put("firstname", firstname)
         map.put("lastname", lastname)
-        map.put("metadatas", metadatas.toString())
+		map.put("metadatas", metadatas.map { it.toMap() })
         return map
     }
 }

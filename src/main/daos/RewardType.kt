@@ -17,6 +17,13 @@ class RewardType(id: EntityID<Int>) : BaseIntEntity(id, RewardTypes) {
 
     var audience by RewardTypes.audience
     var type by RewardTypes.type
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("audience", audience)
+        map.put("type", type)
+        return map
+    }
 }
 
 object RewardTypes : BaseIntIdTable("reward_types") {

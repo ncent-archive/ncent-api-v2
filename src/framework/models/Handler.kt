@@ -81,6 +81,31 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     lateinit var db: Database
     lateinit var connection: Connection
 
+    private val TABLES = arrayOf(
+      Users,
+      CryptoKeyPairs,
+      ApiCreds,
+      Sessions,
+      UserAccounts,
+      Actions,
+      Transactions,
+      Metadatas,
+      TransactionsMetadata,
+      Tokens,
+      TokenTypes,
+      Rewards,
+      RewardPools,
+      RewardTypes,
+      RewardsToTransactions,
+      RewardsMetadata,
+      CompletionCriterias,
+      Challenges,
+      ChallengeSettings,
+      SubChallenges,
+      ChallengeToSubChallenges,
+      UsersMetadata
+    )
+
     fun connectAndBuildTables(): Database {
       db = connectToDatabase()
       dropTables()
@@ -94,29 +119,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
     private fun buildTables() {
       transaction {
-        SchemaUtils.create(
-            Users,
-            CryptoKeyPairs,
-            ApiCreds,
-            Sessions,
-            UserAccounts,
-            Actions,
-            Transactions,
-            Metadatas,
-            TransactionsMetadata,
-            Tokens,
-            TokenTypes,
-            Rewards,
-            RewardPools,
-            RewardTypes,
-            RewardsToTransactions,
-            RewardsMetadata,
-            CompletionCriterias,
-            Challenges,
-            ChallengeSettings,
-            SubChallenges,
-            ChallengeToSubChallenges
-        )
+        SchemaUtils.create(*TABLES)
       }
     }
 
@@ -146,29 +149,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
     private fun dropTables() {
       transaction {
-        SchemaUtils.drop(
-            Users,
-            CryptoKeyPairs,
-            ApiCreds,
-            Sessions,
-            UserAccounts,
-            Actions,
-            Transactions,
-            Metadatas,
-            TransactionsMetadata,
-            Tokens,
-            TokenTypes,
-            Rewards,
-            RewardPools,
-            RewardTypes,
-            RewardsToTransactions,
-            RewardsMetadata,
-            CompletionCriterias,
-            Challenges,
-            ChallengeSettings,
-            SubChallenges,
-            ChallengeToSubChallenges
-        )
+        SchemaUtils.drop(*TABLES)
       }
     }
   }

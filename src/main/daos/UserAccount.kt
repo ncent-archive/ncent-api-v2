@@ -27,7 +27,7 @@ class UserAccount(id: EntityID<Int>) : BaseIntEntity(id, UserAccounts) {
 
     override fun toMap(): MutableMap<String, Any?> {
         var map = super.toMap()
-        // TODO figure out how to load this map.put("userMetadata", userMetadata.toString())
+        map.put("userMetadata", userMetadata.toMap())
         map.put("cryptoKeyPair", cryptoKeyPair.toMap())
         map.put("apiCreds", apiCreds.toMap())
         map.put("session", session.toMap())

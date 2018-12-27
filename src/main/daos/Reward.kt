@@ -20,6 +20,14 @@ class Reward(id: EntityID<Int>) : BaseIntEntity(id, Rewards) {
     var type by RewardType referencedOn Rewards.type
     var pool by RewardPool referencedOn Rewards.pool
     var metadatas by Metadata via RewardsMetadata
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("type", type.toMap())
+        map.put("pool", pool.toMap())
+        map.put("metadatas", metadatas.map { it.toMap() })
+        return map
+    }
 }
 
 object RewardsMetadata : Table("rewards_to_metadatas") {

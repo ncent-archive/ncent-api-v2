@@ -19,6 +19,13 @@ class RewardPool(id: EntityID<Int>) : BaseIntEntity(id, RewardPools) {
 
     var cryptoKeyPair by CryptoKeyPair referencedOn RewardPools.cryptoKeyPair
     var transactions by Transaction via RewardsToTransactions
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("cryptoKeyPair", cryptoKeyPair.toMap())
+        map.put("transactions", transactions.map { it.toMap() })
+        return map
+    }
 }
 
 object RewardPools : BaseIntIdTable("reward_pools") {

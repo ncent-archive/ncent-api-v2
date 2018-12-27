@@ -22,6 +22,14 @@ class CompletionCriteria(id: EntityID<Int>) : BaseIntEntity(id, CompletionCriter
     var address by CompletionCriterias.address
     var reward by Reward referencedOn CompletionCriterias.reward
     var prereq by Challenge via PrerequisiteChallenge
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("address", address)
+        map.put("reward", reward?.toMap())
+        map.put("prereq", prereq.map { it.toMap() })
+        return map
+    }
 }
 
 object PrerequisiteChallenge : Table("prerequisite_challenge") {

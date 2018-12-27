@@ -4,18 +4,10 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import com.amazonaws.services.lambda.runtime.Context
-import com.beust.klaxon.Json
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.google.gson.JsonParser
 import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
-import jdk.internal.org.objectweb.asm.TypeReference
-import main.daos.NewUserAccount
-import main.daos.User
 import main.daos.UserAccount
 
 @ExtendWith(MockKExtension::class)
