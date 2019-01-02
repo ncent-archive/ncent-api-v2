@@ -36,7 +36,7 @@ class EndSessionServiceTest : WordSpec() {
             "should expire the session if it is not expired yet" {
                 transaction {
                     // Create a user and session
-                    val session = GenerateUserAccountService.execute(null, params).data!!.session
+                    val session = GenerateUserAccountService.execute(null, params).data!!.value.session
                     // Validate that the created session ends in the future
 
                     Session.findById(session.id)!!.expiration.millis

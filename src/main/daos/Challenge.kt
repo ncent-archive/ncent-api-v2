@@ -31,6 +31,17 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     var cryptoKeyPair by CryptoKeyPair referencedOn Challenges.cryptoKeyPair
     var distributionFeeReward by Reward referencedOn Challenges.distributionFeeReward
 
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("parentChallenge", parentChallenge?.toMap())
+        map.put("challengeSettings", challengeSettings?.toMap())
+        map.put("subChallenges", subChallenges.map { it.toMap() })
+        map.put("completionCriterias", completionCriterias?.toMap())
+        map.put("cryptoKeyPair", cryptoKeyPair?.toMap())
+        map.put("distributionFeeReward", distributionFeeReward?.toMap())
+        return map
+    }
+
     fun canTransitionState(fromState: ActionType, toState: ActionType): Boolean {
         val result =  when(fromState) {
             ActionType.COMPLETE -> {
@@ -229,12 +240,14 @@ enum class SubChallengeType {
 data class ChallengeMetadata(
     val challengeId: Int,
     val offChain: Boolean,
+    val shareExpiration: String,
     val maxShares: Int?
 ) {
     fun getChallengeMetadataNamespaces(): List<MetadatasNamespace> {
         var challengeMetadatas = mutableListOf<MetadatasNamespace>()
         challengeMetadatas.add(MetadatasNamespace("challengeId", challengeId.toString()))
         challengeMetadatas.add(MetadatasNamespace("offChain", offChain.toString()))
+        challengeMetadatas.add(MetadatasNamespace("shareExpiration", shareExpiration))
         if(maxShares != null)
             challengeMetadatas.add(MetadatasNamespace("maxShares", maxShares.toString()))
         return challengeMetadatas

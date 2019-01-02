@@ -1,6 +1,8 @@
 package framework.models
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.jetbrains.exposed.dao.*
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
@@ -16,6 +18,20 @@ abstract class BaseIntEntity(id: EntityID<Int>, table: BaseIntIdTable) : IntEnti
     val createdAt by table.createdAt
     var updatedAt by table.updatedAt
     var deletedAt by table.deletedAt
+
+    override fun toString(): String {
+        return transaction {
+            return@transaction ObjectMapper().writeValueAsString(toMap())
+        }
+    }
+
+    open fun toMap(): MutableMap<String, Any?> {
+        return mutableMapOf(
+            Pair("createdAt", createdAt.toString()),
+            Pair("updatedAt", updatedAt.toString()),
+            Pair("deletedAt", deletedAt.toString())
+        )
+    }
 }
 
 abstract class BaseIntEntityClass<E : BaseIntEntity>(table: BaseIntIdTable) : IntEntityClass<E>(table) {

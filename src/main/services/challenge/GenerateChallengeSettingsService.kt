@@ -18,7 +18,8 @@ object GenerateChallengeSettingsService: SOAServiceInterface<ChallengeSetting> {
             imageUrl = challengeSettingNamespace.imageUrl
             sponsorName = challengeSettingNamespace.sponsorName
             expiration = challengeSettingNamespace.expiration
-            admin = EntityID(challengeSettingNamespace.admin, ChallengeSettings)
+            shareExpiration = challengeSettingNamespace.shareExpiration
+            admin = EntityID(caller!!, ChallengeSettings)
             offChain = challengeSettingNamespace.offChain
             maxShares = challengeSettingNamespace.maxShares
             maxRewards = challengeSettingNamespace.maxRewards

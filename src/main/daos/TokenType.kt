@@ -21,6 +21,14 @@ class TokenType(id: EntityID<Int>) : BaseIntEntity(id, TokenTypes) {
     var name by TokenTypes.name
     var parentToken by TokenType optionalReferencedOn TokenTypes.parentToken
     var parentTokenConversionRate by TokenTypes.parentTokenConversionRate
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("name", name)
+        map.put("parentToken", parentToken?.toMap())
+        map.put("parentTokenConversionRate", parentTokenConversionRate)
+        return map
+    }
 }
 
 object TokenTypes : BaseIntIdTable("token_types") {

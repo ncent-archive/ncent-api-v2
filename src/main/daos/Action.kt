@@ -17,6 +17,14 @@ class Action(id: EntityID<Int>) : BaseIntEntity(id, Actions) {
     var type by Actions.type
     var data by Actions.data
     var dataType by Actions.dataType
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("type", type)
+        map.put("data", data)
+        map.put("dataType", dataType)
+        return map
+    }
 }
 
 object Actions : BaseIntIdTable("actions") {

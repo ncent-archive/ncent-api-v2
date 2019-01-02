@@ -4,6 +4,7 @@ import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
+import main.helpers.EncryptionHelper
 import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
@@ -20,9 +21,12 @@ object ValidateCryptoKeyPairService: SOAServiceInterface<CryptoKeyPair> {
         val privateKey = params!!["privateKey"]!!
         val cryptoKeyPair = CryptoKeyPair.find {
             CryptoKeyPairs.publicKey eq publicKey
-            CryptoKeyPairs.encryptedPrivateKey eq CryptoKeyPair.encryptPrivateKey(privateKey)
         }
-        if(cryptoKeyPair.empty()) {
+        if(cryptoKeyPair.empty() ||
+            !EncryptionHelper.validateEncryption(
+                privateKey,
+                cryptoKeyPair.first()._privateKeySalt,
+                cryptoKeyPair.first()._privateKey)) {
             result.message = "Invalid key pair"
         } else {
             result.data = cryptoKeyPair.first()

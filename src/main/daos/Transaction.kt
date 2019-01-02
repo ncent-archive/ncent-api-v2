@@ -28,6 +28,16 @@ class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
     var action by Action referencedOn Transactions.action
     var previousTransaction by Transaction optionalReferencedOn Transactions.previousTransaction
     var metadatas by Metadata via TransactionsMetadata
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("from", from)
+        map.put("to", to)
+        map.put("action", action.toMap())
+        map.put("previousTransaction", previousTransaction?.toMap())
+        map.put("metadatas", metadatas.map { it.toMap() })
+        return map
+    }
 }
 
 object Transactions : BaseIntIdTable("transactions") {

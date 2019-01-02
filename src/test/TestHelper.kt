@@ -100,7 +100,7 @@ object TestHelper {
                         Pair("lastname", "Soltanieh"),
                         Pair("email", "as" + DateTime.now(DateTimeZone.UTC).millis + "@ncent.io")
                     )
-                ).data!!
+                ).data!!.value
             } else {
                 userAccount
             }
@@ -131,7 +131,7 @@ object TestHelper {
                     Pair("email", "dev$i@ncnt.io"),
                     Pair("firstname", "dev$i"),
                     Pair("lastname", "ncnt$i")
-                )).data!!)
+                )).data!!.value)
             }
         }
         return userAccounts
@@ -203,6 +203,7 @@ object TestHelper {
 
     fun generateChallengeSettingsNamespace(userAccount: UserAccount, count: Int = 1): List<ChallengeSettingNamespace> {
         var challengeSettingsList = mutableListOf<ChallengeSettingNamespace>()
+        val exp = DateTime.now(DateTimeZone.UTC).plusDays(1)
         for(i in 0..(count - 1)) {
             challengeSettingsList.add(
                 ChallengeSettingNamespace(
@@ -210,7 +211,8 @@ object TestHelper {
                     description = "TESTdescription$i",
                     imageUrl = "TESTimageUrl$i",
                     sponsorName = "TESTsponsorName$i",
-                    expiration = DateTime.now(DateTimeZone.UTC).plusDays(1),
+                    expiration = exp,
+                    shareExpiration = exp,
                     admin = userAccount.idValue,
                     maxShares = 100,
                     offChain = false,
@@ -256,6 +258,7 @@ object TestHelper {
                 ChallengeMetadata(
                     challenge.idValue,
                     challenge.challengeSettings.offChain,
+                    challenge.challengeSettings.shareExpiration.toString(),
                     amount
                 ).getChallengeMetadataNamespaces()
             ),

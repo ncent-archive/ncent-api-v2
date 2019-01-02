@@ -19,21 +19,9 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
     override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Challenge> {
         val challengeNamespace = d!! as ChallengeNamespace
         val userAccount = UserAccount.findById(challengeNamespace.challengeSettings.admin)!!
-        val settings = ChallengeSetting.new {
-            name = challengeNamespace.challengeSettings.name
-            description = challengeNamespace.challengeSettings.description
-            imageUrl = challengeNamespace.challengeSettings.imageUrl
-            sponsorName = challengeNamespace.challengeSettings.sponsorName
-            expiration = challengeNamespace.challengeSettings.expiration
-            admin = userAccount.id
-            offChain = challengeNamespace.challengeSettings.offChain
-            maxShares = challengeNamespace.challengeSettings.maxShares
-            maxRewards = challengeNamespace.challengeSettings.maxRewards
-            maxDistributionFeeReward = challengeNamespace.challengeSettings.maxDistributionFeeReward
-            maxSharesPerReceivedShare = challengeNamespace.challengeSettings.maxSharesPerReceivedShare
-            maxDepth = challengeNamespace.challengeSettings.maxDepth
-            maxNodes = challengeNamespace.challengeSettings.maxNodes
-        }
+        val settings = GenerateChallengeSettingsService.execute(userAccount.idValue, challengeNamespace.challengeSettings, null)
+        if(settings.result != SOAResultType.SUCCESS)
+            return SOAResult(SOAResultType.FAILURE, settings.message)
 
         val keyPairGenerated = GenerateCryptoKeyPairService.execute()
         if(keyPairGenerated.result != SOAResultType.SUCCESS)
@@ -49,8 +37,8 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
         // TODO add reward to pool?
         val challenge = Challenge.new {
             parentChallenge = optionalParentChallenge
-            challengeSettings = settings
-            cryptoKeyPair = keyPairGenerated.data!!
+            challengeSettings = settings.data!!
+            cryptoKeyPair = keyPairGenerated.data!!.value
             distributionFeeReward = distributionFeeRewardResult.data!!
         }
 
@@ -84,6 +72,7 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
                 ChallengeMetadata(
                     challenge.idValue,
                     challenge.challengeSettings.offChain,
+                    challenge.challengeSettings.shareExpiration.toString(),
                     challenge.challengeSettings.maxShares
                 ).getChallengeMetadataNamespaces()
             ),

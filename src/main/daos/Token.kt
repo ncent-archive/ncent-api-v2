@@ -17,6 +17,13 @@ class Token(id: EntityID<Int>) : BaseIntEntity(id, Tokens) {
 
     var amount by Tokens.amount
     var tokenType by TokenType referencedOn Tokens.tokenType
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("amount", amount)
+        map.put("tokenType", tokenType.toMap())
+        return map
+    }
 }
 
 object Tokens : BaseIntIdTable("tokens") {

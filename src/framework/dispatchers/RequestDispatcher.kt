@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.User
+import main.daos.UserAccount
 import kotlin.reflect.full.createInstance
 
 /**
@@ -14,17 +15,17 @@ import kotlin.reflect.full.createInstance
  */
 open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
 
-    lateinit var defaultUser: User
+    lateinit var defaultUser: UserAccount
 
     @Throws(RouterException::class)
     override fun locate(request: ApiGatewayRequest): Any? {
         val path = request.input["path"]
-        for ((regex, model, controller) in ROUTER.routes) {
+        for ((regex, inputModel, outputModel, controller) in ROUTER.routes) {
 			if (!Regex(regex).matches(path as CharSequence)) {
 				continue
 			}
 
-            val modelClass = Class.forName(model).kotlin
+            val outputModelClass = Class.forName(outputModel).kotlin
             val controllerClass = Class.forName(controller).kotlin
             val controllerInstance = controllerClass.createInstance()
 
@@ -32,7 +33,8 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
             val user = findUserByRequest(request)
             val result = func?.call(
                     controllerInstance,
-                    modelClass::class.java,
+                    inputModel,
+                    outputModelClass::class.java,
                     request!!,
                     user,
                     controllerInstance
@@ -50,7 +52,7 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
 		throw RouterException(path as? String ?: "")
     }
 
-    fun findUserByRequest(request: Request) : User {
+    fun findUserByRequest(request: Request) : UserAccount {
         // TODO refactor to get user by request from database
         return defaultUser
     }

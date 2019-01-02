@@ -23,6 +23,6 @@ object ValidateShareService: SOAServiceInterface<Pair<Boolean, ShareTransactionL
         val shares = if(params!!["shares"] != null) params!!["shares"]!!.toInt() else 0
         if(availableShares >= shares && availableShares != 0)
             return SOAResult(SOAResultType.SUCCESS, null, Pair(true,unsharedTransactions.data!!))
-        return SOAResult(SOAResultType.SUCCESS, "You do not have enough shares available: $availableShares", Pair(false, null))
+        return SOAResult(SOAResultType.SUCCESS, "You do not have enough valid shares available: $availableShares", Pair(false, null))
     }
 }

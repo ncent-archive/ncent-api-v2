@@ -6,6 +6,7 @@ import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.transaction.GetTransactionsService
+import org.joda.time.DateTime
 
 /**
  *
@@ -47,6 +48,7 @@ object GetUnsharedTransactionsService: SOAServiceInterface<ShareTransactionList>
         var sharedTransactionCount = mutableMapOf<Int, Int>()
         sharedTransactionResult.data!!.transactions.forEach { tx ->
             val shares = tx.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
+            if(hasShareExpired(tx, Transaction.find { Transactions.previousTransaction eq tx.id }.count())) return@forEach
             tx.previousTransaction?.let { prevTx ->
                 val sharesPlusExistingShares = sharedTransactionCount.getOrDefault(prevTx.idValue, 0) + shares
                 sharedTransactionCount[prevTx.idValue] = sharesPlusExistingShares
@@ -58,11 +60,18 @@ object GetUnsharedTransactionsService: SOAServiceInterface<ShareTransactionList>
         receivedShares.forEach { receivedShare ->
             val shares = receivedShare.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
             val availableShares = shares - sharedTransactionCount.getOrDefault(receivedShare.idValue, 0)
-            if(availableShares > 0) {
+            if(availableShares > 0 && !hasShareExpired(receivedShare, sharedTransactionCount.get(receivedShare.idValue))) {
                 unsharedTransactions.add(Pair(receivedShare, availableShares))
             }
         }
 
         return SOAResult(SOAResultType.SUCCESS, null, ShareTransactionList(unsharedTransactions))
+    }
+
+    private fun hasShareExpired(receivedShare: Transaction, shared: Int?): Boolean {
+        if(DateTime.parse(receivedShare.metadatas.filter { it.key == "shareExpiration" }.first().value).isBeforeNow && shared == null) {
+            return true
+        }
+        return false
     }
 }

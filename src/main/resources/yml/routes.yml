@@ -4,7 +4,8 @@ routes:
 # =========================
 
   - regex: '^/health(/*[a-zA-Z0-9]*)?'
-    model: main.daos.Healthcheck
+    inputModel: main.daos.Healthcheck
+    outputModel: main.daos.Healthcheck
     controller: kotlinserverless.main.controllers.HealthcheckController
     
 # =========================
@@ -12,7 +13,8 @@ routes:
 # =========================
 
   - regex: '^/user(/*[a-zA-Z0-9]*)?'
-    model: main.daos.User
+    inputModel: main.daos.User
+    outputModel: main.daos.User
     controller: main.controllers.UserController
 
 # =========================
@@ -20,7 +22,8 @@ routes:
 # =========================
 
   - regex: '^/challenge(/*[a-zA-Z0-9]*)?'
-    model: main.daos.Challenge
+    inputModel: main.daos.Challenge
+    outputModel: main.daos.Challenge
     controller: main.controllers.ChallengeController
 
 # =========================
@@ -28,7 +31,8 @@ routes:
 # =========================
 
   - regex: '^/completion(/*[a-zA-Z0-9]*)?'
-    model: main.daos.CompletionCriteria
+    inputModel: main.daos.CompletionCriteria
+    outputModel: main.daos.CompletionCriteria
     controller: main.controllers.CompletionCriteriaController
 
 # =========================
@@ -36,7 +40,8 @@ routes:
 # =========================
 
   - regex: '^/reward(/*[a-zA-Z0-9]*)?'
-    model: main.daos.Reward
+    inputModel: main.daos.Reward
+    outputModel: main.daos.Reward
     controller: main.controllers.RewardController
 
 # =========================
@@ -44,11 +49,13 @@ routes:
 # =========================
 
   - regex: '^/token(/*[a-zA-Z0-9]*)?'
-    model: main.daos.Token
+    inputModel: main.daos.Token
+    outputModel: main.daos.Token
     controller: main.controllers.TokenController
 
   - regex: '^/tokens(/*[a-zA-Z0-9]*)?'
-    model: main.daos.Token
+    inputModel: main.daos.Token
+    outputModel: main.daos.Token
     controller: main.controllers.TokensController
 
 # =========================
@@ -56,7 +63,8 @@ routes:
 # =========================
 
   - regex: '^/transaction(/*[a-zA-Z0-9]*)?'
-    model: main.daos.Transaction
+    inputModel: main.daos.Transaction
+    outputModel: main.daos.Transaction
     controller: main.controllers.TransactionController
 
 # =========================
@@ -64,6 +72,7 @@ routes:
 # =========================
 
   - regex: '^/user_account(/*[a-zA-Z0-9]*)?'
-    model: main.daos.UserAccount
+    inputModel: main.daos.UserNamespace
+    outputModel: main.daos.UserAccount
     controller: main.controllers.UserAccountController
 

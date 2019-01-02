@@ -1,11 +1,9 @@
 package kotlinserverless.framework.controllers
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.BaseIntEntity
-import framework.models.idValue
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
-import main.daos.User
+import main.daos.UserAccount
 import kotlin.math.ceil
 
 /**
@@ -45,8 +43,8 @@ interface Controller<M> {
             emptyMap()
     }
 
-    fun getResource(request: Request): String {
-        return request.input["resource"] as String
+    fun getResource(request: Request): String? {
+        return request.input["resource"] as String?
     }
 
     fun getHeaders(request: Request) : Map<String, Any> {
@@ -66,12 +64,6 @@ interface Controller<M> {
             return if (request.input["body"] is String) request.input["body"] as String else request.input["body"] as Map<String, Any>
         else
             throw InvalidArguments("body")
-    }
-
-    fun <T : BaseIntEntity> getEntity(rawBody: Any, cls: Class<T>): T {
-        val objectMapper = ObjectMapper()
-
-        return if (rawBody is String) objectMapper.readValue(rawBody, cls) else objectMapper.convertValue(rawBody, cls)
     }
 
     fun getPagination(queryParameters: Map<String, Any>): Pagination {
@@ -95,20 +87,22 @@ interface Controller<M> {
 
     /**
      * Http router, it receives a class type to return, a request and service to automatically execute and return a response
-     * @param cls Class return type
+     * @param incls Class input type
+     * @param outcls Class return type
      * @param request Http Client request
      * @param service CRUD service to execute
      */
-    fun <T : BaseIntEntity> defaultRouting(cls: Class<T>, request: Request, user: User, restController: RestController<T, User>): SOAResult<T> {
-		val resource: String = getResource(request)
+    fun <T : BaseIntEntity> defaultRouting(inputClass: String, outcls: Class<T>, request: Request, user: UserAccount, restController: RestController<T, UserAccount>): SOAResult<*> {
+		val resource = getResource(request)
         val headers: Map<String, Any> = getHeaders(request)
         val pathParameters: Map<String, Any> = getPathParameters(request)
         val queryParameters: Map<String, Any> = getQueryStringParameters(request)
+        val incls = Class.forName(inputClass)
 
         return when((request.input[HTTP_METHOD] as String).toLowerCase()) {
             HTTP_GET -> {
                 when {
-                    resource.endsWith("findOne", true) -> restController.findOne(user, queryParameters)
+                    resource != null && resource.endsWith("findOne", true) -> restController.findOne(user, queryParameters)
                     pathParameters.containsKey("id") -> {
                         val id = pathParameters["id"]
 
@@ -125,16 +119,16 @@ interface Controller<M> {
                 }
             }
             HTTP_POST -> {
-                restController.create(user, getEntity(getRawBody(request), cls))
+                restController.create(user, getRawBody(request) as Map<String, String>)
             }
             HTTP_PUT -> {
-                restController.update(user, getEntity(getRawBody(request), cls))
+                restController.update(user, getRawBody(request) as Map<String, String>)
             }
             HTTP_DELETE -> {
-                restController.delete(user, getEntity(getRawBody(request), cls).idValue!!)
+                restController.delete(user, (getRawBody(request) as Map<String, String>)["idValue"]!!.toInt())
             }
             HTTP_PATCH -> {
-                restController.update(user, getEntity(getRawBody(request), cls))
+                restController.update(user, getRawBody(request) as Map<String, String>)
             }
 
             else -> {
