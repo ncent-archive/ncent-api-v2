@@ -9,12 +9,6 @@ import org.jetbrains.exposed.sql.select
 
 object GetUserAccountService: SOAServiceInterface<UserAccount> {
     override fun execute(caller: Int?, id: Int?, params: Map<String, String>?): SOAResult<UserAccount> {
-        val result = SOAResult<UserAccount>(
-                SOAResultType.FAILURE,
-                "",
-                null
-        )
-
         val userAccountResult = DaoService.execute {
             val query = UserAccounts
                 .select {

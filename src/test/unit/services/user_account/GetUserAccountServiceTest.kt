@@ -9,24 +9,16 @@ import io.mockk.junit5.MockKExtension
 import kotlinserverless.framework.models.Handler
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
-import main.services.user_account.GenerateUserAccountService
 import main.services.user_account.GetUserAccountService
+import test.TestHelper
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 class GetUserAccountServiceTest: WordSpec() {
-    private lateinit var params: MutableMap<String, String>
-
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        params = mutableMapOf(
-                Pair("email", "dev@ncnt.io"),
-                Pair("firstname", "dev"),
-                Pair("lastname", "ncnt")
-        )
-
-        GenerateUserAccountService.execute(null, params)
+        TestHelper.generateUserAccounts()
     }
 
     override fun afterTest(description: Description, result: TestResult) {
