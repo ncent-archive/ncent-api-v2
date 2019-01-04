@@ -13,10 +13,27 @@ import org.joda.time.DateTimeZone
  */
 object EndSessionService: SOAServiceInterface<Session> {
     override fun execute(caller: Int?, key: String?) : SOAResult<Session> {
-        var session = Session.find { Sessions.sessionKey eq key!! }.first()
+        val result = SOAResult<Session>(
+                SOAResultType.FAILURE,
+                "",
+                null
+        )
+
+        var sessionQuery = Session.find { Sessions.sessionKey eq key!! }
+
+        if (sessionQuery.empty()) {
+            result.message = "session not found"
+            return result
+        }
+
+        val session = sessionQuery.first()
+        result.result = SOAResultType.SUCCESS
+
         if(session.expiration > DateTime.now(DateTimeZone.UTC)) {
             session.expiration = DateTime.now(DateTimeZone.UTC)
         }
-        return SOAResult(SOAResultType.SUCCESS, null, session)
+
+        result.data = session
+        return result
     }
 }
