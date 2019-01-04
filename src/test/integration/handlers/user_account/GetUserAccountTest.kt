@@ -11,27 +11,29 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
 import main.daos.UserAccount
+import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
-class UserAccountCreationTest : WordSpec() {
+class GetUserAccountTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
     private lateinit var user: UserAccount
-    private val map = mutableMapOf(
-        Pair("path", "/user_account/"),
-        Pair("httpMethod", "POST"),
-        Pair("body", mapOf(
-            Pair("email", "dev@ncnt.io"),
-            Pair("firstname", "dev"),
-            Pair("lastname", "ncnt")
-        ))
-    )
+    private lateinit var userAccounts: List<UserAccount>
+    private lateinit var map: Map<String, Any>
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
         user = mockk()
         handler = Handler(user)
         contxt = mockk()
+        userAccounts = TestHelper.generateUserAccounts()
+        map = mutableMapOf(
+                Pair("path", "/user_account/"),
+                Pair("httpMethod", "GET"),
+                Pair("pathParameters", mutableMapOf(
+                    Pair("id", userAccounts[0].id.value)
+                ))
+        )
     }
 
     override fun afterTest(description: Description, result: TestResult) {
@@ -40,16 +42,15 @@ class UserAccountCreationTest : WordSpec() {
 
     init {
         "correct path" should {
-            "should return a valid new user account" {
+            "should return a valid user account" {
                 val response = handler.handleRequest(map, contxt)
                 response.statusCode shouldBe 200
                 val newUserAccountMap = Klaxon().parse<Map<String?, Any>>(response.body!!)
-                val newUserAccountDataMap = Klaxon().parse<Map<String?, Any>>(newUserAccountMap?.get("value") as String)
 
-                newUserAccountDataMap!!.containsKey("apiCreds") shouldBe true
-                newUserAccountDataMap!!.containsKey("session") shouldBe true
-                newUserAccountDataMap!!.containsKey("cryptoKeyPair") shouldBe true
-                newUserAccountDataMap!!.containsKey("userMetadata") shouldBe true
+                newUserAccountMap!!.containsKey("apiCreds") shouldBe true
+                newUserAccountMap!!.containsKey("session") shouldBe true
+                newUserAccountMap!!.containsKey("cryptoKeyPair") shouldBe true
+                newUserAccountMap!!.containsKey("userMetadata") shouldBe true
             }
         }
     }
