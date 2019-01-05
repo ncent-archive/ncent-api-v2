@@ -4,7 +4,6 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import com.amazonaws.services.lambda.runtime.Context
-import com.beust.klaxon.Klaxon
 import io.kotlintest.TestResult
 import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
@@ -12,9 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
 import main.daos.UserAccount
 import test.TestHelper
+import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
-class GetUserAccountTest : WordSpec() {
+class UserAccountLoginTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
     private lateinit var user: UserAccount
@@ -23,17 +23,15 @@ class GetUserAccountTest : WordSpec() {
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        user = mockk()
-        handler = Handler(user)
         contxt = mockk()
         userAccounts = TestHelper.generateUserAccounts()
         map = mutableMapOf(
-                Pair("path", "/user_account/"),
-                Pair("httpMethod", "GET"),
-                Pair("pathParameters", mutableMapOf(
-                    Pair("id", userAccounts[0].id.value)
-                ))
+                Pair("path", "/user_account/login"),
+                Pair("httpMethod", "PATCH")
         )
+        user = userAccounts[0]
+        handler = Handler(user)
+
     }
 
     override fun afterTest(description: Description, result: TestResult) {
@@ -43,14 +41,10 @@ class GetUserAccountTest : WordSpec() {
     init {
         "correct path" should {
             "should return a valid user account" {
-                val response = handler.handleRequest(map, contxt)
-                response.statusCode shouldBe 200
-                val newUserAccountMap = Klaxon().parse<Map<String?, Any>>(response.body!!)
-
-                newUserAccountMap!!.containsKey("apiCreds") shouldBe true
-                newUserAccountMap.containsKey("session") shouldBe true
-                newUserAccountMap.containsKey("cryptoKeyPair") shouldBe true
-                newUserAccountMap.containsKey("userMetadata") shouldBe true
+                transaction {
+                    val response = handler.handleRequest(map, contxt)
+                    response.statusCode shouldBe 200
+                }
             }
         }
     }

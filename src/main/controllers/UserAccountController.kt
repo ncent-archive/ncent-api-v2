@@ -32,31 +32,8 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
         )
 
         val apiCred = user.apiCreds
-        val cryptoKeyPair = user.cryptoKeyPair
 
-        val apiKeyParams = mutableMapOf(
-                Pair("apiKey", apiCred.apiKey),
-                Pair("secretKey", apiCred.secretKey)
-        )
-
-        val cryptoKeyPairParams = mutableMapOf(
-                Pair("publicKey", cryptoKeyPair.publicKey),
-                Pair("privateKey", cryptoKeyPair.privateKey)
-        )
-
-        val validateApiCredResult = ValidateApiKeyService.execute(user.idValue, Any(), apiKeyParams)
-        if (validateApiCredResult.result != SOAResultType.SUCCESS) {
-            result.message = "Invalid ApiCred"
-            return result
-        }
-
-        val validateCryptoKeyPairResult = ValidateCryptoKeyPairService.execute(user.idValue, Any(), cryptoKeyPairParams)
-        if (validateCryptoKeyPairResult.result != SOAResultType.SUCCESS) {
-            result.message = "Invalid CryptoKeyPair"
-            return result
-        }
-
-        val startSessionResult = StartSessionService.execute(user.idValue, apiCred.apiKey, apiCred.secretKey)
+        val startSessionResult = StartSessionService.execute()
         if (startSessionResult.result != SOAResultType.SUCCESS) {
             result.message = "Failed to start session"
         } else {

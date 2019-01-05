@@ -45,6 +45,7 @@ class ApiGatewayResponse(
     var base64Encoded: Boolean = false
 
     fun build(): ApiGatewayResponse {
+      //port these changes to Kotlin Serverless codebase
       var body: String? = null
       body = body ?: if(rawBody != null) rawBody as String else null
       body = body ?: objectBody?.toString()
