@@ -16,23 +16,9 @@ import java.sql.Connection
 open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
   var requestDispatcher: RequestDispatcher = RequestDispatcher()
-  var defaultUser: UserAccount
 
   constructor() {
     connectToDatabase()
-
-    defaultUser = GenerateUserAccountService.execute(null, mapOf(
-        Pair("email", "default"),
-        Pair("firstname", "default"),
-        Pair("lastname", "default")
-    )).data!!.value
-    this.requestDispatcher.defaultUser = defaultUser
-  }
-
-  constructor(user: UserAccount) {
-    connectToDatabase()
-    this.requestDispatcher.defaultUser = user
-    this.defaultUser = user
   }
 
   override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {

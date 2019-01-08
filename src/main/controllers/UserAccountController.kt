@@ -14,7 +14,6 @@ import main.services.user_account.ValidateApiKeyService
 import main.services.user_account.ValidateCryptoKeyPairService
 import main.services.user_account.StartSessionService
 import main.services.user_account.EndSessionService
-import main.services.user_account.ValidateSessionService
 
 class UserAccountController: DefaultController<UserAccount>(), RestController<UserAccount, UserAccount> {
     override fun findOne(user: UserAccount, id: Int): SOAResult<UserAccount> {

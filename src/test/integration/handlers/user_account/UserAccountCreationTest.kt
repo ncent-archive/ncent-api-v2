@@ -5,12 +5,14 @@ import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import com.amazonaws.services.lambda.runtime.Context
 import com.beust.klaxon.Klaxon
-import com.google.gson.Gson
+import framework.models.idValue
+import io.kotlintest.TestResult
 import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
 import main.daos.UserAccount
+import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class UserAccountCreationTest : WordSpec() {
@@ -29,9 +31,14 @@ class UserAccountCreationTest : WordSpec() {
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        user = mockk()
-        handler = Handler(user)
+        handler = Handler()
         contxt = mockk()
+        user = TestHelper.generateUserAccounts().first()
+        map["userId"] = user.idValue.toString()
+    }
+
+    override fun afterTest(description: Description, result: TestResult) {
+        Handler.disconnectAndDropTables()
     }
 
     init {
