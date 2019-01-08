@@ -19,7 +19,7 @@ class HandlerTest : WordSpec() {
     private val map = mapOf("path" to "/health/health")
 
     override fun beforeTest(description: Description): Unit {
-        handler = Handler(mockk(relaxed = true))
+        handler = Handler()
         contxt = mockk()
         dispatcher = mockk()
         handler.requestDispatcher = dispatcher
