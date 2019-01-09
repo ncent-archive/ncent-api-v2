@@ -11,11 +11,11 @@ object JsonHelper {
     fun parse(jsonString: String, name: String? = null): JsonObject {
         var trimmedJsonString = jsonString.trim()
         return when {
-            trimmedJsonString.startsWith("\\{") -> {
+            trimmedJsonString.startsWith("{") -> {
                 var obj = KLAX.parseJsonObject(StringReader(jsonString))
                 parseObj(obj)
             }
-            trimmedJsonString.startsWith("\\[") -> {
+            trimmedJsonString.startsWith("[") -> {
                 var obj = KLAX.parseJsonArray(StringReader(jsonString))
                 var finalObj = JsonObject()
                 finalObj[name!!] = parseArray(obj)

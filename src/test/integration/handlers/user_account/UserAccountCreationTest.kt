@@ -4,6 +4,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import com.amazonaws.services.lambda.runtime.Context
+import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import framework.models.idValue
 import io.kotlintest.TestResult
@@ -50,9 +51,12 @@ class UserAccountCreationTest : WordSpec() {
                 val newUserAccountDataMap = Klaxon().parse<Map<String?, Any>>(newUserAccountMap?.get("value") as String)
 
                 newUserAccountDataMap!!.containsKey("apiCreds") shouldBe true
-                newUserAccountDataMap!!.containsKey("session") shouldBe true
-                newUserAccountDataMap!!.containsKey("cryptoKeyPair") shouldBe true
-                newUserAccountDataMap!!.containsKey("userMetadata") shouldBe true
+                newUserAccountDataMap.containsKey("session") shouldBe true
+                newUserAccountDataMap.containsKey("cryptoKeyPair") shouldBe true
+                newUserAccountDataMap.containsKey("userMetadata") shouldBe true
+
+                val newUserMetadata = newUserAccountDataMap["userMetadata"] as JsonObject
+                newUserMetadata["email"] shouldBe "dev@ncnt.io"
             }
         }
     }

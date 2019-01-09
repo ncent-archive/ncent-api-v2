@@ -1,6 +1,7 @@
 package test.integration.handlers.user_account
 
 import io.kotlintest.shouldBe
+import framework.models.idValue
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import com.amazonaws.services.lambda.runtime.Context
@@ -18,20 +19,17 @@ class UserAccountLogoutTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
     private lateinit var user: UserAccount
-    private lateinit var userAccounts: List<UserAccount>
-    private lateinit var map: Map<String, Any>
+    private val map = mutableMapOf(
+            Pair("path", "/user_account/logout"),
+            Pair("httpMethod", "PATCH")
+    )
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
         contxt = mockk()
-        userAccounts = TestHelper.generateUserAccounts()
-        map = mutableMapOf(
-                Pair("path", "/user_account/logout"),
-                Pair("httpMethod", "PATCH")
-        )
-        user = userAccounts[0]
-        handler = Handler(user)
-
+        handler = Handler()
+        user = TestHelper.generateUserAccounts().first()
+        map["userId"] = user.idValue.toString()
     }
 
     override fun afterTest(description: Description, result: TestResult) {
