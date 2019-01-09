@@ -15,6 +15,8 @@ Todo:
 
 ## Install
 
+NOTE: Make sure you're using Java 8 (v1.8.*)
+
 1. Install it using npm:
   ```shell
   git clone git@github.com:thejnaut1/ncnt.git
