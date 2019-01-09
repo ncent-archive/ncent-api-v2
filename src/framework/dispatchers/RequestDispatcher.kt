@@ -7,8 +7,10 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
+import main.services.user_account.GetUserAccountService
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.lang.Exception
 import kotlin.reflect.full.createInstance
 
 /**
@@ -51,32 +53,11 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
     }
 
     fun findUserByRequest(request: Request) : UserAccount {
-        // TODO move this logic to the GetUserAccountService logic!
-        return when {
-            request.input.containsKey("userId") -> {
-                transaction {
-                    UserAccount.findById((request.input["userId"] as String).toInt())!!
-                }
-            }
-            request.input.containsKey("email") -> {
-                transaction {
-                    val query = UserAccounts
-                            .innerJoin(Users)
-                            .select {
-                                Users.email eq (request.input["email"] as String)
-                            }
-                    UserAccount.wrapRows(query).toList().distinct().first()
-                }
-            }
-            request.input.containsKey("apiKey") -> {
-                val query = UserAccounts
-                        .innerJoin(ApiCreds)
-                        .select {
-                            ApiCreds.apiKey eq (request.input["apiKey"] as String)
-                        }
-                UserAccount.wrapRows(query).toList().distinct().first()
-            }
-            else -> throw Exception("Could not find user without email/apiKey/userId")
+        val userResult = GetUserAccountService.execute(null, 0, request.input.map { Pair(it.key, it.value.toString()) }.toMap())
+        if(userResult.result == SOAResultType.SUCCESS) {
+            return userResult.data!!
+        } else {
+            throw Exception(userResult.message)
         }
     }
 
