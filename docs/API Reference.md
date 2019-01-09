@@ -41,25 +41,225 @@ Table of Contents
    
 # User APIs
 
-The following APIs will interact with the Users Controller.
+The following APIs will interact with the UserAccountsController.
 
 ## retrieveAllUsers
 
-## retrieveUser
+## findOne
 
-## createUser
+This API is a simple retrieval for a single user account
+
+#### Route
+
+/user_accounts
+
+#### Method
+
+GET
+
+#### Parameters
+
+1. user
+   * The user making the API call
+   * Datatype: UserAccount
+1. id
+   * The ID of the user to be retrieved
+   * Datatype: Int
+   
+#### Sample Response
+```json
+{
+   "createdAt":"2019-01-06T14:29:19.561-08:00",
+   "updatedAt":"null",
+   "deletedAt":"null",
+   "userMetadata":{
+      "createdAt":"2019-01-06T14:29:19.556-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "email":"dev0@ncnt.io",
+      "firstname":"dev0",
+      "lastname":"ncnt0",
+      "metadatas":[
+
+      ]
+   },
+   "cryptoKeyPair":{
+      "createdAt":"2019-01-06T14:29:19.558-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "publicKey":"[B@3ce7cd16"
+   },
+   "apiCreds":{
+      "createdAt":"2019-01-06T14:29:19.559-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "apiKey":"[B@2b72c09b"
+   },
+   "session":{
+      "createdAt":"2019-01-06T14:29:19.560-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "sessionKey":"80900064-0c68-45b5-988b-82df5ba55419",
+      "expiration":"2019-01-07T14:29:19.549-08:00"
+   }
+}
+```
+
+## create
+
+This API is used for the creation of a new User instance
+
+#### Route
+
+/user_accounts
+
+#### Method
+
+POST 
+
+#### Parameters 
+
+1. user
+   * The user making the API call
+   * Datatype: UserAccount
+1. params
+   * The intended attributes for the new user to be created
+   * Datatype: Map<String, String>
+
+#### Sample Response
+```json
+{  
+   "value":"{\"createdAt\":\"2019-01-06T23:39:12.345Z\",\"updatedAt\":\"null\",\"deletedAt\":\"null\",\"userMetadata\":{\"createdAt\":\"2019-01-06T15:39:12.278-08:00\",\"updatedAt\":\"null\",\"deletedAt\":\"null\",\"email\":\"dev@ncnt.io\",\"firstname\":\"dev\",\"lastname\":\"ncnt\",\"metadatas\":[]},\"cryptoKeyPair\":{\"createdAt\":\"2019-01-06T15:39:12.340-08:00\",\"updatedAt\":\"null\",\"deletedAt\":\"null\",\"publicKey\":\"[B@6efb3ebb\"},\"apiCreds\":{\"createdAt\":\"2019-01-06T15:39:12.341-08:00\",\"updatedAt\":\"null\",\"deletedAt\":\"null\",\"apiKey\":\"[B@725c7316\"},\"session\":{\"createdAt\":\"2019-01-06T15:39:12.342-08:00\",\"updatedAt\":\"null\",\"deletedAt\":\"null\",\"sessionKey\":\"5cdd7f1c-5331-4a89-8ab7-d1d20df53fed\",\"expiration\":\"2019-01-07T15:39:12.193-08:00\"}}",
+   "privateKey":"[C@6364d579",
+   "secretKey":"[C@4a0e0019"
+}
+```
 
 ## updateUser
 
 ## deleteUser
 
-# Session APIs
+## login
 
-The following APIs will interact with the Sessions Controller. 
+This API is called in order to begin a session for a user account
 
-## createUserSession
+#### Route
 
-## deleteUserSession
+/user_accounts/login
+
+#### Method
+
+PATCH
+
+#### Parameters
+
+1. user
+   * The user making the API call
+   * Datatype: UserAccount
+1. request
+   * The incoming request
+   * Datatype: Request
+   
+#### Sample Response
+
+```json
+{
+   "createdAt":"2019-01-06T14:29:19.561-08:00",
+   "updatedAt":"null",
+   "deletedAt":"null",
+   "userMetadata":{
+      "createdAt":"2019-01-06T14:29:19.556-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "email":"dev0@ncnt.io",
+      "firstname":"dev0",
+      "lastname":"ncnt0",
+      "metadatas":[
+
+      ]
+   },
+   "cryptoKeyPair":{
+      "createdAt":"2019-01-06T14:29:19.558-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "publicKey":"[B@3ce7cd16"
+   },
+   "apiCreds":{
+      "createdAt":"2019-01-06T14:29:19.559-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "apiKey":"[B@2b72c09b"
+   },
+   "session":{
+      "createdAt":"2019-01-06T14:29:19.560-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "sessionKey":"80900064-0c68-45b5-988b-82df5ba55419",
+      "expiration":"2019-01-07T14:29:19.549-08:00"
+   }
+}
+```
+
+## logout
+
+This API is called in order to begin a session for a user account
+
+#### Route
+
+/user_accounts/logout
+
+#### Method
+
+PATCH
+
+#### Parameters
+
+1. user
+   * The user making the API call
+   * Datatype: UserAccount
+1. request
+   * The incoming request
+   * Datatype: Request
+   
+#### Sample Response
+
+```json
+{
+   "createdAt":"2019-01-06T14:29:19.561-08:00",
+   "updatedAt":"null",
+   "deletedAt":"null",
+   "userMetadata":{
+      "createdAt":"2019-01-06T14:29:19.556-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "email":"dev0@ncnt.io",
+      "firstname":"dev0",
+      "lastname":"ncnt0",
+      "metadatas":[
+
+      ]
+   },
+   "cryptoKeyPair":{
+      "createdAt":"2019-01-06T14:29:19.558-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "publicKey":"[B@3ce7cd16"
+   },
+   "apiCreds":{
+      "createdAt":"2019-01-06T14:29:19.559-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "apiKey":"[B@2b72c09b"
+   },
+   "session":{
+      "createdAt":"2019-01-06T14:29:19.560-08:00",
+      "updatedAt":"null",
+      "deletedAt":"null",
+      "sessionKey":"80900064-0c68-45b5-988b-82df5ba55419",
+      "expiration":"2019-01-07T14:29:19.549-08:00"
+   }
+}
+```
 
 # Challenge APIs
 

@@ -45,18 +45,12 @@ class ApiGatewayResponse(
     var base64Encoded: Boolean = false
 
     fun build(): ApiGatewayResponse {
+      //port these changes to Kotlin Serverless codebase
       var body: String? = null
+      body = body ?: if(rawBody != null) rawBody as String else null
+      body = body ?: objectBody?.toString()
+      body = body ?: String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8)
 
-      when {
-        rawBody != null -> body = rawBody as String
-        objectBody != null || (listBody != null && listBody!!.isNotEmpty()) -> try {
-          body = body.toString()
-        } catch (e: JsonProcessingException) {
-          LOG.error("Failed to serialize object", e)
-          throw RuntimeException(e)
-        }
-        binaryBody != null -> body = String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8)
-      }
       return ApiGatewayResponse(statusCode, body, headers, base64Encoded)
     }
   }
