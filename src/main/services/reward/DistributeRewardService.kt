@@ -9,9 +9,9 @@ import main.services.transaction.GetProvidenceChainService
 /**
  * Transfer tokens based on rewards
  */
-object DistributeRewardService: SOAServiceInterface<TransactionList> {
-    override fun execute(caller: UserAccount, params: Map<String, String>?) : SOAResult<TransactionList> {
-        val reward = Reward.findById(params!!["reward_id"]!!.toInt())!!
+object DistributeRewardService {
+    fun execute(rewardId: Int, transactionId: Int) : SOAResult<TransactionList> {
+        val reward = Reward.findById(rewardId)!!
         val address = reward.pool.cryptoKeyPair.publicKey
 
         // calculate rewards
@@ -27,7 +27,7 @@ object DistributeRewardService: SOAServiceInterface<TransactionList> {
 
         //TODO what should we do if any of the balances are negative but some are positive?
         //TODO handle 'ALL' type reward audience -- get all chains
-        val providenceChainResult = GetProvidenceChainService.execute(caller, params!!["transaction_id"]!!.toInt())
+        val providenceChainResult = GetProvidenceChainService.execute(transactionId)
         if(providenceChainResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, providenceChainResult.message)
 

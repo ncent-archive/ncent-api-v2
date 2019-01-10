@@ -6,32 +6,26 @@ import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.services.transaction.GenerateTransactionService
 import main.services.transaction.GetTransactionsService
+import org.joda.time.DateTime
 
 /**
  * Share a challenge.
  */
-object ShareChallengeService: SOAServiceInterface<TransactionList> {
-    override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<TransactionList> {
-        val userAccount = UserAccount.findById(caller!!)!!
-        val publicKeyToShareWith = params!!["publicKeyToShareWith"]!!
+object ShareChallengeService {
+    fun execute(caller: UserAccount, challenge: Challenge, publicKeyToShareWith: String, shares: Int, expiration: String?) : SOAResult<TransactionList> {
 //            val keyPairToShareWith = CryptoKeyPair.find { CryptoKeyPairs.publicKey eq publicKeyToShareWith }.first()
 //            val userToShareWith = UserAccount.find {
 //                UserAccounts.cryptoKeyPair eq keyPairToShareWith.idValue
 //            }.first()
 
         // validate users exist
-        val challenge = Challenge.findById(params!!["challengeId"]!!.toInt())!!
-
-        var shares = params!!["shares"]?.toInt()
         // TODO look into using a datetime formatter
-        val expiration = params!!["expiration"] ?: challenge.challengeSettings.shareExpiration.toString()
+        val expiration = expiration ?: challenge.challengeSettings.shareExpiration.toString()
 
         // if on chain -- validate the user has enough shares
         if(!challenge.challengeSettings.offChain) {
-            val sharabilityResult = ValidateShareService.execute(caller, mapOf(
-                Pair("challengeId", challenge.idValue.toString()),
-                Pair("shares", shares!!.toString())
-            ))
+            val sharabilityResult = ValidateShareService.execute(caller, challenge, shares)
+
             if(sharabilityResult.result != SOAResultType.SUCCESS || !sharabilityResult.data!!.first)
                 return SOAResult(SOAResultType.FAILURE, sharabilityResult.message)
 
@@ -47,8 +41,8 @@ object ShareChallengeService: SOAServiceInterface<TransactionList> {
                 val ustx = it.first
                 val amount = it.second
 
-                val txResult = GenerateTransactionService.execute(caller, TransactionNamespace(
-                    from = userAccount.cryptoKeyPair.publicKey,
+                val txResult = GenerateTransactionService.execute(TransactionNamespace(
+                    from = caller.cryptoKeyPair.publicKey,
                     to = publicKeyToShareWith,
                     previousTransaction = ustx.idValue,
                     metadatas = MetadatasListNamespace(
@@ -64,7 +58,7 @@ object ShareChallengeService: SOAServiceInterface<TransactionList> {
                         data = challenge.idValue,
                         dataType = Challenge::class.simpleName!!
                     )
-                ), null)
+                ))
 
                 // TODO decide what to do if the txresult fails
                 txs.add(txResult.data!!)
@@ -74,13 +68,10 @@ object ShareChallengeService: SOAServiceInterface<TransactionList> {
         } else {
             // create a tx using previous as the first tx
             val receivedTransactionResult = GetTransactionsService.execute(
-                caller,
-                mapOf(
-                    Pair("to", userAccount.cryptoKeyPair.publicKey),
-                    Pair("dataType", "Challenge"),
-                    Pair("data", params!!["challengeId"]!!),
-                    Pair("type", "SHARE")
-                )
+                null,
+                caller.cryptoKeyPair.publicKey,
+                null,
+                ActionNamespace(ActionType.SHARE, challenge.idValue, "Challenge")
             )
 
             if(receivedTransactionResult.result != SOAResultType.SUCCESS)
@@ -88,8 +79,8 @@ object ShareChallengeService: SOAServiceInterface<TransactionList> {
 
             val previousTx = receivedTransactionResult.data!!.transactions?.first()
 
-            val txResult = GenerateTransactionService.execute(caller, TransactionNamespace(
-                from = userAccount.cryptoKeyPair.publicKey,
+            val txResult = GenerateTransactionService.execute(TransactionNamespace(
+                from = caller.cryptoKeyPair.publicKey,
                 to = publicKeyToShareWith,
                 previousTransaction = previousTx?.idValue,
                 metadatas = MetadatasListNamespace(
@@ -105,7 +96,7 @@ object ShareChallengeService: SOAServiceInterface<TransactionList> {
                     data = challenge.idValue,
                     dataType = Challenge::class.simpleName!!
                 )
-            ), null)
+            ))
 
             if(txResult.result != SOAResultType.SUCCESS)
                 return SOAResult(SOAResultType.FAILURE, txResult.message)

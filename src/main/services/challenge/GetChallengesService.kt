@@ -15,17 +15,15 @@ import org.jetbrains.exposed.sql.select
  *
  */
 // TODO maybe include how many shares available??
-object GetChallengesService: SOAServiceInterface<ChallengeToUnsharedTransactionsList> {
+object GetChallengesService {
     // get challenges for a caller
-    override fun execute(caller: UserAccount): SOAResult<ChallengeToUnsharedTransactionsList> {
+    fun execute(caller: UserAccount): SOAResult<ChallengeToUnsharedTransactionsList> {
         val publicKey = caller.cryptoKeyPair.publicKey
         val transactionResult = GetTransactionsService.execute(
-            caller = caller,
-            params = mapOf(
-                Pair("to", publicKey),
-                Pair("type", "SHARE"),
-                Pair("dataType", "Challenge")
-            )
+            from = null,
+            to = publicKey,
+            previousTxId = null,
+            actionNamespace = ActionNamespace(type = ActionType.SHARE, data = null, dataType = "Challenge")
         )
 
         if(transactionResult.result != SOAResultType.SUCCESS)
@@ -53,8 +51,8 @@ object GetChallengesService: SOAServiceInterface<ChallengeToUnsharedTransactions
         var challengeToUnsharedTransactionsList = mutableListOf<Pair<Challenge, ShareTransactionList>>()
         challengeResult.forEach {
             val sharesForChallenge = GetUnsharedTransactionsService.execute(
-                caller = caller,
-                params = mapOf(Pair("challengeId", it.idValue.toString()))
+                caller,
+                it.idValue
             ).data!!
             challengeToUnsharedTransactionsList.add(Pair(it, sharesForChallenge))
         }

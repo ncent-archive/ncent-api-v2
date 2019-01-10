@@ -7,9 +7,8 @@ import main.daos.*
 /**
  * Generate a reward if it is valid
  */
-object GenerateChallengeSettingsService: SOAServiceInterface<ChallengeSetting> {
-    override fun execute(caller: UserAccount, d: Any, params: Map<String, String>?) : SOAResult<ChallengeSetting> {
-        val challengeSettingNamespace = d as ChallengeSettingNamespace
+object GenerateChallengeSettingsService {
+    fun execute(caller: UserAccount, challengeSettingNamespace: ChallengeSettingNamespace) : SOAResult<ChallengeSetting> {
         return SOAResult(SOAResultType.SUCCESS, null, ChallengeSetting.new {
             name = challengeSettingNamespace.name
             description = challengeSettingNamespace.description

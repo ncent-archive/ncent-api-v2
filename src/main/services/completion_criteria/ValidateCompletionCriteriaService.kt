@@ -8,12 +8,11 @@ import main.daos.UserAccount
 /**
  * For the time being, just validate the caller is the criteria address
  */
-object ValidateCompletionCriteriaService: SOAServiceInterface<Boolean> {
-    override fun execute(caller: UserAccount, params: Map<String, String>?) : SOAResult<Boolean> {
-        val cc = CompletionCriteria.findById(params!!["completion_criteria_id"]!!.toInt())!!
+object ValidateCompletionCriteriaService {
+    fun execute(caller: UserAccount, completionCriteria: CompletionCriteria) : SOAResult<Boolean> {
         // TODO -- eventually move this logic to the completion criteria
         // TODO -- in future there will be different completion criteria types, and
         // TODO -- the object should decide if it is valid or not
-        return SOAResult(SOAResultType.SUCCESS, null,caller.cryptoKeyPair.publicKey == cc.address)
+        return SOAResult(SOAResultType.SUCCESS, null,caller.cryptoKeyPair.publicKey == completionCriteria.address)
     }
 }

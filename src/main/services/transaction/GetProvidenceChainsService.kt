@@ -14,10 +14,10 @@ import main.daos.*
  * Has multiple routes as children
  *
  */
-object GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
-    override fun execute(id: Int, params: Map<String, String>?) : SOAResult<List<TransactionList>> {
+object GetProvidenceChainsService {
+    fun execute(transactionId: Int, params: Map<String, String>?) : SOAResult<List<TransactionList>> {
         // Get the transaction in question
-        val txResult = GetTransactionService.execute(id, null)
+        val txResult = GetTransactionService.execute(transactionId)
         if(txResult.result != SOAResultType.SUCCESS)
             return SOAResult(txResult.result, txResult.message, null)
         var tx = txResult.data!!

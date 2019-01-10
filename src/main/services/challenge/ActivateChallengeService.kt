@@ -7,8 +7,8 @@ import main.daos.*
 /**
  * Trigger a challenge state change to active.
  */
-object ActivateChallengeService: SOAServiceInterface<Transaction> {
-    override fun execute(caller: UserAccount, params: Map<String, String>?) : SOAResult<Transaction> {
+object ActivateChallengeService {
+    fun execute(caller: UserAccount, params: Map<String, String>?) : SOAResult<Transaction> {
         var newParams = mutableMapOf<String,String>()
         if(params!!["state"] != null)
             return SOAResult(SOAResultType.FAILURE, "Cannot pass state to activate service.")

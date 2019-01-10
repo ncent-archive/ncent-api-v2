@@ -10,9 +10,8 @@ import org.jetbrains.exposed.sql.insertAndGetId
 /**
  * Generate a token if it is valid
  */
-object GenerateTokenService: SOAServiceInterface<Token> {
-    override fun execute(caller: UserAccount, d: Any, params: Map<String, String>?) : SOAResult<Token> {
-        val tokenNamespace = d as TokenNamespace
+object GenerateTokenService {
+    fun execute(caller: UserAccount, tokenNamespace: TokenNamespace) : SOAResult<Token> {
         // TODO -- should generate a transaction
         val tokenTypeObjId = if(tokenNamespace.tokenType.parentToken != null) {
             TokenTypes.insertAndGetId {
@@ -33,7 +32,6 @@ object GenerateTokenService: SOAServiceInterface<Token> {
 
         // TODO -- add a test for this!
         val result = GenerateTransactionService.execute(
-            caller,
             TransactionNamespace(
                 "DEFAULT",
                 caller.cryptoKeyPair.publicKey,
@@ -44,7 +42,7 @@ object GenerateTokenService: SOAServiceInterface<Token> {
                 ),
                 null,
                 MetadatasListNamespace(listOf(MetadatasNamespace("amount", tokenNamespace.amount.toString())))
-            ), null)
+            ))
         if(result.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, "Failed to generate a transaction funding creator")
 

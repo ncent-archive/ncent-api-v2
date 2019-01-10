@@ -6,8 +6,8 @@ import main.daos.UserAccount
 /**
  *
  */
-object VerifyEmailService: SOAServiceInterface<Boolean> {
-    override fun execute(caller: UserAccount, params: Map<String, String>?) : SOAResult<Boolean> {
+object VerifyEmailService {
+    fun execute(caller: UserAccount, params: Map<String, String>?) : SOAResult<Boolean> {
         throw NotImplementedError()
     }
 }

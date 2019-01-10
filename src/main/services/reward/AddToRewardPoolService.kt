@@ -9,14 +9,15 @@ import main.services.token.TransferTokenService
 /**
  * Transfer tokens to reward pool
  */
-object AddToRewardPoolService: SOAServiceInterface<Transaction> {
-    override fun execute(caller: UserAccount, params: Map<String, String>?) : SOAResult<Transaction> {
-        val reward = Reward.findById(params!!["reward_id"]!!.toInt())!!
-        return TransferTokenService.execute(caller = caller, params = mapOf(
-            Pair("to", reward.pool!!.cryptoKeyPair.publicKey),
-            Pair("from", caller.cryptoKeyPair.publicKey),
-            Pair("name", params["name"]!!),
-            Pair("amount", params["amount"]!!)
-        ))
+object AddToRewardPoolService {
+    fun execute(caller: UserAccount, rewardId: Int, name: String, amount: Double) : SOAResult<Transaction> {
+        val reward = Reward.findById(rewardId)!!
+        return TransferTokenService.execute(caller,
+                caller.cryptoKeyPair.publicKey,
+                reward.pool!!.cryptoKeyPair.publicKey,
+                name,
+                amount,
+                null, null
+        )
     }
 }

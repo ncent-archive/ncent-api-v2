@@ -10,17 +10,15 @@ import main.services.reward.DistributeRewardService
 /**
  * Trigger a challenge state change to active.
  */
-object CompleteChallengeService: SOAServiceInterface<TransactionList> {
-    override fun execute(caller: UserAccount, params: Map<String, String>?) : SOAResult<TransactionList> {
-        var newParams = mutableMapOf<String,String>()
+object CompleteChallengeService {
+    fun execute(caller: UserAccount, params: Map<String, String>?) : SOAResult<TransactionList> {
         val challenge = Challenge.findById(params!!["challengeId"]!!.toInt())!!
 
         // check if the completion criteria matches.
         val validationResult = ValidateCompletionCriteriaService.execute(
-            caller = caller,
-            params = mapOf(
-                Pair("completion_criteria_id", challenge.completionCriterias.idValue.toString())
-            ))
+            caller,
+            challenge.completionCriterias
+        )
         if(validationResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, validationResult.message)
 
@@ -38,9 +36,7 @@ object CompleteChallengeService: SOAServiceInterface<TransactionList> {
             UserAccounts.cryptoKeyPair eq completingKeyPair.idValue
         }.first()
 
-        val sharabilityResult = ValidateShareService.execute(userToCompleteWith.idValue, mapOf(
-            Pair("challengeId", challenge.idValue.toString())
-        ))
+        val sharabilityResult = ValidateShareService.execute(userToCompleteWith, challenge)
 
         if(sharabilityResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, sharabilityResult.message)
@@ -51,9 +47,7 @@ object CompleteChallengeService: SOAServiceInterface<TransactionList> {
         val unsharedTransactions = sharabilityResult.data!!.second!!
 
         // transition state
-        newParams["state"] = "COMPLETE"
-        newParams["challengeId"] = challenge.idValue.toString()
-        val stateChangeResult = ChangeChallengeStateService.execute(caller = caller, params = newParams)
+        val stateChangeResult = ChangeChallengeStateService.execute(caller, challenge.idValue, ActionType.COMPLETE)
         if(stateChangeResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, stateChangeResult.message)
 
@@ -64,11 +58,8 @@ object CompleteChallengeService: SOAServiceInterface<TransactionList> {
 
         // payout winner
         return DistributeRewardService.execute(
-            caller = caller,
-            params = mapOf(
-                Pair("reward_id", challenge.completionCriterias.reward.idValue.toString()),
-                Pair("transaction_id", firstUnspentTx.toString())
-            )
+            challenge.completionCriterias.reward.idValue,
+            firstUnspentTx
         )
     }
 }

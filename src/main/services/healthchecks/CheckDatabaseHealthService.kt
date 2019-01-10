@@ -4,8 +4,8 @@ import kotlinserverless.framework.models.Handler
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 
-object CheckDatabaseHealthService: SOAServiceInterface<Boolean> {
-    override fun execute() : SOAResult<Boolean> {
+object CheckDatabaseHealthService {
+    fun execute() : SOAResult<Boolean> {
         return try {
             Handler.connectToDatabase()
             SOAResult(SOAResultType.SUCCESS, "Successfully connected to database", true)

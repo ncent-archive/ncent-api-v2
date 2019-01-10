@@ -10,19 +10,18 @@ import java.lang.Exception
 /**
  * Add a sub challenge to a challenge.
  */
-object AddSubChallengeService: SOAServiceInterface<SubChallenge> {
-    override fun execute(caller: UserAccount, d: Any, params: Map<String, String>?) : SOAResult<SubChallenge> {
-        val subChallengeNamespace = d as ChallengeNamespace
+object AddSubChallengeService {
+    fun execute(caller: UserAccount, subChallengeNamespace: ChallengeNamespace, challengeId: Int, subChallengeType: SubChallengeType) : SOAResult<SubChallenge> {
         // TODO validate the sub challenge expiration, amounts, same parent id, etc...must accomidate for parent challenge
         val subChallengeResult = GenerateChallengeService.execute(caller, subChallengeNamespace, null)
         if(subChallengeResult.result != SOAResultType.SUCCESS)
             throw Exception(subChallengeResult.message)
 
-        val challengeFound = Challenge.findById(params!!["challengeId"]!!.toInt())!!
+        val challengeFound = Challenge.findById(challengeId)!!
 
         val subChallengeId = SubChallenges.insertAndGetId {
             it[subChallenge] = subChallengeResult.data!!.id
-            it[type] = SubChallengeType.valueOf(params!!["subChallengeType"]!!)
+            it[type] = subChallengeType
         }
 
         ChallengeToSubChallenges.insert {

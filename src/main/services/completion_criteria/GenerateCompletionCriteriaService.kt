@@ -8,10 +8,9 @@ import main.services.reward.GenerateRewardService
 /**
  * Generate a new completion criteria
  */
-object GenerateCompletionCriteriaService: SOAServiceInterface<CompletionCriteria> {
-    override fun execute(caller: UserAccount, d: Any, params: Map<String, String>?) : SOAResult<CompletionCriteria> {
-        val completionCriteriaNamespace = d as CompletionCriteriaNamespace
-        val rewardResult = GenerateRewardService.execute(completionCriteriaNamespace.rewardNamespace, params)
+object GenerateCompletionCriteriaService {
+    fun execute(caller: UserAccount, completionCriteriaNamespace: CompletionCriteriaNamespace) : SOAResult<CompletionCriteria> {
+        val rewardResult = GenerateRewardService.execute(completionCriteriaNamespace.rewardNamespace)
         if(rewardResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, rewardResult.message)
 
