@@ -1,4 +1,4 @@
-package test.unit.services.user
+package test.unit.services.user_account
 
 import framework.models.idValue
 import io.kotlintest.*
