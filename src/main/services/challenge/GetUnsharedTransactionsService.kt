@@ -3,7 +3,6 @@ package main.services.challenge
 import framework.models.idValue
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.transaction.GetTransactionsService
 import org.joda.time.DateTime
@@ -15,11 +14,11 @@ import org.joda.time.DateTime
  */
 object GetUnsharedTransactionsService: SOAServiceInterface<ShareTransactionList> {
     // get challenges for a caller
-    override fun execute(caller: Int?, params: Map<String, String>?): SOAResult<ShareTransactionList> {
-        val publicKey = UserAccount.findById(caller!!)!!.cryptoKeyPair.publicKey
+    override fun execute(caller: UserAccount, params: Map<String, String>?): SOAResult<ShareTransactionList> {
+        val publicKey = caller.cryptoKeyPair.publicKey
         val receivedTransactionResult = GetTransactionsService.execute(
             caller,
-            mapOf(
+            params = mapOf(
                 Pair("to", publicKey),
                 Pair("dataType", "Challenge"),
                 Pair("data", params!!["challengeId"]!!),
@@ -32,7 +31,7 @@ object GetUnsharedTransactionsService: SOAServiceInterface<ShareTransactionList>
 
         val sharedTransactionResult = GetTransactionsService.execute(
             caller,
-            mapOf(
+            params = mapOf(
                 Pair("from", publicKey),
                 Pair("dataType", "Challenge"),
                 Pair("data", params!!["challengeId"]!!),

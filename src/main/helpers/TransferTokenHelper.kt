@@ -15,7 +15,7 @@ import org.jetbrains.exposed.sql.select
 object TransferTokenHelper {
 
     fun transferToken(
-        caller: Int?,
+        caller: UserAccount?,
         from: String,
         to: String,
         tokenId: Int,
@@ -53,12 +53,12 @@ object TransferTokenHelper {
                     previousTransaction = previousTransactionId,
                     metadatas = MetadatasListNamespace(metadataList)
             )
-            return@execute GenerateTransactionService.execute(caller, transactionNamespace, null)
+            return@execute GenerateTransactionService.execute(transactionNamespace, null)
         }.data!!
     }
 
     fun transferToken(
-        caller: Int?,
+        caller: UserAccount?,
         from: String,
         to: String,
         tokenName: String,
@@ -67,7 +67,7 @@ object TransferTokenHelper {
         previousTransactionId: Int?,
         notes: String?): SOAResult<Transaction> {
         // get the token type we wish to transfer
-        val tokenResult = GetTokenService.execute(caller, tokenName)
+        val tokenResult = GetTokenService.execute(tokenName)
         if(tokenResult.result != SOAResultType.SUCCESS)
             return SOAResult(tokenResult.result, tokenResult.message, null)
         val tokenId = tokenResult.data!!.tokenType.idValue

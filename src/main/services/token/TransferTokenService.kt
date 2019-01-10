@@ -2,7 +2,6 @@ package main.services.token
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.daos.Transaction
 import main.helpers.TransferTokenHelper
@@ -11,11 +10,8 @@ import main.helpers.TransferTokenHelper
  * Transfer tokens from one address to another
  */
 object TransferTokenService: SOAServiceInterface<Transaction> {
-    override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<Transaction> {
-        val userAccount = UserAccount.findById(caller!!)
-        // get the user account so we can get the address
-        userAccount ?: return SOAResult(SOAResultType.FAILURE, "Could not find that user", null)
-        val address = userAccount!!.cryptoKeyPair.publicKey
+    override fun execute(caller: UserAccount, params: Map<String, String>?) : SOAResult<Transaction> {
+        val address = caller.cryptoKeyPair.publicKey
 
         // verify that the caller is the from address
         if(address != params!!["from"])

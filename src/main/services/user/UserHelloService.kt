@@ -2,10 +2,9 @@ package kotlinserverless.main.services.users
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 
 object UserHelloService: SOAServiceInterface<String> {
-	override fun execute(caller: Int?, data: String?, params: Map<String, String>?) : SOAResult<String> {
+	override fun execute() : SOAResult<String> {
 		return SOAResult(SOAResultType.SUCCESS, null, "HELLO WORLD")
 	}
 }

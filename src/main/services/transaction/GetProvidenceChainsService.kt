@@ -3,7 +3,6 @@ package main.services.transaction
 import framework.models.idValue
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 
 /**
@@ -16,9 +15,9 @@ import main.daos.*
  *
  */
 object GetProvidenceChainsService: SOAServiceInterface<List<TransactionList>> {
-    override fun execute(caller: Int?, id: Int?) : SOAResult<List<TransactionList>> {
+    override fun execute(id: Int, params: Map<String, String>?) : SOAResult<List<TransactionList>> {
         // Get the transaction in question
-        val txResult = GetTransactionService.execute(caller, id, null)
+        val txResult = GetTransactionService.execute(id, null)
         if(txResult.result != SOAResultType.SUCCESS)
             return SOAResult(txResult.result, txResult.message, null)
         var tx = txResult.data!!

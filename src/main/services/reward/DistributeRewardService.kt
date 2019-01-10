@@ -2,7 +2,6 @@ package main.services.reward
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.helpers.TransferTokenHelper
 import main.services.transaction.GetProvidenceChainService
@@ -11,7 +10,7 @@ import main.services.transaction.GetProvidenceChainService
  * Transfer tokens based on rewards
  */
 object DistributeRewardService: SOAServiceInterface<TransactionList> {
-    override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<TransactionList> {
+    override fun execute(caller: UserAccount, params: Map<String, String>?) : SOAResult<TransactionList> {
         val reward = Reward.findById(params!!["reward_id"]!!.toInt())!!
         val address = reward.pool.cryptoKeyPair.publicKey
 

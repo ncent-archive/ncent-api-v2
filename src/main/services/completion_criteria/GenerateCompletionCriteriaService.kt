@@ -2,7 +2,6 @@ package main.services.completion_criteria
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.reward.GenerateRewardService
 
@@ -10,16 +9,16 @@ import main.services.reward.GenerateRewardService
  * Generate a new completion criteria
  */
 object GenerateCompletionCriteriaService: SOAServiceInterface<CompletionCriteria> {
-    override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<CompletionCriteria> {
-        val completionCriteriaNamespace = d!! as CompletionCriteriaNamespace
-        val rewardResult = GenerateRewardService.execute(caller, completionCriteriaNamespace.rewardNamespace, params)
+    override fun execute(caller: UserAccount, d: Any, params: Map<String, String>?) : SOAResult<CompletionCriteria> {
+        val completionCriteriaNamespace = d as CompletionCriteriaNamespace
+        val rewardResult = GenerateRewardService.execute(completionCriteriaNamespace.rewardNamespace, params)
         if(rewardResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, rewardResult.message)
 
         val completionAddress = if(completionCriteriaNamespace.address != null) {
             completionCriteriaNamespace.address
         } else {
-            UserAccount.findById(caller!!)!!.cryptoKeyPair.publicKey
+            caller.cryptoKeyPair.publicKey
         }
 
         // TODO generate a transaction

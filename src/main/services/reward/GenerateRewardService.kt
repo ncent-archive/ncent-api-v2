@@ -2,7 +2,6 @@ package main.services.reward
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.user_account.GenerateCryptoKeyPairService
 import org.jetbrains.exposed.sql.SizedCollection
@@ -11,8 +10,8 @@ import org.jetbrains.exposed.sql.SizedCollection
  * Generate a reward if it is valid
  */
 object GenerateRewardService: SOAServiceInterface<Reward> {
-    override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Reward> {
-        val rewardNamespace = d!! as RewardNamespace
+    override fun execute(d: Any, params: Map<String, String>?) : SOAResult<Reward> {
+        val rewardNamespace = d as RewardNamespace
         // find or create a reward type
         val rewardTypes = RewardType.find {
             RewardTypes.audience eq rewardNamespace.type.audience

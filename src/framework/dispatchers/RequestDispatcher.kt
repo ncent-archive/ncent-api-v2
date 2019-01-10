@@ -53,7 +53,9 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
     }
 
     fun findUserByRequest(request: Request) : UserAccount {
-        val userResult = GetUserAccountService.execute(null, 0, request.input.map { Pair(it.key, it.value.toString()) }.toMap())
+        var data = request.input.map { Pair(it.key, it.value.toString()) }.toMap()
+
+        val userResult = GetUserAccountService.execute(data)
         if(userResult.result == SOAResultType.SUCCESS) {
             return userResult.data!!
         } else {

@@ -3,7 +3,6 @@ package main.services.challenge
 import framework.models.idValue
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.completion_criteria.GenerateCompletionCriteriaService
 import main.services.reward.GenerateRewardService
@@ -16,8 +15,8 @@ import org.jetbrains.exposed.sql.SizedCollection
  * Create a challenge; generate all appropriate objects including transaction(s)
  */
 object GenerateChallengeService: SOAServiceInterface<Challenge> {
-    override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Challenge> {
-        val challengeNamespace = d!! as ChallengeNamespace
+    override fun execute(caller: UserAccount, d: Any, params: Map<String, String>?) : SOAResult<Challenge> {
+        val challengeNamespace = d as ChallengeNamespace
         val userAccount = UserAccount.findById(challengeNamespace.challengeSettings.admin)!!
         val settings = GenerateChallengeSettingsService.execute(userAccount.idValue, challengeNamespace.challengeSettings, null)
         if(settings.result != SOAResultType.SUCCESS)
@@ -32,7 +31,7 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
         else
             null
 
-        val distributionFeeRewardResult = GenerateRewardService.execute(null, challengeNamespace.distributionFeeReward, null)
+        val distributionFeeRewardResult = GenerateRewardService.execute(challengeNamespace.distributionFeeReward, null)
 
         // TODO add reward to pool?
         val challenge = Challenge.new {
@@ -102,6 +101,6 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
         // TODO should this happen AFTER a challenge is created?
         // TODO how and when will the pool be populated
 
-        return GenerateCompletionCriteriaService.execute(null, completionCriteriaNamespace, null).data!!
+        return GenerateCompletionCriteriaService.execute(completionCriteriaNamespace, null).data!!
     }
 }

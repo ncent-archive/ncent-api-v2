@@ -2,7 +2,6 @@ package main.services.challenge
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
@@ -12,8 +11,8 @@ import java.lang.Exception
  * Add a sub challenge to a challenge.
  */
 object AddSubChallengeService: SOAServiceInterface<SubChallenge> {
-    override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<SubChallenge> {
-        val subChallengeNamespace = d!! as ChallengeNamespace
+    override fun execute(caller: UserAccount, d: Any, params: Map<String, String>?) : SOAResult<SubChallenge> {
+        val subChallengeNamespace = d as ChallengeNamespace
         // TODO validate the sub challenge expiration, amounts, same parent id, etc...must accomidate for parent challenge
         val subChallengeResult = GenerateChallengeService.execute(caller, subChallengeNamespace, null)
         if(subChallengeResult.result != SOAResultType.SUCCESS)

@@ -2,23 +2,15 @@ package main.services.user_account
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.helpers.EncryptionHelper
-import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
  * Validate the accuracy of the passed crypto pub/priv in the UserAccount
  */
-object ValidateCryptoKeyPairService: SOAServiceInterface<CryptoKeyPair> {
-    override fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<CryptoKeyPair> {
-        var result = SOAResult<CryptoKeyPair>(
-            SOAResultType.FAILURE,
-            "",
-            null
-        )
-        val publicKey = params!!["publicKey"]!!
-        val privateKey = params!!["privateKey"]!!
+object ValidateCryptoKeyPairService {
+    fun execute(publicKey: String, privateKey: String) : SOAResult<CryptoKeyPair> {
+        var result = SOAResult<CryptoKeyPair>(SOAResultType.FAILURE, null, null)
         val cryptoKeyPair = CryptoKeyPair.find {
             CryptoKeyPairs.publicKey eq publicKey
         }

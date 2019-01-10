@@ -16,27 +16,23 @@ import main.services.user_account.EndSessionService
 
 class UserAccountController: DefaultController<UserAccount>(), RestController<UserAccount, UserAccount> {
     override fun findOne(user: UserAccount, id: Int): SOAResult<UserAccount> {
-        return GetUserAccountService.execute(user.idValue, id, null)
+        return GetUserAccountService.execute(mapOf(Pair("userId", user.idValue.toString())))
     }
 
     override fun create(user: UserAccount, params: Map<String, String>): SOAResult<NewUserAccount> {
-        return GenerateUserAccountService.execute(user.idValue, params)
+        return GenerateUserAccountService.execute(params)
     }
 
     fun login(user: UserAccount, request: Request): SOAResult<UserAccount> {
-        val result = SOAResult<UserAccount>(
-                SOAResultType.FAILURE,
-                "",
-                null
-        )
+        val result = SOAResult<UserAccount>(SOAResultType.FAILURE, null, null)
 
         val apiCred = user.apiCreds
         val apiKeyParams = mutableMapOf(
-                Pair("apiKey", apiCred.apiKey),
-                Pair("secretKey", apiCred.secretKey)
+            Pair("apiKey", apiCred.apiKey),
+            Pair("secretKey", apiCred.secretKey)
         )
 
-        ValidateApiKeyService.execute(user.idValue, Any(), apiKeyParams)
+        ValidateApiKeyService.execute(apiKeyParams)
 
         //TODO: Full session implementation
         val startSessionResult = StartSessionService.execute()
@@ -59,13 +55,13 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
 
         val apiCred = user.apiCreds
         val apiKeyParams = mutableMapOf(
-                Pair("apiKey", apiCred.apiKey),
-                Pair("secretKey", apiCred.secretKey)
+            Pair("apiKey", apiCred.apiKey),
+            Pair("secretKey", apiCred.secretKey)
         )
 
-        ValidateApiKeyService.execute(user.idValue, Any(), apiKeyParams)
+        ValidateApiKeyService.execute(apiKeyParams)
 
-        val endSessionResult = EndSessionService.execute(user.idValue, user.session.sessionKey)
+        val endSessionResult = EndSessionService.execute(user.session.sessionKey)
 
         if (endSessionResult.result != SOAResultType.SUCCESS) {
             result.message = endSessionResult.message

@@ -3,11 +3,9 @@ package main.services.challenge
 import framework.models.idValue
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.transaction.GenerateTransactionService
 import main.services.transaction.GetTransactionsService
-import org.joda.time.DateTime
 
 /**
  * Share a challenge.

@@ -2,7 +2,6 @@ package main.services.transaction
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.andWhere
@@ -13,18 +12,18 @@ import org.jetbrains.exposed.sql.selectAll
  * "to" is required for now. need at least one field required
  */
 object GetTransactionsService: SOAServiceInterface<TransactionList> {
-    override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<TransactionList> {
+    override fun execute(params: Map<String, String>) : SOAResult<TransactionList> {
         var actionIds: List<Int>? = null
-        if(params!!["dataType"] != null) {
+        if(params["dataType"] != null) {
             val query = Actions.selectAll()
-            params!!["data"]?.let {
-                query.andWhere { Actions.data eq Integer.valueOf(params!!["data"]!!) }
+            params["data"]?.let {
+                query.andWhere { Actions.data eq Integer.valueOf(params["data"]!!) }
             }
-            params!!["type"]?.let {
-                query.andWhere { Actions.type eq ActionType.valueOf(params!!["type"]!!) }
+            params["type"]?.let {
+                query.andWhere { Actions.type eq ActionType.valueOf(params["type"]!!) }
             }
-            params!!["dataType"]?.let {
-                query.andWhere { Actions.dataType eq params!!["dataType"]!! }
+            params["dataType"]?.let {
+                query.andWhere { Actions.dataType eq params["dataType"]!! }
             }
             actionIds = query.map { it[Actions.id].value }
         }
@@ -33,17 +32,17 @@ object GetTransactionsService: SOAServiceInterface<TransactionList> {
         actionIds?.let {
             query.andWhere { Transactions.action inList actionIds }
         }
-        params!!["previousTransaction"]?.let {
+        params["previousTransaction"]?.let {
             query.andWhere { Transactions.previousTransaction eq EntityID(
-                Integer.valueOf(params!!["previousTransaction"]!!),
+                Integer.valueOf(params["previousTransaction"]!!),
                 Transactions
             ) }
         }
-        params!!["from"]?.let {
-            query.andWhere { Transactions.from eq params!!["from"]!! }
+        params["from"]?.let {
+            query.andWhere { Transactions.from eq params["from"]!! }
         }
-        params!!["to"]?.let {
-            query.andWhere { Transactions.to eq params!!["to"]!! }
+        params["to"]?.let {
+            query.andWhere { Transactions.to eq params["to"]!! }
         }
         query.withDistinct()
         // TODO figure out how to do this without a seprate query
