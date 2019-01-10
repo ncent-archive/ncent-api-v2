@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.lang.Exception
 
 /**
- * This service will be used to reset a UserAccount's ApiCreds
+ * This service will be used to reset a user account's ApiCreds
  */
 object ResetApiCredsService: SOAServiceInterface<ApiCred> {
     override fun execute(caller: Int?) : SOAResult<ApiCred> {
