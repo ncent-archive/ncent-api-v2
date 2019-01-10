@@ -37,6 +37,7 @@ class ResetApiCredsServiceTest : WordSpec() {
                     action.data shouldBe userAccount.idValue
                     action.type shouldBe ActionType.UPDATE
                     action.dataType shouldBe "UserAccount"
+                    Transaction.all().toList()[1].action.id shouldBe action.id
                 }
             }
 
