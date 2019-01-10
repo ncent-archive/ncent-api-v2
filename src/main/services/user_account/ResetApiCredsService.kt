@@ -6,7 +6,6 @@ import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.transaction.GenerateTransactionService
-import org.jetbrains.exposed.sql.transactions.transaction
 import java.lang.Exception
 
 /**
