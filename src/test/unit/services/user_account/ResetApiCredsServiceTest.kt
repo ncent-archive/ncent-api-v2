@@ -29,14 +29,25 @@ class ResetApiCredsServiceTest : WordSpec() {
 
     init {
         "calling execute with a valid user id" should {
-            "should reset that user account's api credentials" {
+            "return a success result and an apiNameSpace and generate a transaction" {
                 transaction {
-                    val originalApiCreds = userAccount.apiCreds
-                    var apiCredsResult = ResetApiCredsService.execute(userAccount.idValue)
-                    var updatedApiCreds = apiCredsResult.data
-                    apiCredsResult.result shouldBe SOAResultType.SUCCESS
-                    updatedApiCreds shouldNotBe originalApiCreds
-                    UserAccount.findById(userAccount.idValue)!!.apiCreds shouldBe updatedApiCreds
+                    val apiCredsNamespaceResult = ResetApiCredsService.execute(userAccount.idValue)
+                    apiCredsNamespaceResult.result shouldBe SOAResultType.SUCCESS
+                    val action = Action.all().toList()[1]
+                    action.data shouldBe userAccount.idValue
+                    action.type shouldBe ActionType.UPDATE
+                    action.dataType shouldBe "UserAccount"
+                }
+            }
+
+            "reset that user account's api credentials" {
+                transaction {
+                    val originalApiKey = userAccount.apiCreds.apiKey
+                    val apiCredsNamespaceResult = ResetApiCredsService.execute(userAccount.idValue)
+                    val updatedApiKey = apiCredsNamespaceResult.data!!.apiKey
+                    apiCredsNamespaceResult.result shouldBe SOAResultType.SUCCESS
+                    updatedApiKey shouldNotBe originalApiKey
+                    UserAccount.findById(userAccount.idValue)!!.apiCreds.apiKey shouldBe updatedApiKey
                 }
             }
         }

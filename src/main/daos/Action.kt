@@ -43,5 +43,6 @@ enum class ActionType(val type: String) {
     ACTIVATE("activate"),
     COMPLETE("complete"),
     INVALIDATE("invalidate"),
-    EXPIRE("expire")
+    EXPIRE("expire"),
+    UPDATE("update")
 }
