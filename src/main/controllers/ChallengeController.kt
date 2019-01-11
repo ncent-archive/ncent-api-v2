@@ -4,46 +4,61 @@ import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.models.Request
+import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.services.user_account.ValidateApiKeyService
 import main.services.challenge.*
 import main.helpers.JsonHelper
-import org.joda.time.DateTime
+import main.services.completion_criteria.GenerateCompletionCriteriaService
+import main.services.reward.GenerateRewardService
 
 class ChallengeController: DefaultController<Challenge>(), RestController<Challenge, UserAccount> {
     override fun create(user: UserAccount, params: Map<String, String>): SOAResult<Challenge> {
+        val result = SOAResult<Challenge>(SOAResultType.FAILURE, null, null)
+
         val apiCred = user.apiCreds
-
-        ValidateApiKeyService.execute(apiCred.apiKey, apiCred.secretKey)
-
+        val validateApiKeyResult = ValidateApiKeyService.execute(apiCred.apiKey, apiCred.secretKey)
+        if (validateApiKeyResult.result != SOAResultType.SUCCESS) {
+            result.message = validateApiKeyResult.message
+            return result
+        }
+        
         val parentChallenge: Int? = params["parentChallenge"]?.toInt()
 
-        val challengeSettings = JsonHelper.parse(params["challengeSettings"]!!)
-        val challengeSettingNamespace = ChallengeSettingNamespace(
-                challengeSettings["name"] as String,
-                challengeSettings["description"] as String,
-                challengeSettings["imageUrl"] as String,
-                challengeSettings["sponsorName"] as String,
-                challengeSettings["expiration"] as DateTime,
-                challengeSettings["shareExpiration"] as DateTime,
-                challengeSettings["admin"] as Int,
-                challengeSettings["maxShares"] as Int,
-                challengeSettings["offChain"] as Boolean,
-                challengeSettings["maxRewards"] as Int?,
-                challengeSettings["maxDistributionFeeReward"] as Int?,
-                challengeSettings["maxSharesPerReceivedShare"] as Int?,
-                challengeSettings["maxDepth"] as Int?,
-                challengeSettings["maxNodes"] as Int?
+        val challengeSettingNamespace = JsonHelper.parse<ChallengeSettingNamespace>(params["challengeSettings"]!!)
+        val generateChallengeSettingsResult = GenerateChallengeSettingsService.execute(user, challengeSettingNamespace)
+        if (generateChallengeSettingsResult.result != SOAResultType.SUCCESS) {
+            result.message = generateChallengeSettingsResult.message
+            return result
+        }
+        
+        val completionCriteriaNamespace = JsonHelper.parse<CompletionCriteriaNamespace>(params["completionCriteria"]!!)
+        val generateCompletionCriteriaResult = GenerateCompletionCriteriaService.execute(user, completionCriteriaNamespace)
+        if (generateCompletionCriteriaResult.result != SOAResultType.SUCCESS) {
+            result.message = generateCompletionCriteriaResult.message
+            return result
+        }
+
+        val rewardNamespace = JsonHelper.parse<RewardNamespace>(params["rewardNamespace"]!!)
+        val generateRewardResult = GenerateRewardService.execute(rewardNamespace)
+        if (generateRewardResult.result != SOAResultType.SUCCESS) {
+            result.message = generateRewardResult.message
+            return result
+        }
+
+        val challengeNamespace = ChallengeNamespace(
+                parentChallenge,
+                challengeSettingNamespace,
+                null,
+                completionCriteriaNamespace,
+                rewardNamespace
         )
-        GenerateChallengeSettingsService.execute(user, challengeSettingNamespace)
+        val generateChallengeResult = GenerateChallengeService.execute(user, challengeNamespace)
+        if (generateChallengeResult.result == SOAResultType.SUCCESS) {
+            AddSubChallengeService.execute(user, challengeNamespace, parentChallenge!!, SubChallengeType.valueOf(params["subChallengeType"] as String))
+        }
 
-        val completionCriteria = JsonHelper.parse(params["completionCriteria"]!!)
-        //Todo: parse and form prerequisites list for completion criteria namespace
-        val completionCriteriaNamespace = CompletionCriteriaNamespace(
-
-        )
-
-
+        return generateChallengeResult
     }
 
     override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {

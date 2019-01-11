@@ -220,7 +220,7 @@ object SubChallenges : BaseIntIdTable("sub_challenge") {
 data class ChallengeNamespace(
     val parentChallenge: Int?,
     val challengeSettings: ChallengeSettingNamespace,
-    val subChallenges: List<Pair<Int, SubChallengeType>>,
+    val subChallenges: List<Pair<Int, SubChallengeType>>?,
     val completionCriteria: CompletionCriteriaNamespace,
     val distributionFeeReward: RewardNamespace
 )
