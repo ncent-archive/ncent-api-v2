@@ -46,28 +46,32 @@ class CompleteChallengeServiceTest : WordSpec() {
         "calling execute with valid data" should {
             "should complete the challenge by changing the state and distributing rewards" {
                 transaction {
-                    ActivateChallengeService.execute(userAccount1.idValue, mapOf(Pair("challengeId", challenge.idValue.toString())))
+                    ActivateChallengeService.execute(userAccount1, mapOf(Pair("challengeId", challenge.idValue.toString())))
 
                     /**
                      *          user1 (50)
                      *            |
                      *          user2 (50)
                      */
-                    ShareChallengeService.execute(userAccount1.idValue, mapOf(
-                        Pair("publicKeyToShareWith", userAccount2.cryptoKeyPair.publicKey),
-                        Pair("challengeId", challenge.idValue.toString()),
-                        Pair("shares", 50.toString())
-                    ))
+                    ShareChallengeService.execute(
+                        userAccount1,
+                        challenge,
+                        userAccount2.cryptoKeyPair.publicKey,
+                        50,
+                        null
+                    )
                     /**
                      *          user1 (20)
                      *            |
                      *          user2 (50, 30)
                      */
-                    ShareChallengeService.execute(userAccount1.idValue, mapOf(
-                        Pair("publicKeyToShareWith", userAccount2.cryptoKeyPair.publicKey),
-                        Pair("challengeId", challenge.idValue.toString()),
-                        Pair("shares", 30.toString())
-                    ))
+                    ShareChallengeService.execute(
+                        userAccount1,
+                        challenge,
+                        userAccount2.cryptoKeyPair.publicKey,
+                        30,
+                        null
+                    )
                     /**
                      *          user1 (20)
                      *            |
@@ -75,16 +79,18 @@ class CompleteChallengeServiceTest : WordSpec() {
                      *            |
                      *          user3 (80)
                      */
-                    ShareChallengeService.execute(userAccount2.idValue, mapOf(
-                        Pair("publicKeyToShareWith", userAccount3.cryptoKeyPair.publicKey),
-                        Pair("challengeId", challenge.idValue.toString()),
-                        Pair("shares", 80.toString())
-                    ))
+                    ShareChallengeService.execute(
+                        userAccount2,
+                        challenge,
+                        userAccount3.cryptoKeyPair.publicKey,
+                        80,
+                        null
+                    )
 
                     // user 2 should not be able to complete the challenge
 
                     var result = CompleteChallengeService.execute(
-                        userAccount1.idValue,
+                        userAccount1,
                         mapOf(
                             Pair("challengeId", challenge.idValue.toString()),
                             Pair("completingUserPublicKey", userAccount2.cryptoKeyPair.publicKey)
@@ -96,7 +102,7 @@ class CompleteChallengeServiceTest : WordSpec() {
                     // user 3 should be able to complete the challenge
                     // should generate 3 transactions paying out user 3,2,1
                     var completionResult = CompleteChallengeService.execute(
-                        userAccount1.idValue,
+                        userAccount1,
                         mapOf(
                             Pair("challengeId", challenge.idValue.toString()),
                             Pair("completingUserPublicKey", userAccount3.cryptoKeyPair.publicKey)

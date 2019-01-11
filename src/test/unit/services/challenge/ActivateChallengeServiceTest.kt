@@ -38,7 +38,7 @@ class ActivateChallengeServiceTest : WordSpec() {
                     // start state is created
                     // change to active successfully
                     var result = ActivateChallengeService.execute(
-                        userAccount.idValue,
+                        userAccount,
                         mapOf(
                             Pair("challengeId", challenge1.idValue.toString())
                         )
@@ -47,15 +47,13 @@ class ActivateChallengeServiceTest : WordSpec() {
                     result.data!!.action.type shouldBe ActionType.ACTIVATE
                     // change to invalid successfully
                     ChangeChallengeStateService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge1.idValue.toString()),
-                            Pair("state", "INVALIDATE")
-                        )
+                        userAccount,
+                        challenge1.idValue,
+                        ActionType.INVALIDATE
                     )
                     // change to active successfully
                     result = ActivateChallengeService.execute(
-                        userAccount.idValue,
+                        userAccount,
                         mapOf(
                             Pair("challengeId", challenge1.idValue.toString())
                         )

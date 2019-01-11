@@ -35,12 +35,10 @@ class AddSubChallengeServiceTest : WordSpec() {
                     challenge.subChallenges.count() shouldBe 2
                     val subChallengeNamespace = TestHelper.generateChallengeNamespace(userAccount, 1)[0]
                     AddSubChallengeService.execute(
-                        userAccount.idValue,
+                        userAccount,
                         subChallengeNamespace,
-                        mapOf(
-                            Pair("challengeId", challenge.idValue.toString()),
-                            Pair("subChallengeType", "ASYNC")
-                        )
+                        challenge.idValue,
+                        SubChallengeType.ASYNC
                     )
 
                     val updatedChallenge = Challenge.findById(challenge.id)!!
