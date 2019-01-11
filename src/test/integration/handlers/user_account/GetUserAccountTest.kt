@@ -5,15 +5,16 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import com.amazonaws.services.lambda.runtime.Context
-import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Klaxon
 import io.kotlintest.TestResult
 import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
+import main.daos.NewUserAccountNamespace
 import main.daos.UserAccount
-import test.TestHelper
 import main.helpers.JsonHelper
+import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class GetUserAccountTest : WordSpec() {
@@ -46,15 +47,11 @@ class GetUserAccountTest : WordSpec() {
             "should return a valid user account" {
                 val response = handler.handleRequest(map, contxt)
                 response.statusCode shouldBe 200
-                val newUserAccountJson = JsonHelper.parse(response.body!!)
+                val newUserAccount: NewUserAccountNamespace = JsonHelper.parse(response.body!!)!!
 
-                newUserAccountJson.containsKey("apiCreds") shouldBe true
-                newUserAccountJson.containsKey("session") shouldBe true
-                newUserAccountJson.containsKey("cryptoKeyPair") shouldBe true
-                newUserAccountJson.containsKey("userMetadata") shouldBe true
+                val userAccount = newUserAccount.value
 
-                val newUserMetadata = newUserAccountJson["userMetadata"] as JsonObject
-                newUserMetadata["email"] shouldBe "dev0@ncnt.io"
+                userAccount.userMetadata.email shouldBe "dev0@ncnt.io"
             }
         }
     }

@@ -42,6 +42,10 @@ object UserAccounts : BaseIntIdTable("user_accounts") {
     val session = reference("session", Sessions)
 }
 
+data class UserAccountNamespace(val userMetadata: UserNamespace, val cryptoKeyPair: CryptoKeyPairNamespace, val apiCreds: ApiCredNamespace, val session: SessionNamespace)
+
+data class NewUserAccountNamespace(val value: UserAccountNamespace, val privateKey: String, val secretKey: String)
+
 data class NewUserAccount(val value: UserAccount, val privateKey: String, val secretKey: String) {
     override fun toString(): String {
         return ObjectMapper().writeValueAsString(mapOf(
