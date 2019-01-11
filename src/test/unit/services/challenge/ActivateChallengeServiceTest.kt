@@ -9,7 +9,6 @@ import main.daos.*
 import kotlinserverless.framework.models.Handler
 import kotlinserverless.framework.services.SOAResultType
 import main.services.challenge.ActivateChallengeService
-import main.services.challenge.AddSubChallengeService
 import main.services.challenge.ChangeChallengeStateService
 import org.jetbrains.exposed.sql.transactions.transaction
 import test.TestHelper
@@ -38,27 +37,21 @@ class ActivateChallengeServiceTest : WordSpec() {
                     // start state is created
                     // change to active successfully
                     var result = ActivateChallengeService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge1.idValue.toString())
-                        )
+                        userAccount,
+                        challenge1.idValue
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.action.type shouldBe ActionType.ACTIVATE
                     // change to invalid successfully
                     ChangeChallengeStateService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge1.idValue.toString()),
-                            Pair("state", "INVALIDATE")
-                        )
+                        userAccount,
+                        challenge1.idValue,
+                        ActionType.INVALIDATE
                     )
                     // change to active successfully
                     result = ActivateChallengeService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge1.idValue.toString())
-                        )
+                        userAccount,
+                        challenge1.idValue
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.action.type shouldBe ActionType.ACTIVATE

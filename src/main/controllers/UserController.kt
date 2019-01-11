@@ -10,6 +10,6 @@ import main.daos.UserAccount
 
 class UserController: DefaultController<User>(), RestController<User, UserAccount> {
     fun hello(user: UserAccount, request: Request): SOAResult<String> {
-        return UserHelloService.execute(123, "HELLO", HashMap())
+        return UserHelloService.execute()
     }
 }

@@ -29,7 +29,7 @@ class GetUserAccountServiceTest: WordSpec() {
         "calling execute with a valid user account" should {
             transaction {
                 val userAccount = UserAccount.all().first()
-                val getUserAccountResult = GetUserAccountService.execute(null, userAccount.idValue, null)
+                val getUserAccountResult = GetUserAccountService.execute(userAccount.idValue, null, null)
                 getUserAccountResult.result shouldBe SOAResultType.SUCCESS
                 getUserAccountResult.data?.idValue shouldBe userAccount.idValue
             }
@@ -37,7 +37,7 @@ class GetUserAccountServiceTest: WordSpec() {
         "calling execute with a valid user account email" should {
             transaction {
                 val userAccount = UserAccount.all().first()
-                val getUserAccountResult = GetUserAccountService.execute(null, 0, mapOf(Pair("email", userAccount.userMetadata.email)))
+                val getUserAccountResult = GetUserAccountService.execute(null, userAccount.userMetadata.email, null)
                 getUserAccountResult.result shouldBe SOAResultType.SUCCESS
                 getUserAccountResult.data?.idValue shouldBe userAccount.idValue
             }
@@ -45,7 +45,7 @@ class GetUserAccountServiceTest: WordSpec() {
         "calling execute with a valid user account apiKey" should {
             transaction {
                 val userAccount = UserAccount.all().first()
-                val getUserAccountResult = GetUserAccountService.execute(null, 0, mapOf(Pair("apiKey", userAccount.apiCreds.apiKey)))
+                val getUserAccountResult = GetUserAccountService.execute(null, null, userAccount.apiCreds.apiKey)
                 getUserAccountResult.result shouldBe SOAResultType.SUCCESS
                 getUserAccountResult.data?.idValue shouldBe userAccount.idValue
             }

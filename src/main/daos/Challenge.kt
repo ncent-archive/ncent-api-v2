@@ -138,11 +138,9 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     private fun getTransactions(): List<Transaction>? {
         return GetTransactionsService.execute(
             null,
-            mapOf(
-                Pair("dataType", "Challenge"),
-                Pair("data", idValue.toString()),
-                Pair("to", cryptoKeyPair.publicKey)
-            )
+            cryptoKeyPair.publicKey,
+            null,
+            ActionNamespace(null, idValue, "Challenge")
         ).data?.transactions
     }
 

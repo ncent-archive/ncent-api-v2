@@ -1,7 +1,6 @@
 package main.services.user_account
 
 import kotlinserverless.framework.services.SOAResult
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.UserAccount
 
 /**
@@ -11,8 +10,8 @@ import main.daos.UserAccount
  * We should allow whitelists for specific users
  * We should allow editable limits for some as well
  */
-object ThrottleUserAccountService: SOAServiceInterface<UserAccount> {
-    override fun execute(caller: Int?, data: Any?, params: Map<String, String>?) : SOAResult<UserAccount> {
+object ThrottleUserAccountService {
+    fun execute(caller: UserAccount) : SOAResult<UserAccount> {
         throw NotImplementedError()
     }
 }

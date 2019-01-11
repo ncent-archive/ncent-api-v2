@@ -15,15 +15,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
 class GenerateUserAccountServiceTest : WordSpec() {
-    private lateinit var params: MutableMap<String, String>
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        params = mutableMapOf(
-            Pair("email", "dev@ncnt.io"),
-            Pair("firstname", "dev"),
-            Pair("lastname", "ncnt")
-        )
     }
 
     override fun afterTest(description: Description, result: TestResult) {
@@ -34,7 +28,7 @@ class GenerateUserAccountServiceTest : WordSpec() {
         "calling execute with a valid user account" should {
             "return a success result and new user account and generate a transaction" {
                 transaction {
-                    var result = GenerateUserAccountService.execute(null, params)
+                    var result = GenerateUserAccountService.execute("dev@ncnt.io", "dev", "ncnt")
                     result.result shouldBe SOAResultType.SUCCESS
                     val action = Action.all().first()
                     action.data shouldBe result.data!!.value.idValue
@@ -47,9 +41,8 @@ class GenerateUserAccountServiceTest : WordSpec() {
 
         "calling execute with an invalid user account" should {
             "return a fail result" {
-                params.put("email", "BADEMAIL")
                 transaction {
-                    var result = GenerateUserAccountService.execute(null, params)
+                    var result = GenerateUserAccountService.execute("BADEMAIL", "dev", "ncnt")
                     result.result shouldBe SOAResultType.FAILURE
                     result.message.shouldContain("Check constraint violation")
                 }
@@ -59,9 +52,9 @@ class GenerateUserAccountServiceTest : WordSpec() {
         "calling execute with an already existing user account" should {
             "return a fail result" {
                 transaction {
-                    var result = GenerateUserAccountService.execute(null, params)
+                    var result = GenerateUserAccountService.execute("dev@ncnt.io", "dev", "ncnt")
                     result.result shouldBe SOAResultType.SUCCESS
-                    var result2 = GenerateUserAccountService.execute(null, params)
+                    var result2 = GenerateUserAccountService.execute("dev@ncnt.io", "dev", "ncnt")
                     result2.result shouldBe SOAResultType.FAILURE
                     result2.message.shouldContain("Unique index or primary key violation")
                 }

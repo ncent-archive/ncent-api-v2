@@ -3,7 +3,6 @@ package main.services.challenge
 import framework.models.idValue
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.transaction.GetTransactionsService
 import org.joda.time.DateTime
@@ -13,31 +12,25 @@ import org.joda.time.DateTime
  * Retrieve one or more challenges based on filters
  *
  */
-object GetUnsharedTransactionsService: SOAServiceInterface<ShareTransactionList> {
+object GetUnsharedTransactionsService {
     // get challenges for a caller
-    override fun execute(caller: Int?, params: Map<String, String>?): SOAResult<ShareTransactionList> {
-        val publicKey = UserAccount.findById(caller!!)!!.cryptoKeyPair.publicKey
+    fun execute(caller: UserAccount, challengeId: Int): SOAResult<ShareTransactionList> {
+        val publicKey = caller.cryptoKeyPair.publicKey
         val receivedTransactionResult = GetTransactionsService.execute(
-            caller,
-            mapOf(
-                Pair("to", publicKey),
-                Pair("dataType", "Challenge"),
-                Pair("data", params!!["challengeId"]!!),
-                Pair("type", "SHARE")
-            )
+            null,
+            publicKey,
+            null,
+            ActionNamespace(ActionType.SHARE, challengeId, "Challenge")
         )
 
         if(receivedTransactionResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, receivedTransactionResult.message)
 
         val sharedTransactionResult = GetTransactionsService.execute(
-            caller,
-            mapOf(
-                Pair("from", publicKey),
-                Pair("dataType", "Challenge"),
-                Pair("data", params!!["challengeId"]!!),
-                Pair("type", "SHARE")
-            )
+            publicKey,
+            null,
+            null,
+            ActionNamespace(ActionType.SHARE, challengeId, "Challenge")
         )
 
         if(sharedTransactionResult.result != SOAResultType.SUCCESS)

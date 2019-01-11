@@ -37,11 +37,7 @@ class DistributeRewardServiceTest : WordSpec() {
                     providenceChainIds = TestHelper.buildGenericProvidenceChain()
 
                     val result = DistributeRewardService.execute(
-                        null,
-                        mapOf(
-                            Pair("reward_id", rewardId.value.toString()),
-                            Pair("transaction_id", providenceChainIds.last().value.toString())
-                        )
+                        rewardId.value, providenceChainIds.last().value
                     )
 
                     result.result shouldBe SOAResultType.SUCCESS
@@ -71,11 +67,7 @@ class DistributeRewardServiceTest : WordSpec() {
                     providenceChainIds = TestHelper.buildGenericProvidenceChain()
 
                     val result = DistributeRewardService.execute(
-                        null,
-                        mapOf(
-                            Pair("reward_id", rewardId.value.toString()),
-                            Pair("transaction_id", providenceChainIds.last().value.toString())
-                        )
+                        rewardId.value, providenceChainIds.last().value
                     )
 
                     result.result shouldBe SOAResultType.SUCCESS
@@ -94,11 +86,7 @@ class DistributeRewardServiceTest : WordSpec() {
                     providenceChainIds = TestHelper.buildGenericProvidenceChain()
 
                     val result = DistributeRewardService.execute(
-                        null,
-                        mapOf(
-                            Pair("reward_id", rewardId.value.toString()),
-                            Pair("transaction_id", providenceChainIds.last().value.toString())
-                        )
+                        rewardId.value, providenceChainIds.last().value
                     )
 
                     result.result shouldBe SOAResultType.SUCCESS

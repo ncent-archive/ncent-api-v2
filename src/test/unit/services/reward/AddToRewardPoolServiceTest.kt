@@ -53,15 +53,10 @@ class AddToRewardPoolServiceTest : WordSpec() {
             "generate a transaction transfering to the pool" {
                 transaction {
                     var newUserAccount = TestHelper.generateUserAccounts(1).first()
-                    val token = GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
-                    var reward = GenerateRewardService.execute(newUserAccount.idValue, rewardNamespace, null).data!!
+                    val token = GenerateTokenService.execute(newUserAccount, nCentTokenNamespace).data!!
+                    var reward = GenerateRewardService.execute(rewardNamespace).data!!
                     val result = AddToRewardPoolService.execute(
-                        newUserAccount.idValue,
-                        mapOf(
-                            Pair("reward_id", reward.idValue.toString()),
-                            Pair("name", "nCent"),
-                            Pair("amount", "10")
-                        )
+                        newUserAccount, reward.idValue, "nCent", 10.0
                     )
                     result.result shouldBe SOAResultType.SUCCESS
 

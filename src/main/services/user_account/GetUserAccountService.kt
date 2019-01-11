@@ -2,38 +2,30 @@ package main.services.user_account
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import framework.services.DaoService
 import org.jetbrains.exposed.sql.select
 
-object GetUserAccountService: SOAServiceInterface<UserAccount> {
-    override fun execute(caller: Int?, id: Int?, params: Map<String, String>?): SOAResult<UserAccount> {
+object GetUserAccountService {
+    fun execute(userId: Int? = null, email: String?, apiKey: String?): SOAResult<UserAccount> {
         val userAccountResult = DaoService.execute {
             when {
-                id != null && id != 0 -> {
-                    val query = UserAccounts
-                        .select {
-                            UserAccounts.id eq id!!
-                        }.withDistinct()
-                    UserAccount.wrapRows(query).toList().distinct().first()
+                userId != null -> {
+                    UserAccount.findById(userId)!!
                 }
-                params!!.containsKey("userId") -> {
-                    UserAccount.findById((params["userId"] as String).toInt())!!
-                }
-                params.containsKey("email") -> {
+                email != null -> {
                     val query = UserAccounts
                         .innerJoin(Users)
                         .select {
-                            Users.email eq (params["email"] as String)
+                            Users.email eq email
                         }
                     UserAccount.wrapRows(query).toList().distinct().first()
                 }
-                params.containsKey("apiKey") -> {
+                apiKey != null -> {
                     val query = UserAccounts
                         .innerJoin(ApiCreds)
                         .select {
-                            ApiCreds.apiKey eq (params["apiKey"] as String)
+                            ApiCreds.apiKey eq apiKey
                         }
                     UserAccount.wrapRows(query).toList().distinct().first()
                 }

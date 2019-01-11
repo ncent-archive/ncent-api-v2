@@ -12,6 +12,7 @@ import main.services.token.GenerateTokenService
 import main.services.token.GetTokenService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.extension.ExtendWith
+import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class GetTokenServiceTest : WordSpec() {
@@ -39,7 +40,8 @@ class GetTokenServiceTest : WordSpec() {
         "calling execute with a valid token name" should {
             "return the token and its parent" {
                 transaction {
-                    var newTokenResult = GenerateTokenService.execute(null, nCentTokenNamespace, null)
+                    val caller = TestHelper.generateUserAccounts().first()
+                    var newTokenResult = GenerateTokenService.execute(caller, nCentTokenNamespace)
                     ethTokenNamespace = TokenNamespace(
                         amount = 1000,
                         tokenType = TokenTypeNamespace(
@@ -49,9 +51,9 @@ class GetTokenServiceTest : WordSpec() {
                             parentTokenConversionRate = 10.0
                         )
                     )
-                    GenerateTokenService.execute(null, ethTokenNamespace, null)
+                    GenerateTokenService.execute(caller, ethTokenNamespace)
 
-                    var result = GetTokenService.execute(null, "eth")
+                    var result = GetTokenService.execute("eth")
                     result.result shouldBe SOAResultType.SUCCESS
                     var ethtoken = result.data as Token
                     ethtoken.amount shouldBe 1000

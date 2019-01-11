@@ -15,11 +15,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
 class ValidateSessionServiceTest : WordSpec() {
-    private var params = mutableMapOf(
-        Pair("email", "dev@ncnt.io"),
-        Pair("firstname", "dev"),
-        Pair("lastname", "ncnt")
-    )
     private lateinit var session: Session
     private lateinit var user: UserAccount
 
@@ -35,31 +30,32 @@ class ValidateSessionServiceTest : WordSpec() {
         "executing validate session service" should {
             "should return valid for a valid session" {
                 transaction {
-                    val result = GenerateUserAccountService.execute(null, params).data!!
+                    var result = GenerateUserAccountService.execute("dev@ncnt.io", "dev", "ncnt").data!!
+
                     user = result.value
                     session = user.session!!
 
-                    var result2 = ValidateSessionService.execute(user.idValue, session.sessionKey)
+                    var result2 = ValidateSessionService.execute(user, session.sessionKey)
                     result2.result shouldBe SOAResultType.SUCCESS
                 }
             }
             "should return invalid for a sessionkey that is not associated with the caller" {
                 transaction {
-                    val result = GenerateUserAccountService.execute(null, params).data!!
+                    var result = GenerateUserAccountService.execute("dev@ncnt.io", "dev", "ncnt").data!!
                     user = result.value
                     session = user.session!!
-                    var result2 = ValidateSessionService.execute(user.idValue, "SOMERANDOMKEY")
+                    var result2 = ValidateSessionService.execute(user, "SOMERANDOMKEY")
                     result2.result shouldBe SOAResultType.FAILURE
                     result2.message shouldBe "Invalid Session"
                 }
             }
             "should return invalid for an expired sessionkey" {
                 transaction {
-                    val result = GenerateUserAccountService.execute(null, params).data!!
+                    var result = GenerateUserAccountService.execute("dev@ncnt.io", "dev", "ncnt").data!!
                     user = result.value
                     session = user.session!!
-                    EndSessionService.execute(null, session.sessionKey)
-                    var result2 = ValidateSessionService.execute(user.idValue, session.sessionKey)
+                    EndSessionService.execute(session.sessionKey)
+                    var result2 = ValidateSessionService.execute(user, session.sessionKey)
                     result2.result shouldBe SOAResultType.FAILURE
                     result2.message shouldBe "Session Expired"
                 }

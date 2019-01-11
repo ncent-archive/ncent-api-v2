@@ -40,51 +40,41 @@ class ChangeChallengeStateServiceTest : WordSpec() {
                     // start state is created
                     // try to change to created and fail
                     var result = ChangeChallengeStateService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge1.idValue.toString()),
-                            Pair("state", "CREATE")
-                        )
+                        userAccount,
+                        challenge1.idValue,
+                        ActionType.CREATE
                     )
                     result.message shouldBe "Cannot transition from create to create"
                     result.result shouldBe SOAResultType.FAILURE
                     // change to active successfully
                     result = ChangeChallengeStateService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge1.idValue.toString()),
-                            Pair("state", "ACTIVATE")
-                        )
+                        userAccount,
+                        challenge1.idValue,
+                        ActionType.ACTIVATE
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.action.type shouldBe ActionType.ACTIVATE
                     // change to invalid successfully
                     result = ChangeChallengeStateService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge1.idValue.toString()),
-                            Pair("state", "INVALIDATE")
-                        )
+                        userAccount,
+                        challenge1.idValue,
+                        ActionType.INVALIDATE
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.action.type shouldBe ActionType.INVALIDATE
                     // change to active successfully
                     result = ChangeChallengeStateService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge1.idValue.toString()),
-                            Pair("state", "ACTIVATE")
-                        )
+                        userAccount,
+                        challenge1.idValue,
+                        ActionType.ACTIVATE
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.action.type shouldBe ActionType.ACTIVATE
                     // change to complete successfully
                     result = ChangeChallengeStateService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge1.idValue.toString()),
-                            Pair("state", "COMPLETE")
-                        )
+                        userAccount,
+                        challenge1.idValue,
+                        ActionType.COMPLETE
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.action.type shouldBe ActionType.COMPLETE
@@ -92,31 +82,25 @@ class ChangeChallengeStateServiceTest : WordSpec() {
                     // start state is created
                     // change to active successfully
                     result = ChangeChallengeStateService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge2.idValue.toString()),
-                            Pair("state", "ACTIVATE")
-                        )
+                        userAccount,
+                        challenge2.idValue,
+                        ActionType.ACTIVATE
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.action.type shouldBe ActionType.ACTIVATE
                     // change to expired successfully
                     result = ChangeChallengeStateService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge2.idValue.toString()),
-                            Pair("state", "EXPIRE")
-                        )
+                        userAccount,
+                        challenge2.idValue,
+                        ActionType.EXPIRE
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.action.type shouldBe ActionType.EXPIRE
                     // change to completed fails
                     result = ChangeChallengeStateService.execute(
-                        userAccount.idValue,
-                        mapOf(
-                            Pair("challengeId", challenge2.idValue.toString()),
-                            Pair("state", "COMPLETE")
-                        )
+                        userAccount,
+                        challenge2.idValue,
+                        ActionType.COMPLETE
                     )
                     result.message shouldBe "Cannot transition from expire to complete"
                     result.result shouldBe SOAResultType.FAILURE

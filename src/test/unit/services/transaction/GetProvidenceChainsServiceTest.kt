@@ -32,7 +32,7 @@ class GetProvidenceChainsServiceTest : WordSpec() {
         "calling execute with a valid transaction id" should {
             "return the list of all possible chains if there are many children nodes involved" {
                 transaction {
-                    val result = GetProvidenceChainsService.execute(null, middleTransactionId.value)
+                    val result = GetProvidenceChainsService.execute(middleTransactionId.value)
 
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.count() shouldBe 3
@@ -57,7 +57,7 @@ class GetProvidenceChainsServiceTest : WordSpec() {
             }
             "return a single chain if there are no children node involved" {
                 transaction {
-                    val result = GetProvidenceChainsService.execute(null, sideTransactionId.value)
+                    val result = GetProvidenceChainsService.execute(sideTransactionId.value)
 
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.count() shouldBe 1

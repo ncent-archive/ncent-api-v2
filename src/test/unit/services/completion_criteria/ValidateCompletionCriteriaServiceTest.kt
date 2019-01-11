@@ -38,18 +38,14 @@ class ValidateCompletionCriteriaServiceTest : WordSpec() {
         "calling execute" should {
             "succeed with the correct address passed" {
                 transaction {
-                    val result = ValidateCompletionCriteriaService.execute(userAccount.idValue, mapOf(
-                        Pair("completion_criteria_id", completionCriteria.idValue.toString())
-                    ))
+                    val result = ValidateCompletionCriteriaService.execute(userAccount, completionCriteria)
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!! shouldBe true
                 }
             }
             "fail with the incorrect address passed" {
                 transaction {
-                    val result = ValidateCompletionCriteriaService.execute(userAccount2.idValue, mapOf(
-                        Pair("completion_criteria_id", completionCriteria.idValue.toString())
-                    ))
+                    val result = ValidateCompletionCriteriaService.execute(userAccount2, completionCriteria)
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!! shouldBe false
                 }

@@ -2,7 +2,6 @@ package main.services.transaction
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import org.jetbrains.exposed.dao.EntityID
 
@@ -11,10 +10,10 @@ import org.jetbrains.exposed.dao.EntityID
  * The transaction queried must NOT have children and must be a leaf node
  *
  */
-object GetProvidenceChainService: SOAServiceInterface<TransactionList> {
-    override fun execute(caller: Int?, id: Int?): SOAResult<TransactionList> {
+object GetProvidenceChainService {
+    fun execute(transactionId: Int): SOAResult<TransactionList> {
         // Get the transaction in question
-        val txResult = GetTransactionService.execute(caller, id, null)
+        val txResult = GetTransactionService.execute(transactionId)
         // TODO -- verify that the transaction is a token type
         if (txResult.result != SOAResultType.SUCCESS)
             return SOAResult(txResult.result, txResult.message, null)

@@ -4,15 +4,14 @@ import framework.models.idValue
 import framework.services.DaoService
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.transaction.GenerateTransactionService
 
 /**
  * This service will be used to generate a full User Account
  */
-object GenerateUserAccountService: SOAServiceInterface<NewUserAccount> {
-    override fun execute(caller: Int?, params: Map<String, String>?) : SOAResult<NewUserAccount> {
+object GenerateUserAccountService {
+    fun execute(uemail: String, ufirstname: String, ulastname: String) : SOAResult<NewUserAccount> {
         val apiCredResult = GenerateApiCredsService.execute()
         if(apiCredResult.result != SOAResultType.SUCCESS)
             return SOAResult(apiCredResult.result, apiCredResult.message, null)
@@ -25,9 +24,9 @@ object GenerateUserAccountService: SOAServiceInterface<NewUserAccount> {
 
         return DaoService.execute {
             val user = User.new {
-                email = params!!["email"]!!
-                firstname = params!!["firstname"]!!
-                lastname = params!!["lastname"]!!
+                email = uemail
+                firstname = ufirstname
+                lastname = ulastname
             }
             val apiCred = ApiCred.new {
                 apiKey = apiCredNamespace.apiKey
@@ -52,7 +51,6 @@ object GenerateUserAccountService: SOAServiceInterface<NewUserAccount> {
 
             // TODO log or error result?
             val transactionResult = GenerateTransactionService.execute(
-                userAccount!!.idValue,
                 TransactionNamespace(
                     keyPairData.value.publicKey,
                     null,
@@ -62,7 +60,7 @@ object GenerateUserAccountService: SOAServiceInterface<NewUserAccount> {
                         UserAccount::class.simpleName!!
                     ),
                     null, null
-                ), null
+                )
             )
 
             return@execute NewUserAccount(

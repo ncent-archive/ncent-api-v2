@@ -2,16 +2,14 @@ package main.services.transaction
 
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import org.jetbrains.exposed.sql.SizedCollection
 
 /**
  * Generate a transaction if it is valid
  */
-object GenerateTransactionService: SOAServiceInterface<Transaction> {
-    override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Transaction> {
-        val transactionNamespace = d!! as TransactionNamespace
+object GenerateTransactionService {
+    fun execute(transactionNamespace: TransactionNamespace) : SOAResult<Transaction> {
         val actionObj = Action.new {
             type = transactionNamespace.action!!.type!!
             data = transactionNamespace.action!!.data!!

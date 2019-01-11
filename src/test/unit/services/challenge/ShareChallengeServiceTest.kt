@@ -43,17 +43,17 @@ class ShareChallengeServiceTest : WordSpec() {
         "calling execute with enough shares available in one tx" should {
             "generate a single transaction sharing to the user" {
                 transaction {
-                    val result = ShareChallengeService.execute(userAccount1.idValue, mapOf(
-                        Pair("publicKeyToShareWith", userAccount2.cryptoKeyPair.publicKey),
-                        Pair("challengeId", challenge.idValue.toString()),
-                        Pair("shares", 50.toString())
-                    ))
+                    val result = ShareChallengeService.execute(
+                        userAccount1,
+                        challenge,
+                        userAccount2.cryptoKeyPair.publicKey,
+                        50,
+                        null
+                    )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.transactions.count() shouldBe 1
 
-                    val result2 = GetUnsharedTransactionsService.execute(userAccount1.idValue, mapOf(
-                        Pair("challengeId", challenge.idValue.toString())
-                    ))
+                    val result2 = GetUnsharedTransactionsService.execute(userAccount1, challenge.idValue)
                     result2.data!!.transactionsToShares.map { it.second }.sum() shouldBe 50
                 }
             }
@@ -62,38 +62,42 @@ class ShareChallengeServiceTest : WordSpec() {
         "calling execute with enough shares available in multiple tx" should {
             "generate a multiple transaction sharing to the user" {
                 transaction {
-                    ShareChallengeService.execute(userAccount1.idValue, mapOf(
-                        Pair("publicKeyToShareWith", userAccount2.cryptoKeyPair.publicKey),
-                        Pair("challengeId", challenge.idValue.toString()),
-                        Pair("shares", 50.toString())
-                    ))
-                    ShareChallengeService.execute(userAccount1.idValue, mapOf(
-                        Pair("publicKeyToShareWith", userAccount2.cryptoKeyPair.publicKey),
-                        Pair("challengeId", challenge.idValue.toString()),
-                        Pair("shares", 30.toString())
-                    ))
-                    val result2 = GetUnsharedTransactionsService.execute(userAccount1.idValue, mapOf(
-                            Pair("challengeId", challenge.idValue.toString())
-                    ))
+                    ShareChallengeService.execute(
+                        userAccount1,
+                        challenge,
+                        userAccount2.cryptoKeyPair.publicKey,
+                        50,
+                        null
+                    )
+                    ShareChallengeService.execute(
+                        userAccount1,
+                        challenge,
+                        userAccount2.cryptoKeyPair.publicKey,
+                        30,
+                        null
+                    )
+                    val result2 = GetUnsharedTransactionsService.execute(userAccount1, challenge.idValue)
                     result2.data!!.transactionsToShares.map { it.second }.sum() shouldBe 20
 
-                    var result = ShareChallengeService.execute(userAccount2.idValue, mapOf(
-                        Pair("publicKeyToShareWith", userAccount3.cryptoKeyPair.publicKey),
-                        Pair("challengeId", challenge.idValue.toString()),
-                        Pair("shares", 90.toString())
-                    ))
+                    var result = ShareChallengeService.execute(
+                        userAccount2,
+                        challenge,
+                        userAccount3.cryptoKeyPair.publicKey,
+                        90,
+                        null
+                    )
                     result.result shouldBe SOAResultType.FAILURE
-                    result = ShareChallengeService.execute(userAccount2.idValue, mapOf(
-                        Pair("publicKeyToShareWith", userAccount3.cryptoKeyPair.publicKey),
-                        Pair("challengeId", challenge.idValue.toString()),
-                        Pair("shares", 80.toString())
-                    ))
+                    result = ShareChallengeService.execute(
+                        userAccount2,
+                        challenge,
+                        userAccount3.cryptoKeyPair.publicKey,
+                        80,
+                        null
+                    )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.transactions.count() shouldBe 2
 
-                    val result3 = GetUnsharedTransactionsService.execute(userAccount3.idValue, mapOf(
-                            Pair("challengeId", challenge.idValue.toString())
-                    ))
+                    val result3 = GetUnsharedTransactionsService.execute(userAccount3, challenge.idValue)
                     result3.data!!.transactionsToShares.map { it.second }.sum() shouldBe 80
                 }
             }
@@ -101,11 +105,13 @@ class ShareChallengeServiceTest : WordSpec() {
         "calling execute without enough shares available" should {
             "fails to generate any new transactions" {
                 transaction {
-                    val result = ShareChallengeService.execute(userAccount1.idValue, mapOf(
-                        Pair("publicKeyToShareWith", userAccount2.cryptoKeyPair.publicKey),
-                        Pair("challengeId", challenge.idValue.toString()),
-                        Pair("shares", 2000.toString())
-                    ))
+                    val result = ShareChallengeService.execute(
+                        userAccount1,
+                        challenge,
+                        userAccount2.cryptoKeyPair.publicKey,
+                        2000,
+                        null
+                    )
                     result.result shouldBe SOAResultType.FAILURE
                 }
             }
@@ -113,21 +119,20 @@ class ShareChallengeServiceTest : WordSpec() {
         "calling execute with an expired share" should {
             "fails to generate any new transactions" {
                 transaction {
-                    val unsharedTransactions = ValidateShareService.execute(userAccount1.idValue, mapOf(
-                        Pair("challengeId", challenge.idValue.toString()),
-                        Pair("shares", 1.toString())
-                    )).data!!.second!!
+                    val unsharedTransactions = ValidateShareService.execute(userAccount1, challenge, 1).data!!.second!!
 
                     // Set the expiration for shares to one day earlier.
                     unsharedTransactions.transactionsToShares.forEach {
                         it.first.metadatas.filter { it.key == "shareExpiration" }.first().value = DateTime.now().minusDays(1).toString()
                     }
 
-                    val result = ShareChallengeService.execute(userAccount1.idValue, mapOf(
-                        Pair("publicKeyToShareWith", userAccount2.cryptoKeyPair.publicKey),
-                        Pair("challengeId", challenge.idValue.toString()),
-                        Pair("shares", 1.toString())
-                    ))
+                    val result = ShareChallengeService.execute(
+                        userAccount1,
+                        challenge,
+                        userAccount2.cryptoKeyPair.publicKey,
+                        1,
+                        null
+                    )
                     result.result shouldBe SOAResultType.FAILURE
                 }
             }

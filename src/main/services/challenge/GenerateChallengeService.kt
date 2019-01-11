@@ -3,7 +3,6 @@ package main.services.challenge
 import framework.models.idValue
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.completion_criteria.GenerateCompletionCriteriaService
 import main.services.reward.GenerateRewardService
@@ -15,11 +14,10 @@ import org.jetbrains.exposed.sql.SizedCollection
 /**
  * Create a challenge; generate all appropriate objects including transaction(s)
  */
-object GenerateChallengeService: SOAServiceInterface<Challenge> {
-    override fun execute(caller: Int?, d: Any?, params: Map<String, String>?) : SOAResult<Challenge> {
-        val challengeNamespace = d!! as ChallengeNamespace
+object GenerateChallengeService {
+    fun execute(caller: UserAccount, challengeNamespace: ChallengeNamespace) : SOAResult<Challenge> {
         val userAccount = UserAccount.findById(challengeNamespace.challengeSettings.admin)!!
-        val settings = GenerateChallengeSettingsService.execute(userAccount.idValue, challengeNamespace.challengeSettings, null)
+        val settings = GenerateChallengeSettingsService.execute(userAccount, challengeNamespace.challengeSettings)
         if(settings.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, settings.message)
 
@@ -32,7 +30,7 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
         else
             null
 
-        val distributionFeeRewardResult = GenerateRewardService.execute(null, challengeNamespace.distributionFeeReward, null)
+        val distributionFeeRewardResult = GenerateRewardService.execute(challengeNamespace.distributionFeeReward)
 
         // TODO add reward to pool?
         val challenge = Challenge.new {
@@ -42,14 +40,14 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
             distributionFeeReward = distributionFeeRewardResult.data!!
         }
 
-        challenge.completionCriterias = createCompletionCriteria(challengeNamespace.completionCriteria)
+        challenge.completionCriterias = createCompletionCriteria(caller, challengeNamespace.completionCriteria)
 
         if(challengeNamespace.subChallenges.any()) {
             challenge.subChallenges = createSubChallengesList(challengeNamespace.subChallenges)
         }
 
         // create a transaction for challenge creation state
-        val createChallengeTx = GenerateTransactionService.execute(caller, TransactionNamespace(
+        val createChallengeTx = GenerateTransactionService.execute(TransactionNamespace(
             from = challenge.cryptoKeyPair.publicKey,
             to = challenge.cryptoKeyPair.publicKey,
             previousTransaction = null,
@@ -59,12 +57,12 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
                 data = challenge.idValue,
                 dataType = Challenge::class.simpleName!!
             )
-        ), null)
+        ))
         if(createChallengeTx.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, createChallengeTx.message)
 
         // create a transaction for tokens received?
-        GenerateTransactionService.execute(caller, TransactionNamespace(
+        GenerateTransactionService.execute(TransactionNamespace(
             from = challenge.cryptoKeyPair.publicKey,
             to = userAccount.cryptoKeyPair.publicKey,
             previousTransaction = null,
@@ -81,7 +79,7 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
                 data = challenge.idValue,
                 dataType = Challenge::class.simpleName!!
             )
-        ), null)
+        ))
 
         return SOAResult(SOAResultType.SUCCESS, null, challenge)
     }
@@ -97,11 +95,11 @@ object GenerateChallengeService: SOAServiceInterface<Challenge> {
         return SizedCollection(subChallenges)
     }
 
-    private fun createCompletionCriteria(completionCriteriaNamespace: CompletionCriteriaNamespace) : CompletionCriteria {
+    private fun createCompletionCriteria(caller: UserAccount, completionCriteriaNamespace: CompletionCriteriaNamespace) : CompletionCriteria {
         // TODO think about how we handle generating completion criteria
         // TODO should this happen AFTER a challenge is created?
         // TODO how and when will the pool be populated
 
-        return GenerateCompletionCriteriaService.execute(null, completionCriteriaNamespace, null).data!!
+        return GenerateCompletionCriteriaService.execute(caller, completionCriteriaNamespace).data!!
     }
 }

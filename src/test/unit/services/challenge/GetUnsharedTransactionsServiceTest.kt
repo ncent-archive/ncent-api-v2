@@ -34,10 +34,8 @@ class GetUnsharedTransactionsServiceTest : WordSpec() {
             "return the users unshared transactions" {
                 transaction {
                     var result = GetUnsharedTransactionsService.execute(
-                        userAccounts[0].idValue,
-                        mapOf(
-                            Pair("challengeId", challenge.idValue.toString())
-                        )
+                        userAccounts[0],
+                        challenge.idValue
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.transactionsToShares.count() shouldBe 1
@@ -50,10 +48,8 @@ class GetUnsharedTransactionsServiceTest : WordSpec() {
                         60
                     )
                     result = GetUnsharedTransactionsService.execute(
-                        userAccounts[0].idValue,
-                        mapOf(
-                            Pair("challengeId", challenge.idValue.toString())
-                        )
+                        userAccounts[0],
+                        challenge.idValue
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.transactionsToShares.count() shouldBe 1
