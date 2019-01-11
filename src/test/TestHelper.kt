@@ -44,17 +44,17 @@ object TestHelper {
 
         return transaction {
             var transactionNamespace = TransactionNamespace(from = "ARYA", to = "MIKE", action = action, previousTransaction = null, metadatas = metadatas)
-            var tx1 = GenerateTransactionService.execute(null, transactionNamespace, null).data!!
+            var tx1 = GenerateTransactionService.execute(transactionNamespace).data!!
             var transaction2Namespace = TransactionNamespace(from = "ARYA2", to = "MIKE2", action = action, previousTransaction = tx1.idValue, metadatas = metadatas)
-            var tx2 = GenerateTransactionService.execute(null, transaction2Namespace, null).data!!
+            var tx2 = GenerateTransactionService.execute(transaction2Namespace).data!!
             var transaction3Namespace = TransactionNamespace(from = "ARYA3", to = "MIKE3", action = action, previousTransaction = tx2.idValue, metadatas = metadatas)
             var transaction4Namespace = TransactionNamespace(from = "ARYA4", to = "MIKE4", action = action, previousTransaction = tx2.idValue, metadatas = metadatas)
-            var tx3 = GenerateTransactionService.execute(null, transaction3Namespace, null).data!!
-            var tx4 = GenerateTransactionService.execute(null, transaction4Namespace, null).data!!
+            var tx3 = GenerateTransactionService.execute(transaction3Namespace).data!!
+            var tx4 = GenerateTransactionService.execute(transaction4Namespace).data!!
             var transaction5Namespace = TransactionNamespace(from = "ARYA5", to = "MIKE5", action = action, previousTransaction = tx4.idValue, metadatas = metadatas)
             var transaction6Namespace = TransactionNamespace(from = "ARYA6", to = "MIKE6", action = action, previousTransaction = tx4.idValue, metadatas = metadatas)
-            var tx5 = GenerateTransactionService.execute(null, transaction5Namespace, null).data!!
-            var tx6 = GenerateTransactionService.execute(null, transaction6Namespace, null).data!!
+            var tx5 = GenerateTransactionService.execute(transaction5Namespace).data!!
+            var tx6 = GenerateTransactionService.execute(transaction6Namespace).data!!
             return@transaction listOf(tx1.id, tx2.id, tx3.id, tx4.id, tx5.id, tx6.id)
         }
     }
@@ -94,29 +94,24 @@ object TestHelper {
         return transaction {
             var newUserAccount = if(userAccount == null) {
                 GenerateUserAccountService.execute(
-                    null,
-                    mapOf(
-                        Pair("firstname", "Arya"),
-                        Pair("lastname", "Soltanieh"),
-                        Pair("email", "as" + DateTime.now(DateTimeZone.UTC).millis + "@ncent.io")
-                    )
+                        "as" + DateTime.now(DateTimeZone.UTC).millis + "@ncent.io",
+                        "Arya",
+                        "Soltanieh"
                 ).data!!.value
             } else {
                 userAccount
             }
 
-            val token = GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
-            var reward = GenerateRewardService.execute(newUserAccount.idValue, rewardNamespace, null).data!!
+            val token = GenerateTokenService.execute(newUserAccount, nCentTokenNamespace).data!!
+            var reward = GenerateRewardService.execute(rewardNamespace).data!!
             val rewardPoolTx = AddToRewardPoolService.execute(
-                newUserAccount.idValue,
-                mapOf(
-                    Pair("reward_id", reward.idValue.toString()),
-                    Pair("name", token.tokenType.name),
-                    Pair("amount", "10")
-                )
+                newUserAccount,
+                reward.idValue,
+                token.tokenType.name,
+                10.0
             ).data!!
 
-            var completionCriteria = GenerateCompletionCriteriaService.execute(newUserAccount.idValue, completionCriteriaNamespace, null).data!!
+            var completionCriteria = GenerateCompletionCriteriaService.execute(newUserAccount, completionCriteriaNamespace).data!!
             completionCriteria.reward = reward
 
             return@transaction reward
@@ -127,11 +122,11 @@ object TestHelper {
         var userAccounts = mutableListOf<UserAccount>()
         for(i in 0..(count - 1)) {
             transaction {
-                userAccounts.add(GenerateUserAccountService.execute(null, mutableMapOf(
-                    Pair("email", "dev$i@ncnt.io"),
-                    Pair("firstname", "dev$i"),
-                    Pair("lastname", "ncnt$i")
-                )).data!!.value)
+                userAccounts.add(GenerateUserAccountService.execute(
+                    "dev$i@ncnt.io",
+                    "dev$i",
+                    "ncnt$i"
+                ).data!!.value)
             }
         }
         return userAccounts
@@ -158,7 +153,7 @@ object TestHelper {
                     completionCriteria = completionCriteria1,
                     distributionFeeReward = distributionFeeRewardNamespace
                 )
-                val challengeResult = GenerateChallengeService.execute(userAccount.idValue, challengeNamespace, null)
+                val challengeResult = GenerateChallengeService.execute(userAccount, challengeNamespace)
                 val challenge = challengeResult.data!!
                 if(withReward) {
                     challenge.completionCriterias = CompletionCriteria.find { CompletionCriterias.reward eq buildGenericReward(userAccount).id }.first()
@@ -175,7 +170,7 @@ object TestHelper {
             var challenges = mutableListOf<Challenge>()
 
             challengeNamespaces.forEach {
-                val challengeResult = GenerateChallengeService.execute(userAccount.idValue, it, null)
+                val challengeResult = GenerateChallengeService.execute(userAccount, it)
                 challenges.add(challengeResult.data!!)
             }
             return@execute challenges
@@ -250,7 +245,7 @@ object TestHelper {
     }
 
     fun generateShareTransaction(challenge: Challenge, fromAccount: UserAccount, toAccount: UserAccount, previousTransaction: Transaction, amount: Int): Transaction {
-        return GenerateTransactionService.execute(fromAccount.idValue, TransactionNamespace(
+        return GenerateTransactionService.execute(TransactionNamespace(
             from = fromAccount.cryptoKeyPair.publicKey,
             to = toAccount.cryptoKeyPair.publicKey,
             previousTransaction = previousTransaction.idValue,
@@ -267,6 +262,6 @@ object TestHelper {
                 data = challenge.idValue,
                 dataType = Challenge::class.simpleName!!
             )
-        ), null).data!!
+        )).data!!
     }
 }

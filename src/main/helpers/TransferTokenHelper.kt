@@ -53,7 +53,7 @@ object TransferTokenHelper {
                     previousTransaction = previousTransactionId,
                     metadatas = MetadatasListNamespace(metadataList)
             )
-            return@execute GenerateTransactionService.execute(transactionNamespace, null)
+            return@execute GenerateTransactionService.execute(transactionNamespace)
         }.data!!
     }
 
