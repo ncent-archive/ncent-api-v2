@@ -42,8 +42,8 @@ object GenerateChallengeService {
 
         challenge.completionCriterias = createCompletionCriteria(caller, challengeNamespace.completionCriteria)
 
-        if(challengeNamespace.subChallenges.any()) {
-            challenge.subChallenges = createSubChallengesList(challengeNamespace.subChallenges)
+        if(challengeNamespace.subChallenges!!.any()) {
+            challenge.subChallenges = createSubChallengesList(challengeNamespace.subChallenges!!)
         }
 
         // create a transaction for challenge creation state

@@ -22,37 +22,32 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
             result.message = validateApiKeyResult.message
             return result
         }
+
+        val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(params["challengeNamespace"]!!)
         
         val parentChallenge: Int? = params["parentChallenge"]?.toInt()
 
-        val challengeSettingNamespace = JsonHelper.parse<ChallengeSettingNamespace>(params["challengeSettings"]!!)
+        val challengeSettingNamespace = challengeNamespace.challengeSettings
         val generateChallengeSettingsResult = GenerateChallengeSettingsService.execute(user, challengeSettingNamespace)
         if (generateChallengeSettingsResult.result != SOAResultType.SUCCESS) {
             result.message = generateChallengeSettingsResult.message
             return result
         }
         
-        val completionCriteriaNamespace = JsonHelper.parse<CompletionCriteriaNamespace>(params["completionCriteria"]!!)
+        val completionCriteriaNamespace = challengeNamespace.completionCriteria
         val generateCompletionCriteriaResult = GenerateCompletionCriteriaService.execute(user, completionCriteriaNamespace)
         if (generateCompletionCriteriaResult.result != SOAResultType.SUCCESS) {
             result.message = generateCompletionCriteriaResult.message
             return result
         }
 
-        val rewardNamespace = JsonHelper.parse<RewardNamespace>(params["rewardNamespace"]!!)
+        val rewardNamespace = challengeNamespace.distributionFeeReward
         val generateRewardResult = GenerateRewardService.execute(rewardNamespace)
         if (generateRewardResult.result != SOAResultType.SUCCESS) {
             result.message = generateRewardResult.message
             return result
         }
 
-        val challengeNamespace = ChallengeNamespace(
-                parentChallenge,
-                challengeSettingNamespace,
-                null,
-                completionCriteriaNamespace,
-                rewardNamespace
-        )
         val generateChallengeResult = GenerateChallengeService.execute(user, challengeNamespace)
         if (generateChallengeResult.result == SOAResultType.SUCCESS) {
             AddSubChallengeService.execute(user, challengeNamespace, parentChallenge!!, SubChallengeType.valueOf(params["subChallengeType"] as String))
