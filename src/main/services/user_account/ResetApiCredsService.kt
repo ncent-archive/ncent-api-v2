@@ -3,7 +3,6 @@ package main.services.user_account
 import framework.models.idValue
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import kotlinserverless.framework.services.SOAServiceInterface
 import main.daos.*
 import main.services.transaction.GenerateTransactionService
 import java.lang.Exception
@@ -11,8 +10,8 @@ import java.lang.Exception
 /**
  * This service will be used to reset a user account's ApiCreds
  */
-object ResetApiCredsService: SOAServiceInterface<ApiCredNamespace> {
-    override fun execute(caller: Int?) : SOAResult<ApiCredNamespace> {
+object ResetApiCredsService {
+     fun execute(userId: Int) : SOAResult<ApiCredNamespace> {
         val apiCredResult = GenerateApiCredsService.execute()
         if(apiCredResult.result != SOAResultType.SUCCESS)
             return SOAResult(apiCredResult.result, apiCredResult.message, null)
@@ -23,12 +22,11 @@ object ResetApiCredsService: SOAServiceInterface<ApiCredNamespace> {
         }
 
         return try {
-            val userAccount = UserAccount.findById(caller!!)!!
+            val userAccount = UserAccount.findById(userId)!!
             userAccount.apiCreds = apiCreds
 
             // TODO log or error result?
             val transactionResult = GenerateTransactionService.execute(
-                    userAccount!!.idValue,
                     TransactionNamespace(
                             userAccount.cryptoKeyPair.publicKey,
                             null,
@@ -38,7 +36,7 @@ object ResetApiCredsService: SOAServiceInterface<ApiCredNamespace> {
                                     UserAccount::class.simpleName!!
                             ),
                             null, null
-                    ), null
+                    )
             )
 
             SOAResult(SOAResultType.SUCCESS, null, apiCredNamespace)
