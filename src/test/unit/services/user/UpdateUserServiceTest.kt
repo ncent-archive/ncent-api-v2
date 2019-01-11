@@ -35,9 +35,8 @@ class UpdateUserServiceTest : WordSpec() {
             "allow for the user metadata to be changed" {
                 transaction {
                     var result = UpdateUserService.execute(
-                        userAccount.idValue,
-                        UserNamespace("arya@ncent.io", "Arya", "Soltanieh"),
-                        null
+                        userAccount,
+                        UserNamespace("arya@ncent.io", "Arya", "Soltanieh")
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.email shouldBe "arya@ncent.io"

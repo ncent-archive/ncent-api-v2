@@ -15,7 +15,7 @@ import main.daos.*
  *
  */
 object GetProvidenceChainsService {
-    fun execute(transactionId: Int, params: Map<String, String>?) : SOAResult<List<TransactionList>> {
+    fun execute(transactionId: Int) : SOAResult<List<TransactionList>> {
         // Get the transaction in question
         val txResult = GetTransactionService.execute(transactionId)
         if(txResult.result != SOAResultType.SUCCESS)

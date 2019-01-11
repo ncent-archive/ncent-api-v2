@@ -33,7 +33,7 @@ class GetProvidenceChainServiceTest : WordSpec() {
         "calling execute with a valid transaction id" should {
             "return the providence chain" {
                 transaction {
-                    val result = GetProvidenceChainService.execute(null, endTransactionId.value)
+                    val result = GetProvidenceChainService.execute(endTransactionId.value)
 
                     result.result shouldBe SOAResultType.SUCCESS
 

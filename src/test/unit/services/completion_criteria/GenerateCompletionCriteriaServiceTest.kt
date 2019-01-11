@@ -10,6 +10,7 @@ import kotlinserverless.framework.models.Handler
 import main.services.completion_criteria.GenerateCompletionCriteriaService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
+import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class GenerateCompletionCriteriaServiceTest : WordSpec() {
@@ -42,7 +43,7 @@ class GenerateCompletionCriteriaServiceTest : WordSpec() {
         "calling execute with a valid completion criteria" should {
             "generate the reward and associated reward type and pool and completion criteria" {
                 transaction {
-                    var result = GenerateCompletionCriteriaService.execute(null, completionCriteriaNamespace, null)
+                    var result = GenerateCompletionCriteriaService.execute(TestHelper.generateUserAccounts().first(), completionCriteriaNamespace)
                     result.result shouldBe SOAResultType.SUCCESS
                     val rewardType = RewardType.all().first()
                     rewardType.audience shouldBe Audience.FULL

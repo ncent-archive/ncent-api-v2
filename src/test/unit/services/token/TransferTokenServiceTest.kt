@@ -44,14 +44,15 @@ class TransferTokenServiceTest : WordSpec() {
                 val newUserAccount2 = userAccounts[1]
 
                 transaction {
-                    val token = GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null).data!!
+                    val token = GenerateTokenService.execute(newUserAccount, nCentTokenNamespace).data!!
 
-                    var result = TransferTokenService.execute(newUserAccount.idValue, mapOf(
-                        Pair("to", newUserAccount2.cryptoKeyPair.publicKey),
-                        Pair("from", newUserAccount.cryptoKeyPair.publicKey),
-                        Pair("name", "nCent"),
-                        Pair("amount", "5")
-                    ))
+                    var result = TransferTokenService.execute(
+                        newUserAccount,
+                        newUserAccount.cryptoKeyPair.publicKey,
+                        newUserAccount2.cryptoKeyPair.publicKey,
+                        "nCent",
+                        5.0,
+                        null, null)
                     result.result shouldBe SOAResultType.SUCCESS
                     val tx = result.data as Transaction
                     tx.from shouldBe newUserAccount.cryptoKeyPair.publicKey
@@ -71,14 +72,15 @@ class TransferTokenServiceTest : WordSpec() {
                 val newUserAccount2 = userAccounts[1]
 
                 transaction {
-                    GenerateTokenService.execute(newUserAccount.idValue, nCentTokenNamespace, null)
+                    GenerateTokenService.execute(newUserAccount, nCentTokenNamespace)
 
-                    var result = TransferTokenService.execute(newUserAccount.idValue, mapOf(
-                        Pair("to", newUserAccount2.cryptoKeyPair.publicKey),
-                        Pair("from", newUserAccount.cryptoKeyPair.publicKey),
-                        Pair("name", "nCent"),
-                        Pair("amount", "105")
-                    ))
+                    var result = TransferTokenService.execute(
+                        newUserAccount,
+                        newUserAccount.cryptoKeyPair.publicKey,
+                        newUserAccount2.cryptoKeyPair.publicKey,
+                        "nCent",
+                        105.0,
+                        null, null)
                     result.result shouldBe SOAResultType.FAILURE
                     result.message shouldBe "Insufficient funds"
                 }

@@ -12,7 +12,7 @@ class UserHelloServiceTest : WordSpec() {
     init {
         "calling hello on a User Service" should {
             "return HELLO WORLD" {
-                var result = UserHelloService.execute(123, "HELLO", HashMap())
+                var result = UserHelloService.execute()
                 result.result shouldBe SOAResultType.SUCCESS
                 result.data shouldBe "HELLO WORLD"
             }

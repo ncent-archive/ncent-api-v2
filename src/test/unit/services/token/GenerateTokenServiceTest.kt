@@ -9,6 +9,7 @@ import main.daos.*
 import kotlinserverless.framework.models.Handler
 import main.services.token.GenerateTokenService
 import org.jetbrains.exposed.sql.transactions.transaction
+import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class GenerateTokenServiceTest : WordSpec() {
@@ -36,7 +37,8 @@ class GenerateTokenServiceTest : WordSpec() {
         "calling execute with a valid token" should {
             "generate the tokens and associated tokenType" {
                 transaction {
-                    var result = GenerateTokenService.execute(null, nCentTokenNamespace, null)
+                    val caller = TestHelper.generateUserAccounts().first()
+                    var result = GenerateTokenService.execute(caller, nCentTokenNamespace)
                     result.result shouldBe SOAResultType.SUCCESS
                     val tokenType = TokenType.all().first()
                     tokenType.name shouldBe "nCent"
@@ -55,7 +57,7 @@ class GenerateTokenServiceTest : WordSpec() {
                             parentTokenConversionRate = 10.0
                         )
                     )
-                    result = GenerateTokenService.execute(null, ethTokenNamespace, null)
+                    result = GenerateTokenService.execute(caller, ethTokenNamespace)
                     result.result shouldBe SOAResultType.SUCCESS
                 }
             }

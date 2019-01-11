@@ -39,20 +39,22 @@ class ChangeCompletionCriteriaServiceTest : WordSpec() {
         "calling execute" should {
             "succeed with the correct address passed" {
                 transaction {
-                    val result = ChangeCompletionCriteriaService.execute(userAccount.idValue, mapOf(
-                        Pair("completion_criteria_id", completionCriteria.idValue.toString()),
-                        Pair("new_completion_criteria_address", userAccount2.cryptoKeyPair.publicKey)
-                    ))
+                    val result = ChangeCompletionCriteriaService.execute(
+                        userAccount,
+                        completionCriteria.idValue,
+                        userAccount2.cryptoKeyPair.publicKey
+                    )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.address shouldBe userAccount2.cryptoKeyPair.publicKey
                 }
             }
             "fail with the incorrect address passed" {
                 transaction {
-                    val result = ChangeCompletionCriteriaService.execute(userAccount2.idValue, mapOf(
-                        Pair("completion_criteria_id", completionCriteria.idValue.toString()),
-                        Pair("new_completion_criteria_address", userAccount.cryptoKeyPair.publicKey)
-                    ))
+                    val result = ChangeCompletionCriteriaService.execute(
+                        userAccount2,
+                        completionCriteria.idValue,
+                        userAccount2.cryptoKeyPair.publicKey
+                    )
                     result.result shouldBe SOAResultType.FAILURE
                 }
             }
