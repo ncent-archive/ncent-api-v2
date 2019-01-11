@@ -11,30 +11,46 @@ import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
+import main.daos.Metadatas
 import main.daos.NewUserAccountNamespace
 import main.daos.UserAccount
+import main.daos.UsersMetadata
 import main.helpers.JsonHelper
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.transactions.transaction
 import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class GetUserAccountTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
-    private lateinit var user: UserAccount
+    private lateinit var user1: UserAccount
     private lateinit var map: Map<String, Any>
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        user = TestHelper.generateUserAccounts().first()
+        user1 = TestHelper.generateUserAccounts().first()
+        transaction {
+            val metadataId = Metadatas.insertAndGetId {
+                it[key] = "test1key"
+                it[value] = "test1val"
+            }
+            UsersMetadata.insert {
+                it[user] = user1.id
+                it[metadata] = metadataId
+            }
+            user1.refresh(true)
+        }
         handler = Handler()
         contxt = mockk()
         map = mutableMapOf(
                 Pair("path", "/user_account/"),
                 Pair("httpMethod", "GET"),
                 Pair("pathParameters", mutableMapOf(
-                    Pair("id", user.idValue)
+                    Pair("id", user1.idValue)
                 )),
-                Pair("userId", user.idValue.toString())
+                Pair("userId", user1.idValue.toString())
         )
     }
 
@@ -52,6 +68,7 @@ class GetUserAccountTest : WordSpec() {
                 val userAccount = newUserAccount.value
 
                 userAccount.userMetadata.email shouldBe "dev0@ncnt.io"
+                userAccount.userMetadata.metadatas.first().key shouldBe "test1key"
             }
         }
     }
