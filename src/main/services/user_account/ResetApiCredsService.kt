@@ -11,7 +11,7 @@ import java.lang.Exception
  * This service will be used to reset a user account's ApiCreds
  */
 object ResetApiCredsService {
-     fun execute(userId: Int) : SOAResult<ApiCredNamespace> {
+     fun execute(userAccount: UserAccount) : SOAResult<ApiCredNamespace> {
         val apiCredResult = GenerateApiCredsService.execute()
         if(apiCredResult.result != SOAResultType.SUCCESS)
             return SOAResult(apiCredResult.result, apiCredResult.message, null)
@@ -22,7 +22,6 @@ object ResetApiCredsService {
         }
 
         return try {
-            val userAccount = UserAccount.findById(userId)!!
             userAccount.apiCreds = apiCreds
 
             // TODO log or error result?

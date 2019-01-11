@@ -18,9 +18,7 @@ class ResetApiCredsServiceTest : WordSpec() {
 
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
-        transaction {
-            userAccount = TestHelper.generateUserAccounts(1)[0]
-        }
+        userAccount = TestHelper.generateUserAccounts(1)[0]
     }
 
     override fun afterTest(description: Description, result: TestResult) {
@@ -31,7 +29,7 @@ class ResetApiCredsServiceTest : WordSpec() {
         "calling execute with a valid user id" should {
             "return a success result and an apiNameSpace and generate a transaction" {
                 transaction {
-                    val apiCredsNamespaceResult = ResetApiCredsService.execute(userAccount.idValue)
+                    val apiCredsNamespaceResult = ResetApiCredsService.execute(userAccount)
                     apiCredsNamespaceResult.result shouldBe SOAResultType.SUCCESS
                     val action = Action.all().toList()[1]
                     action.data shouldBe userAccount.idValue
@@ -44,7 +42,7 @@ class ResetApiCredsServiceTest : WordSpec() {
             "reset that user account's api credentials" {
                 transaction {
                     val originalApiKey = userAccount.apiCreds.apiKey
-                    val apiCredsNamespaceResult = ResetApiCredsService.execute(userAccount.idValue)
+                    val apiCredsNamespaceResult = ResetApiCredsService.execute(userAccount)
                     val updatedApiKey = apiCredsNamespaceResult.data!!.apiKey
                     apiCredsNamespaceResult.result shouldBe SOAResultType.SUCCESS
                     updatedApiKey shouldNotBe originalApiKey
