@@ -10,7 +10,6 @@ import kotlinserverless.framework.models.Handler
 import kotlinserverless.framework.services.SOAResultType
 import main.services.challenge.ActivateChallengeService
 import main.services.challenge.CompleteChallengeService
-import main.services.challenge.GetUnsharedTransactionsService
 import main.services.challenge.ShareChallengeService
 import org.jetbrains.exposed.sql.transactions.transaction
 import test.TestHelper
@@ -46,7 +45,7 @@ class CompleteChallengeServiceTest : WordSpec() {
         "calling execute with valid data" should {
             "should complete the challenge by changing the state and distributing rewards" {
                 transaction {
-                    ActivateChallengeService.execute(userAccount1, mapOf(Pair("challengeId", challenge.idValue.toString())))
+                    ActivateChallengeService.execute(userAccount1, challenge.idValue)
 
                     /**
                      *          user1 (50)

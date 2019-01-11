@@ -13,7 +13,7 @@ import java.lang.Exception
 object AddSubChallengeService {
     fun execute(caller: UserAccount, subChallengeNamespace: ChallengeNamespace, challengeId: Int, subChallengeType: SubChallengeType) : SOAResult<SubChallenge> {
         // TODO validate the sub challenge expiration, amounts, same parent id, etc...must accomidate for parent challenge
-        val subChallengeResult = GenerateChallengeService.execute(caller, subChallengeNamespace, null)
+        val subChallengeResult = GenerateChallengeService.execute(caller, subChallengeNamespace)
         if(subChallengeResult.result != SOAResultType.SUCCESS)
             throw Exception(subChallengeResult.message)
 

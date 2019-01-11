@@ -16,23 +16,19 @@ import main.services.user_account.EndSessionService
 
 class UserAccountController: DefaultController<UserAccount>(), RestController<UserAccount, UserAccount> {
     override fun findOne(user: UserAccount, id: Int): SOAResult<UserAccount> {
-        return GetUserAccountService.execute(mapOf(Pair("userId", user.idValue.toString())))
+        return GetUserAccountService.execute(user.idValue, null, null)
     }
 
     override fun create(user: UserAccount, params: Map<String, String>): SOAResult<NewUserAccount> {
-        return GenerateUserAccountService.execute(params)
+        return GenerateUserAccountService.execute(params["email"]!!, params["firstname"]!!, params["lastname"]!!)
     }
 
     fun login(user: UserAccount, request: Request): SOAResult<UserAccount> {
         val result = SOAResult<UserAccount>(SOAResultType.FAILURE, null, null)
 
         val apiCred = user.apiCreds
-        val apiKeyParams = mutableMapOf(
-            Pair("apiKey", apiCred.apiKey),
-            Pair("secretKey", apiCred.secretKey)
-        )
 
-        ValidateApiKeyService.execute(apiKeyParams)
+        ValidateApiKeyService.execute(apiCred.apiKey, apiCred.secretKey)
 
         //TODO: Full session implementation
         val startSessionResult = StartSessionService.execute()
@@ -54,12 +50,8 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
         )
 
         val apiCred = user.apiCreds
-        val apiKeyParams = mutableMapOf(
-            Pair("apiKey", apiCred.apiKey),
-            Pair("secretKey", apiCred.secretKey)
-        )
 
-        ValidateApiKeyService.execute(apiKeyParams)
+        ValidateApiKeyService.execute(apiCred.apiKey, apiCred.secretKey)
 
         val endSessionResult = EndSessionService.execute(user.session.sessionKey)
 

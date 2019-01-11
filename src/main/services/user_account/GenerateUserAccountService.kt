@@ -51,7 +51,6 @@ object GenerateUserAccountService {
 
             // TODO log or error result?
             val transactionResult = GenerateTransactionService.execute(
-                userAccount,
                 TransactionNamespace(
                     keyPairData.value.publicKey,
                     null,
@@ -61,7 +60,7 @@ object GenerateUserAccountService {
                         UserAccount::class.simpleName!!
                     ),
                     null, null
-                ), null
+                )
             )
 
             return@execute NewUserAccount(

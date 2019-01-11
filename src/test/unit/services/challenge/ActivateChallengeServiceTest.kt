@@ -9,7 +9,6 @@ import main.daos.*
 import kotlinserverless.framework.models.Handler
 import kotlinserverless.framework.services.SOAResultType
 import main.services.challenge.ActivateChallengeService
-import main.services.challenge.AddSubChallengeService
 import main.services.challenge.ChangeChallengeStateService
 import org.jetbrains.exposed.sql.transactions.transaction
 import test.TestHelper
@@ -39,9 +38,7 @@ class ActivateChallengeServiceTest : WordSpec() {
                     // change to active successfully
                     var result = ActivateChallengeService.execute(
                         userAccount,
-                        mapOf(
-                            Pair("challengeId", challenge1.idValue.toString())
-                        )
+                        challenge1.idValue
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.action.type shouldBe ActionType.ACTIVATE
@@ -54,9 +51,7 @@ class ActivateChallengeServiceTest : WordSpec() {
                     // change to active successfully
                     result = ActivateChallengeService.execute(
                         userAccount,
-                        mapOf(
-                            Pair("challengeId", challenge1.idValue.toString())
-                        )
+                        challenge1.idValue
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.action.type shouldBe ActionType.ACTIVATE
