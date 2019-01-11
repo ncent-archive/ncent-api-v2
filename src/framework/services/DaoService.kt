@@ -11,6 +11,9 @@ import java.lang.RuntimeException
 import java.sql.SQLException
 
 object DaoService {
+    class SoAErrorException(message: String? = "Generic error"): Exception(message)
+    class SoAFailureException(message: String? = "Generic failure"): Exception(message)
+
     fun <T> execute(query: () -> T): SOAResult<T> {
         var result: SOAResult<T> = SOAResult(SOAResultType.FAILURE, "", null)
         try {
@@ -22,6 +25,14 @@ object DaoService {
             }
             result.data = tx
             result.result = SOAResultType.SUCCESS
+        } catch(e: SoAErrorException) {
+            ApiGatewayResponse.LOG.error(e.message, e)
+            println("There was service error: " + e.message)
+            result.message = if(e.message != null) e.message else e.toString()
+        } catch(e: SoAFailureException) {
+            ApiGatewayResponse.LOG.error(e.message, e)
+            println("There was service failure: " + e.message)
+            result.message = if(e.message != null) e.message else e.toString()
         } catch(e: SQLException) {
             ApiGatewayResponse.LOG.error(e.message, e)
             println("There was a SQL error with a DaoService execution: " + e.message)
@@ -32,6 +43,14 @@ object DaoService {
             result.message = if(e.message != null) e.message else e.toString()
         } finally {
             return result
+        }
+    }
+
+    fun throwOrReturn(result: SOAResultType, message: String?) {
+        when(result) {
+            SOAResultType.FAILURE -> throw SoAFailureException(message)
+            SOAResultType.ERROR -> throw SoAErrorException(message)
+            else -> return
         }
     }
 }
