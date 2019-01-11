@@ -11,10 +11,7 @@ import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
-import main.daos.Metadatas
-import main.daos.NewUserAccountNamespace
-import main.daos.UserAccount
-import main.daos.UsersMetadata
+import main.daos.*
 import main.helpers.JsonHelper
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
@@ -63,9 +60,7 @@ class GetUserAccountTest : WordSpec() {
             "should return a valid user account" {
                 val response = handler.handleRequest(map, contxt)
                 response.statusCode shouldBe 200
-                val newUserAccount: NewUserAccountNamespace = JsonHelper.parse(response.body!!)!!
-
-                val userAccount = newUserAccount.value
+                val userAccount: UserAccountNamespace = JsonHelper.parse(response.body!!)!!
 
                 userAccount.userMetadata.email shouldBe "dev0@ncnt.io"
                 userAccount.userMetadata.metadatas.first().key shouldBe "test1key"

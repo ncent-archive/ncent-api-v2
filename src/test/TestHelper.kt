@@ -198,7 +198,7 @@ object TestHelper {
 
     fun generateChallengeSettingsNamespace(userAccount: UserAccount, count: Int = 1): List<ChallengeSettingNamespace> {
         var challengeSettingsList = mutableListOf<ChallengeSettingNamespace>()
-        val exp = DateTime.now(DateTimeZone.UTC).plusDays(1)
+        val exp = DateTime.now(DateTimeZone.UTC).plusDays(1).toString()
         for(i in 0..(count - 1)) {
             challengeSettingsList.add(
                 ChallengeSettingNamespace(

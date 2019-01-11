@@ -18,7 +18,7 @@ object StartSessionService {
             null,
             SessionNamespace(
                 UUID.randomUUID().toString(),
-                DateTime.now(DateTimeZone.UTC).plusHours(24)
+                DateTime.now(DateTimeZone.UTC).plusHours(24).toString()
             )
         )
     }

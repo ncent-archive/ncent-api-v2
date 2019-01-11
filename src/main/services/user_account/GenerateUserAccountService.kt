@@ -6,6 +6,7 @@ import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.services.transaction.GenerateTransactionService
+import org.joda.time.DateTime
 
 /**
  * This service will be used to generate a full User Account
@@ -34,7 +35,7 @@ object GenerateUserAccountService {
             }
             val newSession = Session.new {
                 sessionKey = sessionNamespace.sessionKey
-                expiration = sessionNamespace.expiration
+                expiration = DateTime.parse(sessionNamespace.expiration)
             }
 
             val keyPairResult = GenerateCryptoKeyPairService.execute()

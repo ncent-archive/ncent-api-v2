@@ -32,4 +32,4 @@ object Sessions : BaseIntIdTable("sessions") {
     val expiration = datetime("expiration")
 }
 
-data class SessionNamespace(val sessionKey: String, val expiration: DateTime)
+data class SessionNamespace(val sessionKey: String, val expiration: String)

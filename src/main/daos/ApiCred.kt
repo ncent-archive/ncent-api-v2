@@ -39,4 +39,4 @@ object ApiCreds : BaseIntIdTable("api_creds") {
     val secretKeySalt = varchar("secretKeySalt", 256)
 }
 
-data class ApiCredNamespace(val apiKey: String, val secretKey: String)
+data class ApiCredNamespace(val apiKey: String, val secretKey: String = "")
