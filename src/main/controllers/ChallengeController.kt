@@ -1,5 +1,6 @@
 package main.controllers
 
+import framework.services.DaoService
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
@@ -13,47 +14,44 @@ import main.services.completion_criteria.GenerateCompletionCriteriaService
 import main.services.reward.GenerateRewardService
 
 class ChallengeController: DefaultController<Challenge>(), RestController<Challenge, UserAccount> {
-    override fun create(user: UserAccount, params: Map<String, String>): SOAResult<Challenge> {
-        val result = SOAResult<Challenge>(SOAResultType.FAILURE, null, null)
+    override fun create(user: UserAccount, params: Map<String, String>): SOAResult<*> {
+        return DaoService.execute {
+            val apiCred = user.apiCreds
+            val validateApiKeyResult = ValidateApiKeyService.execute(apiCred.apiKey, params["secretKey"] as String)
+            if (validateApiKeyResult.result != SOAResultType.SUCCESS) {
+                DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
+            }
 
-        val apiCred = user.apiCreds
-        val validateApiKeyResult = ValidateApiKeyService.execute(apiCred.apiKey, apiCred.secretKey)
-        if (validateApiKeyResult.result != SOAResultType.SUCCESS) {
-            result.message = validateApiKeyResult.message
-            return result
+            val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(params["challengeNamespace"]!!)
+
+            val parentChallenge = challengeNamespace.parentChallenge
+
+            val challengeSettingNamespace = challengeNamespace.challengeSettings
+            val generateChallengeSettingsResult = GenerateChallengeSettingsService.execute(user, challengeSettingNamespace)
+            if (generateChallengeSettingsResult.result != SOAResultType.SUCCESS) {
+                DaoService.throwOrReturn(generateChallengeSettingsResult.result, generateChallengeSettingsResult.message)
+            }
+
+            val completionCriteriaNamespace = challengeNamespace.completionCriteria
+            val generateCompletionCriteriaResult = GenerateCompletionCriteriaService.execute(user, completionCriteriaNamespace)
+            if (generateCompletionCriteriaResult.result != SOAResultType.SUCCESS) {
+                DaoService.throwOrReturn(generateCompletionCriteriaResult.result, generateCompletionCriteriaResult.message)
+            }
+
+            val rewardNamespace = challengeNamespace.distributionFeeReward
+            val generateRewardResult = GenerateRewardService.execute(rewardNamespace)
+            if (generateRewardResult.result != SOAResultType.SUCCESS) {
+                DaoService.throwOrReturn(generateRewardResult.result, generateRewardResult.message)
+            }
+
+            val generateChallengeResult = GenerateChallengeService.execute(user, challengeNamespace)
+            DaoService.throwOrReturn(generateChallengeResult.result, generateChallengeResult.message)
+            if (generateChallengeResult.result == SOAResultType.SUCCESS) {
+                AddSubChallengeService.execute(user, challengeNamespace, parentChallenge!!, SubChallengeType.valueOf(params["subChallengeType"] as String))
+            }
+
+            return@execute generateChallengeResult.data!!
         }
-
-        val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(params["challengeNamespace"]!!)
-        
-        val parentChallenge: Int? = params["parentChallenge"]?.toInt()
-
-        val challengeSettingNamespace = challengeNamespace.challengeSettings
-        val generateChallengeSettingsResult = GenerateChallengeSettingsService.execute(user, challengeSettingNamespace)
-        if (generateChallengeSettingsResult.result != SOAResultType.SUCCESS) {
-            result.message = generateChallengeSettingsResult.message
-            return result
-        }
-        
-        val completionCriteriaNamespace = challengeNamespace.completionCriteria
-        val generateCompletionCriteriaResult = GenerateCompletionCriteriaService.execute(user, completionCriteriaNamespace)
-        if (generateCompletionCriteriaResult.result != SOAResultType.SUCCESS) {
-            result.message = generateCompletionCriteriaResult.message
-            return result
-        }
-
-        val rewardNamespace = challengeNamespace.distributionFeeReward
-        val generateRewardResult = GenerateRewardService.execute(rewardNamespace)
-        if (generateRewardResult.result != SOAResultType.SUCCESS) {
-            result.message = generateRewardResult.message
-            return result
-        }
-
-        val generateChallengeResult = GenerateChallengeService.execute(user, challengeNamespace)
-        if (generateChallengeResult.result == SOAResultType.SUCCESS) {
-            AddSubChallengeService.execute(user, challengeNamespace, parentChallenge!!, SubChallengeType.valueOf(params["subChallengeType"] as String))
-        }
-
-        return generateChallengeResult
     }
 
     override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {

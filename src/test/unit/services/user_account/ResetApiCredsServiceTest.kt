@@ -18,8 +18,8 @@ class ResetApiCredsServiceTest : WordSpec() {
 
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
-        userAccount = TestHelper.generateUserAccounts(1)[0]
-    }
+        val userAccounts = TestHelper.generateUserAccounts(1)
+        userAccount = userAccounts[userAccounts.keys.first()]!!    }
 
     override fun afterTest(description: Description, result: TestResult) {
         Handler.disconnectAndDropTables()

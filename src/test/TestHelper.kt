@@ -118,15 +118,17 @@ object TestHelper {
         }
     }
 
-    fun generateUserAccounts(count: Int = 1): List<UserAccount> {
-        var userAccounts = mutableListOf<UserAccount>()
+    fun generateUserAccounts(count: Int = 1): Map<String, UserAccount> {
+        var userAccounts: Map<String, UserAccount> = mutableMapOf()
         for(i in 0..(count - 1)) {
             transaction {
-                userAccounts.add(GenerateUserAccountService.execute(
+                val result = GenerateUserAccountService.execute(
                     "dev$i@ncnt.io",
                     "dev$i",
                     "ncnt$i"
-                ).data!!.value)
+                ).data
+                val secretKey = result!!.secretKey
+                userAccounts = userAccounts.plus(Pair(secretKey, result.value))
             }
         }
         return userAccounts
@@ -198,7 +200,7 @@ object TestHelper {
 
     fun generateChallengeSettingsNamespace(userAccount: UserAccount, count: Int = 1): List<ChallengeSettingNamespace> {
         var challengeSettingsList = mutableListOf<ChallengeSettingNamespace>()
-        val exp = DateTime.now(DateTimeZone.UTC).plusDays(1)
+        val exp = DateTime.now(DateTimeZone.UTC).plusDays(1).toString()
         for(i in 0..(count - 1)) {
             challengeSettingsList.add(
                 ChallengeSettingNamespace(

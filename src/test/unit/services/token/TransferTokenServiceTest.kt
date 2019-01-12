@@ -40,8 +40,8 @@ class TransferTokenServiceTest : WordSpec() {
         "calling execute with a user transfer, having sufficient funds" should {
             "return the transaction generated" {
                 val userAccounts = TestHelper.generateUserAccounts(2)
-                val newUserAccount = userAccounts[0]
-                val newUserAccount2 = userAccounts[1]
+                val newUserAccount = userAccounts[userAccounts.keys.first()]!!
+                val newUserAccount2 = userAccounts[userAccounts.keys.elementAt(1)]!!
 
                 transaction {
                     val token = GenerateTokenService.execute(newUserAccount, nCentTokenNamespace).data!!
@@ -68,8 +68,8 @@ class TransferTokenServiceTest : WordSpec() {
         "calling execute with a user transfer, having insufficient funds" should {
             "return failure" {
                 val userAccounts = TestHelper.generateUserAccounts(2)
-                val newUserAccount = userAccounts[0]
-                val newUserAccount2 = userAccounts[1]
+                val newUserAccount = userAccounts[userAccounts.keys.first()]!!
+                val newUserAccount2 = userAccounts[userAccounts.keys.elementAt(1)]!!
 
                 transaction {
                     GenerateTokenService.execute(newUserAccount, nCentTokenNamespace)

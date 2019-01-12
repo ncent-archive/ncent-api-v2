@@ -37,7 +37,7 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
 
         val apiCred = user.apiCreds
 
-        ValidateApiKeyService.execute(apiCred.apiKey, apiCred.secretKey)
+        ValidateApiKeyService.execute(apiCred.apiKey, request.input["secretKey"] as String)
 
         //TODO: Full session implementation
         val startSessionResult = StartSessionService.execute()
@@ -60,7 +60,7 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
 
         val apiCred = user.apiCreds
 
-        ValidateApiKeyService.execute(apiCred.apiKey, apiCred.secretKey)
+        ValidateApiKeyService.execute(apiCred.apiKey, request.input["secretKey"] as String)
 
         val endSessionResult = EndSessionService.execute(user.session.sessionKey)
 

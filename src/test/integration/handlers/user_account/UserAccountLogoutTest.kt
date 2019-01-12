@@ -28,7 +28,9 @@ class UserAccountLogoutTest : WordSpec() {
         Handler.connectAndBuildTables()
         contxt = mockk()
         handler = Handler()
-        user = TestHelper.generateUserAccounts().first()
+        val users = TestHelper.generateUserAccounts()
+        user = users[users.keys.first()]!!
+        map["secretKey"] = users.keys.first()
         map["userId"] = user.idValue.toString()
     }
 

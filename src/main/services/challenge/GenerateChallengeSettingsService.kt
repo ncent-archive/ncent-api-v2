@@ -3,6 +3,7 @@ package main.services.challenge
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
+import org.joda.time.DateTime
 
 /**
  * Generate a reward if it is valid
@@ -14,8 +15,8 @@ object GenerateChallengeSettingsService {
             description = challengeSettingNamespace.description
             imageUrl = challengeSettingNamespace.imageUrl
             sponsorName = challengeSettingNamespace.sponsorName
-            expiration = challengeSettingNamespace.expiration
-            shareExpiration = challengeSettingNamespace.shareExpiration
+            expiration = DateTime.parse(challengeSettingNamespace.expiration)
+            shareExpiration = DateTime.parse(challengeSettingNamespace.shareExpiration)
             admin = caller.id
             offChain = challengeSettingNamespace.offChain
             maxShares = challengeSettingNamespace.maxShares

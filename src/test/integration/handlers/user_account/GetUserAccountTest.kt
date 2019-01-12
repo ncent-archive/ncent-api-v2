@@ -29,17 +29,18 @@ class GetUserAccountTest : WordSpec() {
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        user1 = TestHelper.generateUserAccounts().first()
+        val users = TestHelper.generateUserAccounts()
+        val user1 = users[users.keys.first()]
         transaction {
             val metadataId = Metadatas.insertAndGetId {
                 it[key] = "test1key"
                 it[value] = "test1val"
             }
             UsersMetadata.insert {
-                it[user] = user1.id
+                it[user] = user1!!.id
                 it[metadata] = metadataId
             }
-            user1.refresh(true)
+            user1!!.refresh(true)
         }
         handler = Handler()
         contxt = mockk()
@@ -47,7 +48,7 @@ class GetUserAccountTest : WordSpec() {
                 Pair("path", "/user_account/"),
                 Pair("httpMethod", "GET"),
                 Pair("pathParameters", mutableMapOf(
-                    Pair("id", user1.idValue)
+                    Pair("id", user1!!.idValue)
                 )),
                 Pair("userId", user1.idValue.toString())
         )

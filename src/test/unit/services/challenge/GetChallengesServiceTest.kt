@@ -20,9 +20,9 @@ class GetChallengesServiceTest : WordSpec() {
         Handler.connectAndBuildTables()
         transaction {
             val userAccounts = TestHelper.generateUserAccounts(2)
-            userAccount = userAccounts[0]
-            TestHelper.generateFullChallenge(userAccount, userAccounts[1],2)
-            TestHelper.generateFullChallenge(userAccounts[1], userAccounts[1],2)
+            userAccount = userAccounts[userAccounts.keys.first()]!!
+            TestHelper.generateFullChallenge(userAccount, userAccounts[userAccounts.keys.elementAt(1)]!!,2)
+            TestHelper.generateFullChallenge(userAccounts[userAccounts.keys.elementAt(1)]!!, userAccounts[userAccounts.keys.elementAt(1)]!!,2)
         }
     }
 

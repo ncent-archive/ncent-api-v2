@@ -22,7 +22,8 @@ class ChangeChallengeStateServiceTest : WordSpec() {
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
         transaction {
-            userAccount = TestHelper.generateUserAccounts(1)[0]
+            val users = TestHelper.generateUserAccounts()
+            userAccount = users[users.keys.first()]!!
             val challenges = TestHelper.generateFullChallenge(userAccount, userAccount,2)
             challenge1 = challenges[0]
             challenge2 = challenges[1]

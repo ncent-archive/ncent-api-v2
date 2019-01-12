@@ -25,9 +25,9 @@ class CompleteChallengeServiceTest : WordSpec() {
         Handler.connectAndBuildTables()
         transaction {
             val userAccounts = TestHelper.generateUserAccounts(3)
-            userAccount1 = userAccounts[0]
-            userAccount2 = userAccounts[1]
-            userAccount3 = userAccounts[2]
+            userAccount1 = userAccounts[userAccounts.keys.first()]!!
+            userAccount2 = userAccounts[userAccounts.keys.elementAt(1)]!!
+            userAccount3 = userAccounts[userAccounts.keys.elementAt(2)]!!
             /**
              *          user1 (100)
              */

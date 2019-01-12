@@ -19,7 +19,8 @@ class AddSubChallengeServiceTest : WordSpec() {
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
         transaction {
-            userAccount = TestHelper.generateUserAccounts(1)[0]
+            val users = TestHelper.generateUserAccounts()
+            userAccount = users[users.keys.first()]!!
             challenge = TestHelper.generateFullChallenge(userAccount, userAccount,1)[0]
         }
     }

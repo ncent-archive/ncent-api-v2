@@ -23,8 +23,8 @@ class ChangeCompletionCriteriaServiceTest : WordSpec() {
         Handler.connectAndBuildTables()
         transaction {
             val userAccounts = TestHelper.generateUserAccounts(2)
-            userAccount = userAccounts[0]
-            userAccount2 = userAccounts[1]
+            userAccount = userAccounts[userAccounts.keys.first()]!!
+            userAccount2 = userAccounts[userAccounts.keys.elementAt(1)]!!
             TestHelper.buildGenericReward()
             completionCriteria = CompletionCriteria.all().first()
             completionCriteria.address = userAccount.cryptoKeyPair.publicKey
