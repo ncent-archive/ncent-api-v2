@@ -38,7 +38,7 @@ class GenerateTokenServiceTest : WordSpec() {
             "generate the tokens and associated tokenType" {
                 transaction {
                     val accounts = TestHelper.generateUserAccounts()
-                    val caller = accounts[accounts.keys.first()]!!
+                    val caller = accounts[0].value
                     var result = GenerateTokenService.execute(caller, nCentTokenNamespace)
                     result.result shouldBe SOAResultType.SUCCESS
                     val tokenType = TokenType.all().first()

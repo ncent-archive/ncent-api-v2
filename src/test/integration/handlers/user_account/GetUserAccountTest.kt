@@ -10,10 +10,7 @@ import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
-import main.daos.Metadatas
-import main.daos.NewUserAccountNamespace
-import main.daos.UserAccount
-import main.daos.UsersMetadata
+import main.daos.*
 import main.helpers.JsonHelper
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
@@ -29,18 +26,18 @@ class GetUserAccountTest : WordSpec() {
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        val users = TestHelper.generateUserAccounts()
-        val user1 = users[users.keys.first()]
+        val newUsers = TestHelper.generateUserAccounts()
+        val user1 = newUsers[0].value
         transaction {
             val metadataId = Metadatas.insertAndGetId {
                 it[key] = "test1key"
                 it[value] = "test1val"
             }
             UsersMetadata.insert {
-                it[user] = user1!!.id
+                it[user] = user1.id
                 it[metadata] = metadataId
             }
-            user1!!.refresh(true)
+            user1.refresh(true)
         }
         handler = Handler()
         contxt = mockk()
@@ -48,7 +45,7 @@ class GetUserAccountTest : WordSpec() {
                 Pair("path", "/user_account/"),
                 Pair("httpMethod", "GET"),
                 Pair("pathParameters", mutableMapOf(
-                    Pair("id", user1!!.idValue)
+                    Pair("id", user1.idValue)
                 )),
                 Pair("userId", user1.idValue.toString())
         )

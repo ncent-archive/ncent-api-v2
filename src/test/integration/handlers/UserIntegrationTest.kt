@@ -23,9 +23,9 @@ class UserIntegrationTest : WordSpec() {
         Handler.connectAndBuildTables()
         handler = Handler()
         contxt = mockk()
-        val users = TestHelper.generateUserAccounts()
-        val user = users[users.keys.first()]
-        map["userId"] = user!!.idValue.toString()
+        val newUsers = TestHelper.generateUserAccounts()
+        val user = newUsers[0].value
+        map["userId"] = user.idValue.toString()
     }
 
     override fun afterTest(description: Description, result: TestResult) {

@@ -43,8 +43,8 @@ class GenerateCompletionCriteriaServiceTest : WordSpec() {
         "calling execute with a valid completion criteria" should {
             "generate the reward and associated reward type and pool and completion criteria" {
                 transaction {
-                    val userAccounts = TestHelper.generateUserAccounts()
-                    var result = GenerateCompletionCriteriaService.execute(userAccounts[userAccounts.keys.first()]!!, completionCriteriaNamespace)
+                    val newUserAccounts = TestHelper.generateUserAccounts()
+                    var result = GenerateCompletionCriteriaService.execute(newUserAccounts[0].value, completionCriteriaNamespace)
                     result.result shouldBe SOAResultType.SUCCESS
                     val rewardType = RewardType.all().first()
                     rewardType.audience shouldBe Audience.FULL
@@ -55,7 +55,7 @@ class GenerateCompletionCriteriaServiceTest : WordSpec() {
                     reward.metadatas.first().value shouldBe "reward everyone"
                     reward.type.id shouldBe rewardType.id
                     val pool = RewardPool.all().first()
-                    reward.pool?.id shouldBe pool.id
+                    reward.pool.id shouldBe pool.id
                     val completionCriteria = CompletionCriteria.all().first()
                     completionCriteria.reward shouldBe reward
                     completionCriteria.address shouldBe address

@@ -21,8 +21,8 @@ class GenerateChallengeServiceTest : WordSpec() {
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
         transaction {
-            val users = TestHelper.generateUserAccounts()
-            userAccount = users[users.keys.first()]!!
+            val newUsers = TestHelper.generateUserAccounts()
+            userAccount = newUsers[0].value
             val challenges = TestHelper.generateChallenge(userAccount, 7)
             parentChallenge = challenges[0]
             val syncSubChallenge1 = challenges[1]

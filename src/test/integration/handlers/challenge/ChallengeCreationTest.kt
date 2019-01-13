@@ -21,6 +21,7 @@ class ChallengeCreationTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
     private lateinit var user: UserAccount
+    private lateinit var newUser: NewUserAccount
     private lateinit var parentChallenge: Challenge
     private lateinit var distributionFeeRewardNamespace: RewardNamespace
     private lateinit var challengeSettingNamespace: ChallengeSettingNamespace
@@ -33,8 +34,9 @@ class ChallengeCreationTest : WordSpec() {
         handler = Handler()
         contxt = mockk()
         transaction {
-            val users = TestHelper.generateUserAccounts()
-            user = users[users.keys.first()]!!
+            val newUsers = TestHelper.generateUserAccounts()
+            newUser = newUsers[0]
+            user = newUser.value
             parentChallenge = TestHelper.generateChallenge(user).first()
             distributionFeeRewardNamespace = TestHelper.generateRewardNamespace(RewardTypeName.SINGLE)
             challengeSettingNamespace = TestHelper.generateChallengeSettingsNamespace(user).first()
@@ -52,7 +54,7 @@ class ChallengeCreationTest : WordSpec() {
                     Pair("userId", user.idValue.toString()),
                     Pair("body", mapOf(
                             Pair("challengeNamespace", Klaxon().toJsonString(challengeNamespace)),
-                            Pair("secretKey", users.keys.first()),
+                            Pair("secretKey", 0),
                             Pair("subChallengeType", "ASYNC")
                     ))
             )

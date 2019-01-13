@@ -118,20 +118,18 @@ object TestHelper {
         }
     }
 
-    fun generateUserAccounts(count: Int = 1): Map<String, UserAccount> {
-        var userAccounts: Map<String, UserAccount> = mutableMapOf()
+    fun generateUserAccounts(count: Int = 1): List<NewUserAccount> {
+        var newUserAccounts = mutableListOf<NewUserAccount>()
         for(i in 0..(count - 1)) {
             transaction {
-                val result = GenerateUserAccountService.execute(
-                    "dev$i@ncnt.io",
-                    "dev$i",
-                    "ncnt$i"
-                ).data
-                val secretKey = result!!.secretKey
-                userAccounts = userAccounts.plus(Pair(secretKey, result.value))
+                newUserAccounts.add(GenerateUserAccountService.execute(
+                        "dev$i@ncnt.io",
+                        "dev$i",
+                        "ncnt$i"
+                ).data!!)
             }
         }
-        return userAccounts
+        return newUserAccounts
     }
 
     fun generateFullChallenge(userAccount: UserAccount, subChallengeUserAccount: UserAccount, count: Int = 1, withReward: Boolean = false): List<Challenge> {

@@ -34,8 +34,8 @@ class UserAccountCreationTest : WordSpec() {
         Handler.connectAndBuildTables()
         handler = Handler()
         contxt = mockk()
-        val users = TestHelper.generateUserAccounts()
-        user = users[users.keys.first()]!!
+        val newUsers = TestHelper.generateUserAccounts()
+        user = newUsers[0].value
         map["userId"] = user.idValue.toString()
     }
 

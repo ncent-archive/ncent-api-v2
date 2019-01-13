@@ -24,10 +24,10 @@ class CompleteChallengeServiceTest : WordSpec() {
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
         transaction {
-            val userAccounts = TestHelper.generateUserAccounts(3)
-            userAccount1 = userAccounts[userAccounts.keys.first()]!!
-            userAccount2 = userAccounts[userAccounts.keys.elementAt(1)]!!
-            userAccount3 = userAccounts[userAccounts.keys.elementAt(2)]!!
+            val newUserAccounts = TestHelper.generateUserAccounts(3)
+            userAccount1 = newUserAccounts[0].value
+            userAccount2 = newUserAccounts[1].value
+            userAccount3 = newUserAccounts[2].value
             /**
              *          user1 (100)
              */

@@ -41,7 +41,7 @@ class GetTokenServiceTest : WordSpec() {
             "return the token and its parent" {
                 transaction {
                     val accounts = TestHelper.generateUserAccounts()
-                    val caller = accounts[accounts.keys.first()]!!
+                    val caller = accounts[0].value
                     var newTokenResult = GenerateTokenService.execute(caller, nCentTokenNamespace)
                     ethTokenNamespace = TokenNamespace(
                         amount = 1000,
