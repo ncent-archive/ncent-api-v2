@@ -41,7 +41,7 @@ object CryptoKeyPairs : BaseIntIdTable("crypto_key_pairs") {
 
 data class CryptoKeyPairNamespace(
     val publicKey: String,
-    val privateKey: String
+    val privateKey: String = ""
 )
 
 data class NewCryptoKeyPair(
