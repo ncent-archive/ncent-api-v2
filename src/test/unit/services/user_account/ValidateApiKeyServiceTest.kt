@@ -30,9 +30,8 @@ class ValidateApiKeyServiceTest : WordSpec() {
                 transaction {
                     var result = GenerateUserAccountService.execute("dev@ncnt.io", "dev", "ncnt").data!!
                     user = result.value
-                    apiCred = user.apiCreds
 
-                    var result2 = ValidateApiKeyService.execute(apiCred.apiKey, result.secretKey)
+                    var result2 = ValidateApiKeyService.execute(user, result.secretKey)
                     result2.result shouldBe SOAResultType.SUCCESS
                 }
             }
@@ -40,9 +39,8 @@ class ValidateApiKeyServiceTest : WordSpec() {
                 transaction {
                     var result = GenerateUserAccountService.execute("dev@ncnt.io", "dev", "ncnt").data!!
                     user = result.value
-                    apiCred = user.apiCreds
 
-                    var result2 = ValidateApiKeyService.execute(apiCred.apiKey, "FAKESECRET")
+                    var result2 = ValidateApiKeyService.execute(user, "FAKESECRET")
                     result2.result shouldBe SOAResultType.FAILURE
                     result2.message shouldBe "Invalid api credentials"
                 }
