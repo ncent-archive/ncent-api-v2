@@ -25,13 +25,15 @@ object TransferAllTokensService {
                     "Access denied. Caller and from address must match.",
                     null)
 
-        // produce list of all tokenIds with a balance
+        // Generate map of all tokenIds with a balance
         val transactionsResult = TransferTokenHelper.getTransferHistory(address, null)
         if(transactionsResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, transactionsResult.message)
         val mapOfTransfers = TransferTokenHelper.getMapOfTransfersByCurrency(transactionsResult.data!!)
         val mapOfBalances = TransferTokenHelper.getMapOfBalancesByCurrency(address, mapOfTransfers)
 
+
+        // Transfer all tokens to the new address
         var resultingTransactions = mutableListOf<Transaction>()
         var result : SOAResult<TransactionList> =
                 SOAResult(SOAResultType.SUCCESS, "All tokens transferred successfully.", null)
@@ -39,7 +41,6 @@ object TransferAllTokensService {
         if(mapOfBalances.size == 0)
             result.message = "Address has no associated balances so no tokens were transferred."
 
-        // Transfer all tokens to the new address
         mapOfBalances.forEach { tokenId, balance ->
             if(balance <= 0.0 || result.result != SOAResultType.SUCCESS)
                 return@forEach
