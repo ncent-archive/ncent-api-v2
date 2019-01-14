@@ -12,7 +12,7 @@ import main.services.transaction.GenerateTransactionService
 object ChangeChallengeStateService {
     fun execute(caller: UserAccount, challengeId: Int, newState: ActionType) : SOAResult<Transaction> {
         val challenge = Challenge.findById(challengeId)!!
-        if(challenge.challengeSettings.admin != caller.id)
+        if(challenge.challengeSettings.admin.id != caller.id)
             return SOAResult(SOAResultType.FAILURE, "This user cannot change the challenge state")
         var newState = newState
         val oldTx = challenge.getLastStateChangeTransaction()!!

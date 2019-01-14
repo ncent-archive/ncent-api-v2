@@ -34,7 +34,7 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
     var sponsorName by ChallengeSettings.sponsorName
     var expiration by ChallengeSettings.expiration
     var shareExpiration by ChallengeSettings.shareExpiration
-    var admin by ChallengeSettings.admin
+    var admin by UserAccount referencedOn ChallengeSettings.admin
     var offChain by ChallengeSettings.offChain
     var maxShares by ChallengeSettings.maxShares
     var maxRewards by ChallengeSettings.maxRewards
@@ -51,7 +51,7 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
         map.put("sponsorName", sponsorName)
         map.put("expiration", expiration.toString())
         map.put("shareExpiration", shareExpiration.toString())
-        map.put("admin", admin)
+        map.put("admin", admin.toMap())
         map.put("offChain", offChain)
         map.put("maxShares", maxShares)
         map.put("maxRewards", maxRewards)

@@ -218,7 +218,7 @@ object SubChallenges : BaseIntIdTable("sub_challenge") {
 }
 
 data class ChallengeNamespace(
-    val parentChallenge: Int?,
+    val parentChallenge: Int? = null,
     val challengeSettings: ChallengeSettingNamespace,
     val subChallenges: List<Pair<Int, SubChallengeType>>? = listOf(),
     val completionCriteria: CompletionCriteriaNamespace,

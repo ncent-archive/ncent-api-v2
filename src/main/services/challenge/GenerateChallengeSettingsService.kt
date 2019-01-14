@@ -17,7 +17,7 @@ object GenerateChallengeSettingsService {
             sponsorName = challengeSettingNamespace.sponsorName
             expiration = DateTime.parse(challengeSettingNamespace.expiration)
             shareExpiration = DateTime.parse(challengeSettingNamespace.shareExpiration)
-            admin = caller.id
+            admin = caller
             offChain = challengeSettingNamespace.offChain
             maxShares = challengeSettingNamespace.maxShares
             maxRewards = challengeSettingNamespace.maxRewards
