@@ -54,7 +54,7 @@ class ChallengeCreationTest : WordSpec() {
                     Pair("userId", user.idValue.toString()),
                     Pair("body", mapOf(
                             Pair("challengeNamespace", Klaxon().toJsonString(challengeNamespace)),
-                            Pair("secretKey", 0),
+                            Pair("secretKey", newUser.secretKey),
                             Pair("subChallengeType", "ASYNC")
                     ))
             )

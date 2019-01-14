@@ -90,9 +90,9 @@ data class ChallengeSettingNamespace(
     val admin: Int,
     val maxShares: Int,
     val offChain: Boolean,
-    val maxRewards: Int?,
-    val maxDistributionFeeReward: Int?,
-    val maxSharesPerReceivedShare: Int?,
-    val maxDepth: Int?,
-    val maxNodes: Int?
+    val maxRewards: Int? = null,
+    val maxDistributionFeeReward: Int? = null,
+    val maxSharesPerReceivedShare: Int? = null,
+    val maxDepth: Int? = null,
+    val maxNodes: Int? = null
 )
