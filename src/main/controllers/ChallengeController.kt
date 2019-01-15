@@ -27,18 +27,6 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         throw NotImplementedError()
     }
 
-    fun expire(user: UserAccount, request: Request): SOAResult<Challenge> {
-        throw NotImplementedError()
-    }
-
-    fun invalidate(user: UserAccount, request: Request): SOAResult<Challenge> {
-        throw NotImplementedError()
-    }
-
-    fun validate(user: UserAccount, request: Request): SOAResult<Boolean> {
-        throw NotImplementedError()
-    }
-
     fun complete(user: UserAccount, request: Request): SOAResult<Challenge> {
         throw NotImplementedError()
     }
