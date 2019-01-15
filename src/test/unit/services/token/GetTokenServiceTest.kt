@@ -40,7 +40,8 @@ class GetTokenServiceTest : WordSpec() {
         "calling execute with a valid token name" should {
             "return the token and its parent" {
                 transaction {
-                    val caller = TestHelper.generateUserAccounts().first()
+                    val accounts = TestHelper.generateUserAccounts()
+                    val caller = accounts[0].value
                     var newTokenResult = GenerateTokenService.execute(caller, nCentTokenNamespace)
                     ethTokenNamespace = TokenNamespace(
                         amount = 1000,

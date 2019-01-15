@@ -218,12 +218,12 @@ object SubChallenges : BaseIntIdTable("sub_challenge") {
 }
 
 data class ChallengeNamespace(
-    val parentChallenge: Int?,
     val challengeSettings: ChallengeSettingNamespace,
-    val subChallenges: List<Pair<Int, SubChallengeType>>,
     val completionCriteria: CompletionCriteriaNamespace,
-    val distributionFeeReward: RewardNamespace
-)
+    val distributionFeeReward: RewardNamespace,
+    val subChallenges: List<Pair<Int, SubChallengeType>>? = listOf(),
+    val parentChallenge: Int? = null
+    )
 
 enum class SubChallengeType {
     SYNC, ASYNC

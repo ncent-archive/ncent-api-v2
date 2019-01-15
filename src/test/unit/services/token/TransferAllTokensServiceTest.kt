@@ -50,8 +50,8 @@ class TransferAllTokensServiceTest : WordSpec() {
         "calling execute with a funded user" should {
             "return the transaction generated" {
                 val userAccounts = TestHelper.generateUserAccounts(2)
-                val newUserAccount = userAccounts[0]
-                val newUserAccount2 = userAccounts[1]
+                val newUserAccount = userAccounts[0].value
+                val newUserAccount2 = userAccounts[1].value
 
                 transaction {
                     val fooToken = GenerateTokenService.execute(newUserAccount, fooTokenNamespace).data!!
@@ -79,8 +79,8 @@ class TransferAllTokensServiceTest : WordSpec() {
         "calling execute with an unfunded user" should {
             "return return the transaction generated" {
                 val userAccounts = TestHelper.generateUserAccounts(2)
-                val newUserAccount = userAccounts[0]
-                val newUserAccount2 = userAccounts[1]
+                val newUserAccount = userAccounts[0].value
+                val newUserAccount2 = userAccounts[1].value
 
                 transaction {
                     var result = TransferAllTokensService.execute(

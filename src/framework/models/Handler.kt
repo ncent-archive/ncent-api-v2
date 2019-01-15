@@ -79,6 +79,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       TransactionsMetadata,
       Tokens,
       TokenTypes,
+      PrerequisiteChallenge,
       Rewards,
       RewardPools,
       RewardTypes,

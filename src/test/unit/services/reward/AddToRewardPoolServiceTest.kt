@@ -52,7 +52,8 @@ class AddToRewardPoolServiceTest : WordSpec() {
         "calling execute with a valid transfer" should {
             "generate a transaction transfering to the pool" {
                 transaction {
-                    var newUserAccount = TestHelper.generateUserAccounts(1).first()
+                    val accounts = TestHelper.generateUserAccounts()
+                    var newUserAccount = accounts[0].value
                     val token = GenerateTokenService.execute(newUserAccount, nCentTokenNamespace).data!!
                     var reward = GenerateRewardService.execute(rewardNamespace).data!!
                     val result = AddToRewardPoolService.execute(

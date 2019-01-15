@@ -26,10 +26,10 @@ class ShareChallengeServiceTest : WordSpec() {
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
         transaction {
-            val userAccounts = TestHelper.generateUserAccounts(3)
-            userAccount1 = userAccounts[0]
-            userAccount2 = userAccounts[1]
-            userAccount3 = userAccounts[2]
+            val newUserAccounts = TestHelper.generateUserAccounts(3)
+            userAccount1 = newUserAccounts[0].value
+            userAccount2 = newUserAccounts[1].value
+            userAccount3 = newUserAccounts[2].value
             challenge = TestHelper.generateFullChallenge(userAccount1, userAccount1,1)[0]
         }
     }

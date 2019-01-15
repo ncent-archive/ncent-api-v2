@@ -5,7 +5,6 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import com.amazonaws.services.lambda.runtime.Context
-import com.beust.klaxon.Klaxon
 import io.kotlintest.TestResult
 import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
@@ -27,7 +26,8 @@ class GetUserAccountTest : WordSpec() {
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        user1 = TestHelper.generateUserAccounts().first()
+        val newUsers = TestHelper.generateUserAccounts()
+        val user1 = newUsers[0].value
         transaction {
             val metadataId = Metadatas.insertAndGetId {
                 it[key] = "test1key"

@@ -18,7 +18,8 @@ class UpdateUserServiceTest : WordSpec() {
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
         transaction {
-            userAccount = TestHelper.generateUserAccounts(1)[0]
+            val newUserAccounts = TestHelper.generateUserAccounts(1)
+            userAccount = newUserAccounts[0].value
         }
     }
 

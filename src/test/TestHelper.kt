@@ -118,18 +118,18 @@ object TestHelper {
         }
     }
 
-    fun generateUserAccounts(count: Int = 1): List<UserAccount> {
-        var userAccounts = mutableListOf<UserAccount>()
+    fun generateUserAccounts(count: Int = 1): List<NewUserAccount> {
+        var newUserAccounts = mutableListOf<NewUserAccount>()
         for(i in 0..(count - 1)) {
             transaction {
-                userAccounts.add(GenerateUserAccountService.execute(
-                    "dev$i@ncnt.io",
-                    "dev$i",
-                    "ncnt$i"
-                ).data!!.value)
+                newUserAccounts.add(GenerateUserAccountService.execute(
+                        "dev$i@ncnt.io",
+                        "dev$i",
+                        "ncnt$i"
+                ).data!!)
             }
         }
-        return userAccounts
+        return newUserAccounts
     }
 
     fun generateFullChallenge(userAccount: UserAccount, subChallengeUserAccount: UserAccount, count: Int = 1, withReward: Boolean = false): List<Challenge> {

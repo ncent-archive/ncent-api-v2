@@ -28,7 +28,9 @@ class UserAccountLoginTest : WordSpec() {
         Handler.connectAndBuildTables()
         handler = Handler()
         contxt = mockk()
-        user = TestHelper.generateUserAccounts().first()
+        val newUsers = TestHelper.generateUserAccounts()
+        user = newUsers[0].value
+        map["secretKey"] = newUsers[0].secretKey
         map["userId"] = user.idValue.toString()
     }
 

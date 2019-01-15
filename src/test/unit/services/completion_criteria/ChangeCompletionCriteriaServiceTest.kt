@@ -22,9 +22,9 @@ class ChangeCompletionCriteriaServiceTest : WordSpec() {
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
         transaction {
-            val userAccounts = TestHelper.generateUserAccounts(2)
-            userAccount = userAccounts[0]
-            userAccount2 = userAccounts[1]
+            val newUserAccounts = TestHelper.generateUserAccounts(2)
+            userAccount = newUserAccounts[0].value
+            userAccount2 = newUserAccounts[1].value
             TestHelper.buildGenericReward()
             completionCriteria = CompletionCriteria.all().first()
             completionCriteria.address = userAccount.cryptoKeyPair.publicKey

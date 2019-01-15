@@ -40,4 +40,4 @@ object Rewards : BaseIntIdTable("rewards") {
     val pool = reference("pool", RewardPools)
 }
 
-data class RewardNamespace(val type: RewardTypeNamespace, val metadatas: MetadatasListNamespace?)
+data class RewardNamespace(val type: RewardTypeNamespace, val metadatas: MetadatasListNamespace? = null)
