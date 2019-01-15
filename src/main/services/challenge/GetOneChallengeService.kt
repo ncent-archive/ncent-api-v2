@@ -11,8 +11,11 @@ object GetOneChallengeService {
             Challenge.findById(challengeId)
         }
 
-        if (challengeResult.result != SOAResultType.SUCCESS || challengeResult.data == null)
-            return SOAResult(SOAResultType.FAILURE, challengeResult.message, null)
+        if (challengeResult.data == null) {
+            return SOAResult(SOAResultType.FAILURE, "Challenge with id $challengeId not found", null)
+        } else if (challengeResult.result != SOAResultType.SUCCESS) {
+            return SOAResult(challengeResult.result, challengeResult.message, null)
+        }
         return SOAResult(SOAResultType.SUCCESS, null, challengeResult.data!!)
     }
 }
