@@ -55,9 +55,8 @@ class CompleteChallengeServiceTest : WordSpec() {
                     ShareChallengeService.execute(
                         userAccount1,
                         challenge,
-                        userAccount2.cryptoKeyPair.publicKey,
                         50,
-                        null
+                        userAccount2.cryptoKeyPair.publicKey
                     )
                     /**
                      *          user1 (20)
@@ -67,9 +66,8 @@ class CompleteChallengeServiceTest : WordSpec() {
                     ShareChallengeService.execute(
                         userAccount1,
                         challenge,
-                        userAccount2.cryptoKeyPair.publicKey,
                         30,
-                        null
+                        userAccount2.cryptoKeyPair.publicKey
                     )
                     /**
                      *          user1 (20)
@@ -81,9 +79,8 @@ class CompleteChallengeServiceTest : WordSpec() {
                     ShareChallengeService.execute(
                         userAccount2,
                         challenge,
-                        userAccount3.cryptoKeyPair.publicKey,
                         80,
-                        null
+                        userAccount3.cryptoKeyPair.publicKey
                     )
 
                     // user 2 should not be able to complete the challenge
