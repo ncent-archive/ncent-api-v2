@@ -59,8 +59,7 @@ class TransferAllTokensServiceTest : WordSpec() {
 
                     var result = TransferAllTokensService.execute(
                             newUserAccount,
-                            newUserAccount2.cryptoKeyPair.publicKey,
-                            null)
+                            newUserAccount2.cryptoKeyPair.publicKey)
                     result.result shouldBe SOAResultType.SUCCESS
                     val tx = result.data!!.transactions
                     tx.size shouldBe 2

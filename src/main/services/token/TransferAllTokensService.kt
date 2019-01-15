@@ -14,7 +14,7 @@ object TransferAllTokensService {
     fun execute(
             caller: UserAccount,
             toAddress: String,
-            notes: String?) : SOAResult<TransactionList> {
+            notes: String? = null) : SOAResult<TransactionList> {
         val fromAddress = caller.cryptoKeyPair.publicKey
 
         // Generate map of all tokenIds with a balance

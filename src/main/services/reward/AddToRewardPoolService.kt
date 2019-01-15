@@ -16,8 +16,7 @@ object AddToRewardPoolService {
                 caller.cryptoKeyPair.publicKey,
                 reward.pool!!.cryptoKeyPair.publicKey,
                 amount,
-                name,
-                null, null, null
+                name
         )
     }
 }

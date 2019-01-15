@@ -15,10 +15,10 @@ object TransferTokenService {
         from: String,
         to: String,
         amount: Double,
-        name: String?,
-        tokenId: Int?,
-        previousTransactionId: Int?,
-        notes: String?) : SOAResult<Transaction> {
+        name: String? = null,
+        tokenId: Int? = null,
+        previousTransactionId: Int? = null,
+        notes: String? = null) : SOAResult<Transaction> {
         val address = caller.cryptoKeyPair.publicKey
 
         // verify that the caller is the from address
