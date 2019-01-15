@@ -12,12 +12,11 @@ import main.services.token.TransferTokenService
 object AddToRewardPoolService {
     fun execute(caller: UserAccount, rewardId: Int, name: String, amount: Double) : SOAResult<Transaction> {
         val reward = Reward.findById(rewardId)!!
-        return TransferTokenService.execute(caller,
+        return TransferTokenService.execute(
                 caller.cryptoKeyPair.publicKey,
                 reward.pool!!.cryptoKeyPair.publicKey,
-                name,
                 amount,
-                null, null
+                name
         )
     }
 }
