@@ -122,12 +122,21 @@ object TransferTokenHelper {
         return currencyToTransactions
     }
 
-    fun getMapOfBalancesByCurrency(address: String, mapOfTransfers: Map<Int, MutableList<Transaction>>): Map<Int, Double> {
+    fun getMapOfBalancesByCurrency(address: String): SOAResult<Map<Int, Double>> {
+        val transactionsResult = getTransferHistory(address, null)
+        if(transactionsResult.result != SOAResultType.SUCCESS)
+            return SOAResult(SOAResultType.FAILURE, transactionsResult.message)
+        val mapOfTransfers = getMapOfTransfersByCurrency(transactionsResult.data!!)
+
         var currencyToBalances = mutableMapOf<Int, Double>()
         mapOfTransfers.forEach { currency_id, transactions ->
             currencyToBalances.putIfAbsent(currency_id, 0.0)
-            currencyToBalances[currency_id] = currencyToBalances[currency_id]!! + calculateBalance(address, transactions)
+            currencyToBalances[currency_id] =
+                    currencyToBalances[currency_id]!! + calculateBalance(address, transactions)
         }
-        return currencyToBalances
+        return SOAResult(
+                SOAResultType.SUCCESS,
+                "Map of balances retrieved.",
+                currencyToBalances)
     }
 }

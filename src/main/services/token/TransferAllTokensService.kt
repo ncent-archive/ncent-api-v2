@@ -17,13 +17,10 @@ object TransferAllTokensService {
             notes: String? = null) : SOAResult<TransactionList> {
         val fromAddress = caller.cryptoKeyPair.publicKey
 
-        // Generate map of all tokenIds with a balance
-        val transactionsResult = TransferTokenHelper.getTransferHistory(fromAddress, null)
-        if(transactionsResult.result != SOAResultType.SUCCESS)
-            return SOAResult(SOAResultType.FAILURE, transactionsResult.message)
-        val mapOfTransfers = TransferTokenHelper.getMapOfTransfersByCurrency(transactionsResult.data!!)
-        val mapOfBalances = TransferTokenHelper.getMapOfBalancesByCurrency(fromAddress, mapOfTransfers)
-
+        val mapOfBalancesResult = TransferTokenHelper.getMapOfBalancesByCurrency(fromAddress)
+        if (mapOfBalancesResult.result != SOAResultType.SUCCESS)
+            return SOAResult(SOAResultType.FAILURE, "Failed to retrieve balances.", null)
+        val mapOfBalances = mapOfBalancesResult.data!!
 
         // Transfer all tokens to the new address
         var resultingTransactions = mutableListOf<Transaction>()
