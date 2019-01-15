@@ -15,9 +15,9 @@ object AddToRewardPoolService {
         return TransferTokenService.execute(caller,
                 caller.cryptoKeyPair.publicKey,
                 reward.pool!!.cryptoKeyPair.publicKey,
-                name,
                 amount,
-                null, null
+                name,
+                null, null, null
         )
     }
 }

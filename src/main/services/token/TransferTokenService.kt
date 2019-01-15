@@ -14,8 +14,9 @@ object TransferTokenService {
         caller: UserAccount,
         from: String,
         to: String,
-        name: String,
         amount: Double,
+        name: String?,
+        tokenId: Int?,
         previousTransactionId: Int?,
         notes: String?) : SOAResult<Transaction> {
         val address = caller.cryptoKeyPair.publicKey
@@ -24,41 +25,28 @@ object TransferTokenService {
         if(address != from)
             return SOAResult(SOAResultType.FAILURE, "Access denied. Caller and from address must match.", null)
 
-        return TransferTokenHelper.transferToken(
-            caller,
-            from,
-            to,
-            name,
-            amount,
-            ActionType.TRANSFER,
-            previousTransactionId,
-            notes
-        )
-    }
-
-    fun execute(
-            caller: UserAccount,
-            from: String,
-            to: String,
-            tokenId: Int,
-            amount: Double,
-            previousTransactionId: Int?,
-            notes: String?) : SOAResult<Transaction> {
-        val address = caller.cryptoKeyPair.publicKey
-
-        // verify that the caller is the from address
-        if (address != from)
-            return SOAResult(SOAResultType.FAILURE, "Access denied. Caller and from address must match.", null)
-
-        return TransferTokenHelper.transferToken(
+        if (tokenId != null)
+            return TransferTokenHelper.transferToken(
+                    caller,
+                    from,
+                    to,
+                    tokenId,
+                    amount,
+                    ActionType.TRANSFER,
+                    previousTransactionId,
+                    notes)
+        else if (name != null)
+            return TransferTokenHelper.transferToken(
                 caller,
                 from,
                 to,
-                tokenId,
+                name,
                 amount,
                 ActionType.TRANSFER,
                 previousTransactionId,
                 notes
-        )
+            )
+
+        return SOAResult(SOAResultType.FAILURE, "Must include tokenId or token name.", null)
     }
 }

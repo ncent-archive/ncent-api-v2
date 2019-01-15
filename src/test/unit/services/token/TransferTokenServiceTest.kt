@@ -50,9 +50,9 @@ class TransferTokenServiceTest : WordSpec() {
                         newUserAccount,
                         newUserAccount.cryptoKeyPair.publicKey,
                         newUserAccount2.cryptoKeyPair.publicKey,
-                        "nCent",
                         5.0,
-                        null, null)
+                        "nCent",
+                        null, null, null)
                     result.result shouldBe SOAResultType.SUCCESS
                     val tx = result.data as Transaction
                     tx.from shouldBe newUserAccount.cryptoKeyPair.publicKey
@@ -78,9 +78,9 @@ class TransferTokenServiceTest : WordSpec() {
                         newUserAccount,
                         newUserAccount.cryptoKeyPair.publicKey,
                         newUserAccount2.cryptoKeyPair.publicKey,
-                        "nCent",
                         105.0,
-                        null, null)
+                        "nCent",
+                        null, null, null)
                     result.result shouldBe SOAResultType.FAILURE
                     result.message shouldBe "Insufficient funds"
                 }

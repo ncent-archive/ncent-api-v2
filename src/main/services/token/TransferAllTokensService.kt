@@ -13,24 +13,16 @@ import main.services.reward.DistributeRewardService
 object TransferAllTokensService {
     fun execute(
             caller: UserAccount,
-            from: String,
-            to: String,
+            toAddress: String,
             notes: String?) : SOAResult<TransactionList> {
-        val address = caller.cryptoKeyPair.publicKey
-
-        // verify that the caller is the from address
-        if(address != from)
-            return SOAResult(
-                    SOAResultType.FAILURE,
-                    "Access denied. Caller and from address must match.",
-                    null)
+        val fromAddress = caller.cryptoKeyPair.publicKey
 
         // Generate map of all tokenIds with a balance
-        val transactionsResult = TransferTokenHelper.getTransferHistory(address, null)
+        val transactionsResult = TransferTokenHelper.getTransferHistory(fromAddress, null)
         if(transactionsResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, transactionsResult.message)
         val mapOfTransfers = TransferTokenHelper.getMapOfTransfersByCurrency(transactionsResult.data!!)
-        val mapOfBalances = TransferTokenHelper.getMapOfBalancesByCurrency(address, mapOfTransfers)
+        val mapOfBalances = TransferTokenHelper.getMapOfBalancesByCurrency(fromAddress, mapOfTransfers)
 
 
         // Transfer all tokens to the new address
@@ -42,14 +34,20 @@ object TransferAllTokensService {
             result.message = "Address has no associated balances so no tokens were transferred."
 
         mapOfBalances.forEach { tokenId, balance ->
-            if(balance <= 0.0 || result.result != SOAResultType.SUCCESS)
+            if(result.result != SOAResultType.SUCCESS)
                 return@forEach
+            if(balance <= 0.0) {
+                result.result = SOAResultType.FAILURE
+                result.message = "Non zero balance found for token type $tokenId"
+                return@forEach
+            }
             val transferResult : SOAResult<Transaction> = TransferTokenService.execute(
                     caller,
-                    from,
-                    to,
-                    tokenId,
+                    fromAddress,
+                    toAddress,
                     balance,
+                    null,
+                    tokenId,
                     null,
                     notes)
             resultingTransactions.add(transferResult.data!!)
