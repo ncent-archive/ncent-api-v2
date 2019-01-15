@@ -18,12 +18,10 @@ object DistributeRewardService {
         // get all the transactions -- verify they have not been spent
         // check that there are no outbount tx from the completion criteria -- if there are deduct
 
-        val transactionsResult = TransferTokenHelper.getTransferHistory(address, null)
-        if(transactionsResult.result != SOAResultType.SUCCESS)
-            return SOAResult(SOAResultType.FAILURE, transactionsResult.message)
-
-        val mapOfTransfers = TransferTokenHelper.getMapOfTransfersByCurrency(transactionsResult.data!!)
-        val mapOfBalances = TransferTokenHelper.getMapOfBalancesByCurrency(address, mapOfTransfers)
+        val mapOfBalancesResult = TransferTokenHelper.getMapOfBalancesByCurrency(address)
+        if (mapOfBalancesResult.result != SOAResultType.SUCCESS)
+            return SOAResult(SOAResultType.FAILURE, "Failed to retrieve balances.", null)
+        val mapOfBalances = mapOfBalancesResult.data!!
 
         //TODO what should we do if any of the balances are negative but some are positive?
         //TODO handle 'ALL' type reward audience -- get all chains
@@ -63,12 +61,12 @@ object DistributeRewardService {
                 leafToParentProvidenceChain.forEach { tx ->
                     // TODO Add error handling for transfering.
                     resultingTxs.add(TransferTokenHelper.transferToken(
-                        null,
                         address,
                         tx.to!!,
-                        tokenId,
                         amount,
                         ActionType.PAYOUT,
+                        null,
+                        tokenId,
                         null,
                         "Reward distribution"
                     ).data!!)
@@ -79,12 +77,12 @@ object DistributeRewardService {
                 val tx = leafToParentProvidenceChain.first()
                 // TODO Add error handling for transfering.
                 resultingTxs.add(TransferTokenHelper.transferToken(
-                    null,
                     address,
                     tx.to!!,
-                    tokenId,
                     balance,
                     ActionType.PAYOUT,
+                    null,
+                    tokenId,
                     null,
                     "Reward distribution"
                 ).data!!)
@@ -103,12 +101,12 @@ object DistributeRewardService {
                 leafToParentProvidenceChain.forEach { tx ->
                     // TODO Add error handling for transfering.
                     resultingTxs.add(TransferTokenHelper.transferToken(
-                        null,
                         address,
                         tx.to!!,
-                        tokenId,
                         n_over_2,
                         ActionType.PAYOUT,
+                        null,
+                        tokenId,
                         null,
                         "Reward distribution"
                     ).data!!)

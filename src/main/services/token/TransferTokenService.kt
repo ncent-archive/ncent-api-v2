@@ -11,28 +11,22 @@ import main.helpers.TransferTokenHelper
  */
 object TransferTokenService {
     fun execute(
-        caller: UserAccount,
         from: String,
         to: String,
-        name: String,
         amount: Double,
-        previousTransactionId: Int?,
-        notes: String?) : SOAResult<Transaction> {
-        val address = caller.cryptoKeyPair.publicKey
-
-        // verify that the caller is the from address
-        if(address != from)
-            return SOAResult(SOAResultType.FAILURE, "Access denied. Caller and from address must match.", null)
+        name: String? = null,
+        tokenId: Int? = null,
+        previousTransactionId: Int? = null,
+        notes: String? = null) : SOAResult<Transaction> {
 
         return TransferTokenHelper.transferToken(
-            caller,
-            from,
-            to,
-            name,
-            amount,
-            ActionType.TRANSFER,
-            previousTransactionId,
-            notes
-        )
+                    from,
+                    to,
+                    amount,
+                    ActionType.TRANSFER,
+                    name,
+                    tokenId,
+                    previousTransactionId,
+                    notes)
     }
 }

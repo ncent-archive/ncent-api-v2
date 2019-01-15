@@ -47,12 +47,10 @@ class TransferTokenServiceTest : WordSpec() {
                     val token = GenerateTokenService.execute(newUserAccount, nCentTokenNamespace).data!!
 
                     var result = TransferTokenService.execute(
-                        newUserAccount,
                         newUserAccount.cryptoKeyPair.publicKey,
                         newUserAccount2.cryptoKeyPair.publicKey,
-                        "nCent",
                         5.0,
-                        null, null)
+                        "nCent")
                     result.result shouldBe SOAResultType.SUCCESS
                     val tx = result.data as Transaction
                     tx.from shouldBe newUserAccount.cryptoKeyPair.publicKey
@@ -75,12 +73,10 @@ class TransferTokenServiceTest : WordSpec() {
                     GenerateTokenService.execute(newUserAccount, nCentTokenNamespace)
 
                     var result = TransferTokenService.execute(
-                        newUserAccount,
                         newUserAccount.cryptoKeyPair.publicKey,
                         newUserAccount2.cryptoKeyPair.publicKey,
-                        "nCent",
                         105.0,
-                        null, null)
+                        "nCent")
                     result.result shouldBe SOAResultType.FAILURE
                     result.message shouldBe "Insufficient funds"
                 }
