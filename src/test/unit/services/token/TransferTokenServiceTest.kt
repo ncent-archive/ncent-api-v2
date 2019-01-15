@@ -47,7 +47,6 @@ class TransferTokenServiceTest : WordSpec() {
                     val token = GenerateTokenService.execute(newUserAccount, nCentTokenNamespace).data!!
 
                     var result = TransferTokenService.execute(
-                        newUserAccount,
                         newUserAccount.cryptoKeyPair.publicKey,
                         newUserAccount2.cryptoKeyPair.publicKey,
                         5.0,
@@ -74,7 +73,6 @@ class TransferTokenServiceTest : WordSpec() {
                     GenerateTokenService.execute(newUserAccount, nCentTokenNamespace)
 
                     var result = TransferTokenService.execute(
-                        newUserAccount,
                         newUserAccount.cryptoKeyPair.publicKey,
                         newUserAccount2.cryptoKeyPair.publicKey,
                         105.0,

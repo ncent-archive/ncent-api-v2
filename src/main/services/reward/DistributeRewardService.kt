@@ -61,12 +61,12 @@ object DistributeRewardService {
                 leafToParentProvidenceChain.forEach { tx ->
                     // TODO Add error handling for transfering.
                     resultingTxs.add(TransferTokenHelper.transferToken(
-                        null,
                         address,
                         tx.to!!,
-                        tokenId,
                         amount,
                         ActionType.PAYOUT,
+                        null,
+                        tokenId,
                         null,
                         "Reward distribution"
                     ).data!!)
@@ -77,12 +77,12 @@ object DistributeRewardService {
                 val tx = leafToParentProvidenceChain.first()
                 // TODO Add error handling for transfering.
                 resultingTxs.add(TransferTokenHelper.transferToken(
-                    null,
                     address,
                     tx.to!!,
-                    tokenId,
                     balance,
                     ActionType.PAYOUT,
+                    null,
+                    tokenId,
                     null,
                     "Reward distribution"
                 ).data!!)
@@ -101,12 +101,12 @@ object DistributeRewardService {
                 leafToParentProvidenceChain.forEach { tx ->
                     // TODO Add error handling for transfering.
                     resultingTxs.add(TransferTokenHelper.transferToken(
-                        null,
                         address,
                         tx.to!!,
-                        tokenId,
                         n_over_2,
                         ActionType.PAYOUT,
+                        null,
+                        tokenId,
                         null,
                         "Reward distribution"
                     ).data!!)

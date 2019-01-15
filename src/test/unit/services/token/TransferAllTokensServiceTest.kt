@@ -58,7 +58,7 @@ class TransferAllTokensServiceTest : WordSpec() {
                     val barToken = GenerateTokenService.execute(newUserAccount, barTokenNamespace).data!!
 
                     var result = TransferAllTokensService.execute(
-                            newUserAccount,
+                            newUserAccount.cryptoKeyPair.publicKey,
                             newUserAccount2.cryptoKeyPair.publicKey)
                     result.result shouldBe SOAResultType.SUCCESS
                     val tx = result.data!!.transactions
@@ -84,7 +84,7 @@ class TransferAllTokensServiceTest : WordSpec() {
 
                 transaction {
                     var result = TransferAllTokensService.execute(
-                            newUserAccount,
+                            newUserAccount.cryptoKeyPair.publicKey,
                             newUserAccount2.cryptoKeyPair.publicKey,
                             null)
                     result.result shouldBe SOAResultType.SUCCESS

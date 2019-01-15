@@ -12,10 +12,9 @@ import main.services.reward.DistributeRewardService
  */
 object TransferAllTokensService {
     fun execute(
-            caller: UserAccount,
+            fromAddress: String,
             toAddress: String,
             notes: String? = null) : SOAResult<TransactionList> {
-        val fromAddress = caller.cryptoKeyPair.publicKey
 
         val mapOfBalancesResult = TransferTokenHelper.getMapOfBalancesByCurrency(fromAddress)
         if (mapOfBalancesResult.result != SOAResultType.SUCCESS)
@@ -39,7 +38,6 @@ object TransferAllTokensService {
                 return@forEach
             }
             val transferResult : SOAResult<Transaction> = TransferTokenService.execute(
-                    caller,
                     fromAddress,
                     toAddress,
                     balance,

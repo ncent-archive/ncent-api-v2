@@ -15,14 +15,24 @@ import org.jetbrains.exposed.sql.select
 object TransferTokenHelper {
 
     fun transferToken(
-        caller: UserAccount?,
         from: String,
         to: String,
-        tokenId: Int,
         amount: Double,
         type: ActionType,
-        previousTransactionId: Int?,
-        notes: String?): SOAResult<Transaction> {
+        name: String? = null,
+        id: Int? = null,
+        previousTransactionId: Int? = null,
+        notes: String? = null): SOAResult<Transaction> {
+
+        var tokenId: Int
+        if (id == null && name == null)
+            return SOAResult(SOAResultType.FAILURE, "Must include either a token name or tokenId", null)
+        else if(id == null) {
+            val tokenResult = GetTokenService.execute(name!!)
+            if (tokenResult.result != SOAResultType.SUCCESS)
+                return SOAResult(tokenResult.result, tokenResult.message, null)
+            tokenId = tokenResult.data!!.tokenType.idValue
+        } else {tokenId = id}
 
         return DaoService.execute {
             // get the token transfer history for this address
@@ -57,26 +67,9 @@ object TransferTokenHelper {
         }.data!!
     }
 
-    fun transferToken(
-        caller: UserAccount?,
-        from: String,
-        to: String,
-        tokenName: String,
-        amount: Double,
-        type: ActionType,
-        previousTransactionId: Int?,
-        notes: String?): SOAResult<Transaction> {
-        // get the token type we wish to transfer
-        val tokenResult = GetTokenService.execute(tokenName)
-        if(tokenResult.result != SOAResultType.SUCCESS)
-            return SOAResult(tokenResult.result, tokenResult.message, null)
-        val tokenId = tokenResult.data!!.tokenType.idValue
-        return transferToken(caller, from, to, tokenId, amount, type, previousTransactionId, notes)
-    }
-
     // join from and to this caller and the token -- this will get the history of transfers
     // that this user was a part of for this particular token
-    fun getTransferHistory(address: String, tokenId: Int?): SOAResult<List<Transaction>> {
+    fun getTransferHistory(address: String, tokenId: Int? = null): SOAResult<List<Transaction>> {
         return DaoService.execute {
             val expression = if(tokenId != null) {
                 (Transactions.from.eq(address) or Transactions.to.eq(address)) and
