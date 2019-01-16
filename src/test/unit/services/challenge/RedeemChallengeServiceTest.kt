@@ -10,12 +10,13 @@ import kotlinserverless.framework.models.Handler
 import kotlinserverless.framework.services.SOAResultType
 import main.services.challenge.ActivateChallengeService
 import main.services.challenge.CompleteChallengeService
+import main.services.challenge.RedeemChallengeService
 import main.services.challenge.ShareChallengeService
 import org.jetbrains.exposed.sql.transactions.transaction
 import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
-class CompleteChallengeServiceTest : WordSpec() {
+class RedeemChallengeServiceTest : WordSpec() {
     private lateinit var challenge: Challenge
     private lateinit var userAccount1: UserAccount
     private lateinit var userAccount2: UserAccount
@@ -43,7 +44,7 @@ class CompleteChallengeServiceTest : WordSpec() {
         // TODO test off chain
         // TODO test if multi-tx share fails midway
         "calling execute with valid data" should {
-            "should complete the challenge by changing the state and distributing rewards" {
+            "should distribute rewards" {
                 transaction {
                     ActivateChallengeService.execute(userAccount1, challenge.idValue)
 
@@ -85,7 +86,7 @@ class CompleteChallengeServiceTest : WordSpec() {
 
                     // user 2 should not be able to complete the challenge
 
-                    var result = CompleteChallengeService.execute(
+                    var result = RedeemChallengeService.execute(
                         userAccount1,
                         challenge,
                         userAccount2.cryptoKeyPair.publicKey
@@ -95,16 +96,14 @@ class CompleteChallengeServiceTest : WordSpec() {
 
                     // user 3 should be able to complete the challenge
                     // should generate 3 transactions paying out user 3,2,1
-                    var completionResult = CompleteChallengeService.execute(
+                    var redeemResult = RedeemChallengeService.execute(
                         userAccount1,
                         challenge,
                         userAccount3.cryptoKeyPair.publicKey
                     )
-                    completionResult.result shouldBe SOAResultType.SUCCESS
-                    val distributionResults = completionResult.data!!.transactions
+                    redeemResult.result shouldBe SOAResultType.SUCCESS
+                    val distributionResults = redeemResult.data!!.transactions
                     distributionResults.count() shouldBe 3
-                    val state = challenge.getLastStateChangeTransaction()!!
-                    state.action.type shouldBe ActionType.COMPLETE
                 }
             }
         }
