@@ -32,8 +32,9 @@ object ShareAllChallengesService {
         var sharedTransactions = mutableListOf<Transaction>()
         unsharedTransactions.data!!.transactionsToShares.forEach {
             val challenge = Challenge.findById(it.first.action.data)!!
+            val numShares = it.second
             var result = ShareChallengeService.execute(
-                    caller, challenge, it.second, publicKeyToShareWith, emailToShareWith)
+                    caller, challenge, numShares, publicKeyToShareWith, emailToShareWith)
             if(result.result != SOAResultType.SUCCESS)
                 return SOAResult(SOAResultType.FAILURE, result.message, result.data)
 
@@ -43,6 +44,6 @@ object ShareAllChallengesService {
         return SOAResult(
                 SOAResultType.SUCCESS,
                 "Successfully transferred all challenge shares.",
-                Pair(TransactionList(sharedTransactions), publicKeyAndAccount.data!!.second))
+                Pair(TransactionList(sharedTransactions), newUserAccount))
     }
 }
