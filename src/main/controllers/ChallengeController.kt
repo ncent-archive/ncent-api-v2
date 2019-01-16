@@ -24,7 +24,16 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {
-        return GetOneChallengeService.execute(id)
+        val result = SOAResult<Challenge>(SOAResultType.FAILURE, "", null)
+        val challenge = Challenge.findById(id)
+        if (challenge == null) {
+            result.message = "Challenge not found"
+        } else {
+            result.data = challenge
+            result.result = SOAResultType.SUCCESS
+        }
+
+        return result
     }
 
     fun complete(user: UserAccount, request: Request): SOAResult<Challenge> {
