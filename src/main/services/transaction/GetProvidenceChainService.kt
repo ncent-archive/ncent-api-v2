@@ -11,13 +11,8 @@ import org.jetbrains.exposed.dao.EntityID
  *
  */
 object GetProvidenceChainService {
-    fun execute(transactionId: Int): SOAResult<TransactionList> {
-        // Get the transaction in question
-        val txResult = GetTransactionService.execute(transactionId)
+    fun execute(transaction: Transaction): SOAResult<TransactionList> {
         // TODO -- verify that the transaction is a token type
-        if (txResult.result != SOAResultType.SUCCESS)
-            return SOAResult(txResult.result, txResult.message, null)
-        var tx = txResult.data!!
         // verify no children exist
         // TODO we may not need this check
 //        var childrenResult = getChildren(tx.id)
@@ -27,7 +22,7 @@ object GetProvidenceChainService {
 //        if (childrenResult.data!!.any())
 //            return SOAResult(SOAResultType.FAILURE, "Must send a leaf node, must not have children", null)
 
-        val mainChain = getHistoricChain(tx)
+        val mainChain = getHistoricChain(transaction)
 
         return SOAResult(SOAResultType.SUCCESS, null, TransactionList(mainChain))
     }

@@ -15,18 +15,13 @@ import main.daos.*
  *
  */
 object GetProvidenceChainsService {
-    fun execute(transactionId: Int) : SOAResult<List<TransactionList>> {
-        // Get the transaction in question
-        val txResult = GetTransactionService.execute(transactionId)
-        if(txResult.result != SOAResultType.SUCCESS)
-            return SOAResult(txResult.result, txResult.message, null)
-        var tx = txResult.data!!
+    fun execute(transaction: Transaction) : SOAResult<List<TransactionList>> {
         // Keep a map of all providence chains that we are populating
         var providenceChains = mutableMapOf<Int, MutableList<Transaction>>()
         // Once completed populating (no more children), a chain is moved to this list
         var providenceChainsFinal = mutableListOf<TransactionList>()
 
-        var mainChain = GetProvidenceChainService.getHistoricChain(tx)
+        var mainChain = GetProvidenceChainService.getHistoricChain(transaction)
 
         // Add the main chain to the temporary map of 'all chains that are in progress'
         providenceChains[mainChain.last().idValue] = mainChain
