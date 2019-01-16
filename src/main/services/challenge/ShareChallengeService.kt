@@ -25,19 +25,20 @@ object ShareChallengeService {
     ) : SOAResult<Pair<TransactionList, NewUserAccount?>> {
 
         // Validate user exists or attempt to generate a new user
-        val userAccountToShareWithInformation = UserAccountHelper.getOrGenerateUserToShareWith(emailToShareWith, publicKeyToShareWith)
-        val(publicKeyToShareWith, newUserAccount) = if(userAccountToShareWithInformation.result != SOAResultType.SUCCESS)
-            return SOAResult(userAccountToShareWithInformation.result, userAccountToShareWithInformation.message)
-        else
-            userAccountToShareWithInformation.data!!
+        val publicKeyAndAccount = UserAccountHelper.getOrGenerateUser(emailToShareWith, publicKeyToShareWith)
+        val(publicKeyToShareWith, newUserAccount) =
+            if(publicKeyAndAccount.result != SOAResultType.SUCCESS)
+                return SOAResult(publicKeyAndAccount.result, publicKeyAndAccount.message)
+            else
+                publicKeyAndAccount.data!!
 
         // TODO look into using a datetime formatter
         val expiration = expiration ?: challenge.challengeSettings.shareExpiration.toString()
 
-        return if(!challenge.challengeSettings.offChain)
-            shareOnChain(caller, challenge, shares, publicKeyToShareWith, expiration, newUserAccount)
-        else
+        return if(challenge.challengeSettings.offChain)
             shareOffChain(caller, challenge, shares, publicKeyToShareWith, expiration, newUserAccount)
+        else
+            shareOnChain(caller, challenge, shares, publicKeyToShareWith, expiration, newUserAccount)
     }
 
     private fun shareOnChain(

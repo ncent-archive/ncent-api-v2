@@ -79,7 +79,7 @@ class ShareChallengeServiceTest : WordSpec() {
                         "SOMEFAKEPUBLICKEY"
                     )
                     result.result shouldBe SOAResultType.FAILURE
-                    result.message shouldBe "The user does not exist. In order to share with that user you must share via email."
+                    result.message shouldBe "The user does not exist. Must pass email in order to proceed."
                 }
             }
         }
