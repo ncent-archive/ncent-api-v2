@@ -24,3 +24,10 @@ class InvalidArguments(private var body: String) :
  */
 class RouterException(private var resource: String) :
         MyException(404, "The route/resource $resource doesn't exist")
+
+/**
+ * Not Found Exception
+ * @constructor The default exception is 404 not found
+ */
+class NotFoundException :
+        MyException(404, "Not Found")

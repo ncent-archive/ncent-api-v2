@@ -47,7 +47,7 @@ class FindOneChallengeTest : WordSpec() {
                 Pair("httpMethod", "GET"),
                 Pair("userId", user.idValue.toString()),
                 Pair("pathParameters", mutableMapOf(
-                        Pair("challengeId", challenge.idValue)
+                        Pair("id", 404)
                 ))
         )
     }
@@ -73,7 +73,7 @@ class FindOneChallengeTest : WordSpec() {
             "should return a failure response" {
                 transaction {
                     val findOneChallengeResult = handler.handleRequest(badMap, contxt)
-                    findOneChallengeResult.statusCode shouldNotBe  200
+                    findOneChallengeResult.statusCode shouldBe 404
                 }
             }
         }

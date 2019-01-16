@@ -10,6 +10,7 @@ import main.daos.*
 import main.services.user_account.GetUserAccountService
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.mockito.internal.matchers.Not
 import java.lang.Exception
 import kotlin.reflect.full.createInstance
 
@@ -17,7 +18,7 @@ import kotlin.reflect.full.createInstance
  * Request Dispatcher implementation
  */
 open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
-    @Throws(RouterException::class)
+    @Throws(RouterException::class, NotFoundException::class)
     override fun locate(request: ApiGatewayRequest): Any? {
         val path = request.input["path"]
         for ((regex, inputModel, outputModel, controller) in ROUTER.routes) {
@@ -42,6 +43,8 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
 
             if(result.result == SOAResultType.SUCCESS) {
                 return result.data
+            } else if (result.message == "Not Found") {
+                throw NotFoundException()
             } else {
                 println("There was an error processing the request.")
                 println(result.message)

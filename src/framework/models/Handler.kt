@@ -39,6 +39,11 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       status = 404
       body = e.message
     }
+    catch(e: NotFoundException) {
+      LOG.error(e.message, e)
+      status = 404
+      body = e.message
+    }
     catch (e: MyException) {
       LOG.error(e.message, e)
       status = e.code

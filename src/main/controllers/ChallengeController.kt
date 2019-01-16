@@ -3,8 +3,10 @@ package main.controllers
 import framework.services.DaoService
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
+import kotlinserverless.framework.models.NotFoundException
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.models.Request
+import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.services.user_account.ValidateApiKeyService
 import main.services.challenge.*
@@ -22,10 +24,17 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         }
     }
 
+    @Throws(NotFoundException::class)
     override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {
-        return DaoService.execute {
-             Challenge.findById(id)!!
+        val findChallengeResult = DaoService.execute {
+            Challenge.findById(id)!!
         }
+
+        if (findChallengeResult.result != SOAResultType.SUCCESS) {
+            return SOAResult(SOAResultType.FAILURE, "Not Found", null)
+        }
+
+        return findChallengeResult
     }
 
     fun complete(user: UserAccount, request: Request): SOAResult<Challenge> {
