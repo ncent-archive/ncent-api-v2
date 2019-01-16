@@ -24,7 +24,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {
-        throw NotImplementedError()
+        return GetOneChallengeService.execute(id)
     }
 
     fun complete(user: UserAccount, request: Request): SOAResult<Challenge> {
