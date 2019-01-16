@@ -29,9 +29,7 @@ class AddToRewardPoolServiceTest : WordSpec() {
                 audience = Audience.FULL,
                 type = RewardTypeName.EVEN
             ),
-            metadatas = MetadatasListNamespace(
-                listOf(MetadatasNamespace("title", "reward everyone"))
-            )
+            metadatas = arrayOf(MetadatasNamespace("title", "reward everyone"))
         )
         nCentTokenNamespace = TokenNamespace(
             amount = 100,

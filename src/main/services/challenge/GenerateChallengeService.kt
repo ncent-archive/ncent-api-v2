@@ -66,14 +66,12 @@ object GenerateChallengeService {
             from = challenge.cryptoKeyPair.publicKey,
             to = userAccount.cryptoKeyPair.publicKey,
             previousTransaction = null,
-            metadatas = MetadatasListNamespace(
-                ChallengeMetadata(
-                    challenge.idValue,
-                    challenge.challengeSettings.offChain,
-                    challenge.challengeSettings.shareExpiration.toString(),
-                    challenge.challengeSettings.maxShares
-                ).getChallengeMetadataNamespaces()
-            ),
+            metadatas = ChallengeMetadata(
+                            challenge.idValue,
+                            challenge.challengeSettings.offChain,
+                            challenge.challengeSettings.shareExpiration.toString(),
+                            challenge.challengeSettings.maxShares
+                        ).getChallengeMetadataNamespaces().toTypedArray(),
             action = ActionNamespace(
                 type = ActionType.SHARE,
                 data = challenge.idValue,

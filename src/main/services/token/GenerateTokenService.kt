@@ -41,7 +41,7 @@ object GenerateTokenService {
                     Token::class.simpleName!!
                 ),
                 null,
-                MetadatasListNamespace(listOf(MetadatasNamespace("amount", tokenNamespace.amount.toString())))
+                arrayOf(MetadatasNamespace("amount", tokenNamespace.amount.toString()))
             ))
         if(result.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, "Failed to generate a transaction funding creator")

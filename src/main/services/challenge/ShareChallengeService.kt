@@ -45,14 +45,12 @@ object ShareChallengeService {
                     from = caller.cryptoKeyPair.publicKey,
                     to = publicKeyToShareWith,
                     previousTransaction = ustx.idValue,
-                    metadatas = MetadatasListNamespace(
-                        ChallengeMetadata(
-                            challenge.idValue,
-                            challenge.challengeSettings.offChain,
-                            expiration,
-                            Math.min(shares, amount)
-                        ).getChallengeMetadataNamespaces()
-                    ),
+                    metadatas = ChallengeMetadata(
+                                    challenge.idValue,
+                                    challenge.challengeSettings.offChain,
+                                    expiration,
+                                    Math.min(shares, amount)
+                                ).getChallengeMetadataNamespaces().toTypedArray(),
                     action = ActionNamespace(
                         type = ActionType.SHARE,
                         data = challenge.idValue,
@@ -83,14 +81,12 @@ object ShareChallengeService {
                 from = caller.cryptoKeyPair.publicKey,
                 to = publicKeyToShareWith,
                 previousTransaction = previousTx?.idValue,
-                metadatas = MetadatasListNamespace(
-                    ChallengeMetadata(
-                        challenge.idValue,
-                        challenge.challengeSettings.offChain,
-                        expiration,
-                        shares ?: challenge.challengeSettings.maxSharesPerReceivedShare
-                    ).getChallengeMetadataNamespaces()
-                ),
+                metadatas = ChallengeMetadata(
+                                challenge.idValue,
+                                challenge.challengeSettings.offChain,
+                                expiration,
+                                shares ?: challenge.challengeSettings.maxSharesPerReceivedShare
+                            ).getChallengeMetadataNamespaces().toTypedArray(),
                 action = ActionNamespace(
                     type = ActionType.SHARE,
                     data = challenge.idValue,

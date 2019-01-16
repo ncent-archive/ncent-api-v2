@@ -3,6 +3,7 @@ package main.daos
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
+import framework.models.idValue
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.Table
 
@@ -34,7 +35,7 @@ class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
         map.put("from", from)
         map.put("to", to)
         map.put("action", action.toMap())
-        map.put("previousTransaction", previousTransaction?.toMap())
+        map.put("previousTransactionId", previousTransaction?.idValue)
         map.put("metadatas", metadatas.map { it.toMap() })
         return map
     }
@@ -52,7 +53,7 @@ object TransactionsMetadata : Table("transactions_to_metadatas") {
     val metadata = reference("metadata_to_transaction", Metadatas).primaryKey()
 }
 
-data class TransactionNamespace(val from: String?, val to: String?, val action: ActionNamespace?, val previousTransaction: Int?, val metadatas: MetadatasListNamespace?)
+data class TransactionNamespace(val from: String?=null, val to: String?=null, val action: ActionNamespace?=null, val previousTransaction: Int?=null, val metadatas: Array<MetadatasNamespace>? = null)
 
 class TransactionList(val transactions: List<Transaction>)
 
