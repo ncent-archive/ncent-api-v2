@@ -1,6 +1,5 @@
 package test.unit.services.challenge
 
-import framework.models.idValue
 import io.kotlintest.*
 import io.kotlintest.specs.WordSpec
 import io.mockk.junit5.MockKExtension
@@ -40,6 +39,7 @@ class ShareAllChallengesServiceTest : WordSpec() {
         "calling execute with a valid user" should {
             "return transactions for all shares transferred to send address" {
                 transaction {
+                    // Verify that the share transactions were created.
                     val result = ShareAllChallengesService.execute(
                             sender.value,
                             recipient.value.cryptoKeyPair.publicKey)
@@ -48,7 +48,7 @@ class ShareAllChallengesServiceTest : WordSpec() {
                     result.data!!.first.transactions[0].action.data shouldBe 2
                     result.data!!.first.transactions[1].action.data shouldBe 1
 
-                    // Verify that recipient received shares.
+                    // Verify that the recipient received the shares.
                     var unsharedTransactions = GetUnsharedTransactionsService.execute(recipient.value)
                     unsharedTransactions.data!!.transactionsToShares.count() shouldBe 2
                     unsharedTransactions.data!!.transactionsToShares[0].second shouldBe 100

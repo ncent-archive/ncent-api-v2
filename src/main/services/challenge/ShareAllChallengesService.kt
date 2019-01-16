@@ -6,7 +6,7 @@ import main.daos.*
 import main.helpers.UserAccountHelper
 
 /**
- * Share a challenge.
+ * Share all challenges from a user's account.
  */
 object ShareAllChallengesService {
     fun execute(
@@ -28,8 +28,8 @@ object ShareAllChallengesService {
         if(unsharedTransactions.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, unsharedTransactions.message)
 
-        // Iterate through non-transferred shares and send balances to new public key address.
-        var shareTransactions = mutableListOf<Transaction>()
+        // Iterate through unshared transactions and share all.
+        var sharedTransactions = mutableListOf<Transaction>()
         unsharedTransactions.data!!.transactionsToShares.forEach {
             val challenge = Challenge.findById(it.first.action.data)!!
             var result = ShareChallengeService.execute(
@@ -37,12 +37,12 @@ object ShareAllChallengesService {
             if(result.result != SOAResultType.SUCCESS)
                 return SOAResult(SOAResultType.FAILURE, result.message, result.data)
 
-            shareTransactions.addAll(result.data!!.first.transactions)
+            sharedTransactions.addAll(result.data!!.first.transactions)
         }
 
         return SOAResult(
                 SOAResultType.SUCCESS,
                 "Successfully transferred all challenge shares.",
-                Pair(TransactionList(shareTransactions), publicKeyAndAccount.data!!.second))
+                Pair(TransactionList(sharedTransactions), publicKeyAndAccount.data!!.second))
     }
 }
