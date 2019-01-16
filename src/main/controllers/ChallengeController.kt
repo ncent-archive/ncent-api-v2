@@ -51,9 +51,9 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
             val shares = request.input["shares"] as Int
             val expiration = request.input["expiration"] as String?
 
-            val shareChallengeResult = ShareChallengeService.execute(user, challenge, publicKeyToShareWith, shares, expiration)
+            val shareChallengeResult = ShareChallengeService.execute(user, challenge, shares, publicKeyToShareWith, expiration)
             DaoService.throwOrReturn(shareChallengeResult.result, shareChallengeResult.message)
-            return@execute shareChallengeResult.data!!.transactions.first()
+            return@execute shareChallengeResult.data!!.first.transactions.first()
         }
     }
 }

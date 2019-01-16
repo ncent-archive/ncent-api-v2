@@ -9,7 +9,9 @@ import io.mockk.junit5.MockKExtension
 import kotlinserverless.framework.models.Handler
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.Audience
+import main.daos.Reward
 import main.daos.RewardTypeName
+import main.daos.Transaction
 import main.services.reward.DistributeRewardService
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -18,8 +20,8 @@ import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class DistributeRewardServiceTest : WordSpec() {
-    private lateinit var rewardId: EntityID<Int>
-    private lateinit var providenceChainIds: List<EntityID<Int>>
+    private lateinit var reward: Reward
+    private lateinit var providenceChainTxs: List<Transaction>
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
@@ -33,11 +35,11 @@ class DistributeRewardServiceTest : WordSpec() {
         "calling execute with a valid transfer" should {
             "generate a list of transactions transferring to the providence chain evenly" {
                 transaction {
-                    rewardId = TestHelper.buildGenericReward(null, Audience.PROVIDENCE, RewardTypeName.EVEN).id
-                    providenceChainIds = TestHelper.buildGenericProvidenceChain()
+                    reward = TestHelper.buildGenericReward(null, Audience.PROVIDENCE, RewardTypeName.EVEN)
+                    providenceChainTxs = TestHelper.buildGenericProvidenceChain()
 
                     val result = DistributeRewardService.execute(
-                        rewardId.value, providenceChainIds.last().value
+                        reward, providenceChainTxs.last()
                     )
 
                     result.result shouldBe SOAResultType.SUCCESS
@@ -63,11 +65,11 @@ class DistributeRewardServiceTest : WordSpec() {
 
             "generate a single transaction to one individual when reward type is single" {
                 transaction {
-                    rewardId = TestHelper.buildGenericReward(null, Audience.PROVIDENCE, RewardTypeName.SINGLE).id
-                    providenceChainIds = TestHelper.buildGenericProvidenceChain()
+                    reward = TestHelper.buildGenericReward(null, Audience.PROVIDENCE, RewardTypeName.SINGLE)
+                    providenceChainTxs = TestHelper.buildGenericProvidenceChain()
 
                     val result = DistributeRewardService.execute(
-                        rewardId.value, providenceChainIds.last().value
+                        reward, providenceChainTxs.last()
                     )
 
                     result.result shouldBe SOAResultType.SUCCESS
@@ -82,11 +84,11 @@ class DistributeRewardServiceTest : WordSpec() {
             }
             "generate a list of transactions transferring to the providence chain in n over 2" {
                 transaction {
-                    rewardId = TestHelper.buildGenericReward(null, Audience.PROVIDENCE, RewardTypeName.N_OVER_2).id
-                    providenceChainIds = TestHelper.buildGenericProvidenceChain()
+                    reward = TestHelper.buildGenericReward(null, Audience.PROVIDENCE, RewardTypeName.N_OVER_2)
+                    providenceChainTxs = TestHelper.buildGenericProvidenceChain()
 
                     val result = DistributeRewardService.execute(
-                        rewardId.value, providenceChainIds.last().value
+                        reward, providenceChainTxs.last()
                     )
 
                     result.result shouldBe SOAResultType.SUCCESS

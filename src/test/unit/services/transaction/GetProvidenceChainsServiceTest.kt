@@ -7,6 +7,7 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlinserverless.framework.services.SOAResultType
 import kotlinserverless.framework.models.Handler
+import main.daos.Transaction
 import main.services.transaction.GetProvidenceChainsService
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -14,14 +15,14 @@ import test.TestHelper
 
 @ExtendWith(MockKExtension::class)
 class GetProvidenceChainsServiceTest : WordSpec() {
-    private lateinit var middleTransactionId: EntityID<Int>
-    private lateinit var sideTransactionId: EntityID<Int>
+    private lateinit var middleTransaction: Transaction
+    private lateinit var sideTransaction: Transaction
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
         val transactions = TestHelper.buildGenericProvidenceChain()
-        sideTransactionId = transactions[2]
-        middleTransactionId = transactions[1]
+        sideTransaction = transactions[2]
+        middleTransaction = transactions[1]
     }
 
     override fun afterTest(description: Description, result: TestResult) {
@@ -32,7 +33,7 @@ class GetProvidenceChainsServiceTest : WordSpec() {
         "calling execute with a valid transaction id" should {
             "return the list of all possible chains if there are many children nodes involved" {
                 transaction {
-                    val result = GetProvidenceChainsService.execute(middleTransactionId.value)
+                    val result = GetProvidenceChainsService.execute(middleTransaction)
 
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.count() shouldBe 3
@@ -57,7 +58,7 @@ class GetProvidenceChainsServiceTest : WordSpec() {
             }
             "return a single chain if there are no children node involved" {
                 transaction {
-                    val result = GetProvidenceChainsService.execute(sideTransactionId.value)
+                    val result = GetProvidenceChainsService.execute(sideTransaction)
 
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.count() shouldBe 1

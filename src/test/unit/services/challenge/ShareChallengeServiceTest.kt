@@ -46,15 +46,40 @@ class ShareChallengeServiceTest : WordSpec() {
                     val result = ShareChallengeService.execute(
                         userAccount1,
                         challenge,
-                        userAccount2.cryptoKeyPair.publicKey,
                         50,
-                        null
+                        userAccount2.cryptoKeyPair.publicKey
                     )
                     result.result shouldBe SOAResultType.SUCCESS
-                    result.data!!.transactions.count() shouldBe 1
+                    result.data!!.first.transactions.count() shouldBe 1
 
                     val result2 = GetUnsharedTransactionsService.execute(userAccount1, challenge.idValue)
                     result2.data!!.transactionsToShares.map { it.second }.sum() shouldBe 50
+                }
+            }
+            "if the user does not exist and an email is passed, generate a single transaction sharing to a new user" {
+                transaction {
+                    val result = ShareChallengeService.execute(
+                        userAccount1,
+                        challenge,
+                        50,
+                        null,
+                        "newuseremail@okgo.com"
+                    )
+                    result.result shouldBe SOAResultType.SUCCESS
+                    result.data!!.first.transactions.count() shouldBe 1
+                    result.data!!.second!!.value.userMetadata.email shouldBe "newuseremail@okgo.com"
+                }
+            }
+            "if the user does not exist and no email is passed, fail" {
+                transaction {
+                    val result = ShareChallengeService.execute(
+                        userAccount1,
+                        challenge,
+                        50,
+                        "SOMEFAKEPUBLICKEY"
+                    )
+                    result.result shouldBe SOAResultType.FAILURE
+                    result.message shouldBe "The user does not exist. Must pass email in order to proceed."
                 }
             }
         }
@@ -65,16 +90,14 @@ class ShareChallengeServiceTest : WordSpec() {
                     ShareChallengeService.execute(
                         userAccount1,
                         challenge,
-                        userAccount2.cryptoKeyPair.publicKey,
                         50,
-                        null
+                        userAccount2.cryptoKeyPair.publicKey
                     )
                     ShareChallengeService.execute(
                         userAccount1,
                         challenge,
-                        userAccount2.cryptoKeyPair.publicKey,
                         30,
-                        null
+                        userAccount2.cryptoKeyPair.publicKey
                     )
                     val result2 = GetUnsharedTransactionsService.execute(userAccount1, challenge.idValue)
                     result2.data!!.transactionsToShares.map { it.second }.sum() shouldBe 20
@@ -82,20 +105,18 @@ class ShareChallengeServiceTest : WordSpec() {
                     var result = ShareChallengeService.execute(
                         userAccount2,
                         challenge,
-                        userAccount3.cryptoKeyPair.publicKey,
                         90,
-                        null
+                        userAccount3.cryptoKeyPair.publicKey
                     )
                     result.result shouldBe SOAResultType.FAILURE
                     result = ShareChallengeService.execute(
                         userAccount2,
                         challenge,
-                        userAccount3.cryptoKeyPair.publicKey,
                         80,
-                        null
+                        userAccount3.cryptoKeyPair.publicKey
                     )
                     result.result shouldBe SOAResultType.SUCCESS
-                    result.data!!.transactions.count() shouldBe 2
+                    result.data!!.first.transactions.count() shouldBe 2
 
                     val result3 = GetUnsharedTransactionsService.execute(userAccount3, challenge.idValue)
                     result3.data!!.transactionsToShares.map { it.second }.sum() shouldBe 80
@@ -108,9 +129,8 @@ class ShareChallengeServiceTest : WordSpec() {
                     val result = ShareChallengeService.execute(
                         userAccount1,
                         challenge,
-                        userAccount2.cryptoKeyPair.publicKey,
                         2000,
-                        null
+                        userAccount2.cryptoKeyPair.publicKey
                     )
                     result.result shouldBe SOAResultType.FAILURE
                 }
@@ -129,9 +149,8 @@ class ShareChallengeServiceTest : WordSpec() {
                     val result = ShareChallengeService.execute(
                         userAccount1,
                         challenge,
-                        userAccount2.cryptoKeyPair.publicKey,
                         1,
-                        null
+                        userAccount2.cryptoKeyPair.publicKey
                     )
                     result.result shouldBe SOAResultType.FAILURE
                 }

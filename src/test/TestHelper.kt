@@ -29,7 +29,7 @@ object TestHelper {
      *
      * Returns [endTransactionId: ARYA6 ,sideTransactionId: ARYA4]
      */
-    fun buildGenericProvidenceChain(): List<EntityID<Int>> {
+    fun buildGenericProvidenceChain(): List<Transaction> {
         var action = ActionNamespace(
             type = ActionType.CREATE,
             data = 1,
@@ -53,7 +53,7 @@ object TestHelper {
             var transaction6Namespace = TransactionNamespace(from = "ARYA6", to = "MIKE6", action = action, previousTransaction = tx4.idValue, metadatas = metadatas)
             var tx5 = GenerateTransactionService.execute(transaction5Namespace).data!!
             var tx6 = GenerateTransactionService.execute(transaction6Namespace).data!!
-            return@transaction listOf(tx1.id, tx2.id, tx3.id, tx4.id, tx5.id, tx6.id)
+            return@transaction listOf(tx1, tx2, tx3, tx4, tx5, tx6)
         }
     }
 
