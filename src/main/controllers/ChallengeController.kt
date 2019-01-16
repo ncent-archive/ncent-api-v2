@@ -5,7 +5,6 @@ import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.models.Request
-import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.services.user_account.ValidateApiKeyService
 import main.services.challenge.*
@@ -24,16 +23,9 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {
-        val result = SOAResult<Challenge>(SOAResultType.FAILURE, "", null)
-        val challenge = Challenge.findById(id)
-        if (challenge == null) {
-            result.message = "Challenge not found"
-        } else {
-            result.data = challenge
-            result.result = SOAResultType.SUCCESS
+        return DaoService.execute {
+             Challenge.findById(id)!!
         }
-
-        return result
     }
 
     fun complete(user: UserAccount, request: Request): SOAResult<Challenge> {
