@@ -12,6 +12,7 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.mockito.internal.matchers.Not
 import java.lang.Exception
+import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.full.createInstance
 
 /**
@@ -32,19 +33,22 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
 
             val func = controllerClass.members.find { it.name == "defaultRouting" }
             val user = findUserByRequest(request)
-            val result = func?.call(
-                    controllerInstance,
-                    inputModel,
-                    outputModelClass::class.java,
-                    request!!,
-                    user,
-                    controllerInstance
-            ) as SOAResult<Any>
+            val result = try {
+                func?.call(
+                        controllerInstance,
+                        inputModel,
+                        outputModelClass::class.java,
+                        request!!,
+                        user,
+                        controllerInstance
+                ) as SOAResult<Any>
+            }
+            catch(e: InvocationTargetException) {
+                throw e.targetException
+            }
 
             if(result.result == SOAResultType.SUCCESS) {
                 return result.data
-            } else if (result.message == "Not Found") {
-                throw NotFoundException()
             } else {
                 println("There was an error processing the request.")
                 println(result.message)

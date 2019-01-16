@@ -27,14 +27,14 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     @Throws(NotFoundException::class)
     override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {
         val findChallengeResult = DaoService.execute {
-            Challenge.findById(id)!!
+            Challenge.findById(id)
         }
 
-        if (findChallengeResult.result != SOAResultType.SUCCESS) {
-            return SOAResult(SOAResultType.FAILURE, "Not Found", null)
+        if (findChallengeResult.result != SOAResultType.SUCCESS || findChallengeResult.data == null) {
+            throw NotFoundException("Challenge not found")
         }
 
-        return findChallengeResult
+        return SOAResult(findChallengeResult.result, findChallengeResult.message, findChallengeResult.data!!)
     }
 
     fun complete(user: UserAccount, request: Request): SOAResult<Challenge> {

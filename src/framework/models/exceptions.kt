@@ -27,7 +27,8 @@ class RouterException(private var resource: String) :
 
 /**
  * Not Found Exception
+ * @property message The error message to display
  * @constructor The default exception is 404 not found
  */
-class NotFoundException :
-        MyException(404, "Not Found")
+class NotFoundException(override var message: String = "Not Found") :
+        MyException(404, message)
