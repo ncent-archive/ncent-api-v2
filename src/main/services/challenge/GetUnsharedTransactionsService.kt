@@ -14,7 +14,7 @@ import org.joda.time.DateTime
  */
 object GetUnsharedTransactionsService {
     // get challenges for a caller
-    fun execute(caller: UserAccount, challengeId: Int): SOAResult<ShareTransactionList> {
+    fun execute(caller: UserAccount, challengeId: Int? = null): SOAResult<ShareTransactionList> {
         val publicKey = caller.cryptoKeyPair.publicKey
         val receivedTransactionResult = GetTransactionsService.execute(
             null,
