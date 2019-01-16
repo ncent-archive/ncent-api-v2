@@ -15,7 +15,6 @@ import main.daos.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.extension.ExtendWith
 import test.TestHelper
-import java.lang.StringBuilder
 
 @ExtendWith(MockKExtension::class)
 class ChallengeCreationTest : WordSpec() {

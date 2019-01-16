@@ -3,6 +3,7 @@ package main.controllers
 import framework.services.DaoService
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
+import kotlinserverless.framework.models.NotFoundException
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.models.Request
 import kotlinserverless.framework.services.SOAResultType
@@ -23,8 +24,17 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         }
     }
 
+    @Throws(NotFoundException::class)
     override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {
-        throw NotImplementedError()
+        val findChallengeResult = DaoService.execute {
+            Challenge.findById(id)
+        }
+
+        if (findChallengeResult.result != SOAResultType.SUCCESS || findChallengeResult.data == null) {
+            throw NotFoundException("Challenge not found")
+        }
+
+        return SOAResult(findChallengeResult.result, findChallengeResult.message, findChallengeResult.data!!)
     }
 
     fun complete(user: UserAccount, request: Request): SOAResult<Challenge> {

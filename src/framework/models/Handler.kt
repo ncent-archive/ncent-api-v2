@@ -6,7 +6,6 @@ import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import framework.models.BaseIntEntity
 import main.daos.*
-import main.services.user_account.GenerateUserAccountService
 import org.apache.log4j.Logger
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -35,6 +34,11 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       }
     }
     catch(e: RouterException) {
+      LOG.error(e.message, e)
+      status = 404
+      body = e.message
+    }
+    catch(e: NotFoundException) {
       LOG.error(e.message, e)
       status = 404
       body = e.message
