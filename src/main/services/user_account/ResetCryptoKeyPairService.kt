@@ -11,18 +11,13 @@ import java.lang.Exception
  * This service is used to reset a user's public / private keypair.
  */
 object ResetCryptoKeyPairService {
-    fun execute(userAccount: UserAccount) : SOAResult<ApiCredNamespace> {
-        val apiCredResult = GenerateApiCredsService.execute()
-        if(apiCredResult.result != SOAResultType.SUCCESS)
-            return SOAResult(apiCredResult.result, apiCredResult.message, null)
-        val apiCredNamespace: ApiCredNamespace = apiCredResult.data!!
-        val apiCreds = ApiCred.new {
-            apiKey = apiCredNamespace.apiKey
-            secretKey = apiCredNamespace.secretKey
-        }
+    fun execute(userAccount: UserAccount) : SOAResult<NewCryptoKeyPair> {
+        val keypairResult = GenerateCryptoKeyPairService.execute()
+        if(keypairResult.result != SOAResultType.SUCCESS)
+            return SOAResult(keypairResult.result, keypairResult.message, null)
 
         return try {
-            userAccount.apiCreds = apiCreds
+            userAccount.cryptoKeyPair = keypairResult.data!!.value
 
             // TODO log or error result?
             val transactionResult = GenerateTransactionService.execute(
@@ -38,7 +33,7 @@ object ResetCryptoKeyPairService {
                     )
             )
 
-            SOAResult(SOAResultType.SUCCESS, null, apiCredNamespace)
+            SOAResult(SOAResultType.SUCCESS, null, keypairResult.data!!)
         } catch(e: Exception) {
             SOAResult(SOAResultType.FAILURE, e.message, null)
         }
