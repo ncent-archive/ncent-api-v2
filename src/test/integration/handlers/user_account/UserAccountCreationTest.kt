@@ -12,6 +12,7 @@ import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
+import main.daos.NewUserAccountNamespace
 import main.daos.UserAccount
 import test.TestHelper
 
@@ -48,16 +49,9 @@ class UserAccountCreationTest : WordSpec() {
             "should return a valid new user account" {
                 val response = handler.handleRequest(map, contxt)
                 response.statusCode shouldBe 200
-                val newUserAccountMap = Klaxon().parse<Map<String?, Any>>(response.body!!)
-                val newUserAccountDataMap = Klaxon().parse<Map<String?, Any>>(newUserAccountMap?.get("value") as String)
+                val newUserAccount = Klaxon().parse<NewUserAccountNamespace>(response.body!!)
 
-                newUserAccountDataMap!!.containsKey("apiCreds") shouldBe true
-                newUserAccountDataMap.containsKey("session") shouldBe true
-                newUserAccountDataMap.containsKey("cryptoKeyPair") shouldBe true
-                newUserAccountDataMap.containsKey("userMetadata") shouldBe true
-
-                val newUserMetadata = newUserAccountDataMap["userMetadata"] as JsonObject
-                newUserMetadata["email"] shouldBe "dev@ncnt.io"
+                newUserAccount!!.value.userMetadata.email shouldBe "dev@ncnt.io"
             }
         }
     }

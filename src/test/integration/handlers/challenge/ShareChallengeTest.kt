@@ -79,10 +79,10 @@ class ShareChallengeTest : WordSpec() {
                     val response = handler.handleRequest(map, contxt)
                     response.statusCode shouldBe 200
 
-                    val shareWithNewUserNamespace = JsonHelper.parse<ShareWithNewUserNamespace>(response.body as String)
+                    val transactionWithNewUserNamespace = JsonHelper.parse<TransactionWithNewUserNamespace>(response.body as String)
 
-                    shareWithNewUserNamespace.transactions.first().from shouldBe user1.cryptoKeyPair.publicKey
-                    shareWithNewUserNamespace.transactions.first().to shouldBe user2.cryptoKeyPair.publicKey
+                    transactionWithNewUserNamespace.transactions.first().from shouldBe user1.cryptoKeyPair.publicKey
+                    transactionWithNewUserNamespace.transactions.first().to shouldBe user2.cryptoKeyPair.publicKey
                 }
             }
         }
@@ -100,7 +100,8 @@ class ShareChallengeTest : WordSpec() {
             "should return a failure response" {
                 transaction {
                     val response = handler.handleRequest(tooManySharesMap, contxt)
-                    response.statusCode shouldNotBe 200
+                    response.statusCode shouldBe 403
+                    response.body shouldBe "You do not have enough valid shares available: 100"
                 }
             }
         }

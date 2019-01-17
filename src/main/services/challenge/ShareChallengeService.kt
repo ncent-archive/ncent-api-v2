@@ -22,7 +22,7 @@ object ShareChallengeService {
         publicKeyToShareWith: String? = null,
         emailToShareWith: String? = null,
         expiration: String? = null
-    ) : SOAResult<ShareWithNewUser> {
+    ) : SOAResult<TransactionWithNewUser> {
 
         // Validate user exists or attempt to generate a new user
         val publicKeyAndAccount = UserAccountHelper.getOrGenerateUser(emailToShareWith, publicKeyToShareWith)
@@ -48,7 +48,7 @@ object ShareChallengeService {
         publicKeyToShareWith: String,
         expiration: String,
         newUserAccount: NewUserAccount?
-    ): SOAResult<ShareWithNewUser> {
+    ): SOAResult<TransactionWithNewUser> {
 
         // validate the user has enough shares
         // check that we can share based on # shares available and attempt
@@ -90,7 +90,7 @@ object ShareChallengeService {
             txs.add(txResult.data!!)
             shared += amount
         }
-        return SOAResult(SOAResultType.SUCCESS, null, ShareWithNewUser(txs, newUserAccount))
+        return SOAResult(SOAResultType.SUCCESS, null, TransactionWithNewUser(txs, newUserAccount))
     }
 
     private fun shareOffChain(
@@ -100,7 +100,7 @@ object ShareChallengeService {
         publicKeyToShareWith: String,
         expiration: String,
         newUserAccount: NewUserAccount?
-    ): SOAResult<ShareWithNewUser> {
+    ): SOAResult<TransactionWithNewUser> {
         // create a tx using previous as the first tx
         val receivedTransactionResult = GetTransactionsService.execute(
             null,
@@ -133,6 +133,6 @@ object ShareChallengeService {
 
         if(txResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, txResult.message)
-        return SOAResult(SOAResultType.SUCCESS, null, ShareWithNewUser(listOf(txResult.data!!), newUserAccount))
+        return SOAResult(SOAResultType.SUCCESS, null, TransactionWithNewUser(listOf(txResult.data!!), newUserAccount))
     }
 }

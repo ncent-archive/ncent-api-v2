@@ -56,7 +56,7 @@ class TransactionList(val transactions: List<Transaction>)
 
 class ShareTransactionList(val transactionsToShares: List<Pair<Transaction, Int>>)
 
-class ShareWithNewUser(
+class TransactionWithNewUser(
     val transactions: List<Transaction>,
     val newUser: NewUserAccount? = null
 ): BaseNamespace() {
@@ -68,4 +68,4 @@ class ShareWithNewUser(
     }
 }
 
-data class ShareWithNewUserNamespace(val transactions: List<TransactionNamespace>, val newUser: NewUserAccountNamespace? = null)
+data class TransactionWithNewUserNamespace(val transactions: List<TransactionNamespace>, val newUser: NewUserAccountNamespace? = null)

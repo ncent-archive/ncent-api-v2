@@ -32,3 +32,11 @@ class RouterException(private var resource: String) :
  */
 class NotFoundException(override var message: String = "Not Found") :
         MyException(404, message)
+
+/**
+ * Forbidden Exception
+ * @property message The error message to display
+ * @constructor The default exception is 403 forbidden
+ */
+class ForbiddenException(override var message: String = "Operation forbidden") :
+        MyException(403, message)
