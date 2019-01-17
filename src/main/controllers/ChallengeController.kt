@@ -60,7 +60,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
             finalResult.data = serviceResult.data
         }
 
-        if (finalResult.result != SOAResultType.SUCCESS && finalResult.message!!.contains("You do not have enough valid shares available")) {
+        if (finalResult.result != SOAResultType.SUCCESS && finalResult.message?.contains("You do not have enough valid shares available") == true) {
             throw ForbiddenException(finalResult.message as String)
         }
 
