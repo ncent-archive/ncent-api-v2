@@ -46,7 +46,7 @@ object GenerateRewardService {
         newReward.pool = rewardPool
 
         if(rewardNamespace.metadatas != null) {
-            newReward.metadatas = SizedCollection(rewardNamespace.metadatas.metadatas.map {
+            newReward.metadatas = SizedCollection(rewardNamespace.metadatas.map {
                     md -> Metadata.new {
                     key = md.key
                     value = md.value

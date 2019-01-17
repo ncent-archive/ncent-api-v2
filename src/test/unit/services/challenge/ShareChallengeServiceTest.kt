@@ -50,7 +50,7 @@ class ShareChallengeServiceTest : WordSpec() {
                         userAccount2.cryptoKeyPair.publicKey
                     )
                     result.result shouldBe SOAResultType.SUCCESS
-                    result.data!!.first.transactions.count() shouldBe 1
+                    result.data!!.transactions.count() shouldBe 1
 
                     val result2 = GetUnsharedTransactionsService.execute(userAccount1, challenge.idValue)
                     result2.data!!.transactionsToShares.map { it.second }.sum() shouldBe 50
@@ -66,8 +66,8 @@ class ShareChallengeServiceTest : WordSpec() {
                         "newuseremail@okgo.com"
                     )
                     result.result shouldBe SOAResultType.SUCCESS
-                    result.data!!.first.transactions.count() shouldBe 1
-                    result.data!!.second!!.value.userMetadata.email shouldBe "newuseremail@okgo.com"
+                    result.data!!.transactions.count() shouldBe 1
+                    result.data!!.newUser!!.value.userMetadata.email shouldBe "newuseremail@okgo.com"
                 }
             }
             "if the user does not exist and no email is passed, fail" {
@@ -116,7 +116,7 @@ class ShareChallengeServiceTest : WordSpec() {
                         userAccount3.cryptoKeyPair.publicKey
                     )
                     result.result shouldBe SOAResultType.SUCCESS
-                    result.data!!.first.transactions.count() shouldBe 2
+                    result.data!!.transactions.count() shouldBe 2
 
                     val result3 = GetUnsharedTransactionsService.execute(userAccount3, challenge.idValue)
                     result3.data!!.transactionsToShares.map { it.second }.sum() shouldBe 80

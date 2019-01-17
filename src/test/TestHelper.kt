@@ -35,11 +35,9 @@ object TestHelper {
             data = 1,
             dataType = "UserAccount"
         )
-        var metadatas = MetadatasListNamespace(
-            listOf(
+        var metadatas = arrayOf(
                 MetadatasNamespace("city", "san carlos"),
                 MetadatasNamespace("state", "california")
-            )
         )
 
         return transaction {
@@ -69,9 +67,7 @@ object TestHelper {
                 audience = audience,
                 type = type
             ),
-            metadatas = MetadatasListNamespace(
-                listOf(MetadatasNamespace("title", "reward everyone"))
-            )
+            metadatas = arrayOf(MetadatasNamespace("title", "reward everyone"))
         )
         var nCentTokenNamespace = TokenNamespace(
             amount = 100,
@@ -249,14 +245,12 @@ object TestHelper {
             from = fromAccount.cryptoKeyPair.publicKey,
             to = toAccount.cryptoKeyPair.publicKey,
             previousTransaction = previousTransaction.idValue,
-            metadatas = MetadatasListNamespace(
-                ChallengeMetadata(
-                    challenge.idValue,
-                    challenge.challengeSettings.offChain,
-                    challenge.challengeSettings.shareExpiration.toString(),
-                    amount
-                ).getChallengeMetadataNamespaces()
-            ),
+            metadatas = ChallengeMetadata(
+                            challenge.idValue,
+                            challenge.challengeSettings.offChain,
+                            challenge.challengeSettings.shareExpiration.toString(),
+                            amount
+                        ).getChallengeMetadataNamespaces().toTypedArray(),
             action = ActionNamespace(
                 type = ActionType.SHARE,
                 data = challenge.idValue,

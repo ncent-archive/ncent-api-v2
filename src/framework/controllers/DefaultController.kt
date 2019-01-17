@@ -4,6 +4,7 @@ import framework.models.BaseIntEntity
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
 import main.daos.UserAccount
+import java.lang.reflect.InvocationTargetException
 
 open class DefaultController<T: BaseIntEntity> : Controller<T> {
 	override fun <T : BaseIntEntity> defaultRouting(
@@ -20,6 +21,9 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 			if(func != null) {
 				try {
 					return func.call(restController, user, request) as SOAResult<T>
+				}
+				catch(e: InvocationTargetException) {
+					throw e.targetException
 				}
 				catch(e: Exception) {
 					println("There was an error routing!")

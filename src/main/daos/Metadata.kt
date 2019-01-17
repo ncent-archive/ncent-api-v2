@@ -34,5 +34,3 @@ object Metadatas : BaseIntIdTable("metadatas") {
 }
 
 data class MetadatasNamespace(val key: String, val value: String)
-
-data class MetadatasListNamespace(val metadatas: List<MetadatasNamespace>)

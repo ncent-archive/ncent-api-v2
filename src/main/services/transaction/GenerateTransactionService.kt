@@ -23,7 +23,7 @@ object GenerateTransactionService {
                 null
 
         val metadatasToAdd = if(transactionNamespace.metadatas != null) {
-            transactionNamespace.metadatas.metadatas.map {
+            transactionNamespace.metadatas.map {
                 md -> Metadata.new {
                     key = md.key
                     value = md.value

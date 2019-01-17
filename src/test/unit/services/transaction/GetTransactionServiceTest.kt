@@ -29,11 +29,9 @@ class GetTransactionServiceTest : WordSpec() {
                 dataType = "UserAccount"
             ),
             previousTransaction = null,
-            metadatas = MetadatasListNamespace(
-                listOf(
+            metadatas = arrayOf(
                     MetadatasNamespace("city", "san carlos"),
                     MetadatasNamespace("state", "california")
-                )
             )
         )
     }
@@ -56,11 +54,9 @@ class GetTransactionServiceTest : WordSpec() {
                             dataType = "UserAccount"
                         ),
                         previousTransaction = parentTxGenerateResult.data!!.idValue,
-                        metadatas = MetadatasListNamespace(
-                            listOf(
+                        metadatas = arrayOf(
                                 MetadatasNamespace("city", "san carlos"),
                                 MetadatasNamespace("state", "california")
-                            )
                         )
                     )
                     val txGenerateResult = GenerateTransactionService.execute(transaction2Namespace)

@@ -33,7 +33,7 @@ object Actions : BaseIntIdTable("actions") {
     val dataType = varchar("class_name", 100)
 }
 
-data class ActionNamespace(val type: ActionType?, val data: Int?, val dataType: String)
+data class ActionNamespace(val type: ActionType?=null, val data: Int?=null, val dataType: String)
 
 enum class ActionType(val type: String) {
     TRANSFER("transfer"),

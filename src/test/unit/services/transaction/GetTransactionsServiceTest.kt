@@ -28,11 +28,9 @@ class GetTransactionsServiceTest : WordSpec() {
                 dataType = "UserAccount"
             ),
             previousTransaction = null,
-            metadatas = MetadatasListNamespace(
-                listOf(
+            metadatas = arrayOf(
                     MetadatasNamespace("city", "san carlos"),
                     MetadatasNamespace("state", "california")
-                )
             )
         )
 
@@ -45,11 +43,9 @@ class GetTransactionsServiceTest : WordSpec() {
                 dataType = "UserAccount"
             ),
             previousTransaction = null,
-            metadatas = MetadatasListNamespace(
-                listOf(
+            metadatas = arrayOf(
                     MetadatasNamespace("city", "san carlos"),
                     MetadatasNamespace("state", "california")
-                )
             )
         )
     }

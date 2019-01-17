@@ -22,7 +22,7 @@ object ShareChallengeService {
         publicKeyToShareWith: String? = null,
         emailToShareWith: String? = null,
         expiration: String? = null
-    ) : SOAResult<Pair<TransactionList, NewUserAccount?>> {
+    ) : SOAResult<TransactionWithNewUser> {
 
         // Validate user exists or attempt to generate a new user
         val publicKeyAndAccount = UserAccountHelper.getOrGenerateUser(emailToShareWith, publicKeyToShareWith)
@@ -48,7 +48,7 @@ object ShareChallengeService {
         publicKeyToShareWith: String,
         expiration: String,
         newUserAccount: NewUserAccount?
-    ): SOAResult<Pair<TransactionList, NewUserAccount?>> {
+    ): SOAResult<TransactionWithNewUser> {
 
         // validate the user has enough shares
         // check that we can share based on # shares available and attempt
@@ -73,14 +73,12 @@ object ShareChallengeService {
                 from = caller.cryptoKeyPair.publicKey,
                 to = publicKeyToShareWith,
                 previousTransaction = ustx.idValue,
-                metadatas = MetadatasListNamespace(
-                    ChallengeMetadata(
-                        challenge.idValue,
-                        challenge.challengeSettings.offChain,
-                        expiration,
-                        Math.min(shares, amount)
-                    ).getChallengeMetadataNamespaces()
-                ),
+                metadatas = ChallengeMetadata(
+                                challenge.idValue,
+                                challenge.challengeSettings.offChain,
+                                expiration,
+                                Math.min(shares, amount)
+                            ).getChallengeMetadataNamespaces().toTypedArray(),
                 action = ActionNamespace(
                     type = ActionType.SHARE,
                     data = challenge.idValue,
@@ -92,7 +90,7 @@ object ShareChallengeService {
             txs.add(txResult.data!!)
             shared += amount
         }
-        return SOAResult(SOAResultType.SUCCESS, null, Pair(TransactionList(txs), newUserAccount))
+        return SOAResult(SOAResultType.SUCCESS, null, TransactionWithNewUser(txs, newUserAccount))
     }
 
     private fun shareOffChain(
@@ -102,7 +100,7 @@ object ShareChallengeService {
         publicKeyToShareWith: String,
         expiration: String,
         newUserAccount: NewUserAccount?
-    ): SOAResult<Pair<TransactionList, NewUserAccount?>> {
+    ): SOAResult<TransactionWithNewUser> {
         // create a tx using previous as the first tx
         val receivedTransactionResult = GetTransactionsService.execute(
             null,
@@ -120,14 +118,12 @@ object ShareChallengeService {
             from = caller.cryptoKeyPair.publicKey,
             to = publicKeyToShareWith,
             previousTransaction = previousTx?.idValue,
-            metadatas = MetadatasListNamespace(
-                ChallengeMetadata(
-                    challenge.idValue,
-                    challenge.challengeSettings.offChain,
-                    expiration,
-                    shares
-                ).getChallengeMetadataNamespaces()
-            ),
+            metadatas = ChallengeMetadata(
+                            challenge.idValue,
+                            challenge.challengeSettings.offChain,
+                            expiration,
+                            shares
+                        ).getChallengeMetadataNamespaces().toTypedArray(),
             action = ActionNamespace(
                 type = ActionType.SHARE,
                 data = challenge.idValue,
@@ -137,6 +133,6 @@ object ShareChallengeService {
 
         if(txResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, txResult.message)
-        return SOAResult(SOAResultType.SUCCESS, null, Pair(TransactionList(listOf(txResult.data!!)), newUserAccount))
+        return SOAResult(SOAResultType.SUCCESS, null, TransactionWithNewUser(listOf(txResult.data!!), newUserAccount))
     }
 }

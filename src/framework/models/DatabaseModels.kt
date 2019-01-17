@@ -34,6 +34,16 @@ abstract class BaseIntEntity(id: EntityID<Int>, table: BaseIntIdTable) : IntEnti
     }
 }
 
+abstract class BaseNamespace {
+    override fun toString(): String {
+        return transaction {
+            return@transaction ObjectMapper().writeValueAsString(toMap())
+        }
+    }
+
+    abstract fun toMap(): MutableMap<String, Any?>
+}
+
 abstract class BaseIntEntityClass<E : BaseIntEntity>(table: BaseIntIdTable) : IntEntityClass<E>(table) {
 
     init {

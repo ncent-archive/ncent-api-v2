@@ -48,14 +48,12 @@ object RedeemChallengeService {
             from = completerPublicKey,
             to = challenge.completionCriterias.address,
             previousTransaction = firstUnspentTx.idValue,
-            metadatas = MetadatasListNamespace(
-                ChallengeMetadata(
-                    challenge.idValue,
-                    challenge.challengeSettings.offChain,
-                    challenge.challengeSettings.shareExpiration.toString(),
-                    1
-                ).getChallengeMetadataNamespaces()
-            ),
+            metadatas = ChallengeMetadata(
+                            challenge.idValue,
+                            challenge.challengeSettings.offChain,
+                            challenge.challengeSettings.shareExpiration.toString(),
+                            1
+                        ).getChallengeMetadataNamespaces().toTypedArray(),
             action = ActionNamespace(
                 type = ActionType.SHARE,
                 data = challenge.idValue,
