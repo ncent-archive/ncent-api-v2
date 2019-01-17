@@ -19,7 +19,7 @@ import kotlin.reflect.full.createInstance
  * Request Dispatcher implementation
  */
 open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
-    @Throws(RouterException::class, NotFoundException::class, ForbiddenException::class)
+    @Throws(RouterException::class, NotFoundException::class)
     override fun locate(request: ApiGatewayRequest): Any? {
         val path = request.input["path"]
         for ((regex, inputModel, outputModel, controller) in ROUTER.routes) {
@@ -49,8 +49,6 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
 
             if(result.result == SOAResultType.SUCCESS) {
                 return result.data
-            } else if (result.result == SOAResultType.FAILURE && result.message != null) {
-                throw ForbiddenException(result.message as String)
             } else {
                 println("There was an error processing the request.")
                 println(result.message)
