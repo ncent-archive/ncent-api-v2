@@ -41,19 +41,20 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         throw NotImplementedError()
     }
 
-    fun share(user: UserAccount, request: Request): SOAResult<Transaction> {
+    fun share(user: UserAccount, request: Request): SOAResult<ShareWithNewUser> {
         return DaoService.execute {
             ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
 
             val challengeId = request.input["challengeId"] as Int
             val challenge = Challenge.findById(challengeId)!!
-            val publicKeyToShareWith = request.input["publicKeyToShareWith"] as String
+            val publicKeyToShareWith = request.input["publicKeyToShareWith"] as String?
             val shares = request.input["shares"] as Int
             val expiration = request.input["expiration"] as String?
+            val emailToShareWith = request.input["emailToShareWith"] as String?
 
-            val shareChallengeResult = ShareChallengeService.execute(user, challenge, shares, publicKeyToShareWith, expiration)
+            val shareChallengeResult = ShareChallengeService.execute(user, challenge, shares, publicKeyToShareWith, emailToShareWith, expiration)
             DaoService.throwOrReturn(shareChallengeResult.result, shareChallengeResult.message)
-            return@execute shareChallengeResult.data!!.first.transactions.first()
+            return@execute shareChallengeResult.data!!
         }
     }
 }

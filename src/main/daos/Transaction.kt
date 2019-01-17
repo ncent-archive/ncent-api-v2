@@ -1,9 +1,6 @@
 package main.daos
 
-import framework.models.BaseIntEntity
-import framework.models.BaseIntEntityClass
-import framework.models.BaseIntIdTable
-import framework.models.idValue
+import framework.models.*
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.Table
 
@@ -58,3 +55,17 @@ data class TransactionNamespace(val from: String?=null, val to: String?=null, va
 class TransactionList(val transactions: List<Transaction>)
 
 class ShareTransactionList(val transactionsToShares: List<Pair<Transaction, Int>>)
+
+class ShareWithNewUser(
+    val transactions: List<Transaction>,
+    val newUser: NewUserAccount? = null
+): BaseNamespace() {
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = mutableMapOf<String, Any?>()
+        map.put("transactions", transactions.map { it.toMap() })
+        map.put("newUser", newUser?.toMap())
+        return map
+    }
+}
+
+data class ShareWithNewUserNamespace(val transactions: List<TransactionNamespace>, val newUser: NewUserAccountNamespace? = null)

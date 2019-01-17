@@ -24,6 +24,7 @@ class ShareChallengeTest : WordSpec() {
     private lateinit var user2: UserAccount
     private lateinit var challenge: Challenge
     private lateinit var map: Map<String, Any>
+    private lateinit var newUserMap: Map<String, Any>
     private lateinit var tooManySharesMap: Map<String, Any>
 
     override fun beforeTest(description: Description) {
@@ -42,6 +43,16 @@ class ShareChallengeTest : WordSpec() {
                     Pair("challengeId", challenge.idValue),
                     Pair("publicKeyToShareWith", user2.cryptoKeyPair.publicKey),
                     Pair("shares", 3),
+                    Pair("emailToShareWith", user2.userMetadata.email),
+                    Pair("secretKey", newUsers[0].secretKey)
+            )
+            newUserMap = mutableMapOf(
+                    Pair("path", "/challenge/share"),
+                    Pair("httpMethod", "PATCH"),
+                    Pair("userId", user1.idValue.toString()),
+                    Pair("challengeId", challenge.idValue),
+                    Pair("shares", 3),
+                    Pair("emailToShareWith", "test@test.com"),
                     Pair("secretKey", newUsers[0].secretKey)
             )
             tooManySharesMap = mutableMapOf(
@@ -51,6 +62,7 @@ class ShareChallengeTest : WordSpec() {
                     Pair("challengeId", challenge.idValue),
                     Pair("publicKeyToShareWith", user2.cryptoKeyPair.publicKey),
                     Pair("shares", 1000),
+                    Pair("emailToShareWith", user2.userMetadata.email),
                     Pair("secretKey", newUsers[0].secretKey)
             )
         }
@@ -67,9 +79,19 @@ class ShareChallengeTest : WordSpec() {
                     val response = handler.handleRequest(map, contxt)
                     response.statusCode shouldBe 200
 
-                    val transactionNamespace = JsonHelper.parse<TransactionNamespace>(response.body as String)
-                    transactionNamespace.from shouldBe user1.cryptoKeyPair.publicKey
-                    transactionNamespace.to shouldBe user2.cryptoKeyPair.publicKey
+                    val shareWithNewUserNamespace = JsonHelper.parse<ShareWithNewUserNamespace>(response.body as String)
+
+                    shareWithNewUserNamespace.transactions.first().from shouldBe user1.cryptoKeyPair.publicKey
+                    shareWithNewUserNamespace.transactions.first().to shouldBe user2.cryptoKeyPair.publicKey
+                }
+            }
+        }
+
+        "valid API call" should {
+            "should share successfully with new user" {
+                transaction {
+                    val response = handler.handleRequest(newUserMap, contxt)
+                    response.statusCode shouldBe 200
                 }
             }
         }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
+import framework.models.BaseNamespace
 import org.jetbrains.exposed.dao.*
 
 /**
@@ -46,12 +47,16 @@ data class UserAccountNamespace(val userMetadata: UserNamespace, val cryptoKeyPa
 
 data class NewUserAccountNamespace(val value: UserAccountNamespace, val privateKey: String, val secretKey: String)
 
-data class NewUserAccount(val value: UserAccount, val privateKey: String, val secretKey: String) {
-    override fun toString(): String {
-        return ObjectMapper().writeValueAsString(mapOf(
-            Pair("value", value.toString()),
-            Pair("privateKey", privateKey),
-            Pair("secretKey", secretKey)
-        ))
+class NewUserAccount(
+        val value: UserAccount,
+        val privateKey: String,
+        val secretKey: String
+): BaseNamespace() {
+    override fun toMap(): MutableMap<String, Any?> {
+        val map = mutableMapOf<String, Any?>()
+        map.put("value", value.toMap())
+        map.put("privateKey", privateKey)
+        map.put("secretKey", secretKey)
+        return map
     }
 }
