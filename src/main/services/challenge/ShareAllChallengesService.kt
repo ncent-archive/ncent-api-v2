@@ -36,9 +36,9 @@ object ShareAllChallengesService {
             var result = ShareChallengeService.execute(
                     caller, challenge, numShares, publicKeyToShareWith, emailToShareWith)
             if(result.result != SOAResultType.SUCCESS)
-                return SOAResult(SOAResultType.FAILURE, result.message, result.data)
+                return SOAResult(SOAResultType.FAILURE, result.message)
 
-            sharedTransactions.addAll(result.data!!.first.transactions)
+            sharedTransactions.addAll(result.data!!.transactions)
         }
 
         return SOAResult(
