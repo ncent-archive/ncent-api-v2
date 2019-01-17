@@ -12,24 +12,7 @@ import main.daos.*
 import main.services.user_account.ValidateApiKeyService
 import main.services.challenge.*
 import main.helpers.JsonHelper
-
-@Throws(NotFoundException::class)
-fun findChallengeById(challengeId: Int?): Challenge {
-    if (challengeId == null) {
-        throw InternalError()
-    }
-
-    val findChallengeResult = DaoService.execute {
-        Challenge.findById(challengeId)
-    }
-
-    if (findChallengeResult.result != SOAResultType.SUCCESS || findChallengeResult.data == null) {
-        throw NotFoundException("Challenge not found")
-    }
-
-    return findChallengeResult.data!!
-
-}
+import main.helpers.ChallengeHelper
 
 class ChallengeController: DefaultController<Challenge>(), RestController<Challenge, UserAccount> {
     override fun create(user: UserAccount, params: Map<String, String>): SOAResult<*> {
@@ -44,7 +27,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {
-        val challenge = findChallengeById(id)
+        val challenge = ChallengeHelper.findChallengeById(id)
 
         return SOAResult(SOAResultType.SUCCESS, "", challenge)
     }
@@ -68,7 +51,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         }
         DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
 
-        val challenge = findChallengeById(challengeId)
+        val challenge = ChallengeHelper.findChallengeById(challengeId)
 
         DaoService.execute {
             val serviceResult = ShareChallengeService.execute(user, challenge, shares, publicKeyToShareWith, emailToShareWith, expiration)
@@ -77,7 +60,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
             finalResult.data = serviceResult.data
         }
 
-        if (finalResult.result != SOAResultType.SUCCESS && finalResult.message != null) {
+        if (finalResult.result != SOAResultType.SUCCESS && finalResult.message!!.contains("You do not have enough valid shares available")) {
             throw ForbiddenException(finalResult.message as String)
         }
 
