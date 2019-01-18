@@ -81,8 +81,8 @@ object TestHelper {
 
         var completionCriteriaNamespace = CompletionCriteriaNamespace(
             address = null,
-            rewardNamespace = rewardNamespace,
-            preReqChallengeIds = listOf()
+            reward = rewardNamespace,
+            prereq = listOf()
         )
 
         // Create a user, token, reward, and add to the pool
@@ -135,9 +135,9 @@ object TestHelper {
             for(i in 0..(count - 1)) {
                 val challenges = generateChallenge(subChallengeUserAccount, 3)
                 val parentChallenge = challenges[0]
-                var subChallengeList = mutableListOf<Pair<Challenge, SubChallengeType>>()
-                subChallengeList.add(Pair(challenges[1], SubChallengeType.SYNC))
-                subChallengeList.add(Pair(challenges[2], SubChallengeType.ASYNC))
+                var subChallengeList = mutableListOf<SubChallengeNamespace>()
+                subChallengeList.add(SubChallengeNamespace(challenges[1].idValue, SubChallengeType.SYNC.toString()))
+                subChallengeList.add(SubChallengeNamespace(challenges[2].idValue, SubChallengeType.ASYNC.toString()))
                 val distributionFeeRewardNamespace = TestHelper.generateRewardNamespace(RewardTypeName.SINGLE)
                 val challengeSettingNamespace = TestHelper.generateChallengeSettingsNamespace(userAccount).first()
                 val completionCriteriasNamespace = TestHelper.generateCompletionCriteriaNamespace(userAccount, 2)
@@ -145,7 +145,7 @@ object TestHelper {
                 val challengeNamespace = ChallengeNamespace(
                     parentChallenge = parentChallenge.idValue,
                     challengeSettings = challengeSettingNamespace,
-                    subChallenges = subChallengeList.map { Pair(it.first.idValue, it.second) },
+                    subChallenges = subChallengeList,
                     completionCriteria = completionCriteria1,
                     distributionFeeReward = distributionFeeRewardNamespace
                 )
@@ -224,7 +224,7 @@ object TestHelper {
             completionCriteriaNamespaces.add(
                 CompletionCriteriaNamespace(
                     address = userAccount.cryptoKeyPair.publicKey,
-                    rewardNamespace = generateRewardNamespace()
+                    reward = generateRewardNamespace()
                 )
             )
         }

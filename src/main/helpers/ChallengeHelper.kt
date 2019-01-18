@@ -2,8 +2,12 @@ package main.helpers
 
 import framework.services.DaoService
 import kotlinserverless.framework.models.NotFoundException
+import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.Challenge
+import main.daos.ChallengeToUnsharedTransactionsList
+import main.daos.UserAccount
+import main.services.challenge.GetChallengesService
 
 object ChallengeHelper {
     @Throws(NotFoundException::class)
@@ -21,5 +25,18 @@ object ChallengeHelper {
         }
 
         return findChallengeResult.data!!
+    }
+
+    @Throws(NotFoundException::class)
+    fun getChallenges(user: UserAccount): SOAResult<ChallengeToUnsharedTransactionsList?> {
+        val getChallengesResult = DaoService.execute {
+            GetChallengesService.execute(user).data
+        }
+
+        if (getChallengesResult.data == null || getChallengesResult.data?.challengeToUnsharedTransactions?.isEmpty() == true) {
+            throw NotFoundException("No challenges found for ${user.cryptoKeyPair.publicKey}")
+        }
+
+        return getChallengesResult
     }
 }

@@ -12,4 +12,8 @@ object JsonHelper {
     inline fun <reified T> parse(value: String): T {
         return KLAX.parse<T>(value)!!
     }
+
+    inline fun <reified T> parseArray(value: String): List<T> {
+        return KLAX.parseArray(value)!!
+    }
 }

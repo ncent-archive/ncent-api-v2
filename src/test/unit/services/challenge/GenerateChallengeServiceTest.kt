@@ -39,13 +39,13 @@ class GenerateChallengeServiceTest : WordSpec() {
                 parentChallenge = parentChallenge.idValue,
                 challengeSettings = challengeSettingNamespace,
                 subChallenges = listOf(
-                        Pair(asyncSubChallenge1, SubChallengeType.ASYNC),
-                        Pair(asyncSubChallenge2, SubChallengeType.ASYNC),
-                        Pair(asyncSubChallenge3, SubChallengeType.ASYNC),
-                        Pair(syncSubChallenge1, SubChallengeType.SYNC),
-                        Pair(syncSubChallenge2, SubChallengeType.SYNC),
-                        Pair(syncSubChallenge3, SubChallengeType.SYNC)
-                ).map { Pair(it.first.idValue, it.second) },
+                        SubChallengeNamespace(asyncSubChallenge1.idValue, SubChallengeType.ASYNC.toString()),
+                        SubChallengeNamespace(asyncSubChallenge2.idValue, SubChallengeType.ASYNC.toString()),
+                        SubChallengeNamespace(asyncSubChallenge3.idValue, SubChallengeType.ASYNC.toString()),
+                        SubChallengeNamespace(syncSubChallenge1.idValue, SubChallengeType.SYNC.toString()),
+                        SubChallengeNamespace(syncSubChallenge2.idValue, SubChallengeType.SYNC.toString()),
+                        SubChallengeNamespace(syncSubChallenge3.idValue, SubChallengeType.SYNC.toString())
+                ),
                 completionCriteria = completionCriteria1,
                 distributionFeeReward = distributionFeeRewardNamespace
             )

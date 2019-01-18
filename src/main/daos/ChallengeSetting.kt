@@ -3,6 +3,7 @@ package main.daos
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
+import framework.models.idValue
 import org.jetbrains.exposed.dao.EntityID
 import org.joda.time.DateTime
 
@@ -51,7 +52,7 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
         map.put("sponsorName", sponsorName)
         map.put("expiration", expiration.toString())
         map.put("shareExpiration", shareExpiration.toString())
-        map.put("admin", admin.toMap())
+        map.put("admin", admin.idValue)
         map.put("offChain", offChain)
         map.put("maxShares", maxShares)
         map.put("maxRewards", maxRewards)

@@ -42,4 +42,4 @@ object CompletionCriterias : BaseIntIdTable("completion_criterias") {
     val reward = reference("reward", Rewards)
 }
 
-data class CompletionCriteriaNamespace(val address: String?, val rewardNamespace: RewardNamespace, val preReqChallengeIds: List<Int> = listOf())
+data class CompletionCriteriaNamespace(val address: String?, val reward: RewardNamespace, val prereq: List<Int> = listOf())

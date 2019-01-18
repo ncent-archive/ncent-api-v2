@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import io.kotlintest.Description
 import io.kotlintest.shouldBe
 import io.kotlintest.TestResult
-import io.kotlintest.shouldNotBe
 import kotlinserverless.framework.models.Handler
 import io.mockk.mockk
 import main.daos.*
