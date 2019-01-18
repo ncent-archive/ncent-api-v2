@@ -11,12 +11,13 @@ import main.daos.*
 import main.services.challenge.*
 import main.helpers.JsonHelper
 import main.helpers.ChallengeHelper
+import main.helpers.ControllerHelper.RequestData
 
 class ChallengeController: DefaultController<Challenge>(), RestController<Challenge, UserAccount> {
-    override fun create(user: UserAccount, queryParams: Map<String, Any>): SOAResult<*> {
-        validateApiKey(user, queryParams)
+    override fun create(user: UserAccount, requestData: RequestData): SOAResult<Challenge> {
+        validateApiKey(user, requestData)
         return DaoService.execute {
-            val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(queryParams["challengeNamespace"]!!.toString())
+            val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(requestData.body["challengeNamespace"]!!.toString())
 
             val generateChallengeResult = GenerateChallengeService.execute(user, challengeNamespace)
             DaoService.throwOrReturn(generateChallengeResult.result, generateChallengeResult.message)
@@ -24,16 +25,16 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         }
     }
 
-    override fun findOne(user: UserAccount, queryParams: Map<String, Any>, id: Int): SOAResult<Challenge> {
-        validateApiKey(user, queryParams)
+    override fun findOne(user: UserAccount, requestData: RequestData, id: Int): SOAResult<Challenge> {
+        validateApiKey(user, requestData)
 
         val challenge = ChallengeHelper.findChallengeById(id)
 
         return SOAResult(SOAResultType.SUCCESS, "", challenge)
     }
 
-    override fun findAll(user: UserAccount, queryParams: Map<String, Any>): SOAResult<List<Challenge>> {
-        validateApiKey(user, queryParams)
+    override fun findAll(user: UserAccount, requestData: RequestData): SOAResult<List<Challenge>> {
+        validateApiKey(user, requestData)
 
         val challengesResult = ChallengeHelper.getChallenges(user)
 
@@ -81,16 +82,16 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     @Throws(ForbiddenException::class)
-    fun share(user: UserAccount, request: Request): SOAResult<TransactionWithNewUser?> {
-        val queryParams = validateApiKeyAndGetQueryParams(user, request)
+    fun share(user: UserAccount, requestData: RequestData): SOAResult<TransactionWithNewUser?> {
+        validateApiKey(user, requestData)
 
         val finalResult = SOAResult<TransactionWithNewUser?>(SOAResultType.FAILURE, null, null)
 
-        val challengeId = queryParams["challengeId"] as Int
-        val publicKeyToShareWith = queryParams["publicKeyToShareWith"] as String?
-        val shares = queryParams["shares"] as Int
-        val expiration = queryParams["expiration"] as String?
-        val emailToShareWith = queryParams["emailToShareWith"] as String?
+        val challengeId = requestData.body["challengeId"] as Int
+        val publicKeyToShareWith = requestData.body["publicKeyToShareWith"] as String?
+        val shares = requestData.body["shares"] as Int
+        val expiration = requestData.body["expiration"] as String?
+        val emailToShareWith = requestData.body["emailToShareWith"] as String?
 
         val challenge = ChallengeHelper.findChallengeById(challengeId)
 

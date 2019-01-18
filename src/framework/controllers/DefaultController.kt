@@ -4,6 +4,7 @@ import framework.models.BaseIntEntity
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
 import main.daos.UserAccount
+import main.helpers.ControllerHelper
 import java.lang.reflect.InvocationTargetException
 
 open class DefaultController<T: BaseIntEntity> : Controller<T> {
@@ -19,8 +20,8 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 		if(path.size > 1) {
 			val func = restController::class.members.find { it.name == path[1] }
 			if(func != null) {
-				try {
-					return func.call(restController, user, request) as SOAResult<T>
+				return try {
+					func.call(restController, user, ControllerHelper.getRequestData(request)) as SOAResult<T>
 				}
 				catch(e: InvocationTargetException) {
 					throw e.targetException
@@ -28,7 +29,7 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 				catch(e: Exception) {
 					println("There was an error routing!")
 					println(e)
-					return super.defaultRouting(incls, outcls, request, user, restController)
+					super.defaultRouting(incls, outcls, request, user, restController)
 				}
 			}
 		}

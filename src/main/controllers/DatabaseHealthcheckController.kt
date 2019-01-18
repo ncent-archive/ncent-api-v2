@@ -6,10 +6,11 @@ import main.daos.Healthcheck
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.User
+import main.helpers.ControllerHelper.RequestData
 import main.services.healthchecks.CheckDatabaseHealthService
 
 class HealthcheckController: DefaultController<Healthcheck>(), RestController<Healthcheck, User> {
-    override fun health(user: User, queryParams: Map<String, Any>): SOAResult<Healthcheck> {
+    override fun health(user: User, requestData: RequestData): SOAResult<Healthcheck> {
         val isDatabaseHealthyCheck = CheckDatabaseHealthService.execute()
         if (isDatabaseHealthyCheck.result == SOAResultType.FAILURE) {
             return SOAResult(SOAResultType.FAILURE, "Failed to connect", null)

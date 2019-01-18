@@ -20,40 +20,35 @@ interface Controller<M> {
      * @param service CRUD service to execute
      */
     fun <T : BaseIntEntity> defaultRouting(inputClass: String, outcls: Class<T>, request: Request, user: UserAccount, restController: RestController<T, UserAccount>): SOAResult<*> {
-		val resource = ControllerHelper.getResource(request)
-        val headers: Map<String, Any> = ControllerHelper.getHeaders(request)
-        val pathParameters: Map<String, Any> = ControllerHelper.getPathParameters(request)
-        val queryParameters: Map<String, Any> = ControllerHelper.getQueryStringParameters(request)
-        val incls = Class.forName(inputClass)
+		val requestData = ControllerHelper.getRequestData(request)
 
         return when((request.input[ControllerHelper.HTTP_METHOD] as String).toLowerCase()) {
             ControllerHelper.HTTP_GET -> {
                 when {
-                    resource != null && resource.endsWith("findOne", true) -> restController.findOne(user, queryParameters)
-                    pathParameters.containsKey("id") -> {
-                        val id = pathParameters["id"]
+                    requestData.resource != null && requestData.resource.endsWith("findOne", true) && requestData.body.containsKey("id") -> {
+                        val id = requestData.body["id"]
 
                         when (id) {
-                            is Int -> restController.findOne(user, queryParameters, id.toString().toInt())
+                            is Int -> restController.findOne(user, requestData, id.toString().toInt())
                             else -> throw Exception("Id must be an integer")
                         }
                     }
                     else -> {
-                        return restController.findAll(user, queryParameters)
+                        return restController.findAll(user, requestData)
                     }
                 }
             }
             ControllerHelper.HTTP_POST -> {
-                restController.create(user, queryParameters)
+                restController.create(user, requestData)
             }
             ControllerHelper.HTTP_PUT -> {
-                restController.update(user, queryParameters)
+                restController.update(user, requestData)
             }
             ControllerHelper.HTTP_DELETE -> {
-                restController.delete(user, queryParameters, request.input["idValue"].toString().toInt())
+                restController.delete(user, requestData, requestData.body["id"].toString().toInt())
             }
             ControllerHelper.HTTP_PATCH -> {
-                restController.update(user, queryParameters)
+                restController.update(user, requestData)
             }
 
             else -> {

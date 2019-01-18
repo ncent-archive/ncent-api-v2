@@ -7,7 +7,7 @@ import framework.services.DaoService
 import org.jetbrains.exposed.sql.select
 
 object GetUserAccountService {
-    fun execute(userId: Int? = null, email: String?, apiKey: String?): SOAResult<UserAccount> {
+    fun execute(userId: Int? = null, email: String? = null, apiKey: String? = null): SOAResult<UserAccount> {
         val userAccountResult = DaoService.execute {
             when {
                 userId != null -> {

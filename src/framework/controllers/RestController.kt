@@ -1,9 +1,9 @@
 package kotlinserverless.framework.controllers
 
 import framework.services.DaoService
-import kotlinserverless.framework.models.Request
+import kotlinserverless.framework.models.UnauthorizedError
 import main.daos.UserAccount
-import main.helpers.ControllerHelper
+import main.helpers.ControllerHelper.RequestData
 import main.services.user_account.ValidateApiKeyService
 
 /**
@@ -14,16 +14,12 @@ import main.services.user_account.ValidateApiKeyService
  * @param <U> User permissions
  */
 interface RestController<T, U> : ReadableController<T, U>, WritableController<T, U> {
-    fun validateApiKey(user: UserAccount, queryParams: Map<String, Any>) {
+    fun validateApiKey(user: UserAccount, requestData: RequestData) {
+        if(requestData.userAuth == null)
+            throw UnauthorizedError("Must include authentication for this endpoint")
         val validateApiKeyResult = DaoService.execute {
-            ValidateApiKeyService.execute(user, queryParams["secretKey"]!! as String)
+            ValidateApiKeyService.execute(user, requestData.userAuth.secretKey)
         }
         DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
-    }
-
-    fun validateApiKeyAndGetQueryParams(user: UserAccount, request: Request): Map<String, Any> {
-        val queryParameters: Map<String, Any> = ControllerHelper.getQueryStringParameters(request)
-        validateApiKey(user, queryParameters)
-        return queryParameters
     }
 }

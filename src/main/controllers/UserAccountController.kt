@@ -4,39 +4,39 @@ import framework.models.idValue
 import framework.services.DaoService
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
-import kotlinserverless.framework.models.Request
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.daos.NewUserAccount
+import main.helpers.ControllerHelper.RequestData
 import main.services.user_account.GenerateUserAccountService
 import main.services.user_account.GetUserAccountService
 import main.services.user_account.StartSessionService
 import main.services.user_account.EndSessionService
 
 class UserAccountController: DefaultController<UserAccount>(), RestController<UserAccount, UserAccount> {
-    override fun findOne(user: UserAccount, queryParams: Map<String, Any>, id: Int): SOAResult<UserAccount> {
-        validateApiKey(user, queryParams)
+    override fun findOne(user: UserAccount, requestData: RequestData, id: Int): SOAResult<UserAccount> {
+        validateApiKey(user, requestData)
         return DaoService.execute {
-            val result = GetUserAccountService.execute(user.idValue, null, null)
+            val result = GetUserAccountService.execute(user.idValue)
             DaoService.throwOrReturn(result.result, result.message)
             return@execute result.data!!
         }
     }
 
-    override fun create(user: UserAccount, queryParams: Map<String, Any>): SOAResult<NewUserAccount> {
+    override fun create(user: UserAccount, requestData: RequestData): SOAResult<NewUserAccount> {
         return DaoService.execute {
             val result = GenerateUserAccountService.execute(
-                queryParams["email"]!! as String,
-                queryParams["firstname"]!! as String,
-                queryParams["lastname"]!! as String)
+                requestData.body["email"]!! as String,
+                requestData.body["firstname"]!! as String,
+                requestData.body["lastname"]!! as String)
             DaoService.throwOrReturn(result.result, result.message)
             return@execute result.data!!
         }
     }
 
-    fun login(user: UserAccount, request: Request): SOAResult<UserAccount> {
-        validateApiKeyAndGetQueryParams(user, request)
+    fun login(user: UserAccount, requestData: RequestData): SOAResult<UserAccount> {
+        validateApiKey(user, requestData)
 
         val result = SOAResult<UserAccount>(SOAResultType.FAILURE, null, null)
 
@@ -52,8 +52,8 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
         return result
     }
 
-    fun logout(user: UserAccount, request: Request): SOAResult<UserAccount> {
-        validateApiKeyAndGetQueryParams(user, request)
+    fun logout(user: UserAccount, requestData: RequestData): SOAResult<UserAccount> {
+        validateApiKey(user, requestData)
 
         val result = SOAResult<UserAccount>(
             SOAResultType.FAILURE,
