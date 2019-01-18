@@ -76,32 +76,23 @@ object ControllerHelper {
 
     }
 
-    private fun getUserAuth(headers: Map<String, Any>): UserAuth? {
-        if(!headers.containsKey("Authorization: Basic "))
-            return null
-        val base64EncodedAuth = headers.get("Authorization: Basic ") as String
-        val base64DecodedAuth = Base64.decode(base64EncodedAuth.toByteArray())
-        val keyAndSecret = base64DecodedAuth.toString().split(":".toRegex(), 2)
-        if(keyAndSecret.size != 2)
-            throw InvalidArguments("The user authentication parameters are not formatted correctly. Should be apikey:secret")
-        return UserAuth(keyAndSecret[0], keyAndSecret[1])
-    }
-
     fun getRequestData(request: Request): RequestData {
         val queryParams = getQueryStringParameters(request)
         val headers = getHeaders(request)
         return RequestData(
+            request,
             getResource(request),
             headers,
             getPathParameters(request),
             queryParams,
             getBody(request),
             getPagination(queryParams),
-            getUserAuth(headers)
+            UserAccountHelper.getUserAuth(headers)
         )
     }
 
     data class RequestData(
+        val request: Request,
         val resource: String?,
         val headers: Map<String, Any>,
         val pathParams: Map<String, Any>,

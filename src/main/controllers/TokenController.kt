@@ -13,7 +13,7 @@ class TokenController: DefaultController<Token>(), RestController<Token, UserAcc
         throw NotImplementedError()
     }
 
-    override fun create(user: UserAccount, requestData: RequestData): SOAResult<*> {
+    override fun create(user: UserAccount?, requestData: RequestData): SOAResult<*> {
         throw NotImplementedError()
     }
 

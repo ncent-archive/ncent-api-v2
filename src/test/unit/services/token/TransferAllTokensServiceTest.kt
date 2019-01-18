@@ -23,22 +23,22 @@ class TransferAllTokensServiceTest : WordSpec() {
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
         fooTokenNamespace = TokenNamespace(
-                amount = 100,
-                tokenType = TokenTypeNamespace(
-                        id = null,
-                        name = "foo",
-                        parentToken = null,
-                        parentTokenConversionRate = null
-                )
+            amount = 100,
+            tokenType = TokenTypeNamespace(
+                id = null,
+                name = "foo",
+                parentToken = null,
+                parentTokenConversionRate = null
+            )
         )
         barTokenNamespace = TokenNamespace(
-                amount = 100,
-                tokenType = TokenTypeNamespace(
-                        id = null,
-                        name = "bar",
-                        parentToken = null,
-                        parentTokenConversionRate = null
-                )
+            amount = 100,
+            tokenType = TokenTypeNamespace(
+                id = null,
+                name = "bar",
+                parentToken = null,
+                parentTokenConversionRate = null
+            )
         )
     }
 
@@ -58,8 +58,8 @@ class TransferAllTokensServiceTest : WordSpec() {
                     val barToken = GenerateTokenService.execute(newUserAccount, barTokenNamespace).data!!
 
                     var result = TransferAllTokensService.execute(
-                            newUserAccount.cryptoKeyPair.publicKey,
-                            newUserAccount2.cryptoKeyPair.publicKey)
+                        newUserAccount.cryptoKeyPair.publicKey,
+                        newUserAccount2.cryptoKeyPair.publicKey)
                     result.result shouldBe SOAResultType.SUCCESS
                     val tx = result.data!!.transactions
                     tx.size shouldBe 2

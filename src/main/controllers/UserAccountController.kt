@@ -24,7 +24,7 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
         }
     }
 
-    override fun create(user: UserAccount, requestData: RequestData): SOAResult<NewUserAccount> {
+    override fun create(user: UserAccount?, requestData: RequestData): SOAResult<NewUserAccount> {
         return DaoService.execute {
             val result = GenerateUserAccountService.execute(
                 requestData.body["email"]!! as String,

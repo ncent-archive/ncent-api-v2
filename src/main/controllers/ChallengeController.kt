@@ -14,8 +14,8 @@ import main.helpers.ChallengeHelper
 import main.helpers.ControllerHelper.RequestData
 
 class ChallengeController: DefaultController<Challenge>(), RestController<Challenge, UserAccount> {
-    override fun create(user: UserAccount, requestData: RequestData): SOAResult<Challenge> {
-        validateApiKey(user, requestData)
+    override fun create(user: UserAccount?, requestData: RequestData): SOAResult<Challenge> {
+        validateApiKey(user!!, requestData)
         return DaoService.execute {
             val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(requestData.body["challengeNamespace"]!!.toString())
 

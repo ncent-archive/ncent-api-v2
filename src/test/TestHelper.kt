@@ -3,6 +3,7 @@ package test
 import framework.models.idValue
 import framework.services.DaoService
 import main.daos.*
+import main.helpers.UserAccountHelper
 import main.services.challenge.GenerateChallengeService
 import main.services.completion_criteria.GenerateCompletionCriteriaService
 import main.services.reward.AddToRewardPoolService
@@ -10,12 +11,23 @@ import main.services.reward.GenerateRewardService
 import main.services.token.GenerateTokenService
 import main.services.transaction.GenerateTransactionService
 import main.services.user_account.GenerateUserAccountService
+import org.glassfish.jersey.internal.util.Base64
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
 object TestHelper {
+
+    // Used to generate a request to the api, used for integration testing
+    fun buildRequest(user: NewUserAccount, path: String, httpMethod: String, body: Map<String, Any>): Map<String, Any> {
+        var request = mutableMapOf<String, Any>()
+        request["path"] = path
+        request["httpMethod"] = httpMethod
+        request["body"] = body
+        request["headers"] = mapOf(Pair("Authorization: Basic ", UserAccountHelper.getUserAuth(user)))
+        return request
+    }
 
     /**
      * Building a tree:

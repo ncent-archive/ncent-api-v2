@@ -12,9 +12,10 @@ import main.services.reward.DistributeRewardService
  */
 object TransferAllTokensService {
     fun execute(
-            fromAddress: String,
-            toAddress: String,
-            notes: String? = null) : SOAResult<TransactionList> {
+        fromAddress: String,
+        toAddress: String,
+        notes: String? = null
+    ) : SOAResult<TransactionList> {
 
         val mapOfBalancesResult = TransferTokenHelper.getMapOfBalancesByCurrency(fromAddress)
         if (mapOfBalancesResult.result != SOAResultType.SUCCESS)
@@ -26,7 +27,7 @@ object TransferAllTokensService {
         var result : SOAResult<TransactionList> =
                 SOAResult(SOAResultType.SUCCESS, "All tokens transferred successfully.", null)
 
-        if(mapOfBalances.size == 0)
+        if(mapOfBalances.isEmpty())
             result.message = "Address has no associated balances so no tokens were transferred."
 
         mapOfBalances.forEach { tokenId, balance ->
@@ -38,13 +39,14 @@ object TransferAllTokensService {
                 return@forEach
             }
             val transferResult : SOAResult<Transaction> = TransferTokenService.execute(
-                    fromAddress,
-                    toAddress,
-                    balance,
-                    null,
-                    tokenId,
-                    null,
-                    notes)
+                fromAddress,
+                toAddress,
+                balance,
+                null,
+                tokenId,
+                null,
+                notes
+            )
             resultingTransactions.add(transferResult.data!!)
             if(transferResult.result != SOAResultType.SUCCESS) {
                 result.result = transferResult.result

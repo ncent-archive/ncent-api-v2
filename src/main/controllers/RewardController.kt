@@ -9,7 +9,7 @@ import main.daos.UserAccount
 import main.helpers.ControllerHelper.RequestData
 
 class RewardController: DefaultController<Reward>(), RestController<Reward, UserAccount> {
-    override fun create(user: UserAccount, requestData: RequestData): SOAResult<*> {
+    override fun create(user: UserAccount?, requestData: RequestData): SOAResult<*> {
         throw NotImplementedError()
     }
 

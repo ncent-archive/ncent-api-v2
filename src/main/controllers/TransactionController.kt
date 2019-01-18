@@ -8,7 +8,7 @@ import main.daos.UserAccount
 import main.helpers.ControllerHelper.RequestData
 
 class TransactionController: DefaultController<Transaction>(), RestController<Transaction, UserAccount> {
-    override fun create(user: UserAccount, requestData: RequestData): SOAResult<*> {
+    override fun create(user: UserAccount?, requestData: RequestData): SOAResult<*> {
         throw NotImplementedError()
     }
 }

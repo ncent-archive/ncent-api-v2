@@ -19,10 +19,8 @@ interface Controller<M> {
      * @param request Http Client request
      * @param service CRUD service to execute
      */
-    fun <T : BaseIntEntity> defaultRouting(inputClass: String, outcls: Class<T>, request: Request, user: UserAccount, restController: RestController<T, UserAccount>): SOAResult<*> {
-		val requestData = ControllerHelper.getRequestData(request)
-
-        return when((request.input[ControllerHelper.HTTP_METHOD] as String).toLowerCase()) {
+    fun <T : BaseIntEntity> defaultRouting(inputClass: String, outcls: Class<T>, requestData: ControllerHelper.RequestData, user: UserAccount, restController: RestController<T, UserAccount>): SOAResult<*> {
+        return when((requestData.request.input[ControllerHelper.HTTP_METHOD] as String).toLowerCase()) {
             ControllerHelper.HTTP_GET -> {
                 when {
                     requestData.resource != null && requestData.resource.endsWith("findOne", true) && requestData.body.containsKey("id") -> {

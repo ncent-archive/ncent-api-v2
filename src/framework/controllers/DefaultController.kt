@@ -11,17 +11,17 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 	override fun <T : BaseIntEntity> defaultRouting(
 			incls: String,
 			outcls: Class<T>,
-            request: Request,
+            requestData: ControllerHelper.RequestData,
 			user: UserAccount,
             restController: RestController<T, UserAccount>
     ): SOAResult<*> {
-		val path = request.input["path"].toString().removePrefix("/").split("/")
+		val path = requestData.request.input["path"].toString().removePrefix("/").split("/")
 
 		if(path.size > 1) {
 			val func = restController::class.members.find { it.name == path[1] }
 			if(func != null) {
 				return try {
-					func.call(restController, user, ControllerHelper.getRequestData(request)) as SOAResult<T>
+					func.call(restController, user, requestData) as SOAResult<T>
 				}
 				catch(e: InvocationTargetException) {
 					throw e.targetException
@@ -29,10 +29,10 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 				catch(e: Exception) {
 					println("There was an error routing!")
 					println(e)
-					super.defaultRouting(incls, outcls, request, user, restController)
+					super.defaultRouting(incls, outcls, requestData, user, restController)
 				}
 			}
 		}
-		return super.defaultRouting(incls, outcls, request, user, restController)
+		return super.defaultRouting(incls, outcls, requestData, user, restController)
 	}
 }
