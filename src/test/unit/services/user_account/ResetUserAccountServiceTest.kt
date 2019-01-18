@@ -49,9 +49,11 @@ class ResetUserAccountServiceTest : WordSpec() {
                     // Verify that the user's account was updated in the database and that its credentials are
                     // different than its original credentials.
                     newUserAccount.result shouldBe SOAResultType.SUCCESS
-                    EncryptionHelper.validateEncryption(newPrivateKey, newPrivateKeySalt , encryptedPrivateKey) shouldBe true
+                    EncryptionHelper
+                            .validateEncryption(newPrivateKey, newPrivateKeySalt , encryptedPrivateKey) shouldBe true
                     encryptedPrivateKey shouldNotBe originalPrivateKey
-                    EncryptionHelper.validateEncryption(newSecretKey, newSecretKeySalt , encryptedSecretKey) shouldBe true
+                    EncryptionHelper
+                            .validateEncryption(newSecretKey, newSecretKeySalt , encryptedSecretKey) shouldBe true
                     encryptedSecretKey shouldNotBe originalSecretKey
                 }
             }
