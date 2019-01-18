@@ -25,7 +25,6 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
     }
 
     override fun create(user: UserAccount, queryParams: Map<String, Any>): SOAResult<NewUserAccount> {
-        validateApiKey(user, queryParams)
         return DaoService.execute {
             val result = GenerateUserAccountService.execute(
                 queryParams["email"]!! as String,
