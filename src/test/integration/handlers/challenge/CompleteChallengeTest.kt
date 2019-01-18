@@ -36,8 +36,8 @@ class CompleteChallengeTest : WordSpec() {
             val newUsers = TestHelper.generateUserAccounts(2)
             user1 = newUsers[0].value
             user2 = newUsers[1].value
-            challenge = TestHelper.generateFullChallenge(user1, user1).first()
-            notActivatedChallenge = TestHelper.generateFullChallenge(user1, user1).first()
+            challenge = TestHelper.generateFullChallenge(user1, user1, 1, true).first()
+            notActivatedChallenge = TestHelper.generateFullChallenge(user1, user1, 1, true).first()
             ActivateChallengeService.execute(user1, challenge.idValue)
             ShareChallengeService.execute(user1, challenge, 2, user2.cryptoKeyPair.publicKey, null, null)
             ShareChallengeService.execute(user1, notActivatedChallenge, 2, user2.cryptoKeyPair.publicKey, null, null)
@@ -72,8 +72,8 @@ class CompleteChallengeTest : WordSpec() {
                     val completeChallengeResult = handler.handleRequest(map, contxt)
                     completeChallengeResult.statusCode shouldBe 200
 
-                    val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(completeChallengeResult.body!!)
-                    challengeNamespace.challengeSettings.name shouldBe challenge.challengeSettings.name
+                    val transactionNamespaceList = JsonHelper.parse<TransactionNamespaceList>(completeChallengeResult.body!!)
+                    transactionNamespaceList.transactions.size shouldBe 2
                 }
             }
         }

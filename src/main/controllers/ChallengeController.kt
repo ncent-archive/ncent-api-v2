@@ -47,28 +47,20 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         return SOAResult(SOAResultType.SUCCESS, challengesResult.message, ChallengeList(challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first}))
     }
 
-    fun complete(user: UserAccount, request: Request): SOAResult<Challenge?> {
-        val finalResult = SOAResult<Challenge?>(SOAResultType.FAILURE, null, null)
-
+    fun complete(user: UserAccount, request: Request): SOAResult<TransactionList> {
         val completerPublicKey = request.input["completerPublicKey"] as String
         val challengeId = request.input["challengeId"] as Int
         val challenge = ChallengeHelper.findChallengeById(challengeId)
 
-        DaoService.execute {
-            val serviceResult = CompleteChallengeService.execute(user, challenge, completerPublicKey)
-            finalResult.result = serviceResult.result
-            finalResult.message = serviceResult.message
+        val finalResult = DaoService.execute {
+            CompleteChallengeService.execute(user, challenge, completerPublicKey)
+        }.data
 
-            if (serviceResult.result == SOAResultType.SUCCESS) {
-                finalResult.data = challenge
-            }
-        }
-
-        if (finalResult.result == SOAResultType.FAILURE && finalResult.message?.contains("Cannot transition from") == true) {
+        if (finalResult?.result == SOAResultType.FAILURE && finalResult.message?.contains("Cannot transition from") == true) {
             throw ForbiddenException(finalResult.message!!)
         }
 
-        return finalResult
+        return finalResult!!
     }
 
     @Throws(ForbiddenException::class)
