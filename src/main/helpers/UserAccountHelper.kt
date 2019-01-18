@@ -11,15 +11,19 @@ import main.helpers.ControllerHelper.UserAuth
 
 object UserAccountHelper {
     fun getUserAuth(user: NewUserAccount): String {
-        return Base64.encode("${user.value.cryptoKeyPair.publicKey}:${user.secretKey}".toByteArray()).toString()
+        val apiKey = user.value.apiCreds.apiKey
+        val encodedApiKeyAndSecret = Base64.encodeAsString("$apiKey:${user.secretKey}")
+        return "Basic $encodedApiKeyAndSecret"
     }
 
     fun getUserAuth(headers: Map<String, Any>): UserAuth? {
-        if(!headers.containsKey("Authorization: Basic "))
+        if(!headers.containsKey("Authorization"))
             return null
-        val base64EncodedAuth = headers.get("Authorization: Basic ") as String
-        val base64DecodedAuth = Base64.decode(base64EncodedAuth.toByteArray())
-        val keyAndSecret = base64DecodedAuth.toString().split(":".toRegex(), 2)
+        val authHeaderSplit = (headers["Authorization"] as String).split(" ")
+        if(authHeaderSplit.size != 2 && authHeaderSplit[0] != "Basic")
+            throw InvalidArguments("This is not a properly formatted user auth header. Must include 'Basic apikey:secretkey'")
+        val base64DecodedAuth = Base64.decodeAsString(authHeaderSplit[1])
+        val keyAndSecret = base64DecodedAuth.split(":".toRegex(), 2)
         if(keyAndSecret.size != 2)
             throw InvalidArguments("The user authentication parameters are not formatted correctly. Should be apikey:secret")
         return UserAuth(keyAndSecret[0], keyAndSecret[1])

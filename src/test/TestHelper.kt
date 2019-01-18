@@ -25,7 +25,7 @@ object TestHelper {
         request["path"] = path
         request["httpMethod"] = httpMethod
         request["body"] = body
-        request["headers"] = mapOf(Pair("Authorization: Basic ", UserAccountHelper.getUserAuth(user)))
+        request["headers"] = mapOf(Pair("Authorization", UserAccountHelper.getUserAuth(user)))
         return request
     }
 

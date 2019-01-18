@@ -1,9 +1,7 @@
 package main.helpers
 
-import kotlinserverless.framework.models.InvalidArguments
 import kotlinserverless.framework.models.Pagination
 import kotlinserverless.framework.models.Request
-import org.glassfish.jersey.internal.util.Base64
 import kotlin.math.ceil
 
 object ControllerHelper {
