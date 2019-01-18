@@ -112,7 +112,7 @@ interface Controller<M> {
                         }
                     }
                     else -> {
-                        // TODO figure out how to implement findAll better
+                        // TODO figure out how to implement findAll better - look into pagination
                         throw NotImplementedError()
                         // return restController.findAll(AnonymousUser(), queryParameters, getPagination(queryParameters))
                     }

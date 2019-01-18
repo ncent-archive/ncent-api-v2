@@ -82,12 +82,12 @@ object GenerateChallengeService {
         return SOAResult(SOAResultType.SUCCESS, null, challenge)
     }
 
-    private fun createSubChallengesList(subChallengeIds: List<Pair<Int, SubChallengeType>>) : SizedCollection<SubChallenge> {
+    private fun createSubChallengesList(subChallengeIds: List<SubChallengeNamespace>) : SizedCollection<SubChallenge> {
         var subChallenges = mutableListOf<SubChallenge>()
         subChallengeIds.forEach {
             subChallenges.add(SubChallenge.new {
-                subChallenge = EntityID(it.first, Challenges)
-                type = it.second
+                subChallenge = EntityID(it.subChallengeId, Challenges)
+                type = SubChallengeType.valueOf(it.type!!)
             })
         }
         return SizedCollection(subChallenges)

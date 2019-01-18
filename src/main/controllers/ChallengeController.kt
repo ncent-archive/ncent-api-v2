@@ -4,7 +4,6 @@ import framework.services.DaoService
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.models.ForbiddenException
-import kotlinserverless.framework.models.NotFoundException
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.models.Request
 import kotlinserverless.framework.services.SOAResultType
@@ -30,6 +29,21 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         val challenge = ChallengeHelper.findChallengeById(id)
 
         return SOAResult(SOAResultType.SUCCESS, "", challenge)
+    }
+
+    fun findAll(user: UserAccount, request: Request): SOAResult<ChallengeList> {
+        val validateApiKeyResult = DaoService.execute {
+            ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
+        }
+        DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
+
+        val challengesResult = ChallengeHelper.getChallenges(user)
+
+        if (challengesResult.data == null) {
+            throw InternalError()
+        }
+
+        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, ChallengeList(challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first}))
     }
 
     fun complete(user: UserAccount, request: Request): SOAResult<Challenge> {

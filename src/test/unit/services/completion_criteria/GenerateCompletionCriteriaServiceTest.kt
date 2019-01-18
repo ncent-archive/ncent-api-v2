@@ -28,8 +28,8 @@ class GenerateCompletionCriteriaServiceTest : WordSpec() {
         )
         completionCriteriaNamespace = CompletionCriteriaNamespace(
             address = address,
-            rewardNamespace =  rewardNamespace,
-            preReqChallengeIds = listOf()
+            reward =  rewardNamespace,
+            prereq = listOf()
         )
     }
 

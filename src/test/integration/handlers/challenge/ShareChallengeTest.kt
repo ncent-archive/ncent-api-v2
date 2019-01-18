@@ -1,7 +1,6 @@
 package test.integration.handlers.challenge
 
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import com.amazonaws.services.lambda.runtime.Context

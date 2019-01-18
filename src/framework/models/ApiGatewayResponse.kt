@@ -1,5 +1,6 @@
 package kotlinserverless.framework.models
 
+import com.beust.klaxon.Klaxon
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.BaseIntEntity

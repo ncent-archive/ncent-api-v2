@@ -1,9 +1,7 @@
 package main.daos
 
-import framework.models.BaseIntEntity
-import framework.models.BaseIntEntityClass
-import framework.models.BaseIntIdTable
-import framework.models.idValue
+import com.fasterxml.jackson.databind.ObjectMapper
+import framework.models.*
 import main.services.transaction.GetTransactionsService
 import org.jetbrains.exposed.dao.*
 import org.joda.time.DateTime
@@ -33,10 +31,10 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
 
     override fun toMap(): MutableMap<String, Any?> {
         var map = super.toMap()
-        map.put("parentChallenge", parentChallenge?.toMap())
+        map.put("parentChallenge", parentChallenge?.idValue)
         map.put("challengeSettings", challengeSettings?.toMap())
         map.put("subChallenges", subChallenges.map { it.toMap() })
-        map.put("completionCriterias", completionCriterias?.toMap())
+        map.put("completionCriteria", completionCriterias?.toMap())
         map.put("cryptoKeyPair", cryptoKeyPair?.toMap())
         map.put("distributionFeeReward", distributionFeeReward?.toMap())
         return map
@@ -188,7 +186,17 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
 //    }
 }
 
-class ChallengeList(val challenges: List<Challenge>)
+class ChallengeList(
+    val challenges: List<Challenge>
+): BaseNamespace() {
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = mutableMapOf<String, Any?>()
+        map.put("challenges", challenges.map { it.toMap() })
+        return map
+    }
+}
+
+data class ChallengeNamespaceList(val challenges: List<ChallengeNamespace>)
 
 class ChallengeToUnsharedTransactionsList(val challengeToUnsharedTransactions: List<Pair<Challenge, ShareTransactionList>>)
 
@@ -205,7 +213,16 @@ class SubChallenge(id: EntityID<Int>) : BaseIntEntity(id, SubChallenges) {
 
     var subChallenge by SubChallenges.subChallenge
     var type by SubChallenges.type
+
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = super.toMap()
+        map.put("subChallengeId", idValue)
+        map.put("type", type.toString())
+        return map
+    }
 }
+
+data class SubChallengeNamespace(val subChallengeId: Int?, val type: String?)
 
 object ChallengeToSubChallenges : BaseIntIdTable("challenge_to_sub_challenges") {
     val challenge = reference("challenge_to_sub_challenge", Challenges).primaryKey()
@@ -221,12 +238,12 @@ data class ChallengeNamespace(
     val challengeSettings: ChallengeSettingNamespace,
     val completionCriteria: CompletionCriteriaNamespace,
     val distributionFeeReward: RewardNamespace,
-    val subChallenges: List<Pair<Int, SubChallengeType>>? = listOf(),
+    val subChallenges: List<SubChallengeNamespace>? = null,
     val parentChallenge: Int? = null
     )
 
-enum class SubChallengeType {
-    SYNC, ASYNC
+enum class SubChallengeType(val type: String) {
+    SYNC("sync"), ASYNC("async")
 }
 
 /**

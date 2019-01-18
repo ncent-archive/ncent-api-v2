@@ -10,7 +10,7 @@ import main.services.reward.GenerateRewardService
  */
 object GenerateCompletionCriteriaService {
     fun execute(caller: UserAccount, completionCriteriaNamespace: CompletionCriteriaNamespace) : SOAResult<CompletionCriteria> {
-        val rewardResult = GenerateRewardService.execute(completionCriteriaNamespace.rewardNamespace)
+        val rewardResult = GenerateRewardService.execute(completionCriteriaNamespace.reward)
         if(rewardResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, rewardResult.message)
 
@@ -22,9 +22,9 @@ object GenerateCompletionCriteriaService {
 
         // TODO generate a transaction
 
-        return if(completionCriteriaNamespace.preReqChallengeIds.any()) {
+        return if(completionCriteriaNamespace.prereq.any()) {
             val prereqChallenges = Challenge.find {
-                Challenges.id inList completionCriteriaNamespace.preReqChallengeIds!!
+                Challenges.id inList completionCriteriaNamespace.prereq!!
             }
             SOAResult(SOAResultType.SUCCESS, null, CompletionCriteria.new {
                 address = completionAddress
