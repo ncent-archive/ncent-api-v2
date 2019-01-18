@@ -32,6 +32,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     fun findAll(user: UserAccount, request: Request): SOAResult<ChallengeList> {
+
         val validateApiKeyResult = DaoService.execute {
             ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
         }
@@ -46,8 +47,28 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         return SOAResult(SOAResultType.SUCCESS, challengesResult.message, ChallengeList(challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first}))
     }
 
-    fun complete(user: UserAccount, request: Request): SOAResult<Challenge> {
-        throw NotImplementedError()
+    fun complete(user: UserAccount, request: Request): SOAResult<Challenge?> {
+        val finalResult = SOAResult<Challenge?>(SOAResultType.FAILURE, null, null)
+
+        val completerPublicKey = request.input["completerPublicKey"] as String
+        val challengeId = request.input["challengeId"] as Int
+        val challenge = ChallengeHelper.findChallengeById(challengeId)
+
+        DaoService.execute {
+            val serviceResult = CompleteChallengeService.execute(user, challenge, completerPublicKey)
+            finalResult.result = serviceResult.result
+            finalResult.message = serviceResult.message
+
+            if (serviceResult.result == SOAResultType.SUCCESS) {
+                finalResult.data = challenge
+            }
+        }
+
+        if (finalResult.result == SOAResultType.FAILURE && finalResult.message?.contains("Cannot transition from") == true) {
+            throw ForbiddenException(finalResult.message!!)
+        }
+
+        return finalResult
     }
 
     @Throws(ForbiddenException::class)
