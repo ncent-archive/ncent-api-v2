@@ -8,16 +8,15 @@ import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.models.Request
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
-import main.services.user_account.ValidateApiKeyService
 import main.services.challenge.*
 import main.helpers.JsonHelper
 import main.helpers.ChallengeHelper
 
 class ChallengeController: DefaultController<Challenge>(), RestController<Challenge, UserAccount> {
-    override fun create(user: UserAccount, params: Map<String, String>): SOAResult<*> {
+    override fun create(user: UserAccount, queryParams: Map<String, Any>): SOAResult<*> {
+        validateApiKey(user, queryParams)
         return DaoService.execute {
-            ValidateApiKeyService.execute(user, params["secretKey"] as String)
-            val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(params["challengeNamespace"]!!)
+            val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(queryParams["challengeNamespace"]!!.toString())
 
             val generateChallengeResult = GenerateChallengeService.execute(user, challengeNamespace)
             DaoService.throwOrReturn(generateChallengeResult.result, generateChallengeResult.message)
@@ -25,18 +24,16 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         }
     }
 
-    override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {
+    override fun findOne(user: UserAccount, queryParams: Map<String, Any>, id: Int): SOAResult<Challenge> {
+        validateApiKey(user, queryParams)
+
         val challenge = ChallengeHelper.findChallengeById(id)
 
         return SOAResult(SOAResultType.SUCCESS, "", challenge)
     }
 
-    fun findAll(user: UserAccount, request: Request): SOAResult<ChallengeList> {
-
-        val validateApiKeyResult = DaoService.execute {
-            ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
-        }
-        DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
+    override fun findAll(user: UserAccount, queryParams: Map<String, Any>): SOAResult<List<Challenge>> {
+        validateApiKey(user, queryParams)
 
         val challengesResult = ChallengeHelper.getChallenges(user)
 
@@ -44,7 +41,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
             throw InternalError()
         }
 
-        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, ChallengeList(challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first}))
+        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first})
     }
 
     @Throws(ForbiddenException::class)
@@ -85,18 +82,15 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
 
     @Throws(ForbiddenException::class)
     fun share(user: UserAccount, request: Request): SOAResult<TransactionWithNewUser?> {
+        val queryParams = validateApiKeyAndGetQueryParams(user, request)
+
         val finalResult = SOAResult<TransactionWithNewUser?>(SOAResultType.FAILURE, null, null)
 
-        val challengeId = request.input["challengeId"] as Int
-        val publicKeyToShareWith = request.input["publicKeyToShareWith"] as String?
-        val shares = request.input["shares"] as Int
-        val expiration = request.input["expiration"] as String?
-        val emailToShareWith = request.input["emailToShareWith"] as String?
-
-        val validateApiKeyResult = DaoService.execute {
-            ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
-        }
-        DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
+        val challengeId = queryParams["challengeId"] as Int
+        val publicKeyToShareWith = queryParams["publicKeyToShareWith"] as String?
+        val shares = queryParams["shares"] as Int
+        val expiration = queryParams["expiration"] as String?
+        val emailToShareWith = queryParams["emailToShareWith"] as String?
 
         val challenge = ChallengeHelper.findChallengeById(challengeId)
 

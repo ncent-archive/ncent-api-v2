@@ -1,6 +1,7 @@
 package kotlinserverless.framework.controllers
 
 import kotlinserverless.framework.healthchecks.InvalidEndpoint
+import kotlinserverless.framework.models.Request
 import kotlinserverless.framework.services.SOAResult
 
 /**
@@ -16,7 +17,7 @@ interface WritableController<T, U> {
      * @param user [U] User who is requesting (to verify permissions)
      * @param element [T] that is going to be saved
      */
-    fun create(user: U, params: Map<String, String>): SOAResult<*> {
+    fun create(user: U, queryParams: Map<String, Any>): SOAResult<*> {
         throw InvalidEndpoint()
     }
 
@@ -25,7 +26,7 @@ interface WritableController<T, U> {
      * @param user [U] User who is requesting (to verify permissions)
      * @param element [T] that is going to be updated
      */
-    fun update(user: U, params: Map<String, String>): SOAResult<T> {
+    fun update(user: U, queryParams: Map<String, Any>): SOAResult<T> {
         throw InvalidEndpoint()
     }
 
@@ -34,7 +35,7 @@ interface WritableController<T, U> {
      * @param user [U] User who is requesting (to verify permissions)
      * @param id Unique ID of the [T]
      */
-    fun delete(user: U, id: Int): SOAResult<T> {
+    fun delete(user: U, queryParams: Map<String, Any>, id: Int): SOAResult<T> {
         throw InvalidEndpoint()
     }
 }

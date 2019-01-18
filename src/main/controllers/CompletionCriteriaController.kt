@@ -7,11 +7,11 @@ import main.daos.CompletionCriteria
 import main.daos.UserAccount
 
 class CompletionCriteriaController: DefaultController<CompletionCriteria>(), RestController<CompletionCriteria, UserAccount> {
-    override fun create(user: UserAccount, params: Map<String, String>): SOAResult<*> {
+    override fun create(user: UserAccount, queryParams: Map<String, Any>): SOAResult<*> {
         throw NotImplementedError()
     }
 
-    override fun update(user: UserAccount, params: Map<String, String>): SOAResult<CompletionCriteria> {
+    override fun update(user: UserAccount, queryParams: Map<String, Any>): SOAResult<CompletionCriteria> {
         throw NotImplementedError()
     }
 }

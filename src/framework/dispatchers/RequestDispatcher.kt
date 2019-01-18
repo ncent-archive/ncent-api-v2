@@ -35,12 +35,12 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
             val user = findUserByRequest(request)
             val result = try {
                 func?.call(
-                        controllerInstance,
-                        inputModel,
-                        outputModelClass::class.java,
-                        request!!,
-                        user,
-                        controllerInstance
+                    controllerInstance,
+                    inputModel,
+                    outputModelClass::class.java,
+                    request!!,
+                    user,
+                    controllerInstance
                 ) as SOAResult<Any>
             }
             catch(e: InvocationTargetException) {

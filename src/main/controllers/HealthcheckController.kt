@@ -2,7 +2,6 @@ package kotlinserverless.main.controllers
 
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.controllers.RestController
-import kotlinserverless.framework.models.*
 import main.daos.Healthcheck
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
@@ -25,15 +24,15 @@ class HealthcheckController: DefaultController<Healthcheck>(), RestController<He
         message = "default"
     }
 
-    override fun findOne(user: User, id: Int): SOAResult<Healthcheck> {
+    override fun findOne(user: User, queryParams: Map<String, Any>, id: Int): SOAResult<Healthcheck> {
         return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
     }
 
-    override fun findOne(user: User, filters: Map<String, Any>): SOAResult<Healthcheck> {
+    override fun findOne(user: User, queryParams: Map<String, Any>): SOAResult<Healthcheck> {
         return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
     }
 
-    override fun health(user: User, request: Request?): SOAResult<Healthcheck> {
+    override fun health(user: User, queryParams: Map<String, Any>): SOAResult<Healthcheck> {
         return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
     }
 }
