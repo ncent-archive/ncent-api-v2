@@ -31,6 +31,21 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         return SOAResult(SOAResultType.SUCCESS, "", challenge)
     }
 
+    fun findAll(user: UserAccount, request: Request): SOAResult<ChallengeList> {
+        val validateApiKeyResult = DaoService.execute {
+            ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
+        }
+        DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
+
+        val challengesResult = ChallengeHelper.getChallenges(user)
+
+        if (challengesResult.data == null) {
+            throw InternalError()
+        }
+
+        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, ChallengeList(challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first}))
+    }
+
     fun complete(user: UserAccount, request: Request): SOAResult<Challenge> {
         throw NotImplementedError()
     }
@@ -64,20 +79,5 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         }
 
         return finalResult
-    }
-
-    fun findAll(user: UserAccount, request: Request): SOAResult<ChallengeList> {
-        val validateApiKeyResult = DaoService.execute {
-            ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
-        }
-        DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
-
-        val challengesResult = ChallengeHelper.getChallenges(user)
-
-        if (challengesResult.data == null) {
-            throw InternalError()
-        }
-
-        return SOAResult(SOAResultType.SUCCESS, null, ChallengeList(challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first}))
     }
 }

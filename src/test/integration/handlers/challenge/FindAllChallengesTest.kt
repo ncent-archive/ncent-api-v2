@@ -1,8 +1,6 @@
 package test.integration.handlers.challenge
 
 import com.amazonaws.services.lambda.runtime.Context
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Klaxon
 import framework.models.idValue
 import io.kotlintest.specs.WordSpec
 import io.mockk.junit5.MockKExtension
@@ -73,6 +71,7 @@ class FindAllChallengesTest : WordSpec() {
                 transaction {
                     val findAllChallengesResult = handler.handleRequest(notFoundMap, contxt)
                     findAllChallengesResult.statusCode shouldBe 404
+                    findAllChallengesResult.body shouldBe "No challenges found for ${user2.cryptoKeyPair.publicKey}"
                 }
             }
         }
