@@ -16,6 +16,11 @@ object RedeemChallengeService {
         // TODO -- we should check for the caller if they should be calling CompleteChallengeService instead
         // TODO ^ -- if the max completers has been met by this call we should complete the challenge
         // check if the completion criteria matches.
+        val oldTx = challenge.getLastStateChangeTransaction()!!
+        if (oldTx.action.type != ActionType.ACTIVATE) {
+            return SOAResult(SOAResultType.FAILURE, "Challenge has not been activated")
+        }
+
         val validationResult = ValidateCompletionCriteriaService.execute(
             caller,
             challenge.completionCriterias

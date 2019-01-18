@@ -47,6 +47,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         return SOAResult(SOAResultType.SUCCESS, challengesResult.message, ChallengeList(challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first}))
     }
 
+    @Throws(ForbiddenException::class)
     fun complete(user: UserAccount, request: Request): SOAResult<TransactionList> {
         val completerPublicKey = request.input["completerPublicKey"] as String
         val challengeId = request.input["challengeId"] as Int
@@ -56,7 +57,26 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
             CompleteChallengeService.execute(user, challenge, completerPublicKey)
         }.data
 
-        if (finalResult?.result == SOAResultType.FAILURE && finalResult.message?.contains("Cannot transition from") == true) {
+        if (finalResult?.result == SOAResultType.FAILURE &&
+                (finalResult.message?.contains("Cannot transition from") == true || finalResult.message?.contains("This user cannot change the challenge state") == true)) {
+            throw ForbiddenException(finalResult.message!!)
+        }
+
+        return finalResult!!
+    }
+
+    @Throws(ForbiddenException::class)
+    fun redeem(user: UserAccount, request: Request): SOAResult<TransactionList> {
+        val completerPublicKey = request.input["completerPublicKey"] as String
+        val challengeId = request.input["challengeId"] as Int
+        val challenge = ChallengeHelper.findChallengeById(challengeId)
+
+        val finalResult = DaoService.execute {
+            RedeemChallengeService.execute(user, challenge, completerPublicKey)
+        }.data
+
+        if (finalResult?.result == SOAResultType.FAILURE &&
+                (finalResult.message?.contains("Cannot transition from") == true || finalResult.message?.contains("Challenge has not been activated") == true)) {
             throw ForbiddenException(finalResult.message!!)
         }
 
