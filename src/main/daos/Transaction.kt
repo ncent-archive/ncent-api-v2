@@ -52,7 +52,15 @@ object TransactionsMetadata : Table("transactions_to_metadatas") {
 
 data class TransactionNamespace(val from: String?=null, val to: String?=null, val action: ActionNamespace?=null, val previousTransaction: Int?=null, val metadatas: Array<MetadatasNamespace>? = null)
 
-class TransactionList(val transactions: List<Transaction>)
+class TransactionList(val transactions: List<Transaction>): BaseNamespace() {
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = mutableMapOf<String, Any?>()
+        map.put("transactions", transactions.map { it.toMap() })
+        return map
+    }
+}
+
+data class TransactionNamespaceList(val transactions: List<TransactionNamespace>)
 
 class ShareTransactionList(val transactionsToShares: List<Pair<Transaction, Int>>)
 
