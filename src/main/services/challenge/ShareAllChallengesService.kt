@@ -11,17 +11,16 @@ import main.helpers.UserAccountHelper
 object ShareAllChallengesService {
     fun execute(
             caller: UserAccount,
-            publicKeyToShareWith: String? = null,
+            publicKey: String? = null,
             emailToShareWith: String? = null
     ) : SOAResult<Pair<TransactionList, NewUserAccount?>> {
 
         // Validate user exists or attempt to generate a new user.
-        val publicKeyAndAccount = UserAccountHelper.getOrGenerateUser(emailToShareWith, publicKeyToShareWith)
-        val(publicKeyToShareWith, newUserAccount) =
-                if(publicKeyAndAccount.result != SOAResultType.SUCCESS)
-                    return SOAResult(publicKeyAndAccount.result, publicKeyAndAccount.message)
-                else
-                    publicKeyAndAccount.data!!
+        val getUserAccountResult = UserAccountHelper.getOrGenerateUser(emailToShareWith, publicKey)
+        if(getUserAccountResult.result != SOAResultType.SUCCESS)
+            return SOAResult(getUserAccountResult.result, getUserAccountResult.message)
+        val publicKeyToShareWith = getUserAccountResult.data!!.first.cryptoKeyPair.publicKey
+        val newUserAccount = getUserAccountResult.data!!.second
 
         // Pull list of non-transferred shares.
         val unsharedTransactions = GetUnsharedTransactionsService.execute(caller)
