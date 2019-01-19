@@ -1,6 +1,5 @@
 package test.unit.services.challenge
 
-import framework.models.idValue
 import io.kotlintest.*
 import io.kotlintest.specs.WordSpec
 import io.mockk.junit5.MockKExtension

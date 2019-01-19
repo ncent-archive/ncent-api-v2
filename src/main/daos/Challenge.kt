@@ -200,6 +200,8 @@ data class ChallengeNamespaceList(val challenges: List<ChallengeNamespace>)
 
 class ChallengeToUnsharedTransactionsList(val challengeToUnsharedTransactions: List<Pair<Challenge, ShareTransactionList>>)
 
+class EmailToChallengeBalanceList(val challengeId: Int, val publicKeyToChallengeBalances: MutableMap<String, Int>)
+
 object Challenges : BaseIntIdTable("challenges") {
     val parentChallenge = reference("parent_challenge", Challenges).nullable()
     val challengeSettings = reference("challenge_settings", ChallengeSettings)
