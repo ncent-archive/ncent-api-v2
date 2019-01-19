@@ -217,7 +217,14 @@ class ChallengeToUnsharedTransactionsList(val challengeToUnsharedTransactions: L
 
 data class ChallengeToUnsharedTransactionsNamespaceList(val challengeToUnsharedTransactions: List<ChallengeToUnsharedTransactionNamespace>)
 
-class EmailToChallengeBalanceList(val challengeId: Int, val publicKeyToChallengeBalances: MutableMap<String, Int>)
+class EmailToChallengeBalanceList(val challengeId: Int, val emailToChallengeBalances: MutableMap<String, Int>): BaseNamespace() {
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = mutableMapOf<String, Any?>()
+        map.put("challengeId", challengeId)
+        map.put("emailToChallengeBalances", emailToChallengeBalances)
+        return map
+    }
+}
 
 object Challenges : BaseIntIdTable("challenges") {
     val parentChallenge = reference("parent_challenge", Challenges).nullable()

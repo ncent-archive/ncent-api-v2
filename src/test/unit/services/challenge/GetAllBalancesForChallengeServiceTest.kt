@@ -44,7 +44,7 @@ class GetAllBalancesForChallengeServiceTest : WordSpec() {
                     val getAllBalancesForChallengeResult = GetAllBalancesForChallengeService.execute(user1, challenge.idValue)
                     getAllBalancesForChallengeResult.result shouldBe SOAResultType.SUCCESS
 
-                    val keyToBalances = getAllBalancesForChallengeResult.data!!.publicKeyToChallengeBalances
+                    val keyToBalances = getAllBalancesForChallengeResult.data!!.emailToChallengeBalances
                     var totalBalance = 0
 
                     for (key in keyToBalances.keys) {
@@ -57,7 +57,7 @@ class GetAllBalancesForChallengeServiceTest : WordSpec() {
         }
 
         "calling execute without the challenge sponsor" should {
-            "return a 403 forbidden response" {
+            "return an SOA failure" {
                 transaction {
                     val getAllBalancesForChallengeResult = GetAllBalancesForChallengeService.execute(user2, challenge.idValue)
                     getAllBalancesForChallengeResult.result shouldBe SOAResultType.FAILURE
