@@ -22,10 +22,14 @@ object UserAccountHelper {
              *   in order to share with a non-existant user we must have the email
              **/
             email != null -> {
-                val userResult = User.find {
-                    Users.email eq email
-                }
-                val userAccount = if(userResult.empty()) {
+                val query = UserAccounts
+                    .innerJoin(Users)
+                    .select {
+                        Users.email eq email
+                    }.withDistinct()
+                val userAccounts = UserAccount.wrapRows(query).toList().distinct()
+
+                if(userAccounts.isEmpty()) {
                     val newUserAccountResult = GenerateUserAccountService.execute(
                         uemail = email,
                         ufirstname = email.substringBefore("@"),
@@ -37,12 +41,8 @@ object UserAccountHelper {
                     newUserAccount = newUserAccountResult.data
                     newUserAccount!!.value
                 } else {
-                    UserAccount.find {
-                        UserAccounts.userMetadata eq userResult.first().id
-                    }.first()
+                    userAccounts.first()
                 }
-
-                userAccount
             }
             publicKey != null -> {
                 val query = UserAccounts
