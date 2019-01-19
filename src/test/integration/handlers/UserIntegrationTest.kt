@@ -31,7 +31,7 @@ class UserIntegrationTest : WordSpec() {
             map = TestHelper.buildRequest(
                 user,
                 "/user/hello",
-                "POST"g
+                "POST"
             )
         }
     }
