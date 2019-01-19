@@ -5,19 +5,18 @@ import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.models.ForbiddenException
 import kotlinserverless.framework.services.SOAResult
-import kotlinserverless.framework.models.Request
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
-import main.services.user_account.ValidateApiKeyService
 import main.services.challenge.*
 import main.helpers.JsonHelper
 import main.helpers.ChallengeHelper
+import main.helpers.ControllerHelper.RequestData
 
 class ChallengeController: DefaultController<Challenge>(), RestController<Challenge, UserAccount> {
-    override fun create(user: UserAccount, params: Map<String, String>): SOAResult<*> {
+    override fun create(user: UserAccount?, requestData: RequestData): SOAResult<Challenge> {
+        validateApiKey(user!!, requestData)
         return DaoService.execute {
-            ValidateApiKeyService.execute(user, params["secretKey"] as String)
-            val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(params["challengeNamespace"]!!)
+            val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(requestData.body["challengeNamespace"]!!.toString())
 
             val generateChallengeResult = GenerateChallengeService.execute(user, challengeNamespace)
             DaoService.throwOrReturn(generateChallengeResult.result, generateChallengeResult.message)
@@ -25,18 +24,16 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         }
     }
 
-    override fun findOne(user: UserAccount, id: Int): SOAResult<Challenge> {
+    override fun findOne(user: UserAccount, requestData: RequestData, id: Int): SOAResult<Challenge> {
+        validateApiKey(user, requestData)
+
         val challenge = ChallengeHelper.findChallengeById(id)
 
         return SOAResult(SOAResultType.SUCCESS, "", challenge)
     }
 
-    fun findAll(user: UserAccount, request: Request): SOAResult<ChallengeList> {
-
-        val validateApiKeyResult = DaoService.execute {
-            ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
-        }
-        DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
+    override fun findAll(user: UserAccount, requestData: RequestData): SOAResult<List<Challenge>> {
+        validateApiKey(user, requestData)
 
         val challengesResult = ChallengeHelper.getChallenges(user)
 
@@ -44,13 +41,14 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
             throw InternalError()
         }
 
-        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, ChallengeList(challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first}))
+        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first})
     }
 
     @Throws(ForbiddenException::class)
-    fun complete(user: UserAccount, request: Request): SOAResult<TransactionList> {
-        val completerPublicKey = request.input["completerPublicKey"] as String
-        val challengeId = request.input["challengeId"] as Int
+    fun complete(user: UserAccount?, requestData: RequestData): SOAResult<TransactionList> {
+        validateApiKey(user!!, requestData)
+        val completerPublicKey = requestData.body["completerPublicKey"] as String
+        val challengeId = requestData.body["challengeId"] as Int
         val challenge = ChallengeHelper.findChallengeById(challengeId)
 
         val finalResult = DaoService.execute {
@@ -66,9 +64,10 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     @Throws(ForbiddenException::class)
-    fun redeem(user: UserAccount, request: Request): SOAResult<TransactionList> {
-        val completerPublicKey = request.input["completerPublicKey"] as String
-        val challengeId = request.input["challengeId"] as Int
+    fun redeem(user: UserAccount?, requestData: RequestData): SOAResult<TransactionList> {
+        validateApiKey(user!!, requestData)
+        val completerPublicKey = requestData.body["completerPublicKey"] as String
+        val challengeId = requestData.body["challengeId"] as Int
         val challenge = ChallengeHelper.findChallengeById(challengeId)
 
         val finalResult = DaoService.execute {
@@ -84,19 +83,16 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     @Throws(ForbiddenException::class)
-    fun share(user: UserAccount, request: Request): SOAResult<TransactionWithNewUser?> {
+    fun share(user: UserAccount?, requestData: RequestData): SOAResult<TransactionWithNewUser?> {
+        validateApiKey(user!!, requestData)
+
         val finalResult = SOAResult<TransactionWithNewUser?>(SOAResultType.FAILURE, null, null)
 
-        val challengeId = request.input["challengeId"] as Int
-        val publicKeyToShareWith = request.input["publicKeyToShareWith"] as String?
-        val shares = request.input["shares"] as Int
-        val expiration = request.input["expiration"] as String?
-        val emailToShareWith = request.input["emailToShareWith"] as String?
-
-        val validateApiKeyResult = DaoService.execute {
-            ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
-        }
-        DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
+        val challengeId = requestData.body["challengeId"] as Int
+        val publicKeyToShareWith = requestData.body["publicKeyToShareWith"] as String?
+        val shares = requestData.body["shares"] as Int
+        val expiration = requestData.body["expiration"] as String?
+        val emailToShareWith = requestData.body["emailToShareWith"] as String?
 
         val challenge = ChallengeHelper.findChallengeById(challengeId)
 

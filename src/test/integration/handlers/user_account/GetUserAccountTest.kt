@@ -21,34 +21,35 @@ import test.TestHelper
 class GetUserAccountTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
-    private lateinit var user1: UserAccount
+    private lateinit var user1: NewUserAccount
     private lateinit var map: Map<String, Any>
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
         val newUsers = TestHelper.generateUserAccounts()
-        val user1 = newUsers[0].value
+        user1 = newUsers[0]
         transaction {
             val metadataId = Metadatas.insertAndGetId {
                 it[key] = "test1key"
                 it[value] = "test1val"
             }
             UsersMetadata.insert {
-                it[user] = user1.id
+                it[user] = user1.value.id
                 it[metadata] = metadataId
             }
-            user1.refresh(true)
+            user1.value.refresh(true)
+            handler = Handler()
+            contxt = mockk()
+            map = TestHelper.buildRequest(
+                user1,
+                "/user_account",
+                "GET",
+                mapOf(
+                        Pair("id", user1.value.idValue),
+                        Pair("userId", user1.value.idValue.toString())
+                )
+            )
         }
-        handler = Handler()
-        contxt = mockk()
-        map = mutableMapOf(
-                Pair("path", "/user_account/"),
-                Pair("httpMethod", "GET"),
-                Pair("pathParameters", mutableMapOf(
-                    Pair("id", user1.idValue)
-                )),
-                Pair("userId", user1.idValue.toString())
-        )
     }
 
     override fun afterTest(description: Description, result: TestResult) {

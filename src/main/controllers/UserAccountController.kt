@@ -7,35 +7,38 @@ import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
-import kotlinserverless.framework.models.Request
 import main.daos.NewUserAccount
+import main.helpers.ControllerHelper.RequestData
 import main.services.user_account.GenerateUserAccountService
 import main.services.user_account.GetUserAccountService
-import main.services.user_account.ValidateApiKeyService
 import main.services.user_account.StartSessionService
 import main.services.user_account.EndSessionService
 
 class UserAccountController: DefaultController<UserAccount>(), RestController<UserAccount, UserAccount> {
-    override fun findOne(user: UserAccount, id: Int): SOAResult<UserAccount> {
+    override fun findOne(user: UserAccount, requestData: RequestData, id: Int): SOAResult<UserAccount> {
+        validateApiKey(user, requestData)
         return DaoService.execute {
-            val result = GetUserAccountService.execute(user.idValue, null, null)
+            val result = GetUserAccountService.execute(user.idValue)
             DaoService.throwOrReturn(result.result, result.message)
             return@execute result.data!!
         }
     }
 
-    override fun create(user: UserAccount, params: Map<String, String>): SOAResult<NewUserAccount> {
+    override fun create(user: UserAccount?, requestData: RequestData): SOAResult<NewUserAccount> {
         return DaoService.execute {
-            val result = GenerateUserAccountService.execute(params["email"]!!, params["firstname"]!!, params["lastname"]!!)
+            val result = GenerateUserAccountService.execute(
+                requestData.body["email"]!! as String,
+                requestData.body["firstname"]!! as String,
+                requestData.body["lastname"]!! as String)
             DaoService.throwOrReturn(result.result, result.message)
             return@execute result.data!!
         }
     }
 
-    fun login(user: UserAccount, request: Request): SOAResult<UserAccount> {
+    fun login(user: UserAccount?, requestData: RequestData): SOAResult<UserAccount> {
+        validateApiKey(user!!, requestData)
+
         val result = SOAResult<UserAccount>(SOAResultType.FAILURE, null, null)
-
-        ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
 
         //TODO: Full session implementation
         val startSessionResult = StartSessionService.execute()
@@ -49,14 +52,14 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
         return result
     }
 
-    fun logout(user: UserAccount, request: Request): SOAResult<UserAccount> {
+    fun logout(user: UserAccount?, requestData: RequestData): SOAResult<UserAccount> {
+        validateApiKey(user!!, requestData)
+
         val result = SOAResult<UserAccount>(
             SOAResultType.FAILURE,
             "",
             null
         )
-
-        ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
 
         val endSessionResult = EndSessionService.execute(user.session.sessionKey)
 

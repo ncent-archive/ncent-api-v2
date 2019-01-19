@@ -1,19 +1,15 @@
 package framework.services
 
 import kotlinserverless.framework.models.ApiGatewayResponse
+import kotlinserverless.framework.models.SoAErrorException
+import kotlinserverless.framework.models.SoAFailureException
+import kotlinserverless.framework.models.UnauthorizedError
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
-import org.h2.jdbc.JdbcBatchUpdateException
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.lang.RuntimeException
 import java.sql.SQLException
 
 object DaoService {
-    class SoAErrorException(message: String? = "Generic error"): Exception(message)
-    class SoAFailureException(message: String? = "Generic failure"): Exception(message)
-
     fun <T> execute(query: () -> T): SOAResult<T> {
         var result: SOAResult<T> = SOAResult(SOAResultType.FAILURE, "", null)
         try {
@@ -47,6 +43,9 @@ object DaoService {
     }
 
     fun throwOrReturn(result: SOAResultType, message: String?) {
+        if(message?.equals("Invalid api credentials") == true)
+            throw UnauthorizedError(message!!)
+
         when(result) {
             SOAResultType.FAILURE -> throw SoAFailureException(message)
             SOAResultType.ERROR -> throw SoAErrorException(message)

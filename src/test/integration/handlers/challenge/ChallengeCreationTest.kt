@@ -20,11 +20,10 @@ import test.TestHelper
 class ChallengeCreationTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
-    private lateinit var user: UserAccount
     private lateinit var newUser: NewUserAccount
     private lateinit var challengeNamespace: ChallengeNamespace
-    private lateinit var map: Any
-    private lateinit var badMap: Any
+    private lateinit var map: Map<String, Any>
+    private lateinit var badMap: Map<String, Any>
 
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
@@ -33,25 +32,23 @@ class ChallengeCreationTest : WordSpec() {
         transaction {
             val newUsers = TestHelper.generateUserAccounts()
             newUser = newUsers[0]
-            user = newUser.value
-            challengeNamespace = TestHelper.generateChallengeNamespace(user).first()
-            map = mutableMapOf(
-                    Pair("path", "/challenge/"),
-                    Pair("httpMethod", "POST"),
-                    Pair("userId", user.idValue.toString()),
-                    Pair("body", mapOf(
-                            Pair("challengeNamespace", Klaxon().toJsonString(challengeNamespace)),
-                            Pair("secretKey", newUser.secretKey)
-                    ))
+            challengeNamespace = TestHelper.generateChallengeNamespace(newUser.value).first()
+            map = TestHelper.buildRequest(
+                newUser,
+                "/challenge/",
+                "POST",
+                mapOf(
+                    Pair("challengeNamespace", Klaxon().toJsonString(challengeNamespace))
+                )
             )
-            badMap = mutableMapOf(
-                    Pair("path", "/challenge/"),
-                    Pair("httpMethod", "POST"),
-                    Pair("userId", user.idValue.toString()),
-                    Pair("body", mapOf(
-                            Pair("challengeNamespace", null),
-                            Pair("secretKey", newUser.secretKey)
-                    ))
+
+            badMap = TestHelper.buildRequest(
+                newUser,
+                "/challenge/",
+                "POST",
+                mapOf(
+                    Pair("challengeNamespace", "null")
+                )
             )
         }
     }
@@ -63,14 +60,14 @@ class ChallengeCreationTest : WordSpec() {
     init {
         "correct path" should {
             "should return a valid new challenge" {
-                val response = handler.handleRequest(map as Map<String, Any>, contxt)
+                val response = handler.handleRequest(map, contxt)
                 response.statusCode shouldBe 200
             }
         }
 
         "calling this API with incorrect parameters" should {
             "should return a failure response" {
-                val response = handler.handleRequest(badMap as Map<String, Any>, contxt)
+                val response = handler.handleRequest(badMap, contxt)
                 response.statusCode shouldNotBe 200
             }
         }
