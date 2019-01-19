@@ -82,8 +82,8 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     @Throws(ForbiddenException::class)
-    fun share(user: UserAccount, requestData: RequestData): SOAResult<TransactionWithNewUser?> {
-        validateApiKey(user, requestData)
+    fun share(user: UserAccount?, requestData: RequestData): SOAResult<TransactionWithNewUser?> {
+        validateApiKey(user!!, requestData)
 
         val finalResult = SOAResult<TransactionWithNewUser?>(SOAResultType.FAILURE, null, null)
 

@@ -20,13 +20,14 @@ import org.joda.time.DateTimeZone
 object TestHelper {
 
     // Used to generate a request to the api, used for integration testing
-    fun buildRequest(user: NewUserAccount, path: String, httpMethod: String, body: Map<String, Any>? = null): Map<String, Any> {
+    fun buildRequest(user: NewUserAccount?, path: String, httpMethod: String, body: Map<String, Any>? = null): Map<String, Any> {
         var request = mutableMapOf<String, Any>()
         request["path"] = path
         request["httpMethod"] = httpMethod
         if(body != null)
             request["body"] = body
-        request["headers"] = mapOf(Pair("Authorization", UserAccountHelper.getUserAuth(user)))
+        if(user != null)
+            request["headers"] = mapOf(Pair("Authorization", UserAccountHelper.getUserAuth(user)))
         return request
     }
 

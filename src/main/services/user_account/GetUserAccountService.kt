@@ -7,7 +7,7 @@ import framework.services.DaoService
 import org.jetbrains.exposed.sql.select
 
 object GetUserAccountService {
-    fun execute(userId: Int? = null, email: String? = null, apiKey: String? = null): SOAResult<UserAccount> {
+    fun execute(userId: Int? = null, email: String? = null, apiKey: String? = null): SOAResult<UserAccount?> {
         val userAccountResult = DaoService.execute {
             when {
                 userId != null -> {
@@ -30,7 +30,7 @@ object GetUserAccountService {
                     UserAccount.wrapRows(query).toList().distinct().first()
                 }
                 else -> {
-                    throw Exception("Could not find user without email/apiKey/userId")
+                    null
                 }
             }
         }

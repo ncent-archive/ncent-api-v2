@@ -9,7 +9,7 @@ import main.daos.UserAccount
 import main.helpers.ControllerHelper.RequestData
 
 class UserController: DefaultController<User>(), RestController<User, UserAccount> {
-    fun hello(user: UserAccount, requestData: RequestData): SOAResult<String> {
+    fun hello(user: UserAccount?, requestData: RequestData): SOAResult<String> {
         return UserHelloService.execute()
     }
 }

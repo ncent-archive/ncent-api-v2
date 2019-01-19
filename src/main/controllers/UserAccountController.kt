@@ -35,8 +35,8 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
         }
     }
 
-    fun login(user: UserAccount, requestData: RequestData): SOAResult<UserAccount> {
-        validateApiKey(user, requestData)
+    fun login(user: UserAccount?, requestData: RequestData): SOAResult<UserAccount> {
+        validateApiKey(user!!, requestData)
 
         val result = SOAResult<UserAccount>(SOAResultType.FAILURE, null, null)
 
@@ -52,8 +52,8 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
         return result
     }
 
-    fun logout(user: UserAccount, requestData: RequestData): SOAResult<UserAccount> {
-        validateApiKey(user, requestData)
+    fun logout(user: UserAccount?, requestData: RequestData): SOAResult<UserAccount> {
+        validateApiKey(user!!, requestData)
 
         val result = SOAResult<UserAccount>(
             SOAResultType.FAILURE,

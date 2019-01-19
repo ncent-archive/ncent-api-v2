@@ -5,6 +5,7 @@ import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
 import main.daos.UserAccount
 import main.helpers.ControllerHelper
+import java.lang.NullPointerException
 import kotlin.math.ceil
 
 /**
@@ -19,25 +20,28 @@ interface Controller<M> {
      * @param request Http Client request
      * @param service CRUD service to execute
      */
-    fun <T : BaseIntEntity> defaultRouting(inputClass: String, outcls: Class<T>, requestData: ControllerHelper.RequestData, user: UserAccount, restController: RestController<T, UserAccount>): SOAResult<*> {
-        return when((requestData.request.input[ControllerHelper.HTTP_METHOD] as String).toLowerCase()) {
+    fun <T : BaseIntEntity> defaultRouting(inputClass: String, outcls: Class<T>, requestData: ControllerHelper.RequestData, user: UserAccount?, restController: RestController<T, UserAccount>): SOAResult<*> {
+        val method = (requestData.request.input[ControllerHelper.HTTP_METHOD] as String).toLowerCase()
+        if(method == ControllerHelper.HTTP_POST)
+            return restController.create(user, requestData)
+        try {
+            user!!
+        } catch(e: NullPointerException) {
+            throw NullPointerException("You must pass the user authentication header and value in order to use this.")
+        }
+        return when(method) {
             ControllerHelper.HTTP_GET -> {
                 when {
-                    requestData.resource != null && requestData.resource.endsWith("findOne", true) && requestData.body.containsKey("id") -> {
-                        val id = requestData.body["id"]
+                    requestData.body.containsKey("id") -> {
+                        val id = requestData.body["id"].toString().toIntOrNull()
 
-                        when (id) {
-                            is Int -> restController.findOne(user, requestData, id.toString().toInt())
-                            else -> throw Exception("Id must be an integer")
-                        }
+                        id ?: throw Exception("Id must be an integer")
+                        restController.findOne(user, requestData, id.toString().toInt())
                     }
                     else -> {
                         return restController.findAll(user, requestData)
                     }
                 }
-            }
-            ControllerHelper.HTTP_POST -> {
-                restController.create(user, requestData)
             }
             ControllerHelper.HTTP_PUT -> {
                 restController.update(user, requestData)

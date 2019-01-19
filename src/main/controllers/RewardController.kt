@@ -13,7 +13,7 @@ class RewardController: DefaultController<Reward>(), RestController<Reward, User
         throw NotImplementedError()
     }
 
-    fun pool(user: UserAccount, requestData: RequestData): SOAResult<Reward> {
+    fun pool(user: UserAccount?, requestData: RequestData): SOAResult<Reward> {
         throw NotImplementedError()
     }
 }

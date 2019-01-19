@@ -17,7 +17,7 @@ class TokenController: DefaultController<Token>(), RestController<Token, UserAcc
         throw NotImplementedError()
     }
 
-    fun transfer(user: UserAccount, requestData: RequestData): SOAResult<Token> {
+    fun transfer(user: UserAccount?, requestData: RequestData): SOAResult<Token> {
         throw NotImplementedError()
     }
 }

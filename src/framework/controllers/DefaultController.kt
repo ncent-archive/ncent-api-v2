@@ -12,7 +12,7 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 			incls: String,
 			outcls: Class<T>,
             requestData: ControllerHelper.RequestData,
-			user: UserAccount,
+			user: UserAccount?,
             restController: RestController<T, UserAccount>
     ): SOAResult<*> {
 		val path = requestData.request.input["path"].toString().removePrefix("/").split("/")
