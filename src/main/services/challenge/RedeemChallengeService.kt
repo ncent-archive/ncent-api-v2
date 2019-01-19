@@ -45,7 +45,7 @@ object RedeemChallengeService {
         val unsharedTransactions = sharabilityResult.data!!.second!!
 
         // decide which transaction to use ( TODO for now the first unshared tx?)
-        val firstUnspentTx = unsharedTransactions.transactionsToShares.first().first
+        val firstUnspentTx = unsharedTransactions.transactionsToShares.first().transaction
 
         // TODO test this gets generated correctly
         // generate a tx moving the share to the completion contract so it cannot be used again

@@ -51,8 +51,8 @@ class ShareAllChallengesServiceTest : WordSpec() {
                     // Verify that the recipient received the shares.
                     var unsharedTransactions = GetUnsharedTransactionsService.execute(recipient.value)
                     unsharedTransactions.data!!.transactionsToShares.count() shouldBe 2
-                    unsharedTransactions.data!!.transactionsToShares[0].second shouldBe 100
-                    unsharedTransactions.data!!.transactionsToShares[1].second shouldBe 100
+                    unsharedTransactions.data!!.transactionsToShares[0].shares shouldBe 100
+                    unsharedTransactions.data!!.transactionsToShares[1].shares shouldBe 100
 
                     // Verify that the sender no longer has any shares.
                     unsharedTransactions = GetUnsharedTransactionsService.execute(sender.value)

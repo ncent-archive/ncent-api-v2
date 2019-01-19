@@ -60,8 +60,8 @@ class FindAllChallengesTest : WordSpec() {
                     val findAllChallengesResult = handler.handleRequest(map, contxt)
                     findAllChallengesResult.statusCode shouldBe 200
 
-                    val challengeNamespaceList = JsonHelper.parse<ChallengeNamespaceList>(findAllChallengesResult.body as String)
-                    challengeNamespaceList.challenges.size shouldBe 4
+                    val challengeToUnsharedTransactionNamespaceList = JsonHelper.parse<ChallengeToUnsharedTransactionsNamespaceList>(findAllChallengesResult.body as String)
+                    challengeToUnsharedTransactionNamespaceList.challengeToUnsharedTransactions.size shouldBe 4
                 }
             }
         }

@@ -31,7 +31,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         return SOAResult(SOAResultType.SUCCESS, "", challenge)
     }
 
-    fun findAll(user: UserAccount, request: Request): SOAResult<ChallengeList> {
+    fun findAll(user: UserAccount, request: Request): SOAResult<ChallengeToUnsharedTransactionsList> {
 
         val validateApiKeyResult = DaoService.execute {
             ValidateApiKeyService.execute(user, request.input["secretKey"] as String)
@@ -44,7 +44,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
             throw InternalError()
         }
 
-        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, ChallengeList(challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first}))
+        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, challengesResult.data!!)
     }
 
     @Throws(ForbiddenException::class)

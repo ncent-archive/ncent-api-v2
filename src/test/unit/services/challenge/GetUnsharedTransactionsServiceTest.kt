@@ -41,12 +41,12 @@ class GetUnsharedTransactionsServiceTest : WordSpec() {
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.transactionsToShares.count() shouldBe 1
-                    result.data!!.transactionsToShares.first().second shouldBe 100
+                    result.data!!.transactionsToShares.first().shares shouldBe 100
                     TestHelper.generateShareTransaction(
                         challenge1,
                         newUserAccounts[0].value,
                         newUserAccounts[1].value,
-                        result.data!!.transactionsToShares.first().first,
+                        result.data!!.transactionsToShares.first().transaction,
                         60
                     )
                     result = GetUnsharedTransactionsService.execute(
@@ -55,7 +55,7 @@ class GetUnsharedTransactionsServiceTest : WordSpec() {
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.transactionsToShares.count() shouldBe 1
-                    result.data!!.transactionsToShares.first().second shouldBe 40
+                    result.data!!.transactionsToShares.first().shares shouldBe 40
                 }
             }
         }
@@ -68,20 +68,20 @@ class GetUnsharedTransactionsServiceTest : WordSpec() {
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.transactionsToShares.count() shouldBe 2
-                    result.data!!.transactionsToShares[0].second shouldBe 100
-                    result.data!!.transactionsToShares[1].second shouldBe 100
+                    result.data!!.transactionsToShares[0].shares shouldBe 100
+                    result.data!!.transactionsToShares[1].shares shouldBe 100
                     TestHelper.generateShareTransaction(
                             challenge1,
                             newUserAccounts[0].value,
                             newUserAccounts[1].value,
-                            result.data!!.transactionsToShares[0].first,
+                            result.data!!.transactionsToShares[0].transaction,
                             60
                     )
                     TestHelper.generateShareTransaction(
                             challenge1,
                             newUserAccounts[0].value,
                             newUserAccounts[1].value,
-                            result.data!!.transactionsToShares[1].first,
+                            result.data!!.transactionsToShares[1].transaction,
                             50
                     )
 
@@ -91,8 +91,8 @@ class GetUnsharedTransactionsServiceTest : WordSpec() {
                     )
                     result.result shouldBe SOAResultType.SUCCESS
                     result.data!!.transactionsToShares.count() shouldBe 2
-                    result.data!!.transactionsToShares[0].second shouldBe 40
-                    result.data!!.transactionsToShares[1].second shouldBe 50
+                    result.data!!.transactionsToShares[0].shares shouldBe 40
+                    result.data!!.transactionsToShares[1].shares shouldBe 50
                 }
             }
         }

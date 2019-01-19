@@ -48,13 +48,13 @@ object GetUnsharedTransactionsService {
             }
         }
 
-        var unsharedTransactions = mutableListOf<Pair<Transaction, Int>>()
+        var unsharedTransactions = mutableListOf<TransactionToShare>()
 
         receivedShares.forEach { receivedShare ->
             val shares = receivedShare.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
             val availableShares = shares - sharedTransactionCount.getOrDefault(receivedShare.idValue, 0)
             if(availableShares > 0 && !hasShareExpired(receivedShare, sharedTransactionCount.get(receivedShare.idValue))) {
-                unsharedTransactions.add(Pair(receivedShare, availableShares))
+                unsharedTransactions.add(TransactionToShare(receivedShare, availableShares))
             }
         }
 
