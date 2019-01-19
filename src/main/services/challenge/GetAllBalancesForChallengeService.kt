@@ -8,19 +8,9 @@ import main.helpers.ChallengeHelper
 import main.helpers.UserAccountHelper
 import main.services.transaction.GetTransactionsService
 
-fun getChallengeBalanceForUser(userAccount: UserAccount, challengeId: Int): Int {
-    var balance = 0
-    val unsharedTransactionList = GetUnsharedTransactionsService.execute(userAccount, challengeId).data
-    for (transactionToShare in unsharedTransactionList!!.transactionsToShares) {
-        balance += transactionToShare.second
-    }
-
-    return balance
-}
-
 object GetAllBalancesForChallengeService {
-    fun execute(caller: UserAccount, challengeId: Int): SOAResult<PublicKeyToChallengeBalanceList> {
-        val allBalancesForChallenge = PublicKeyToChallengeBalanceList(challengeId, mutableMapOf())
+    fun execute(caller: UserAccount, challengeId: Int): SOAResult<EmailToChallengeBalanceList> {
+        val allBalancesForChallenge = EmailToChallengeBalanceList(challengeId, mutableMapOf())
 
         val challenge = ChallengeHelper.findChallengeById(challengeId)
         if (caller.idValue != challenge.challengeSettings.admin.idValue) {
@@ -43,5 +33,15 @@ object GetAllBalancesForChallengeService {
         }
 
         return SOAResult(SOAResultType.SUCCESS, null, allBalancesForChallenge)
+    }
+
+    private fun getChallengeBalanceForUser(userAccount: UserAccount, challengeId: Int): Int {
+        var balance = 0
+        val unsharedTransactionList = GetUnsharedTransactionsService.execute(userAccount, challengeId).data
+        for (transactionToShare in unsharedTransactionList!!.transactionsToShares) {
+            balance += transactionToShare.second
+        }
+
+        return balance
     }
 }
