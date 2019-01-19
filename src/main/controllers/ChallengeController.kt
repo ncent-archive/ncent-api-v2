@@ -4,6 +4,7 @@ import framework.services.DaoService
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.models.ForbiddenException
+import kotlinserverless.framework.models.NotFoundException
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
@@ -120,5 +121,19 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         }
 
         return finalResult
+    }
+
+    fun getAllBalancesForChallenge(user: UserAccount?, requestData: RequestData): SOAResult<EmailToChallengeBalanceList> {
+        validateApiKey(user!!, requestData)
+
+        val challengeId = requestData.body["challengeId"] as Int
+
+        val getAllBalancesForChallengeResult = GetAllBalancesForChallengeService.execute(user, challengeId)
+
+        if (getAllBalancesForChallengeResult.data == null && getAllBalancesForChallengeResult.message == "User not permitted to make this call") {
+            throw ForbiddenException(getAllBalancesForChallengeResult.message)
+        }
+
+        return SOAResult(SOAResultType.SUCCESS, getAllBalancesForChallengeResult.message, getAllBalancesForChallengeResult.data!!)
     }
 }

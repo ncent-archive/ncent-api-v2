@@ -29,7 +29,7 @@ object GetAllBalancesForChallengeService {
         val userAccounts = publicKeys.map { it -> UserAccountHelper.getOrGenerateUser(null, it).data }
 
         for (userAccount in userAccounts) {
-            allBalancesForChallenge.publicKeyToChallengeBalances.put(userAccount!!.first.userMetadata.email, getChallengeBalanceForUser(userAccount.first, challengeId))
+            allBalancesForChallenge.emailToChallengeBalances.put(userAccount!!.first.userMetadata.email, getChallengeBalanceForUser(userAccount.first, challengeId))
         }
 
         return SOAResult(SOAResultType.SUCCESS, null, allBalancesForChallenge)
