@@ -1,9 +1,9 @@
 package kotlinserverless.framework.controllers
 
 import kotlinserverless.framework.healthchecks.InvalidEndpoint
-import kotlinserverless.framework.models.*
 import main.daos.Healthcheck
 import kotlinserverless.framework.services.SOAResult
+import main.helpers.ControllerHelper.RequestData
 
 /**
  * Service that exposes the capabilities of a {@link T} element
@@ -25,23 +25,17 @@ interface ReadableController<T, U> {
 //        throw InvalidEndpoint()
 //    }
 
+    fun findAll(user: U, requestData: RequestData): SOAResult<List<T>> {
+        throw InvalidEndpoint()
+    }
+
     /**
      * Finds one [T] by the unique ID
      * @param user [U] User who is requesting (to verify permissions)
      * @param id Unique id
      * @return [T] that has that ID
      */
-    fun findOne(user: U, id: Int): SOAResult<T> {
-        throw InvalidEndpoint()
-    }
-
-    /**
-     * Finds one [T] by an unique natural [K] key
-     * @param user [U] User who is requesting (to verify permissions)
-     * @param filters Set of filters that will return a unique value
-     * @return [T] that has that [Any] natural key
-     */
-    fun findOne(user: U, filters: Map<String, Any> = emptyMap()): SOAResult<T> {
+    fun findOne(user: U, requestData: RequestData, id: Int): SOAResult<T> {
         throw InvalidEndpoint()
     }
 
@@ -51,7 +45,7 @@ interface ReadableController<T, U> {
      * @param filters Set of filters
      * @return list of [T]
      */
-    fun count(user: U, filters: Map<String, Any> = emptyMap()): SOAResult<Int> {
+    fun count(user: U, requestData: RequestData): SOAResult<Int> {
         throw InvalidEndpoint()
     }
 
@@ -61,7 +55,7 @@ interface ReadableController<T, U> {
      * @param id Unique id
      * @return [Boolean] value indicating true if exists or false if not
      */
-    fun exists(user: U, id: Int): SOAResult<Boolean> {
+    fun exists(user: U, requestData: RequestData): SOAResult<Boolean> {
         throw InvalidEndpoint()
     }
 
@@ -70,7 +64,7 @@ interface ReadableController<T, U> {
      * ex: used to verify access to the database/cache layer is functioning properly
      * @return [Healthcheck] object representing the health
      */
-    fun health(user: U, request: Request?): SOAResult<Healthcheck> {
+    fun health(user: U, requestData: RequestData): SOAResult<Healthcheck> {
         throw InvalidEndpoint()
     }
 }

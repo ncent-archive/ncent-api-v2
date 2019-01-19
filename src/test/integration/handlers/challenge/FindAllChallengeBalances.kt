@@ -19,8 +19,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class FindAllChallengesTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
-    private lateinit var user1: UserAccount
-    private lateinit var user2: UserAccount
+    private lateinit var user1: NewUserAccount
+    private lateinit var user2: NewUserAccount
     private lateinit var challenge: Challenge
     private lateinit var map: Map<String, Any>
     private lateinit var notFoundMap: Map<String, Any>
@@ -31,20 +31,24 @@ class FindAllChallengesTest : WordSpec() {
         contxt = mockk()
         transaction {
             val newUsers = TestHelper.generateUserAccounts(2)
-            user1 = newUsers[0].value
-            user2 = newUsers[1].value
-            challenge = TestHelper.generateFullChallenge(user1, user1).first()
-            map = mutableMapOf(
-                    Pair("path", "/challenge/findAll"),
-                    Pair("httpMethod", "GET"),
-                    Pair("userId", user1.idValue.toString()),
-                    Pair("secretKey", newUsers[0].secretKey)
+            user1 = newUsers[0]
+            user2 = newUsers[1]
+            challenge = TestHelper.generateFullChallenge(user1.value, user1.value).first()
+            map = TestHelper.buildRequest(
+                user1,
+                "/challenge/findAllChallengeBalances",
+                "GET",
+                mapOf(
+                    Pair("userId", user1.value.idValue.toString())
+                )
             )
-            notFoundMap = mutableMapOf(
-                    Pair("path", "/challenge/findAll"),
-                    Pair("httpMethod", "GET"),
-                    Pair("userId", user2.idValue.toString()),
-                    Pair("secretKey", newUsers[1].secretKey)
+            notFoundMap = TestHelper.buildRequest(
+                user2,
+                "/challenge/findAllChallengeBalances",
+                "GET",
+                mapOf(
+                    Pair("userId", user2.value.idValue.toString())
+                )
             )
         }
     }
@@ -71,7 +75,7 @@ class FindAllChallengesTest : WordSpec() {
                 transaction {
                     val findAllChallengesResult = handler.handleRequest(notFoundMap, contxt)
                     findAllChallengesResult.statusCode shouldBe 404
-                    findAllChallengesResult.body shouldBe "No challenges found for ${user2.cryptoKeyPair.publicKey}"
+                    findAllChallengesResult.body shouldBe "No challenges found for ${user2.value.cryptoKeyPair.publicKey}"
                 }
             }
         }

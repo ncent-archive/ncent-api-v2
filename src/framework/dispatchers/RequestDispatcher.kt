@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
+import main.helpers.ControllerHelper
 import main.services.user_account.GetUserAccountService
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -32,15 +33,16 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
             val controllerInstance = controllerClass.createInstance()
 
             val func = controllerClass.members.find { it.name == "defaultRouting" }
-            val user = findUserByRequest(request)
+            val requestData = ControllerHelper.getRequestData(request)
+            val user = findUserByRequest(requestData)
             val result = try {
                 func?.call(
-                        controllerInstance,
-                        inputModel,
-                        outputModelClass::class.java,
-                        request!!,
-                        user,
-                        controllerInstance
+                    controllerInstance,
+                    inputModel,
+                    outputModelClass::class.java,
+                    requestData,
+                    user,
+                    controllerInstance
                 ) as SOAResult<Any>
             }
             catch(e: InvocationTargetException) {
@@ -59,15 +61,12 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
 		throw RouterException(path as? String ?: "")
     }
 
-    fun findUserByRequest(request: Request) : UserAccount {
-        var data = request.input.map { Pair(it.key, it.value.toString()) }.toMap()
-
-        val userResult = GetUserAccountService.execute(data["userId"]?.toInt(), data["email"], data["apiKey"])
-        if(userResult.result == SOAResultType.SUCCESS) {
-            return userResult.data!!
-        } else {
-            throw Exception(userResult.message)
-        }
+    fun findUserByRequest(requestData: ControllerHelper.RequestData) : UserAccount? {
+        return GetUserAccountService.execute(
+            requestData.body["userId"]?.toString()?.toInt(),
+            requestData.body["email"]?.toString(),
+            requestData.userAuth?.apiKey
+        ).data
     }
 
     /**

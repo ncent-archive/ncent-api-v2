@@ -10,6 +10,7 @@ import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
+import main.daos.NewUserAccount
 import main.daos.UserAccount
 import test.TestHelper
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -18,20 +19,27 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class UserAccountLoginTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
-    private lateinit var user: UserAccount
-    private val map = mutableMapOf(
-            Pair("path", "/user_account/logout"),
-            Pair("httpMethod", "PATCH")
-    )
+    private lateinit var user: NewUserAccount
+    private lateinit var map: Map<String, Any>
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
         handler = Handler()
         contxt = mockk()
-        val newUsers = TestHelper.generateUserAccounts()
-        user = newUsers[0].value
-        map["secretKey"] = newUsers[0].secretKey
-        map["userId"] = user.idValue.toString()
+        transaction {
+            val newUsers = TestHelper.generateUserAccounts()
+            user = newUsers[0]
+            map = TestHelper.buildRequest(
+                user,
+                "/user_account/login",
+                "PATCH",
+                mapOf(
+                    Pair("userId", user.value.idValue),
+                    Pair("firstname", "dev"),
+                    Pair("lastname", "ncnt")
+                )
+            )
+        }
     }
 
     override fun afterTest(description: Description, result: TestResult) {

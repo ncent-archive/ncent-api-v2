@@ -5,20 +5,19 @@ import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
 import main.daos.Token
-import kotlinserverless.framework.models.Request
-import main.daos.User
 import main.daos.UserAccount
+import main.helpers.ControllerHelper.RequestData
 
 class TokenController: DefaultController<Token>(), RestController<Token, UserAccount> {
-    override fun findOne(user: UserAccount, id: Int): SOAResult<Token> {
+    override fun findOne(user: UserAccount, requestData: RequestData, id: Int): SOAResult<Token> {
         throw NotImplementedError()
     }
 
-    override fun create(user: UserAccount, params: Map<String, String>): SOAResult<*> {
+    override fun create(user: UserAccount?, requestData: RequestData): SOAResult<*> {
         throw NotImplementedError()
     }
 
-    fun transfer(user: UserAccount, request: Request): SOAResult<Token> {
+    fun transfer(user: UserAccount?, requestData: RequestData): SOAResult<Token> {
         throw NotImplementedError()
     }
 }

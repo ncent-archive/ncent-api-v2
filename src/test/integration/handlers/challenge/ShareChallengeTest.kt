@@ -19,8 +19,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class ShareChallengeTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
-    private lateinit var user1: UserAccount
-    private lateinit var user2: UserAccount
+    private lateinit var user1: NewUserAccount
+    private lateinit var user2: NewUserAccount
     private lateinit var challenge: Challenge
     private lateinit var map: Map<String, Any>
     private lateinit var newUserMap: Map<String, Any>
@@ -32,37 +32,43 @@ class ShareChallengeTest : WordSpec() {
         contxt = mockk()
         transaction {
             val newUsers = TestHelper.generateUserAccounts(2)
-            user1 = newUsers[0].value
-            user2 = newUsers[1].value
-            challenge = TestHelper.generateFullChallenge(user1, user1).first()
-            map = mutableMapOf(
-                    Pair("path", "/challenge/share"),
-                    Pair("httpMethod", "PATCH"),
-                    Pair("userId", user1.idValue.toString()),
+            user1 = newUsers[0]
+            user2 = newUsers[1]
+            challenge = TestHelper.generateFullChallenge(user1.value, user1.value).first()
+            map = TestHelper.buildRequest(
+                user1,
+                "/challenge/share",
+                "PATCH",
+                mapOf(
+                    Pair("userId", user1.value.idValue.toString()),
                     Pair("challengeId", challenge.idValue),
-                    Pair("publicKeyToShareWith", user2.cryptoKeyPair.publicKey),
+                    Pair("publicKeyToShareWith", user2.value.cryptoKeyPair.publicKey),
                     Pair("shares", 3),
-                    Pair("emailToShareWith", user2.userMetadata.email),
-                    Pair("secretKey", newUsers[0].secretKey)
+                    Pair("emailToShareWith", user2.value.userMetadata.email)
+                )
             )
-            newUserMap = mutableMapOf(
-                    Pair("path", "/challenge/share"),
-                    Pair("httpMethod", "PATCH"),
-                    Pair("userId", user1.idValue.toString()),
+            newUserMap = TestHelper.buildRequest(
+                user1,
+                "/challenge/share",
+                "PATCH",
+                mapOf(
+                    Pair("userId", user1.value.idValue.toString()),
                     Pair("challengeId", challenge.idValue),
-                    Pair("shares", 3),
                     Pair("emailToShareWith", "test@test.com"),
-                    Pair("secretKey", newUsers[0].secretKey)
+                    Pair("shares", 3)
+                )
             )
-            tooManySharesMap = mutableMapOf(
-                    Pair("path", "/challenge/share"),
-                    Pair("httpMethod", "PATCH"),
-                    Pair("userId", user1.idValue.toString()),
+            tooManySharesMap = TestHelper.buildRequest(
+                user1,
+                "/challenge/share",
+                "PATCH",
+                mapOf(
+                    Pair("userId", user1.value.idValue.toString()),
                     Pair("challengeId", challenge.idValue),
-                    Pair("publicKeyToShareWith", user2.cryptoKeyPair.publicKey),
-                    Pair("shares", 1000),
-                    Pair("emailToShareWith", user2.userMetadata.email),
-                    Pair("secretKey", newUsers[0].secretKey)
+                    Pair("publicKeyToShareWith", user2.value.cryptoKeyPair.publicKey),
+                    Pair("emailToShareWith", user2.value.userMetadata.email),
+                    Pair("shares", 1000)
+                )
             )
         }
     }
@@ -80,8 +86,8 @@ class ShareChallengeTest : WordSpec() {
 
                     val transactionWithNewUserNamespace = JsonHelper.parse<TransactionWithNewUserNamespace>(response.body as String)
 
-                    transactionWithNewUserNamespace.transactions.first().from shouldBe user1.cryptoKeyPair.publicKey
-                    transactionWithNewUserNamespace.transactions.first().to shouldBe user2.cryptoKeyPair.publicKey
+                    transactionWithNewUserNamespace.transactions.first().from shouldBe user1.value.cryptoKeyPair.publicKey
+                    transactionWithNewUserNamespace.transactions.first().to shouldBe user2.value.cryptoKeyPair.publicKey
                 }
             }
         }

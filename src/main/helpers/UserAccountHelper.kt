@@ -1,12 +1,34 @@
 package main.helpers
 
+import kotlinserverless.framework.models.InvalidArguments
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.services.user_account.GenerateUserAccountService
 import org.jetbrains.exposed.sql.select
+import org.glassfish.jersey.internal.util.Base64
+import main.helpers.ControllerHelper.UserAuth
 
 object UserAccountHelper {
+    fun getUserAuth(user: NewUserAccount): String {
+        val apiKey = user.value.apiCreds.apiKey
+        val encodedApiKeyAndSecret = Base64.encodeAsString("$apiKey:${user.secretKey}")
+        return "Basic $encodedApiKeyAndSecret"
+    }
+
+    fun getUserAuth(headers: Map<String, Any>): UserAuth? {
+        if(!headers.containsKey("Authorization"))
+            return null
+        val authHeaderSplit = (headers["Authorization"] as String).split(" ")
+        if(authHeaderSplit.size != 2 && authHeaderSplit[0] != "Basic")
+            throw InvalidArguments("This is not a properly formatted user auth header. Must include 'Basic apikey:secretkey'")
+        val base64DecodedAuth = Base64.decodeAsString(authHeaderSplit[1])
+        val keyAndSecret = base64DecodedAuth.split(":".toRegex(), 2)
+        if(keyAndSecret.size != 2)
+            throw InvalidArguments("The user authentication parameters are not formatted correctly. Should be apikey:secret")
+        return UserAuth(keyAndSecret[0], keyAndSecret[1])
+    }
+
     fun getOrGenerateUser(
         email: String?,
         publicKey: String?

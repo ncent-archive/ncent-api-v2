@@ -20,7 +20,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class FindOneChallengeTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
-    private lateinit var user: UserAccount
+    private lateinit var user: NewUserAccount
     private lateinit var challenge: Challenge
     private lateinit var map: Map<String, Any>
     private lateinit var badMap: Map<String, Any>
@@ -30,25 +30,25 @@ class FindOneChallengeTest : WordSpec() {
         handler = Handler()
         contxt = mockk()
         transaction {
-            user = TestHelper.generateUserAccounts().first().value
-            challenge = TestHelper.generateFullChallenge(user, user).first()
+            user = TestHelper.generateUserAccounts().first()
+            challenge = TestHelper.generateFullChallenge(user.value, user.value).first()
+            map = TestHelper.buildRequest(
+                user,
+                "/challenge",
+                "GET",
+                mapOf(
+                    Pair("id", user.value.idValue)
+                )
+            )
+            badMap = TestHelper.buildRequest(
+                user,
+                "/challenge",
+                "GET",
+                mapOf(
+                    Pair("id", 404)
+                )
+            )
         }
-        map = mutableMapOf(
-                Pair("path", "/challenge/"),
-                Pair("httpMethod", "GET"),
-                Pair("userId", user.idValue.toString()),
-                Pair("pathParameters", mutableMapOf(
-                        Pair("id", challenge.idValue)
-                ))
-        )
-        badMap = mutableMapOf(
-                Pair("path", "/challenge/"),
-                Pair("httpMethod", "GET"),
-                Pair("userId", user.idValue.toString()),
-                Pair("pathParameters", mutableMapOf(
-                        Pair("id", 404)
-                ))
-        )
     }
 
     override fun afterTest(description: Description, result: TestResult) {
