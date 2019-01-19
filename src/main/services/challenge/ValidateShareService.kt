@@ -20,7 +20,7 @@ object ValidateShareService {
         if(unsharedTransactions.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, unsharedTransactions.message)
 
-        val availableShares = unsharedTransactions.data!!.transactionsToShares.map { it.second }.sum()
+        val availableShares = unsharedTransactions.data!!.transactionsToShares.map { it.shares }.sum()
 
         if(availableShares >= shares && availableShares != 0)
             return SOAResult(SOAResultType.SUCCESS, null, Pair(true,unsharedTransactions.data!!))

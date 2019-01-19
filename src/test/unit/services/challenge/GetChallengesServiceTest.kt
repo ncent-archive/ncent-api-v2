@@ -35,13 +35,13 @@ class GetChallengesServiceTest : WordSpec() {
                 transaction {
                     var result = GetChallengesService.execute(userAccount)
                     result.result shouldBe SOAResultType.SUCCESS
-                    val challenges = result.data!!.challengeToUnsharedTransactions.map { it.first }
+                    val challenges = result.data!!.challengeToUnsharedTransactions.map { it.challenge }
                     challenges.count() shouldBe 2
                     challenges.first().subChallenges.count() shouldBe 2
 
-                    result.data!!.challengeToUnsharedTransactions.map { it.second }.forEach {
+                    result.data!!.challengeToUnsharedTransactions.map { it.shareTransactionList }.forEach {
                         it.transactionsToShares.forEach {
-                            it.second shouldBe 100
+                            it.shares shouldBe 100
                         }
                     }
                     // the challenges + sub challenges + parent challenges

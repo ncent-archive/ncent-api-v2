@@ -41,7 +41,19 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
             throw InternalError()
         }
 
-        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.first})
+        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.challenge })
+    }
+
+    fun findAllChallengeBalances(user: UserAccount, requestData: RequestData): SOAResult<ChallengeToUnsharedTransactionsList> {
+        validateApiKey(user, requestData)
+
+        val challengesResult = ChallengeHelper.getChallenges(user)
+
+        if (challengesResult.data == null) {
+            throw InternalError()
+        }
+
+        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, challengesResult.data!!)
     }
 
     @Throws(ForbiddenException::class)

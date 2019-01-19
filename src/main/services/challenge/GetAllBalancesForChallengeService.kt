@@ -39,7 +39,7 @@ object GetAllBalancesForChallengeService {
         var balance = 0
         val unsharedTransactionList = GetUnsharedTransactionsService.execute(userAccount, challengeId).data
         for (transactionToShare in unsharedTransactionList!!.transactionsToShares) {
-            balance += transactionToShare.second
+            balance += transactionToShare.shares
         }
 
         return balance

@@ -196,9 +196,26 @@ class ChallengeList(
     }
 }
 
-data class ChallengeNamespaceList(val challenges: List<ChallengeNamespace>)
+class ChallengeToUnsharedTransaction(val challenge: Challenge, val shareTransactionList: ShareTransactionList): BaseNamespace() {
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = mutableMapOf<String, Any?>()
+        map.put("challenge", challenge.toMap())
+        map.put("shareTransactionList", shareTransactionList.toMap())
+        return map
+    }
+}
 
-class ChallengeToUnsharedTransactionsList(val challengeToUnsharedTransactions: List<Pair<Challenge, ShareTransactionList>>)
+data class ChallengeToUnsharedTransactionNamespace(val challenge: ChallengeNamespace, val shareTransactionList: ShareTransactionListNamespace)
+
+class ChallengeToUnsharedTransactionsList(val challengeToUnsharedTransactions: List<ChallengeToUnsharedTransaction>): BaseNamespace() {
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = mutableMapOf<String, Any?>()
+        map.put("challengeToUnsharedTransactions", challengeToUnsharedTransactions.map { it.toMap() })
+        return map
+    }
+}
+
+data class ChallengeToUnsharedTransactionsNamespaceList(val challengeToUnsharedTransactions: List<ChallengeToUnsharedTransactionNamespace>)
 
 class EmailToChallengeBalanceList(val challengeId: Int, val publicKeyToChallengeBalances: MutableMap<String, Int>)
 

@@ -30,8 +30,8 @@ object ShareAllChallengesService {
         // Iterate through unshared transactions and share all.
         var sharedTransactions = mutableListOf<Transaction>()
         unsharedTransactions.data!!.transactionsToShares.forEach {
-            val challenge = Challenge.findById(it.first.action.data)!!
-            val numShares = it.second
+            val challenge = Challenge.findById(it.transaction.action.data)!!
+            val numShares = it.shares
             var result = ShareChallengeService.execute(
                     caller, challenge, numShares, publicKeyToShareWith, emailToShareWith)
             if(result.result != SOAResultType.SUCCESS)

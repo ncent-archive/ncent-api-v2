@@ -65,8 +65,8 @@ object ShareChallengeService {
         unsharedTransactions.transactionsToShares.forEach {
             if(shared >= shares)
                 return@forEach
-            val ustx = it.first
-            val amount = it.second
+            val ustx = it.transaction
+            val amount = it.shares
 
             val txResult = GenerateTransactionService.execute(TransactionNamespace(
                 from = caller.cryptoKeyPair.publicKey,

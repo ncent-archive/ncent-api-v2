@@ -16,7 +16,7 @@ import test.TestHelper
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
-class FindAllChallengesTest : WordSpec() {
+class FindAllChallengeBalancesTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
     private lateinit var user1: NewUserAccount
@@ -35,20 +35,20 @@ class FindAllChallengesTest : WordSpec() {
             user2 = newUsers[1]
             challenge = TestHelper.generateFullChallenge(user1.value, user1.value).first()
             map = TestHelper.buildRequest(
-                    user1,
-                    "/challenge/findAll",
-                    "GET",
-                    mapOf(
-                            Pair("userId", user1.value.idValue.toString())
-                    )
+                user1,
+                "/challenge/findAllChallengeBalances",
+                "GET",
+                mapOf(
+                    Pair("userId", user1.value.idValue.toString())
+                )
             )
             notFoundMap = TestHelper.buildRequest(
-                    user2,
-                    "/challenge/findAll",
-                    "GET",
-                    mapOf(
-                            Pair("userId", user2.value.idValue.toString())
-                    )
+                user2,
+                "/challenge/findAllChallengeBalances",
+                "GET",
+                mapOf(
+                    Pair("userId", user2.value.idValue.toString())
+                )
             )
         }
     }
@@ -64,8 +64,8 @@ class FindAllChallengesTest : WordSpec() {
                     val findAllChallengesResult = handler.handleRequest(map, contxt)
                     findAllChallengesResult.statusCode shouldBe 200
 
-                    val challenges = JsonHelper.parseArray<ChallengeNamespace>(findAllChallengesResult.body as String)
-                    challenges.size shouldBe 4
+                    val challengeToUnsharedTransactionNamespaceList = JsonHelper.parse<ChallengeToUnsharedTransactionsNamespaceList>(findAllChallengesResult.body as String)
+                    challengeToUnsharedTransactionNamespaceList.challengeToUnsharedTransactions.size shouldBe 4
                 }
             }
         }

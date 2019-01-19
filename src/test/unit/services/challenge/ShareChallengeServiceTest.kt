@@ -53,7 +53,7 @@ class ShareChallengeServiceTest : WordSpec() {
                     result.data!!.transactions.count() shouldBe 1
 
                     val result2 = GetUnsharedTransactionsService.execute(userAccount1, challenge.idValue)
-                    result2.data!!.transactionsToShares.map { it.second }.sum() shouldBe 50
+                    result2.data!!.transactionsToShares.map { it.shares }.sum() shouldBe 50
                 }
             }
             "if the user does not exist and an email is passed, generate a single transaction sharing to a new user" {
@@ -100,7 +100,7 @@ class ShareChallengeServiceTest : WordSpec() {
                         userAccount2.cryptoKeyPair.publicKey
                     )
                     val result2 = GetUnsharedTransactionsService.execute(userAccount1, challenge.idValue)
-                    result2.data!!.transactionsToShares.map { it.second }.sum() shouldBe 20
+                    result2.data!!.transactionsToShares.map { it.shares }.sum() shouldBe 20
 
                     var result = ShareChallengeService.execute(
                         userAccount2,
@@ -119,7 +119,7 @@ class ShareChallengeServiceTest : WordSpec() {
                     result.data!!.transactions.count() shouldBe 2
 
                     val result3 = GetUnsharedTransactionsService.execute(userAccount3, challenge.idValue)
-                    result3.data!!.transactionsToShares.map { it.second }.sum() shouldBe 80
+                    result3.data!!.transactionsToShares.map { it.shares }.sum() shouldBe 80
                 }
             }
         }
@@ -143,7 +143,7 @@ class ShareChallengeServiceTest : WordSpec() {
 
                     // Set the expiration for shares to one day earlier.
                     unsharedTransactions.transactionsToShares.forEach {
-                        it.first.metadatas.filter { it.key == "shareExpiration" }.first().value = DateTime.now().minusDays(1).toString()
+                        it.transaction.metadatas.filter { it.key == "shareExpiration" }.first().value = DateTime.now().minusDays(1).toString()
                     }
 
                     val result = ShareChallengeService.execute(

@@ -62,7 +62,26 @@ class TransactionList(val transactions: List<Transaction>): BaseNamespace() {
 
 data class TransactionNamespaceList(val transactions: List<TransactionNamespace>)
 
-class ShareTransactionList(val transactionsToShares: List<Pair<Transaction, Int>>)
+class TransactionToShare(val transaction: Transaction, val shares: Int): BaseNamespace() {
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = mutableMapOf<String, Any?>()
+        map.put("transaction", transaction.toMap())
+        map.put("shares", shares)
+        return map
+    }
+}
+
+data class TransactionToShareNamespace(val transaction: TransactionNamespace, val shares: Int)
+
+class ShareTransactionList(val transactionsToShares: List<TransactionToShare>): BaseNamespace() {
+    override fun toMap(): MutableMap<String, Any?> {
+        var map = mutableMapOf<String, Any?>()
+        map.put("transactionsToShares", transactionsToShares.map { it.toMap() })
+        return map
+    }
+}
+
+data class ShareTransactionListNamespace(val transactionsToShares: List<TransactionToShareNamespace>)
 
 class TransactionWithNewUser(
     val transactions: List<Transaction>,
