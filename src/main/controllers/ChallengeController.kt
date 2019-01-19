@@ -5,7 +5,6 @@ import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.models.ForbiddenException
 import kotlinserverless.framework.services.SOAResult
-import kotlinserverless.framework.models.Request
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.services.challenge.*
@@ -46,9 +45,10 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     @Throws(ForbiddenException::class)
-    fun complete(user: UserAccount, request: Request): SOAResult<TransactionList> {
-        val completerPublicKey = request.input["completerPublicKey"] as String
-        val challengeId = request.input["challengeId"] as Int
+    fun complete(user: UserAccount?, requestData: RequestData): SOAResult<TransactionList> {
+        validateApiKey(user!!, requestData)
+        val completerPublicKey = requestData.body["completerPublicKey"] as String
+        val challengeId = requestData.body["challengeId"] as Int
         val challenge = ChallengeHelper.findChallengeById(challengeId)
 
         val finalResult = DaoService.execute {
@@ -64,9 +64,10 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     @Throws(ForbiddenException::class)
-    fun redeem(user: UserAccount, request: Request): SOAResult<TransactionList> {
-        val completerPublicKey = request.input["completerPublicKey"] as String
-        val challengeId = request.input["challengeId"] as Int
+    fun redeem(user: UserAccount?, requestData: RequestData): SOAResult<TransactionList> {
+        validateApiKey(user!!, requestData)
+        val completerPublicKey = requestData.body["completerPublicKey"] as String
+        val challengeId = requestData.body["challengeId"] as Int
         val challenge = ChallengeHelper.findChallengeById(challengeId)
 
         val finalResult = DaoService.execute {

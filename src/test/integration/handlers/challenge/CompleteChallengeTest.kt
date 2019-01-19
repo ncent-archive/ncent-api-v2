@@ -22,11 +22,11 @@ class CompleteChallengeTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
     private lateinit var newUsers: List<NewUserAccount>
-    private lateinit var user1: UserAccount
-    private lateinit var user2: UserAccount
+    private lateinit var user1: NewUserAccount
+    private lateinit var user2: NewUserAccount
     private lateinit var challenge: Challenge
     private lateinit var notActivatedChallenge: Challenge
-    private lateinit var map: MutableMap<String, Any>
+    private lateinit var map: Map<String, Any>
 
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
@@ -34,16 +34,13 @@ class CompleteChallengeTest : WordSpec() {
         contxt = mockk()
         transaction {
             newUsers = TestHelper.generateUserAccounts(2)
-            user1 = newUsers[0].value
-            user2 = newUsers[1].value
-            challenge = TestHelper.generateFullChallenge(user1, user1, 1, true).first()
-            notActivatedChallenge = TestHelper.generateFullChallenge(user1, user1, 1, true).first()
-            ActivateChallengeService.execute(user1, challenge.idValue)
-            ShareChallengeService.execute(user1, challenge, 2, user2.cryptoKeyPair.publicKey, null, null)
-            ShareChallengeService.execute(user1, notActivatedChallenge, 2, user2.cryptoKeyPair.publicKey, null, null)
-            map = mutableMapOf(
-                    Pair("httpMethod", "PATCH")
-            )
+            user1 = newUsers[0]
+            user2 = newUsers[1]
+            challenge = TestHelper.generateFullChallenge(user1.value, user1.value, 1, true).first()
+            notActivatedChallenge = TestHelper.generateFullChallenge(user1.value, user1.value, 1, true).first()
+            ActivateChallengeService.execute(user1.value, challenge.idValue)
+            ShareChallengeService.execute(user1.value, challenge, 2, user2.value.cryptoKeyPair.publicKey, null, null)
+            ShareChallengeService.execute(user1.value, notActivatedChallenge, 2, user2.value.cryptoKeyPair.publicKey, null, null)
         }
     }
 
@@ -55,11 +52,16 @@ class CompleteChallengeTest : WordSpec() {
         "Calling the Complete Challenge API" should {
             "should return the list of reward distribution transactions when passed valid parameters" {
                 transaction {
-                    map.put("path", "/challenge/complete")
-                    map.put("userId", user1.idValue.toString())
-                    map.put("secretKey", newUsers[0].secretKey)
-                    map.put("completerPublicKey", user2.cryptoKeyPair.publicKey)
-                    map.put("challengeId", challenge.idValue)
+                    map = TestHelper.buildRequest(
+                        user1,
+                        "/challenge/complete",
+                        "PATCH",
+                        mapOf(
+                            Pair("userId", user1.value.idValue.toString()),
+                            Pair("challengeId", challenge.idValue),
+                            Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        )
+                    )
 
                     val completeChallengeResult = handler.handleRequest(map, contxt)
                     completeChallengeResult.statusCode shouldBe 200
@@ -71,11 +73,16 @@ class CompleteChallengeTest : WordSpec() {
             }
             "should return a 403 forbidden response when attempted by a public key other than the sponsor's" {
                 transaction {
-                    map.put("path", "/challenge/complete")
-                    map.put("userId", user2.idValue.toString())
-                    map.put("secretKey", newUsers[0].secretKey)
-                    map.put("completerPublicKey", user2.cryptoKeyPair.publicKey)
-                    map.put("challengeId", challenge.idValue)
+                    map = TestHelper.buildRequest(
+                        user1,
+                        "/challenge/complete",
+                        "PATCH",
+                        mapOf(
+                                Pair("userId", user2.value.idValue.toString()),
+                                Pair("challengeId", challenge.idValue),
+                                Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        )
+                    )
 
                     val completeChallengeResult = handler.handleRequest(map, contxt)
                     completeChallengeResult.statusCode shouldBe 403
@@ -84,11 +91,16 @@ class CompleteChallengeTest : WordSpec() {
             }
             "should return a 403 forbidden response when challenge state cannot change to complete" {
                 transaction {
-                    map.put("path", "/challenge/complete")
-                    map.put("userId", user1.idValue.toString())
-                    map.put("secretKey", newUsers[0].secretKey)
-                    map.put("completerPublicKey", user2.cryptoKeyPair.publicKey)
-                    map.put("challengeId", notActivatedChallenge.idValue)
+                    map = TestHelper.buildRequest(
+                        user1,
+                        "/challenge/complete",
+                        "PATCH",
+                        mapOf(
+                            Pair("userId", user1.value.idValue.toString()),
+                            Pair("challengeId", notActivatedChallenge.idValue),
+                            Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        )
+                    )
 
                     val completeChallengeResult = handler.handleRequest(map, contxt)
                     completeChallengeResult.statusCode shouldBe 403
@@ -100,11 +112,16 @@ class CompleteChallengeTest : WordSpec() {
         "Calling the Redeem Challenge API" should {
             "should return the list of reward distribution transactions when passed valid parameters" {
                 transaction {
-                    map.put("path", "/challenge/redeem")
-                    map.put("userId", user1.idValue.toString())
-                    map.put("secretKey", newUsers[0].secretKey)
-                    map.put("completerPublicKey", user2.cryptoKeyPair.publicKey)
-                    map.put("challengeId", challenge.idValue)
+                    map = TestHelper.buildRequest(
+                        user1,
+                        "/challenge/redeem",
+                        "PATCH",
+                        mapOf(
+                            Pair("userId", user1.value.idValue.toString()),
+                            Pair("challengeId", challenge.idValue),
+                            Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        )
+                    )
 
                     val redeemChallengeResult = handler.handleRequest(map, contxt)
                     redeemChallengeResult.statusCode shouldBe 200
@@ -116,11 +133,16 @@ class CompleteChallengeTest : WordSpec() {
             }
             "should return a 403 forbidden response when attempted by a public key other than the sponsor's" {
                 transaction {
-                    map.put("path", "/challenge/complete")
-                    map.put("userId", user2.idValue.toString())
-                    map.put("secretKey", newUsers[0].secretKey)
-                    map.put("completerPublicKey", user2.cryptoKeyPair.publicKey)
-                    map.put("challengeId", challenge.idValue)
+                    map = TestHelper.buildRequest(
+                        user1,
+                        "/challenge/complete",
+                        "PATCH",
+                        mapOf(
+                            Pair("userId", user2.value.idValue.toString()),
+                            Pair("challengeId", challenge.idValue),
+                            Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        )
+                    )
 
                     val redeemChallengeResult = handler.handleRequest(map, contxt)
                     redeemChallengeResult.statusCode shouldBe 403
@@ -129,11 +151,16 @@ class CompleteChallengeTest : WordSpec() {
             }
             "should return a 403 forbidden response when challenge state cannot change to complete" {
                 transaction {
-                    map.put("path", "/challenge/redeem")
-                    map.put("userId", user1.idValue.toString())
-                    map.put("secretKey", newUsers[0].secretKey)
-                    map.put("completerPublicKey", user2.cryptoKeyPair.publicKey)
-                    map.put("challengeId", notActivatedChallenge.idValue)
+                    map = TestHelper.buildRequest(
+                        user1,
+                        "/challenge/redeem",
+                        "PATCH",
+                        mapOf(
+                            Pair("userId", user1.value.idValue.toString()),
+                            Pair("challengeId", notActivatedChallenge.idValue),
+                            Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        )
+                    )
 
                     val redeemChallengeResult = handler.handleRequest(map, contxt)
                     redeemChallengeResult.body shouldBe "Challenge has not been activated"
