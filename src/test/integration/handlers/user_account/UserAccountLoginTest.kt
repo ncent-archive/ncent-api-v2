@@ -11,7 +11,6 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
 import main.daos.NewUserAccount
-import main.daos.UserAccount
 import test.TestHelper
 import org.jetbrains.exposed.sql.transactions.transaction
 
