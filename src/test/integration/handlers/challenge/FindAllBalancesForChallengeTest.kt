@@ -18,7 +18,7 @@ import test.TestHelper
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
-class GetAllBalancesForChallengeTest : WordSpec() {
+class FindAllBalancesForChallengeTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
     private lateinit var newUsers: List<NewUserAccount>
@@ -54,7 +54,7 @@ class GetAllBalancesForChallengeTest : WordSpec() {
                 transaction {
                     map = TestHelper.buildRequest(
                             user1,
-                            "/challenge/getAllBalancesForChallenge",
+                            "/challenge/balances",
                             "GET",
                             mapOf(
                                     Pair("userId", user1.value.idValue.toString()),
@@ -81,7 +81,7 @@ class GetAllBalancesForChallengeTest : WordSpec() {
                 transaction {
                     map = TestHelper.buildRequest(
                             user2,
-                            "/challenge/getAllBalancesForChallenge",
+                            "/challenge/balances",
                             "GET",
                             mapOf(
                                     Pair("userId", user2.value.idValue.toString()),

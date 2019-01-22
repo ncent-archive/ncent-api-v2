@@ -31,7 +31,7 @@ class UserAccountLoginTest : WordSpec() {
             user = newUsers[0]
             map = TestHelper.buildRequest(
                 user,
-                "/user_account/login",
+                "/user/login",
                 "PATCH",
                 mapOf(
                     Pair("userId", user.value.idValue),

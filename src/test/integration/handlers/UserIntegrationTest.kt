@@ -30,7 +30,7 @@ class UserIntegrationTest : WordSpec() {
         transaction {
             map = TestHelper.buildRequest(
                 user,
-                "/user/hello",
+                "/user_test/hello",
                 "POST"
             )
         }

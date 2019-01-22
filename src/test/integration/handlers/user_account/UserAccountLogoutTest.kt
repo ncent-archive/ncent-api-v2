@@ -31,7 +31,7 @@ class UserAccountLogoutTest : WordSpec() {
             user = newUsers[0]
             map = TestHelper.buildRequest(
                 user,
-                "/user_account/logout",
+                "/user/logout",
                 "PATCH",
                 mapOf(
                     Pair("userId", user.value.idValue),

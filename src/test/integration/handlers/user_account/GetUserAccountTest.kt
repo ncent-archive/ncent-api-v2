@@ -42,7 +42,7 @@ class GetUserAccountTest : WordSpec() {
             contxt = mockk()
             map = TestHelper.buildRequest(
                 user1,
-                "/user_account",
+                "/user",
                 "GET",
                 mapOf(
                         Pair("id", user1.value.idValue),

@@ -19,7 +19,7 @@ class UserAccountCreationTest : WordSpec() {
     private lateinit var contxt: Context
     private val map = TestHelper.buildRequest(
         null,
-        "/user_account",
+        "/user",
         "POST",
         mapOf(
             Pair("email", "dev@ncnt.io"),
