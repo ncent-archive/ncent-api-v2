@@ -13,9 +13,9 @@ routes:
 # =========================
 
   - regex: '^/user(/*[a-zA-Z0-9]*)?'
-    inputModel: main.daos.User
-    outputModel: main.daos.User
-    controller: main.controllers.UserController
+    inputModel: main.daos.UserAccount
+    outputModel: main.daos.UserAccount
+    controller: main.controllers.UserAccountController
 
 # =========================
 # Challenges Microservice
@@ -71,8 +71,8 @@ routes:
 # User Account Microservice
 # =========================
 
-  - regex: '^/user_account(/*[a-zA-Z0-9]*)?'
+  - regex: '^/user_test(/*[a-zA-Z0-9]*)?'
     inputModel: main.daos.UserNamespace
-    outputModel: main.daos.UserAccount
-    controller: main.controllers.UserAccountController
+    outputModel: main.daos.User
+    controller: main.controllers.UserController
 

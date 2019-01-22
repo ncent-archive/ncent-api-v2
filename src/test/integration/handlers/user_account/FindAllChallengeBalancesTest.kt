@@ -1,4 +1,4 @@
-package test.integration.handlers.challenge
+package test.integration.handlers.user_account
 
 import com.amazonaws.services.lambda.runtime.Context
 import framework.models.idValue
@@ -36,7 +36,7 @@ class FindAllChallengeBalancesTest : WordSpec() {
             challenge = TestHelper.generateFullChallenge(user1.value, user1.value).first()
             map = TestHelper.buildRequest(
                 user1,
-                "/challenge/findAllChallengeBalances",
+                "/user/balances",
                 "GET",
                 mapOf(
                     Pair("userId", user1.value.idValue.toString())
@@ -44,7 +44,7 @@ class FindAllChallengeBalancesTest : WordSpec() {
             )
             notFoundMap = TestHelper.buildRequest(
                 user2,
-                "/challenge/findAllChallengeBalances",
+                "/user/balances",
                 "GET",
                 mapOf(
                     Pair("userId", user2.value.idValue.toString())
