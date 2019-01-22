@@ -10,10 +10,7 @@ import main.daos.*
 import main.daos.NewUserAccount
 import main.helpers.ChallengeHelper
 import main.helpers.ControllerHelper.RequestData
-import main.services.user_account.GenerateUserAccountService
-import main.services.user_account.GetUserAccountService
-import main.services.user_account.StartSessionService
-import main.services.user_account.EndSessionService
+import main.services.user_account.*
 
 class UserAccountController: DefaultController<UserAccount>(), RestController<UserAccount, UserAccount> {
     override fun findOne(user: UserAccount, requestData: RequestData, id: Int): SOAResult<UserAccount> {
@@ -85,5 +82,14 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
         result.result = SOAResultType.SUCCESS
 
         return result
+    }
+
+    fun reset(user: UserAccount, requestData: RequestData): SOAResult<NewUserAccount> {
+        validateApiKey(user, requestData)
+        return DaoService.execute {
+            val result = ResetUserAccount.execute(user)
+            DaoService.throwOrReturn(result.result, result.message)
+            return@execute result.data!!
+        }
     }
 }

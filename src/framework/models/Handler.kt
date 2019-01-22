@@ -18,6 +18,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
   constructor() {
     connectToDatabase()
+    buildTables()
   }
 
   override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {

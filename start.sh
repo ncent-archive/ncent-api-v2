@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mvn package
+mvn clean compile assembly:single
 
 serverless deploy --stage $1
 

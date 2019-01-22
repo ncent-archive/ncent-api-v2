@@ -15,7 +15,7 @@ import test.TestHelper
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
-class UserAccountLoginTest : WordSpec() {
+class UserAccountResetTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
     private lateinit var user: NewUserAccount
@@ -29,14 +29,14 @@ class UserAccountLoginTest : WordSpec() {
             val newUsers = TestHelper.generateUserAccounts()
             user = newUsers[0]
             map = TestHelper.buildRequest(
-                user,
-                "/user/login",
-                "PATCH",
-                mapOf(
-                    Pair("userId", user.value.idValue),
-                    Pair("firstname", "dev"),
-                    Pair("lastname", "ncnt")
-                )
+                    user,
+                    "/user/reset",
+                    "PATCH",
+                    mapOf(
+                            Pair("userId", user.value.idValue),
+                            Pair("firstname", "dev"),
+                            Pair("lastname", "ncnt")
+                    )
             )
         }
     }
