@@ -16,7 +16,7 @@ import java.util.*
  */
 class ApiGatewayResponse(
         val statusCode: Int = 200,
-        var body: String? = null,
+        var body: Any? = null,
         val headers: Map<String, String>? = Collections.emptyMap(),
         val isBase64Encoded: Boolean = false
 ): Response {
@@ -38,7 +38,7 @@ class ApiGatewayResponse(
     var objectMapper: ObjectMapper = ObjectMapper()
 
     var statusCode: Int = 200
-    var rawBody: String? = null
+    var rawBody: Any? = null
     var headers: Map<String, String>? = Collections.emptyMap()
     var objectBody: BaseIntEntity? = null
     var listBody: List<Any>? = null
@@ -47,10 +47,10 @@ class ApiGatewayResponse(
 
     fun build(): ApiGatewayResponse {
       //port these changes to Kotlin Serverless codebase
-      var body: String? = null
-      body = body ?: if(rawBody != null) rawBody as String else null
-      body = body ?: objectBody?.toString()
-      body = body ?: listBody?.toString()
+      var body: Any? = null
+      body = body ?: if(rawBody != null) rawBody else null
+      body = body ?: if(objectBody != null) objectBody?.toMap() else null
+      body = body ?: if(listBody != null) listBody else null
       body = body ?: String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8)
 
       return ApiGatewayResponse(statusCode, body, headers, base64Encoded)

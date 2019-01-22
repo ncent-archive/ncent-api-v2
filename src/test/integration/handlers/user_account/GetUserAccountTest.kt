@@ -61,7 +61,7 @@ class GetUserAccountTest : WordSpec() {
             "should return a valid user account" {
                 val response = handler.handleRequest(map, contxt)
                 response.statusCode shouldBe 200
-                val userAccount: UserAccountNamespace = JsonHelper.parse(response.body!!)!!
+                val userAccount = JsonHelper.parse<UserAccountNamespace>(response.body!!.toString())!!
 
                 userAccount.userMetadata.email shouldBe "dev0@ncnt.io"
                 userAccount.userMetadata.metadatas.first().key shouldBe "test1key"
