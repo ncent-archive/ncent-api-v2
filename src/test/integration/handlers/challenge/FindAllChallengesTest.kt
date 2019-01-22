@@ -64,7 +64,7 @@ class FindAllChallengesTest : WordSpec() {
                     val findAllChallengesResult = handler.handleRequest(map, contxt)
                     findAllChallengesResult.statusCode shouldBe 200
 
-                    val challenges = JsonHelper.parseArray<ChallengeNamespace>(findAllChallengesResult.body as String)
+                    val challenges = JsonHelper.parseArray<ChallengeNamespace>(findAllChallengesResult.body!!.toString())
                     challenges.size shouldBe 4
                 }
             }

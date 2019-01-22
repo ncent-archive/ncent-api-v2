@@ -55,11 +55,11 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
         map.put("admin", admin.idValue)
         map.put("offChain", offChain)
         map.put("maxShares", maxShares)
-        map.put("maxRewards", maxRewards)
-        map.put("maxDistributionFeeReward", maxDistributionFeeReward)
-        map.put("maxSharesPerReceivedShare", maxSharesPerReceivedShare)
-        map.put("maxDepth", maxDepth)
-        map.put("maxNodes", maxNodes)
+        map.put("maxRewards", maxRewards.toString())
+        map.put("maxDistributionFeeReward", maxDistributionFeeReward.toString())
+        map.put("maxSharesPerReceivedShare", maxSharesPerReceivedShare.toString())
+        map.put("maxDepth", maxDepth.toString())
+        map.put("maxNodes", maxNodes.toString())
         return map
     }
 }
@@ -91,9 +91,9 @@ data class ChallengeSettingNamespace(
     val admin: Int,
     val maxShares: Int,
     val offChain: Boolean,
-    val maxRewards: Int? = null,
-    val maxDistributionFeeReward: Int? = null,
-    val maxSharesPerReceivedShare: Int? = null,
-    val maxDepth: Int? = null,
-    val maxNodes: Int? = null
+    val maxRewards: String? = null,
+    val maxDistributionFeeReward: String? = null,
+    val maxSharesPerReceivedShare: String? = null,
+    val maxDepth: String? = null,
+    val maxNodes: String? = null
 )

@@ -62,9 +62,8 @@ class FindOneChallengeTest : WordSpec() {
                     val findOneChallengeResult = handler.handleRequest(map, contxt)
                     findOneChallengeResult.statusCode shouldBe 200
 
-                    val challengeData = JsonHelper.parse<Map<String, Any>>(findOneChallengeResult.body!!.toString())
-                    val challengeSettings = challengeData["challengeSettings"]!! as JsonObject
-                    challengeSettings.get("name") shouldBe challenge.challengeSettings.name
+                    val challengeData = JsonHelper.parse<ChallengeNamespace>(findOneChallengeResult.body as Map<String, Any?>)
+                    challengeData.challengeSettings.name shouldBe challenge.challengeSettings.name
                 }
             }
         }

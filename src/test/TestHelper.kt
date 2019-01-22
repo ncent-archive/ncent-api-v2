@@ -157,7 +157,7 @@ object TestHelper {
                 val completionCriteriasNamespace = TestHelper.generateCompletionCriteriaNamespace(userAccount, 2)
                 val completionCriteria1 = completionCriteriasNamespace[0]
                 val challengeNamespace = ChallengeNamespace(
-                    parentChallenge = parentChallenge.idValue,
+                    parentChallenge = parentChallenge.idValue.toString(),
                     challengeSettings = challengeSettingNamespace,
                     subChallenges = subChallengeList,
                     completionCriteria = completionCriteria1,

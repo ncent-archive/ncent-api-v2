@@ -3,6 +3,7 @@ package kotlinserverless.framework.models
 import com.beust.klaxon.Klaxon
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import framework.models.BaseIntEntity
 import kotlinserverless.framework.models.*
 import org.apache.log4j.LogManager
@@ -24,10 +25,10 @@ class ApiGatewayResponse(
   companion object {
     inline fun build(block: Builder.() -> Unit) = Builder().apply(block).build()
     val LOG = LogManager.getLogger(this::class.java) //TODO: figure out how to user the correct class name.
+    var objectMapper: ObjectMapper = ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT)
   }
 	
   override fun toString(): String {
-	  var objectMapper: ObjectMapper = ObjectMapper()
 	  return objectMapper.writeValueAsString(this)
   }
 
@@ -48,10 +49,10 @@ class ApiGatewayResponse(
     fun build(): ApiGatewayResponse {
       //port these changes to Kotlin Serverless codebase
       var body: Any? = null
-      body = body ?: if(rawBody != null) rawBody else null
-      body = body ?: if(objectBody != null) objectBody?.toMap() else null
-      body = body ?: if(listBody != null) listBody else null
-      body = body ?: String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8)
+      body = body ?: rawBody
+      body = body ?: objectBody?.toMap()
+      body = body ?: listBody
+      body = body ?: if (binaryBody != null) String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8) else null
 
       return ApiGatewayResponse(statusCode, body, headers, base64Encoded)
     }

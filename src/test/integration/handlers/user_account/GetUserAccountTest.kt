@@ -5,6 +5,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import com.amazonaws.services.lambda.runtime.Context
+import com.beust.klaxon.Klaxon
 import io.kotlintest.TestResult
 import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
@@ -59,12 +60,14 @@ class GetUserAccountTest : WordSpec() {
     init {
         "correct path" should {
             "should return a valid user account" {
-                val response = handler.handleRequest(map, contxt)
-                response.statusCode shouldBe 200
-                val userAccount = JsonHelper.parse<UserAccountNamespace>(response.body!!.toString())!!
+                transaction {
+                    val response = handler.handleRequest(map, contxt)
+                    response.statusCode shouldBe 200
+                    val userAccount = JsonHelper.parse<UserAccountNamespace>(response.body as Map<String, Any?>)
 
-                userAccount.userMetadata.email shouldBe "dev0@ncnt.io"
-                userAccount.userMetadata.metadatas.first().key shouldBe "test1key"
+                    userAccount.userMetadata.email shouldBe "dev0@ncnt.io"
+                    userAccount.userMetadata.metadatas.first().key shouldBe "test1key"
+                }
             }
         }
     }

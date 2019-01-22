@@ -62,7 +62,6 @@ class ChallengeCreationTest : WordSpec() {
             "should return a valid new challenge" {
                 transaction {
                     val response = handler.handleRequest(map, contxt)
-                    println(response)
                     response.statusCode shouldBe 200
                 }
             }
