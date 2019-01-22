@@ -31,7 +31,7 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
 
     override fun toMap(): MutableMap<String, Any?> {
         var map = super.toMap()
-        map.put("parentChallenge", parentChallenge?.idValue)
+        map.put("parentChallenge", parentChallenge?.idValue.toString())
         map.put("challengeSettings", challengeSettings?.toMap())
         map.put("subChallenges", subChallenges.map { it.toMap() })
         map.put("completionCriteria", completionCriterias?.toMap())
@@ -265,7 +265,7 @@ data class ChallengeNamespace(
     val completionCriteria: CompletionCriteriaNamespace,
     val distributionFeeReward: RewardNamespace,
     val subChallenges: List<SubChallengeNamespace>? = null,
-    val parentChallenge: Int? = null
+    val parentChallenge: String? = null
     )
 
 enum class SubChallengeType(val type: String) {

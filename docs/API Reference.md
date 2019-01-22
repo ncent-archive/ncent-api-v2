@@ -1,22 +1,19 @@
 Table of Contents
 
 1. [User APIs](#user-apis)
-   + [retrieveAllUsers](#retrieveallusers)
-   + [retrieveUser](#retrieveuser)
-   + [createUser](#createuser)
-   + [updateUser](#updateuser)
-   + [deleteUser](#deleteuser)
-1. [Session APIs](#session-apis)
-   + [createUserSession](#createusersession)
-   + [deleteUserSession](#deleteusersession)
+   + [Find One User](#find-one-user)
+   + [Get User Balances](#get-user-balances)
+   + [Create User](#user-create)
+   + [Login](#login)
+   + [Logout](#logout)
 1. [Challenge APIs](#challenge-apis)
-   + [retrieveAllChallenges](#retrieveallchallenges)
-   + [retrieveAllChallengesForUser](#retrieveallchallengesforuser)
-   + [retrieveChallenge](#retrievechallenge)
-   + [modifyChallengeState](#modifychallengestate)
-   + [shareChallenge](#sharechallenge)
-   + [endChallenge](#endchallenge)
-   + [redeemChallenge](#redeemchallenge)
+   + [Find One Challenge](#find-one-challenge)
+   + [Find All Challenges](#find-all-challenges)
+   + [Get All Balances For a Challenge](#get-all-balances-for-a-challenge)
+   + [Create Challenge](#create-challenge)
+   + [Share Challenge](#share-challenge)
+   + [Redeem Challenge](#redeem-challenge)
+   + [Complete Challenge](#complete-challenge)
 1. [ChallengeSetting APIs](#challengesetting-apis)
    + [retrieveChallengeSettings](#retrievechallengesettings)
 1. [CompletionCriteria APIs](#completioncriteria-apis)
@@ -43,15 +40,13 @@ Table of Contents
 
 The following APIs will interact with the UserAccountsController.
 
-## retrieveAllUsers
-
-## findOne
+## Find One User
 
 This API is a simple retrieval for a single user account
 
 #### Route
 
-/user_accounts
+/user
 
 #### Method
 
@@ -105,13 +100,15 @@ GET
 }
 ```
 
-## create
+## Get User Balances
+
+## Create User
 
 This API is used for the creation of a new User instance
 
 #### Route
 
-/user_accounts
+/user
 
 #### Method
 
@@ -135,17 +132,13 @@ POST
 }
 ```
 
-## updateUser
-
-## deleteUser
-
-## login
+## Login
 
 This API is called in order to begin a session for a user account
 
 #### Route
 
-/user_accounts/login
+/user/login
 
 #### Method
 
@@ -200,13 +193,13 @@ PATCH
 }
 ```
 
-## logout
+## Logout
 
 This API is called in order to begin a session for a user account
 
 #### Route
 
-/user_accounts/logout
+/user/logout
 
 #### Method
 
@@ -265,19 +258,19 @@ PATCH
 
 The following APIs will interact with the Challenges controller.
 
-## retrieveAllChallenges
+## Find One Challenge
 
-## retrieveAllChallengesForUser
+## Find All Challenges
 
-## retrieveChallenge
+## Get All Balances For a Challenge
 
-## modifyChallengeState
+## Create Challenge
 
-## shareChallenge
+## Share Challenge
 
-## endChallenge
+## Redeem Challenge
 
-## redeemChallenge
+## Complete Challenge
 
 # ChallengeSetting APIs
 

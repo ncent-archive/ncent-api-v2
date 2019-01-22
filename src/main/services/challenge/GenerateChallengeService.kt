@@ -26,7 +26,7 @@ object GenerateChallengeService {
             return SOAResult(SOAResultType.FAILURE, keyPairGenerated.message)
 
         val optionalParentChallenge = if(challengeNamespace.parentChallenge != null)
-            Challenge.findById(challengeNamespace.parentChallenge)
+            Challenge.findById(challengeNamespace.parentChallenge.toInt())
         else
             null
 
