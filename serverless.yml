@@ -54,160 +54,160 @@ package:
 
 functions:
   user:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
       - http:
           path: /user/hello
           method: get
   health:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /health/health
         method: get
 
   user_account_get:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /user_account
         method: get
 
   user_account_create:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /user_account
         method: post
 
   user_account_login:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /user_account/login
         method: post
 
   user_account_logout:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /user_account/logout
         method: post
 
   token_get:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /token
         method: get
 
   tokens_get:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /tokens
         method: get
 
   token_create:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /token
         method: post
 
   token_transfer:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /token/transfer
         method: post
 
   reward_pool:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /reward/pool
         method: post
 
   reward_create:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /reward
         method: post
 
   completion_create:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /completion
         method: post
 
   completion_complete:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /completion
         method: put
 
   transaction:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /transaction
         method: post
 
   challenge_create:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /challenge
         method: post
 
   challenge_get:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /challenge
         method: get
 
   challenges_get:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /challenges
         method: get
 
   challenge_expire:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /challenge/expire
         method: put
 
   challenge_invalidate:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /challenge/invalidate
         method: put
 
   challenge_validate:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /challenge/validate
         method: put
 
   challenge_complete:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /challenge/complete
         method: put
 
   challenge_share:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - http:
         path: /challenge/share
@@ -243,7 +243,8 @@ functions:
 #          trigger: PreSignUp
 
 #    Define function environment variables here
-
+    environment:
+      
 
 # you can add CloudFormation resource templates here
 #resources:

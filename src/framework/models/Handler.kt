@@ -42,7 +42,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     catch (e: Throwable) {
       LOG.error(e.message, e)
       status = 500
-      body = "Internal server error"
+      body = "Internal server error " + e.message.toString() + "\n" + e.stackTrace.map { "\n"+it.toString() }
     }
     finally {
       return ApiGatewayResponse.build {
