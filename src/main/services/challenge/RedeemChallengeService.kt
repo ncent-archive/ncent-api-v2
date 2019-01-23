@@ -52,7 +52,7 @@ object RedeemChallengeService {
         val txResult = GenerateTransactionService.execute(TransactionNamespace(
             from = completerPublicKey,
             to = challenge.completionCriterias.address,
-            previousTransaction = firstUnspentTx.idValue,
+            previousTransaction = firstUnspentTx.idValue.toString(),
             metadatas = ChallengeMetadata(
                             challenge.idValue,
                             challenge.challengeSettings.offChain,
