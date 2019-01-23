@@ -60,15 +60,19 @@ class ChallengeCreationTest : WordSpec() {
     init {
         "correct path" should {
             "should return a valid new challenge" {
-                val response = handler.handleRequest(map, contxt)
-                response.statusCode shouldBe 200
+                transaction {
+                    val response = handler.handleRequest(map, contxt)
+                    response.statusCode shouldBe 200
+                }
             }
         }
 
         "calling this API with incorrect parameters" should {
             "should return a failure response" {
-                val response = handler.handleRequest(badMap, contxt)
-                response.statusCode shouldNotBe 200
+                transaction {
+                    val response = handler.handleRequest(badMap, contxt)
+                    response.statusCode shouldNotBe 200
+                }
             }
         }
     }

@@ -52,7 +52,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
         else if (body is Collection<*>)
           listBody = body as List<Any>
         else
-          rawBody = body.toString()
+          rawBody = body
         headers = mapOf("X-Powered-By" to "AWS Lambda & Serverless")
       }
     }

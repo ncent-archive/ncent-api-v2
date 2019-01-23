@@ -43,7 +43,7 @@ class UserAccountCreationTest : WordSpec() {
             "should return a valid new user account" {
                 val response = handler.handleRequest(map, contxt)
                 response.statusCode shouldBe 200
-                val newUserAccount = Klaxon().parse<NewUserAccountNamespace>(response.body!!)
+                val newUserAccount = Klaxon().parse<NewUserAccountNamespace>(response.body!!.toString())
 
                 newUserAccount!!.value.userMetadata.email shouldBe "dev@ncnt.io"
             }

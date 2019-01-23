@@ -94,6 +94,13 @@ functions:
         path: /user_account/logout
         method: post
 
+  user_account_reset:
+    handler: kotlinserverless.framework.Handler
+    events:
+      - http:
+          path: /user_account/reset
+          method: patch
+
   token_get:
     handler: kotlinserverless.framework.models.Handler
     events:

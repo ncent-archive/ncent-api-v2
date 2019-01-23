@@ -20,11 +20,11 @@ object GenerateChallengeSettingsService {
             admin = caller
             offChain = challengeSettingNamespace.offChain
             maxShares = challengeSettingNamespace.maxShares
-            maxRewards = challengeSettingNamespace.maxRewards
-            maxDistributionFeeReward = challengeSettingNamespace.maxDistributionFeeReward
-            maxSharesPerReceivedShare = challengeSettingNamespace.maxSharesPerReceivedShare
-            maxDepth = challengeSettingNamespace.maxDepth
-            maxNodes = challengeSettingNamespace.maxNodes
+            maxRewards = challengeSettingNamespace.maxRewards?.toInt()
+            maxDistributionFeeReward = challengeSettingNamespace.maxDistributionFeeReward?.toInt()
+            maxSharesPerReceivedShare = challengeSettingNamespace.maxSharesPerReceivedShare?.toInt()
+            maxDepth = challengeSettingNamespace.maxDepth?.toInt()
+            maxNodes = challengeSettingNamespace.maxNodes?.toInt()
         })
     }
 }

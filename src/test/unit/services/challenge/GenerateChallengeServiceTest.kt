@@ -36,7 +36,7 @@ class GenerateChallengeServiceTest : WordSpec() {
             val completionCriteriasNamespace = TestHelper.generateCompletionCriteriaNamespace(userAccount, 2)
             val completionCriteria1 = completionCriteriasNamespace[0]
             challengeNamespace = ChallengeNamespace(
-                parentChallenge = parentChallenge.idValue,
+                parentChallenge = parentChallenge.idValue.toString(),
                 challengeSettings = challengeSettingNamespace,
                 subChallenges = listOf(
                         SubChallengeNamespace(asyncSubChallenge1.idValue, SubChallengeType.ASYNC.toString()),
