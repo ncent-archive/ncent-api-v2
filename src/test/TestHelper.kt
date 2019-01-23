@@ -57,14 +57,14 @@ object TestHelper {
         return transaction {
             var transactionNamespace = TransactionNamespace(from = "ARYA", to = "MIKE", action = action, previousTransaction = null, metadatas = metadatas)
             var tx1 = GenerateTransactionService.execute(transactionNamespace).data!!
-            var transaction2Namespace = TransactionNamespace(from = "ARYA2", to = "MIKE2", action = action, previousTransaction = tx1.idValue.toString(), metadatas = metadatas)
+            var transaction2Namespace = TransactionNamespace(from = "ARYA2", to = "MIKE2", action = action, previousTransaction = tx1.idValue, metadatas = metadatas)
             var tx2 = GenerateTransactionService.execute(transaction2Namespace).data!!
-            var transaction3Namespace = TransactionNamespace(from = "ARYA3", to = "MIKE3", action = action, previousTransaction = tx2.idValue.toString(), metadatas = metadatas)
-            var transaction4Namespace = TransactionNamespace(from = "ARYA4", to = "MIKE4", action = action, previousTransaction = tx2.idValue.toString(), metadatas = metadatas)
+            var transaction3Namespace = TransactionNamespace(from = "ARYA3", to = "MIKE3", action = action, previousTransaction = tx2.idValue, metadatas = metadatas)
+            var transaction4Namespace = TransactionNamespace(from = "ARYA4", to = "MIKE4", action = action, previousTransaction = tx2.idValue, metadatas = metadatas)
             var tx3 = GenerateTransactionService.execute(transaction3Namespace).data!!
             var tx4 = GenerateTransactionService.execute(transaction4Namespace).data!!
-            var transaction5Namespace = TransactionNamespace(from = "ARYA5", to = "MIKE5", action = action, previousTransaction = tx4.idValue.toString(), metadatas = metadatas)
-            var transaction6Namespace = TransactionNamespace(from = "ARYA6", to = "MIKE6", action = action, previousTransaction = tx4.idValue.toString(), metadatas = metadatas)
+            var transaction5Namespace = TransactionNamespace(from = "ARYA5", to = "MIKE5", action = action, previousTransaction = tx4.idValue, metadatas = metadatas)
+            var transaction6Namespace = TransactionNamespace(from = "ARYA6", to = "MIKE6", action = action, previousTransaction = tx4.idValue, metadatas = metadatas)
             var tx5 = GenerateTransactionService.execute(transaction5Namespace).data!!
             var tx6 = GenerateTransactionService.execute(transaction6Namespace).data!!
             return@transaction listOf(tx1, tx2, tx3, tx4, tx5, tx6)
@@ -258,7 +258,7 @@ object TestHelper {
         return GenerateTransactionService.execute(TransactionNamespace(
             from = fromAccount.cryptoKeyPair.publicKey,
             to = toAccount.cryptoKeyPair.publicKey,
-            previousTransaction = previousTransaction.idValue.toString(),
+            previousTransaction = previousTransaction.idValue,
             metadatas = ChallengeMetadata(
                             challenge.idValue,
                             challenge.challengeSettings.offChain,
