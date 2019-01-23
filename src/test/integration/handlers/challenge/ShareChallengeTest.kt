@@ -84,7 +84,7 @@ class ShareChallengeTest : WordSpec() {
                     val response = handler.handleRequest(map, contxt)
                     response.statusCode shouldBe 200
 
-                    val transactionWithNewUserNamespace = JsonHelper.parse<TransactionWithNewUserNamespace>(response.body.toString())
+                    val transactionWithNewUserNamespace = JsonHelper.parse<TransactionWithNewUserNamespace>(response.body as Map<String, Any?>)
 
                     transactionWithNewUserNamespace.transactions.first().from shouldBe user1.value.cryptoKeyPair.publicKey
                     transactionWithNewUserNamespace.transactions.first().to shouldBe user2.value.cryptoKeyPair.publicKey

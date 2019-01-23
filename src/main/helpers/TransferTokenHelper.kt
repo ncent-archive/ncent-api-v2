@@ -60,7 +60,7 @@ object TransferTokenHelper {
                             data = tokenId,
                             dataType = Token::class.simpleName!!
                     ),
-                    previousTransaction = previousTransactionId,
+                    previousTransaction = previousTransactionId.toString(),
                     metadatas = metadataList.toTypedArray()
             )
             return@execute GenerateTransactionService.execute(transactionNamespace)

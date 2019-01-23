@@ -53,7 +53,7 @@ class GetTransactionServiceTest : WordSpec() {
                             data = 2,
                             dataType = "UserAccount"
                         ),
-                        previousTransaction = parentTxGenerateResult.data!!.idValue,
+                        previousTransaction = parentTxGenerateResult.data!!.idValue.toString(),
                         metadatas = arrayOf(
                                 MetadatasNamespace("city", "san carlos"),
                                 MetadatasNamespace("state", "california")
