@@ -250,8 +250,11 @@ functions:
 #          trigger: PreSignUp
 
 #    Define function environment variables here
-    environment:
-      
+#    environment:
+#      database_url: jdbc:mysql://localhost:3306/ncnt
+#      database_driver: com.mysql.jdbc.Driver
+#      database_user: root
+#      database_password: ncntroot
 
 # you can add CloudFormation resource templates here
 #resources:

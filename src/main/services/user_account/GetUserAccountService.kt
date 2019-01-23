@@ -1,14 +1,13 @@
 package main.services.user_account
 
 import kotlinserverless.framework.services.SOAResult
-import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import framework.services.DaoService
 import org.jetbrains.exposed.sql.select
 
 object GetUserAccountService {
     fun execute(userId: Int? = null, email: String? = null, apiKey: String? = null): SOAResult<UserAccount?> {
-        val userAccountResult = DaoService.execute {
+        return DaoService.execute {
             when {
                 userId != null -> {
                     UserAccount.findById(userId)!!
@@ -34,9 +33,5 @@ object GetUserAccountService {
                 }
             }
         }
-
-        if (userAccountResult.result != SOAResultType.SUCCESS)
-            return SOAResult(userAccountResult.result, userAccountResult.message, null)
-        return SOAResult(SOAResultType.SUCCESS, null, userAccountResult.data!!)
     }
 }
