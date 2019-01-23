@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import framework.models.BaseIntEntity
-import framework.models.BaseNamespace
 import kotlinserverless.framework.models.*
 import org.apache.log4j.LogManager
 import java.nio.charset.StandardCharsets
@@ -43,7 +42,6 @@ class ApiGatewayResponse(
     var rawBody: Any? = null
     var headers: Map<String, String>? = Collections.emptyMap()
     var objectBody: BaseIntEntity? = null
-    var baseNamespaceBody: BaseNamespace? = null
     var listBody: List<Any>? = null
     var binaryBody: ByteArray? = null
     var base64Encoded: Boolean = false
@@ -53,7 +51,6 @@ class ApiGatewayResponse(
       var body: Any? = null
       body = body ?: rawBody
       body = body ?: objectBody?.toMap()
-      body = body ?: baseNamespaceBody?.toMap()
       body = body ?: listBody
       body = body ?: if (binaryBody != null) String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8) else null
 

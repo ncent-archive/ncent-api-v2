@@ -71,7 +71,7 @@ object ShareChallengeService {
             val txResult = GenerateTransactionService.execute(TransactionNamespace(
                 from = caller.cryptoKeyPair.publicKey,
                 to = publicKeyToShareWith,
-                previousTransaction = ustx.idValue.toString(),
+                previousTransaction = ustx.idValue,
                 metadatas = ChallengeMetadata(
                                 challenge.idValue,
                                 challenge.challengeSettings.offChain,
@@ -116,7 +116,7 @@ object ShareChallengeService {
         val txResult = GenerateTransactionService.execute(TransactionNamespace(
             from = caller.cryptoKeyPair.publicKey,
             to = publicKeyToShareWith,
-            previousTransaction = previousTx?.idValue.toString(),
+            previousTransaction = previousTx?.idValue,
             metadatas = ChallengeMetadata(
                             challenge.idValue,
                             challenge.challengeSettings.offChain,
