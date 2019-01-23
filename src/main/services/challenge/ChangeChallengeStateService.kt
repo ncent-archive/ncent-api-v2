@@ -27,7 +27,7 @@ object ChangeChallengeStateService {
         return GenerateTransactionService.execute(TransactionNamespace(
             from = challenge.cryptoKeyPair.publicKey,
             to = challenge.cryptoKeyPair.publicKey,
-            previousTransaction = oldTx.idValue,
+            previousTransaction = oldTx.idValue.toString(),
             metadatas = null,
             action = ActionNamespace(
                 type = newState,

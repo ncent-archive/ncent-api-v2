@@ -5,6 +5,7 @@ import kotlinserverless.framework.dispatchers.RequestDispatcher
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import framework.models.BaseIntEntity
+import framework.models.BaseNamespace
 import main.daos.*
 import org.apache.log4j.Logger
 import org.jetbrains.exposed.sql.Database
@@ -49,6 +50,9 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
         statusCode = status
         if (body is BaseIntEntity)
           objectBody = body
+        else if (body is BaseNamespace) {
+          baseNamespaceBody = body
+        }
         else if (body is Collection<*>)
           listBody = body as List<Any>
         else
