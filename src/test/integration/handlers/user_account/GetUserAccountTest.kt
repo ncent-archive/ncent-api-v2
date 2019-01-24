@@ -63,7 +63,7 @@ class GetUserAccountTest : WordSpec() {
                 transaction {
                     val response = handler.handleRequest(map, contxt)
                     response.statusCode shouldBe 200
-                    val userAccount = JsonHelper.parse<UserAccountNamespace>(response.body as Map<String, Any?>)
+                    val userAccount = JsonHelper.parse<UserAccountNamespace>(response.body!!)
 
                     userAccount.userMetadata.email shouldBe "dev0@ncnt.io"
                     userAccount.userMetadata.metadatas.first().key shouldBe "test1key"

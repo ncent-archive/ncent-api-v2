@@ -9,11 +9,19 @@ import com.beust.klaxon.Klaxon
 object JsonHelper {
     val KLAX = Klaxon()
 
-    inline fun <reified T> parse(value: String): T {
+    inline fun <reified T> parse(value: Any): T {
+        return when (value) {
+            is String -> parseString<T>(value)!!
+            is Map<*,*> -> parseMap(value as Map<String, Any?>)
+            else -> throw InternalError("There was a problem parsing to json: $value")
+        }
+    }
+
+    inline fun <reified T> parseString(value: String): T {
         return KLAX.parse<T>(value)!!
     }
 
-    inline fun <reified T> parse(value: Map<String, Any?>): T {
+    inline fun <reified T> parseMap(value: Map<String, Any?>): T {
         val string = KLAX.toJsonString(value)
         return KLAX.parse<T>(string)!!
     }

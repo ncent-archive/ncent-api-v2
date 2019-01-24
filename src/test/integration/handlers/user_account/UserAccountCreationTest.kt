@@ -45,7 +45,7 @@ class UserAccountCreationTest : WordSpec() {
                 transaction {
                     val response = handler.handleRequest(map, contxt)
                     response.statusCode shouldBe 200
-                    val newUserAccount = JsonHelper.parse<NewUserAccountNamespace>(response.body!! as Map<String, Any?>)
+                    val newUserAccount = JsonHelper.parse<NewUserAccountNamespace>(response.body!!)
 
                     newUserAccount!!.value.userMetadata.email shouldBe "dev@ncnt.io"
                 }

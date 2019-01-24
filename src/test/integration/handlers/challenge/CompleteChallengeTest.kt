@@ -66,7 +66,7 @@ class CompleteChallengeTest : WordSpec() {
                     val completeChallengeResult = handler.handleRequest(map, contxt)
                     completeChallengeResult.statusCode shouldBe 200
 
-                    val transactionNamespaceList = JsonHelper.parse<TransactionNamespaceList>(completeChallengeResult.body!! as Map<String, Any?>)
+                    val transactionNamespaceList = JsonHelper.parse<TransactionNamespaceList>(completeChallengeResult.body!!)
                     transactionNamespaceList.transactions.size shouldBe 2
                 }
 
@@ -126,7 +126,7 @@ class CompleteChallengeTest : WordSpec() {
                     val redeemChallengeResult = handler.handleRequest(map, contxt)
                     redeemChallengeResult.statusCode shouldBe 200
 
-                    val transactionNamespaceList = JsonHelper.parse<TransactionNamespaceList>(redeemChallengeResult.body!! as Map<String, Any?>)
+                    val transactionNamespaceList = JsonHelper.parse<TransactionNamespaceList>(redeemChallengeResult.body!!)
                     transactionNamespaceList.transactions.size shouldBe 2
                 }
 
