@@ -26,7 +26,20 @@ object JsonHelper {
         return KLAX.parse<T>(string)!!
     }
 
-    inline fun <reified T> parseArray(value: String): List<T> {
+    inline fun <reified T> parseArray(value: Any): List<T> {
+        return when (value) {
+            is String -> parseStringArray(value)
+            is List<*> -> parseListArray(value as List<Any?>)
+            else -> throw InternalError("There was a problem parsing to json: $value")
+        }
+    }
+
+    inline fun <reified T> parseStringArray(value: String): List<T> {
         return KLAX.parseArray(value)!!
     }
+
+    inline fun <reified T> parseListArray(value: List<*>): List<T> {
+        return KLAX.parseArray(KLAX.toJsonString(value))!!
+    }
+
 }
