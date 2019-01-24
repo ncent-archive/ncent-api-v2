@@ -54,7 +54,13 @@ class ApiGatewayResponse(
       body = body ?: rawBody
       body = body ?: objectBody?.toMap()
       body = body ?: baseNamespaceBody?.toMap()
-      body = body ?: listBody
+      body = body ?: listBody?.map {
+        when (it) {
+          is BaseIntEntity -> it.toMap()
+          is BaseNamespace -> it.toMap()
+          else -> it
+        }
+      }
       body = body ?: if (binaryBody != null) String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8) else null
 
       return ApiGatewayResponse(statusCode, body, headers, base64Encoded)

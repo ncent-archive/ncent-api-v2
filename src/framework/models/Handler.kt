@@ -52,9 +52,9 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
           objectBody = body
         else if (body is BaseNamespace) {
           baseNamespaceBody = body
-        }
-        else if (body is Collection<*>)
+        } else if (body is Collection<*>) {
           listBody = body as List<Any>
+        }
         else
           rawBody = body
         headers = mapOf("X-Powered-By" to "AWS Lambda & Serverless")
