@@ -65,7 +65,7 @@ class FindAllBalancesForChallengeTest : WordSpec() {
                     val getAllBalancesForChallengeResult = handler.handleRequest(map, contxt)
                     getAllBalancesForChallengeResult.statusCode shouldBe 200
 
-                    val emailToChallengeBalanceList = JsonHelper.parse<EmailToChallengeBalanceList>(getAllBalancesForChallengeResult.body!!.toString())
+                    val emailToChallengeBalanceList = JsonHelper.parse<EmailToChallengeBalanceList>(getAllBalancesForChallengeResult.body!!)
                     var totalBalance = 0
                     for (key in emailToChallengeBalanceList.emailToChallengeBalances.keys) {
                         totalBalance += emailToChallengeBalanceList.emailToChallengeBalances[key]!!

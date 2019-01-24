@@ -5,6 +5,7 @@ import kotlinserverless.framework.dispatchers.RequestDispatcher
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import framework.models.BaseIntEntity
+import framework.models.BaseNamespace
 import main.daos.*
 import org.apache.log4j.Logger
 import org.jetbrains.exposed.sql.Database
@@ -42,13 +43,16 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     catch (e: Throwable) {
       LOG.error(e.message, e)
       status = 500
-      body = "Internal server error " + e.message.toString() + "\n" + e.stackTrace.map { "\n"+it.toString() }
+      body = "Internal server error"
     }
     finally {
       return ApiGatewayResponse.build {
         statusCode = status
         if (body is BaseIntEntity)
           objectBody = body
+        else if (body is BaseNamespace) {
+          baseNamespaceBody = body
+        }
         else if (body is Collection<*>)
           listBody = body as List<Any>
         else

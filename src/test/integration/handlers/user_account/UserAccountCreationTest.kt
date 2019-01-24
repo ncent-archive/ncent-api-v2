@@ -4,14 +4,15 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import io.kotlintest.Description
 import com.amazonaws.services.lambda.runtime.Context
-import com.beust.klaxon.Klaxon
 import io.kotlintest.TestResult
 import kotlinserverless.framework.models.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import io.mockk.mockk
 import main.daos.NewUserAccountNamespace
+import main.helpers.JsonHelper
 import test.TestHelper
+import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
 class UserAccountCreationTest : WordSpec() {
@@ -41,11 +42,13 @@ class UserAccountCreationTest : WordSpec() {
     init {
         "correct path" should {
             "should return a valid new user account" {
-                val response = handler.handleRequest(map, contxt)
-                response.statusCode shouldBe 200
-                val newUserAccount = Klaxon().parse<NewUserAccountNamespace>(response.body!!.toString())
+                transaction {
+                    val response = handler.handleRequest(map, contxt)
+                    response.statusCode shouldBe 200
+                    val newUserAccount = JsonHelper.parse<NewUserAccountNamespace>(response.body!!)
 
-                newUserAccount!!.value.userMetadata.email shouldBe "dev@ncnt.io"
+                    newUserAccount!!.value.userMetadata.email shouldBe "dev@ncnt.io"
+                }
             }
         }
     }

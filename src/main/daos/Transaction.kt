@@ -32,7 +32,7 @@ class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
         map.put("from", from)
         map.put("to", to)
         map.put("action", action.toMap())
-        map.put("previousTransactionId", previousTransaction?.idValue)
+        map.put("previousTransactionId", previousTransaction?.idValue.toString())
         map.put("metadatas", metadatas.map { it.toMap() })
         return map
     }
@@ -50,7 +50,7 @@ object TransactionsMetadata : Table("transactions_to_metadatas") {
     val metadata = reference("metadata_to_transaction", Metadatas).primaryKey()
 }
 
-data class TransactionNamespace(val from: String?=null, val to: String?=null, val action: ActionNamespace?=null, val previousTransaction: Int?=null, val metadatas: Array<MetadatasNamespace>? = null)
+data class TransactionNamespace(val from: String?=null, val to: String?=null, val action: ActionNamespace?=null, val previousTransaction: String?=null, val metadatas: Array<MetadatasNamespace>? = null)
 
 class TransactionList(val transactions: List<Transaction>): BaseNamespace() {
     override fun toMap(): MutableMap<String, Any?> {
@@ -90,7 +90,9 @@ class TransactionWithNewUser(
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
         map.put("transactions", transactions.map { it.toMap() })
-        map.put("newUser", newUser?.toMap())
+        if (newUser != null) {
+            map.put("newUser", newUser.toMap())
+        }
         return map
     }
 }

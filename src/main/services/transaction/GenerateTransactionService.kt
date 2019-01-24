@@ -17,8 +17,8 @@ object GenerateTransactionService {
         }
 
         val previousTxEntity: Transaction? =
-            if (transactionNamespace.previousTransaction != null)
-                Transaction.findById(transactionNamespace.previousTransaction!!)
+            if (transactionNamespace.previousTransaction != null && transactionNamespace.previousTransaction != "null")
+                Transaction.findById(transactionNamespace.previousTransaction.toInt())
             else
                 null
 
