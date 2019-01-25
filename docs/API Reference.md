@@ -38,9 +38,9 @@ Table of Contents
    
 # User Authentication
 
-Most API calls will require user authentication. All that is required for this is to pass an object
- into the request with a "apiKey" and "secretKey" fields pointing to their respective values as Strings. This will allow 
- the API to validate the User and return a successful response.
+Most API calls will require user authentication. All that is required for this is the presence of an "Authorization" header
+ in the request with a value that has the following format: "Basic {apiKey:secretKey}". This follows standard RESTful API best 
+ practices, which are outlined in this [article](https://blog.restcase.com/restful-api-authentication-basics/).
    
 # User APIs
 
