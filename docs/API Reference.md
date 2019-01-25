@@ -36,6 +36,12 @@ Table of Contents
    + [retrieveProvenanceChainFIFO](#retrieveprovenancechainfifo)
    + [createTransaction](#createtransaction)
    
+# User Authentication
+
+Most API calls will require user authentication. All that is required for this is to pass an object
+ into the request with a "apiKey" and "secretKey" fields pointing to their respective values as Strings. This will allow 
+ the API to validate the User and return a successful response.
+   
 # User APIs
 
 The following APIs will interact with the UserAccountsController.
@@ -46,7 +52,7 @@ This API is a simple retrieval for a single user account
 
 #### Route
 
-/user/{userId}
+/user
 
 #### Method
 
@@ -926,7 +932,7 @@ This API is called in order to retrieve the data for a single challenge
 
 #### Route
 
-/challenge/{challengeId}
+/challenge
 
 #### Method
 
