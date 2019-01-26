@@ -22,6 +22,13 @@ tenant: ncntdev
 provider:
   name: aws
   runtime: java8
+  region: ${opt:region, 'us-west-1'}
+  vpc:
+    securityGroupIds:
+      - sg-03e1b070d826d2767
+    subnetIds:
+      - subnet-00173f7ae2ead86ec
+      - subnet-0e1d69b5214c618df
 
 # you can overwrite defaults here
 #  stage: dev
@@ -251,10 +258,10 @@ functions:
 
 #    Define function environment variables here
     environment:
-      database_url: jdbc:mysql://localhost:3306/ncnt
-      database_driver: com.mysql.jdbc.Driver
-      database_user: root
-      database_password: ncntroot
+#      database_url: jdbc:mysql://localhost:3306/ncnt
+#      database_driver: com.mysql.jdbc.Driver
+#      database_user: root
+#      database_password: ncntroot
 
 # you can add CloudFormation resource templates here
 #resources:

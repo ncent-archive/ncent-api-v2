@@ -164,6 +164,32 @@
    </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <excludes>
+                    <exclude>**/test*.*</exclude>
+                    <exclude>**/META-INF*.*</exclude>
+                    <exclude>**/.idea*.*</exclude>
+                    <exclude>**/pom.xml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>**/*.yml</include>
+                </includes>
+                <excludes>
+                    <exclude>**/test*.*</exclude>
+                    <exclude>**/META-INF*.*</exclude>
+                    <exclude>**/.idea*.*</exclude>
+                    <exclude>**/serverless.yml</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test</testSourceDirectory>
         <plugins>
