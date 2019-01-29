@@ -3,6 +3,7 @@ package main.controllers
 import framework.services.DaoService
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.controllers.RestController
+import kotlinserverless.framework.models.Handler
 import main.daos.Healthcheck
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
@@ -24,9 +25,9 @@ class DatabaseHealthcheckController: DefaultController<Healthcheck>(), RestContr
                 null
             )
             if(isDatabaseHealthyCheck.data!!) {
-                result.data = Healthcheck.findByStatus("healthy")
+                result.data = Healthcheck.findByStatus("database_healthy")
             } else {
-                result.data = Healthcheck.findByStatus("unhealthy")
+                result.data = Healthcheck.findByStatus("database_unhealthy")
             }
             return@execute result
         }.data!!

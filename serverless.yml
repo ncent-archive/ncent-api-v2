@@ -29,6 +29,12 @@ provider:
     subnetIds:
       - subnet-00173f7ae2ead86ec
       - subnet-0e1d69b5214c618df
+  #    Define function environment variables here
+  environment:
+  #      database_url: jdbc:mysql://localhost:3306/ncnt
+  #      database_driver: com.mysql.jdbc.Driver
+  #      database_user: root
+  #      database_password: ncntroot
 
 # you can overwrite defaults here
 #  stage: dev
@@ -262,13 +268,6 @@ functions:
 #      - cognitoUserPool:
 #          pool: MyUserPool
 #          trigger: PreSignUp
-
-#    Define function environment variables here
-    environment:
-#      database_url: jdbc:mysql://localhost:3306/ncnt
-#      database_driver: com.mysql.jdbc.Driver
-#      database_user: root
-#      database_password: ncntroot
 
 # you can add CloudFormation resource templates here
 #resources:

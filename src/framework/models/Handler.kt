@@ -7,8 +7,10 @@ import com.amazonaws.services.lambda.runtime.RequestHandler
 import framework.models.BaseIntEntity
 import main.daos.*
 import org.apache.log4j.Logger
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.sql.Connection
 
@@ -19,6 +21,10 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
   constructor() {
     connectToDatabase()
     buildTables()
+  }
+
+  fun getDbName(): String {
+    return db.url
   }
 
   override fun handleRequest(input: Map<String, Any>, context: Context): ApiGatewayResponse {
@@ -104,15 +110,15 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       transaction {
         SchemaUtils.create(*TABLES)
         try {
-          Healthcheck.new {
-            status = "healthy"
-            message = "default"
+          Healthchecks.insertIgnore {
+            it[status] = "database_healthy"
+            it[message] = "connected to database."
           }
-          Healthcheck.new {
-            status = "unhealthy"
-            message = "default"
+          Healthchecks.insertIgnore {
+            it[status] = "database_unhealthy"
+            it[message] = "failed to connect to database."
           }
-        } catch(e: Throwable) {
+        } catch(e: ExposedSQLException) {
 
         }
       }

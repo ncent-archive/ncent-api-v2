@@ -1,6 +1,5 @@
 package main.daos
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable

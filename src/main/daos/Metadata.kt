@@ -29,8 +29,8 @@ class Metadata(id: EntityID<Int>) : BaseIntEntity(id, Metadatas) {
 }
 
 object Metadatas : BaseIntIdTable("metadatas") {
-    val key = varchar("key", 256)
-    val value = varchar("value", 256)
+    val key = varchar("md_key", 256)
+    val value = varchar("md_value", 256)
 }
 
 data class MetadatasNamespace(val key: String, val value: String)
