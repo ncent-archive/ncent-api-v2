@@ -10,7 +10,7 @@ object CheckDatabaseHealthService {
             Handler.connectToDatabase()
             SOAResult(SOAResultType.SUCCESS, "Successfully connected to database", true)
         } catch(e: Exception) {
-            SOAResult(SOAResultType.SUCCESS, "Failed to connect to database: " + e.message, false)
+            SOAResult(SOAResultType.FAILURE, "Failed to connect to database: " + e.message, false)
         }
     }
 }

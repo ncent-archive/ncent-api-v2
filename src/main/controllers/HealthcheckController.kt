@@ -1,4 +1,4 @@
-package kotlinserverless.main.controllers
+package main.controllers
 
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.controllers.RestController
@@ -29,8 +29,8 @@ class HealthcheckController: DefaultController<Healthcheck>(), RestController<He
         return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
     }
 
-    override fun health(user: UserAccount, requestData: RequestData): SOAResult<Healthcheck> {
-        return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
+    override fun health(user: UserAccount?, requestData: RequestData): SOAResult<Healthcheck> {
+        return DatabaseHealthcheckController().health(user, requestData)
     }
 }
 

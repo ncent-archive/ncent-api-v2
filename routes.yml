@@ -6,7 +6,12 @@ routes:
   - regex: '^/health(/*[a-zA-Z0-9]*)?'
     inputModel: main.daos.Healthcheck
     outputModel: main.daos.Healthcheck
-    controller: kotlinserverless.main.controllers.HealthcheckController
+    controller: main.controllers.HealthcheckController
+
+  - regex: '^/dbhealth(/*[a-zA-Z0-9]*)?'
+    inputModel: main.daos.Healthcheck
+    outputModel: main.daos.Healthcheck
+    controller: main.controllers.DatabaseHealthcheckController
     
 # =========================
 # User Microservice

@@ -64,7 +64,7 @@ interface ReadableController<T, U> {
      * ex: used to verify access to the database/cache layer is functioning properly
      * @return [Healthcheck] object representing the health
      */
-    fun health(user: U, requestData: RequestData): SOAResult<Healthcheck> {
+    fun health(user: U?, requestData: RequestData): SOAResult<Healthcheck> {
         throw InvalidEndpoint()
     }
 }

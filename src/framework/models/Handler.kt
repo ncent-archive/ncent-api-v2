@@ -63,6 +63,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     lateinit var connection: Connection
 
     private val TABLES = arrayOf(
+      Healthchecks,
       Users,
       CryptoKeyPairs,
       ApiCreds,
@@ -102,6 +103,18 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     private fun buildTables() {
       transaction {
         SchemaUtils.create(*TABLES)
+        try {
+          Healthcheck.new {
+            status = "healthy"
+            message = "default"
+          }
+          Healthcheck.new {
+            status = "unhealthy"
+            message = "default"
+          }
+        } catch(e: Throwable) {
+
+        }
       }
     }
 

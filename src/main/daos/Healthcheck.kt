@@ -3,6 +3,7 @@ package main.daos
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
+import framework.models.idValue
 import org.jetbrains.exposed.dao.EntityID
 
 class Healthcheck(id: EntityID<Int>): BaseIntEntity(id, Healthchecks) {
@@ -13,6 +14,13 @@ class Healthcheck(id: EntityID<Int>): BaseIntEntity(id, Healthchecks) {
 		fun findByStatus(status: String): Healthcheck {
 			return Healthcheck.find { Healthchecks.status eq status }.first()
 		}
+	}
+
+	override fun toMap(): MutableMap<String, Any?> {
+		var map = super.toMap()
+		map.put("status", status)
+		map.put("message", message)
+		return map
 	}
 }
 

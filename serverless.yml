@@ -73,6 +73,13 @@ functions:
         path: /health/health
         method: get
 
+  dbhealth:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - http:
+        path: /dbhealth/health
+        method: get
+
   user_account_get:
     handler: kotlinserverless.framework.models.Handler
     events:
