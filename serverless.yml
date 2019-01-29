@@ -31,6 +31,10 @@ provider:
       - subnet-0e1d69b5214c618df
   #    Define function environment variables here
   environment:
+    database_url: ${ssm:/ncnt/production/database/url~true}
+    database_driver: ${ssm:/ncnt/production/database/driver}
+    database_user: ${ssm:/ncnt/production/database/user}
+    database_password: ${ssm:/ncnt/production/database/password~true}
   #      database_url: jdbc:mysql://localhost:3306/ncnt
   #      database_driver: com.mysql.jdbc.Driver
   #      database_user: root
