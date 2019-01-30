@@ -5,6 +5,7 @@ import kotlinserverless.framework.dispatchers.RequestDispatcher
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import framework.models.BaseIntEntity
+import framework.models.BaseNamespace
 import main.daos.*
 import org.apache.log4j.BasicConfigurator
 import org.apache.log4j.Logger
@@ -67,8 +68,9 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
           objectBody = body
         else if (body is Collection<*>)
           listBody = body as List<Any>
-        else
+        else {
           rawBody = body
+        }
         headers = mapOf("X-Powered-By" to "AWS Lambda & Serverless")
       }
     }

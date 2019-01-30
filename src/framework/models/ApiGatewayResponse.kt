@@ -5,7 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import framework.models.BaseIntEntity
+import framework.models.BaseNamespace
+import main.helpers.JsonHelper
 import org.apache.log4j.LogManager
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.nio.charset.StandardCharsets
 import java.util.*
 
@@ -23,12 +26,7 @@ class ApiGatewayResponse(
   companion object {
     inline fun build(block: Builder.() -> Unit) = Builder().apply(block).build()
     val LOG = LogManager.getLogger(this::class.java) //TODO: figure out how to user the correct class name.
-    var objectMapper: ObjectMapper = ObjectMapper()
-      .enable(SerializationFeature.INDENT_OUTPUT)
-  }
-	
-  override fun toString(): String {
-	  return objectMapper.writeValueAsString(this)
+    val objectMapper = ObjectMapper()
   }
 
   /**
@@ -46,11 +44,22 @@ class ApiGatewayResponse(
     fun build(): ApiGatewayResponse {
       //port these changes to Kotlin Serverless codebase
       var body: Any? = null
-      body = body ?: rawBody
-      body = body ?: objectBody?.toString()
-      body = body ?: listBody
+      if(rawBody is BaseNamespace)
+        // TODO figure out how to remove this
+        transaction {
+          body = body ?: (rawBody as? BaseNamespace)?.toMap()
+        }
+      else
+        body = body ?: rawBody
+      body = body ?: objectBody?.toMap()
+      if(listBody?.first() is BaseNamespace)
+        body = body ?: listBody!!.map { (it as BaseNamespace).toMap() }
+      else if(listBody?.first() is BaseIntEntity)
+        body = body ?: listBody!!.map { (it as BaseIntEntity).toMap() }
       body = body ?: if (binaryBody != null) String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8) else null
 
+      if(body != null && body !is String)
+        body = objectMapper.writeValueAsString(body)
       return ApiGatewayResponse(statusCode, body, headers, isBase64Encoded)
     }
   }

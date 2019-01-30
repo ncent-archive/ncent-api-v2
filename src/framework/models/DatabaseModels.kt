@@ -19,12 +19,6 @@ abstract class BaseIntEntity(id: EntityID<Int>, table: BaseIntIdTable) : IntEnti
     var updatedAt by table.updatedAt
     var deletedAt by table.deletedAt
 
-    override fun toString(): String {
-        return transaction {
-            return@transaction ObjectMapper().writeValueAsString(toMap())
-        }
-    }
-
     open fun toMap(): MutableMap<String, Any?> {
         return mutableMapOf(
             Pair("createdAt", createdAt.toString()),
@@ -35,12 +29,6 @@ abstract class BaseIntEntity(id: EntityID<Int>, table: BaseIntIdTable) : IntEnti
 }
 
 abstract class BaseNamespace {
-    override fun toString(): String {
-        return transaction {
-            return@transaction ObjectMapper().writeValueAsString(toMap())
-        }
-    }
-
     abstract fun toMap(): MutableMap<String, Any?>
 }
 
