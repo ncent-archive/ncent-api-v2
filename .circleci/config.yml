@@ -10,7 +10,7 @@ jobs:
     - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
         # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
         key: ncnt-api-{{ checksum "pom.xml" }}
-    - run: mvn dependency:go-offline
+    - run: mvn -o install -DskipTests=true
     - save_cache: # saves the project dependencies
         paths:
         - ~/.m2
