@@ -180,6 +180,7 @@
                 <includes>
                     <include>**/*.xml</include>
                     <include>**/*.yml</include>
+                    <include>**/*.properties</include>
                 </includes>
                 <excludes>
                     <exclude>**/test*.*</exclude>
@@ -187,13 +188,6 @@
                     <exclude>**/.idea*.*</exclude>
                     <exclude>**/pom.xml</exclude>
                 </excludes>
-            </resource>
-            <resource>
-                <directory>${project.basedir}</directory>
-                <targetPath>${project.basedir}/src/main/resources</targetPath>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
             </resource>
         </resources>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
