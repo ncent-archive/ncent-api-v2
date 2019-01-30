@@ -10,15 +10,15 @@ workflows:
         - image: circleci/openjdk:8-jdk-browsers
         steps:
         - checkout
-        - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
-            # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-            key: ncnt-api-{{ checksum "pom.xml" }}
-        - run: mvn dependency:go-offline
-        - save_cache: # saves the project dependencies
-            paths:
-            - ~/.m2
-            key: ncnt-api-{{ checksum "pom.xml" }}
-        - run: mvn clean test # run the actual tests
-        - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
-            # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-            path: target/surefire-reports
+#        - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
+#            # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+#            key: ncnt-api-{{ checksum "pom.xml" }}
+#        - run: mvn dependency:go-offline
+#        - save_cache: # saves the project dependencies
+#            paths:
+#            - ~/.m2
+#            key: ncnt-api-{{ checksum "pom.xml" }}
+#        - run: mvn clean test # run the actual tests
+#        - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
+#            # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+#            path: target/surefire-reports
