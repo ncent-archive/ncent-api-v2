@@ -1,5 +1,6 @@
 package kotlinserverless.framework.models
 
+import com.beust.klaxon.Json
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -17,7 +18,7 @@ class ApiGatewayResponse(
         val statusCode: Int = 200,
         var body: Any? = null,
         val headers: Map<String, String>? = Collections.emptyMap(),
-        @JsonProperty("isBase64Encoded") val isBase64Encoded: Boolean = false
+        @Json("isBase64Encoded") @JsonProperty("isBase64Encoded") val isBase64Encoded: Boolean = false
 ): Response {
   companion object {
     inline fun build(block: Builder.() -> Unit) = Builder().apply(block).build()

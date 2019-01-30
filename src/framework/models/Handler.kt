@@ -19,8 +19,14 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
   var requestDispatcher: RequestDispatcher = RequestDispatcher()
 
+  constructor() {
+    BasicConfigurator.configure()
+    connectToDatabase()
+    buildTables()
+  }
+
   constructor(test: Boolean = false) {
-    if(!test) {
+    if(!test!!) {
       BasicConfigurator.configure()
     }
     connectToDatabase()
