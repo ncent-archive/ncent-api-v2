@@ -90,39 +90,39 @@ functions:
         path: /dbhealth/health
         method: get
 
-  user_account_get:
+  user_get:
     handler: kotlinserverless.framework.models.Handler
     events:
     - http:
-        path: /user_account
+        path: /user
         method: get
 
-  user_account_create:
+  user_create:
     handler: kotlinserverless.framework.models.Handler
     events:
     - http:
-        path: /user_account
+        path: /user
         method: post
 
-  user_account_login:
+  user_login:
     handler: kotlinserverless.framework.models.Handler
     events:
     - http:
-        path: /user_account/login
+        path: /user/login
         method: post
 
-  user_account_logout:
+  user_logout:
     handler: kotlinserverless.framework.models.Handler
     events:
     - http:
-        path: /user_account/logout
+        path: /user/logout
         method: post
 
-  user_account_reset:
+  user_reset:
     handler: kotlinserverless.framework.Handler
     events:
       - http:
-          path: /user_account/reset
+          path: /user/reset
           method: patch
 
   token_get:
