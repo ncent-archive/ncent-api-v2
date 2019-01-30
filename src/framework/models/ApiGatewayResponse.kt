@@ -35,8 +35,6 @@ class ApiGatewayResponse(
    * Uses the Builder pattern to create the response
    */
   class Builder {
-    var objectMapper: ObjectMapper = ObjectMapper()
-
     var statusCode: Int = 200
     var rawBody: Any? = null
     var headers: Map<String, String>? = Collections.emptyMap()
@@ -49,7 +47,7 @@ class ApiGatewayResponse(
       //port these changes to Kotlin Serverless codebase
       var body: Any? = null
       body = body ?: rawBody
-      body = body ?: objectBody?.toMap()
+      body = body ?: objectBody?.toString()
       body = body ?: listBody
       body = body ?: if (binaryBody != null) String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8) else null
 
