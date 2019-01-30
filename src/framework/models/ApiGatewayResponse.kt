@@ -1,11 +1,9 @@
 package kotlinserverless.framework.models
 
-import com.beust.klaxon.Klaxon
-import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import framework.models.BaseIntEntity
-import kotlinserverless.framework.models.*
 import org.apache.log4j.LogManager
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -19,12 +17,13 @@ class ApiGatewayResponse(
         val statusCode: Int = 200,
         var body: Any? = null,
         val headers: Map<String, String>? = Collections.emptyMap(),
-        val isBase64Encoded: Boolean = false
+        @JsonProperty("isBase64Encoded") val isBase64Encoded: Boolean = false
 ): Response {
   companion object {
     inline fun build(block: Builder.() -> Unit) = Builder().apply(block).build()
     val LOG = LogManager.getLogger(this::class.java) //TODO: figure out how to user the correct class name.
-    var objectMapper: ObjectMapper = ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT)
+    var objectMapper: ObjectMapper = ObjectMapper()
+      .enable(SerializationFeature.INDENT_OUTPUT)
   }
 	
   override fun toString(): String {
@@ -43,7 +42,7 @@ class ApiGatewayResponse(
     var objectBody: BaseIntEntity? = null
     var listBody: List<Any>? = null
     var binaryBody: ByteArray? = null
-    var isbase64Encoded: Boolean = false
+    var isBase64Encoded: Boolean = false
 
     fun build(): ApiGatewayResponse {
       //port these changes to Kotlin Serverless codebase
@@ -53,7 +52,7 @@ class ApiGatewayResponse(
       body = body ?: listBody
       body = body ?: if (binaryBody != null) String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8) else null
 
-      return ApiGatewayResponse(statusCode, body, headers, isbase64Encoded)
+      return ApiGatewayResponse(statusCode, body, headers, isBase64Encoded)
     }
   }
 }

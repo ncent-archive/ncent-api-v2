@@ -23,7 +23,7 @@ class UserIntegrationTest : WordSpec() {
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        handler = Handler()
+        handler = Handler(true)
         contxt = mockk()
         val newUsers = TestHelper.generateUserAccounts()
         val user = newUsers[0]

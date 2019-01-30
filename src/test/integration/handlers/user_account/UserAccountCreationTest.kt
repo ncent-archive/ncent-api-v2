@@ -30,7 +30,7 @@ class UserAccountCreationTest : WordSpec() {
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        handler = Handler()
+        handler = Handler(true)
         contxt = mockk()
     }
 

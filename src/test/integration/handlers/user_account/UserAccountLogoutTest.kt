@@ -24,7 +24,7 @@ class UserAccountLogoutTest : WordSpec() {
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        handler = Handler()
+        handler = Handler(true)
         contxt = mockk()
         transaction {
             val newUsers = TestHelper.generateUserAccounts()

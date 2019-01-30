@@ -30,7 +30,7 @@ class FindAllBalancesForChallengeTest : WordSpec() {
 
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
-        handler = Handler()
+        handler = Handler(true)
         contxt = mockk()
         transaction {
             newUsers = TestHelper.generateUserAccounts(2)

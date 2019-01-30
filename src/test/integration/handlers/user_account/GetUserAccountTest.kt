@@ -39,7 +39,7 @@ class GetUserAccountTest : WordSpec() {
                 it[metadata] = metadataId
             }
             user1.value.refresh(true)
-            handler = Handler()
+            handler = Handler(true)
             contxt = mockk()
             map = TestHelper.buildRequest(
                 user1,

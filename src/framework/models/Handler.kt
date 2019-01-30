@@ -19,10 +19,12 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
 
   var requestDispatcher: RequestDispatcher = RequestDispatcher()
 
-  constructor() {
-    BasicConfigurator.configure()
+  constructor(test: Boolean = false) {
+    if(!test) {
+      BasicConfigurator.configure()
+    }
     connectToDatabase()
-    buildTables()
+    buildTables(test)
   }
 
   fun getDbName(): String {
@@ -108,20 +110,22 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       return LOG
     }
 
-    private fun buildTables() {
+    private fun buildTables(test: Boolean = false) {
       transaction {
         SchemaUtils.create(*TABLES)
-        try {
-          Healthchecks.insertIgnore {
-            it[status] = "database_healthy"
-            it[message] = "connected to database."
-          }
-          Healthchecks.insertIgnore {
-            it[status] = "database_unhealthy"
-            it[message] = "failed to connect to database."
-          }
-        } catch(e: ExposedSQLException) {
+        if(!test) {
+          try {
+            Healthchecks.insertIgnore {
+              it[status] = "database_healthy"
+              it[message] = "connected to database."
+            }
+            Healthchecks.insertIgnore {
+              it[status] = "database_unhealthy"
+              it[message] = "failed to connect to database."
+            }
+          } catch(e: ExposedSQLException) {
 
+          }
         }
       }
     }
@@ -129,7 +133,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     fun connectToDatabase(): Database {
       try {
         db = Database.connect(
-                System.getenv("database_url") ?: "jdbc:h2:mem:test",
+                System.getenv("database_url") ?: "jdbc:h2:mem:test;MODE=MySQL",
                 driver = System.getenv("database_driver") ?: "org.h2.Driver",
                 user = System.getenv("database_user") ?: "",
                 password = System.getenv("database_password") ?: ""

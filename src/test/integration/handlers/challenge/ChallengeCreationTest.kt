@@ -27,7 +27,7 @@ class ChallengeCreationTest : WordSpec() {
 
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
-        handler = Handler()
+        handler = Handler(true)
         contxt = mockk()
         transaction {
             val newUsers = TestHelper.generateUserAccounts()
