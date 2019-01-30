@@ -179,6 +179,7 @@
                 <directory>${project.basedir}</directory>
                 <includes>
                     <include>**/*.xml</include>
+                    <include>**/*.yml</include>
                 </includes>
                 <excludes>
                     <exclude>**/test*.*</exclude>
@@ -189,15 +190,10 @@
             </resource>
             <resource>
                 <directory>${project.basedir}</directory>
+                <targetPath>${project.basedir}/src/main/resources</targetPath>
                 <includes>
-                    <include>**/*.yml</include>
+                    <include>**/*.properties</include>
                 </includes>
-                <excludes>
-                    <exclude>**/test*.*</exclude>
-                    <exclude>**/META-INF*.*</exclude>
-                    <exclude>**/.idea*.*</exclude>
-                    <exclude>**/serverless.yml</exclude>
-                </excludes>
             </resource>
         </resources>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
