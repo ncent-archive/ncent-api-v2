@@ -30,7 +30,10 @@ object ControllerHelper {
 
     private fun getStringAnyMap(request: Request, key: String): Map<String, Any> {
         return if (request.input.containsKey(key) && request.input[key] != null)
-            request.input[key] as Map<String, Any>
+            if(request.input[key] !is String)
+                request.input[key] as Map<String, Any>
+            else
+                JsonHelper.parse(request.input[key] as String)
         else
             emptyMap()
     }
