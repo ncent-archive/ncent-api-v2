@@ -1,12 +1,9 @@
 package kotlinserverless.framework.models
 
-import com.beust.klaxon.Klaxon
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import framework.models.BaseIntEntity
-import kotlinserverless.framework.models.*
-import org.apache.log4j.LogManager
+import org.apache.log4j.BasicConfigurator
 import java.nio.charset.StandardCharsets
 import java.util.*
 
@@ -24,7 +21,7 @@ class ApiGatewayResponse(
 
   companion object {
     inline fun build(block: Builder.() -> Unit) = Builder().apply(block).build()
-    val LOG = LogManager.getLogger(this::class.java) //TODO: figure out how to user the correct class name.
+    val LOG = BasicConfigurator.configure() //TODO: figure out how to user the correct class name.
     var objectMapper: ObjectMapper = ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT)
   }
 	
