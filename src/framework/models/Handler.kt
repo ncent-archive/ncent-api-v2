@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import framework.models.BaseIntEntity
 import main.daos.*
+import org.apache.log4j.BasicConfigurator
 import org.apache.log4j.Logger
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
@@ -19,6 +20,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
   var requestDispatcher: RequestDispatcher = RequestDispatcher()
 
   constructor() {
+    BasicConfigurator.configure()
     connectToDatabase()
     buildTables()
   }
