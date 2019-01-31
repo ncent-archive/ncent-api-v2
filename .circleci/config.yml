@@ -24,14 +24,14 @@ jobs:
     docker: # run the steps with Docker
     - image: circleci/openjdk:8-jdk-browsers
     steps:
-    - checkout
-    - run:
-        name: Run tests
-        command: 'mvn test'
+      - checkout
+      - run:
+          name: Run tests
+          command: 'mvn test'
   deploy-dev:
     docker:
       - image: amaysim/serverless
-      steps:
+    steps:
       - run:
           name: Configure serverless aws
           command: 'serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}'
