@@ -1,35 +1,87 @@
 version: 2.1
+
 jobs:
   node-js-install:
+    working_directory: ~/ncnt-api
+    docker: # run the steps with Docker
+    - image: circleci/openjdk:8-jdk-browsers
     steps:
-    - {restore_cache: null, key: 'node-js-install-{{ checksum "pom.xml" }}'}
-    - {run: null, command: "sudo apt install curl &&\ncurl -sL https://deb.nodesource.com/setup_10.x | sudo bash - &&\nsudo apt install nodejs\n"}
-    - {save_cache: null, paths: [~/.nodejs], key: 'node-js-install-{{ checksum "pom.xml" }}'}
+    - restore_cache:
+        key: node-js-install-{{ checksum "pom.xml" }}
+    - run:
+      command: |
+        sudo apt install curl &&
+        curl -sL https://deb.nodesource.com/setup_10.x | sudo bash - &&
+        sudo apt install nodejs
+    - save_cache: # saves the project dependencies
+        paths:
+        - ~/.nodejs
+        key: node-js-install-{{ checksum "pom.xml" }}
   serverless-install:
+    working_directory: ~/ncnt-api
+    docker: # run the steps with Docker
+    - image: circleci/openjdk:8-jdk-browsers
     steps:
-    - {restore_cache: null, key: 'serverless-install-{{ checksum "pom.xml" }}'}
-    - {run: null, command: "npm install -g serverless &&\nserverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}\n"}
-    - {save_cache: null, paths: [~/.nodejs], key: 'serverless-install-{{ checksum "pom.xml" }}'}
+    - restore_cache:
+        key: serverless-install-{{ checksum "pom.xml" }}
+    - run:
+      command: |
+        npm install -g serverless &&
+        serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}
+    - save_cache: # saves the project dependencies
+        paths:
+        - ~/.nodejs
+        key: serverless-install-{{ checksum "pom.xml" }}
   build:
     working_directory: ~/ncnt-api
-    docker:
-    - {image: 'circleci/openjdk:8-jdk-browsers'}
+    docker: # run the steps with Docker
+    - image: circleci/openjdk:8-jdk-browsers
     steps:
     - checkout
-    - {restore_cache: null, key: 'ncnt-api-{{ checksum "pom.xml" }}'}
-    - {run: null, command: 'mvn dependency:go-offline'}
-    - {save_cache: null, paths: [~/.m2], key: 'ncnt-api-{{ checksum "pom.xml" }}'}
+    - restore_cache:
+        key: ncnt-api-{{ checksum "pom.xml" }}
+    - run:
+      command: mvn dependency:go-offline
+    - save_cache: # saves the project dependencies
+        paths:
+        - ~/.m2
+        key: ncnt-api-{{ checksum "pom.xml" }}
+
   build-test:
-  -
-    run: 'mvn clean test'
+    working_directory: ~/ncnt-api
+    docker: # run the steps with Docker
+    - image: circleci/openjdk:8-jdk-browsers
+    - run: mvn clean test # run the actual tests
   build-deploy-development:
-  -
-    run: 'serverless deploy --stage development'
+    working_directory: ~/ncnt-api
+    docker: # run the steps with Docker
+    - image: circleci/openjdk:8-jdk-browsers
+    - run: serverless deploy --stage development
+
 workflows:
   version: 2.1
   build-deploy:
     jobs:
-    - {node-js-install: null, filters: {branches: {only: master}}}
-    - {serverless-install: {requires: [node-js-install], filters: {branches: {only: master}}}}
-    - {build-test: {requires: [build], filters: {branches: {only: master}}}}
-    - {build-deploy-development: {requires: [build, serverless-install], filters: {branches: {only: master}}}}
+    - node-js-install:
+      filters:
+        branches:
+          only: master
+    - serverless-install:
+        requires:
+        - node-js-install
+        filters:
+          branches:
+            only: master
+    - build-test:
+        requires:
+        - build
+        filters:
+          branches:
+            only: master
+    - build-deploy-development:
+        requires:
+        - build
+        - serverless-install
+        filters:
+          branches:
+            only: master
