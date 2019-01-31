@@ -46,7 +46,6 @@ jobs:
         paths:
         - ~/.m2
         key: ncnt-api-{{ checksum "pom.xml" }}
-
   build-test:
     working_directory: ~/ncnt-api
     docker: # run the steps with Docker
@@ -77,6 +76,10 @@ workflows:
     - build-test:
         requires:
         - build
+        filters:
+          branches:
+            only: master
+    - build:
         filters:
           branches:
             only: master
