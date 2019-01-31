@@ -3,13 +3,11 @@ package kotlinserverless.framework.models
 import com.beust.klaxon.Json
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
 import framework.models.BaseIntEntity
-import framework.models.BaseNamespace
-import main.helpers.JsonHelper
+import framework.models.BaseObject
+import framework.services.DaoService
 import org.apache.log4j.LogManager
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.nio.charset.StandardCharsets
 import java.util.*
 
 
@@ -35,32 +33,38 @@ class ApiGatewayResponse(
   class Builder {
     var statusCode: Int = 200
     var rawBody: Any? = null
-    var headers: Map<String, String>? = Collections.emptyMap()
-    var objectBody: BaseIntEntity? = null
-    var listBody: List<Any>? = null
-    var binaryBody: ByteArray? = null
-    var isBase64Encoded: Boolean = false
+    var headers: Map<String, String>? = mapOf("X-Powered-By" to "AWS Lambda & Serverless")
 
     fun build(): ApiGatewayResponse {
-      //port these changes to Kotlin Serverless codebase
-      var body: Any? = null
-      if(rawBody is BaseNamespace)
-        // TODO figure out how to remove this
-        transaction {
-          body = body ?: (rawBody as? BaseNamespace)?.toMap()
-        }
-      else
-        body = body ?: rawBody
-      body = body ?: objectBody?.toMap()
-      if(listBody?.first() is BaseNamespace)
-        body = body ?: listBody!!.map { (it as BaseNamespace).toMap() }
-      else if(listBody?.first() is BaseIntEntity)
-        body = body ?: listBody!!.map { (it as BaseIntEntity).toMap() }
-      body = body ?: if (binaryBody != null) String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8) else null
+      var body = try {
+        getBody(rawBody)
+      } catch(e: IllegalStateException) {
+        DaoService.execute {
+          getBody(rawBody)
+        }.data!!
+      }
 
       if(body != null && body !is String)
         body = objectMapper.writeValueAsString(body)
-      return ApiGatewayResponse(statusCode, body, headers, isBase64Encoded)
+      return ApiGatewayResponse(statusCode, body, headers)
+    }
+
+    companion object {
+      private fun getBody(rawBody: Any?): Any? {
+        return when (rawBody) {
+          is BaseObject -> {
+            (rawBody as? BaseObject)?.toMap()
+          }
+          is List<*> -> {
+            if ((rawBody as? List<*>)?.first() is BaseObject) {
+              (rawBody as? List<*>)?.map { (it as? BaseObject)?.toMap() }
+            } else {
+              (rawBody as? List<*>)?.map { it.toString() }
+            }
+          }
+          else -> rawBody
+        }
+      }
     }
   }
 }

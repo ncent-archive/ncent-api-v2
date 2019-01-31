@@ -3,7 +3,7 @@ package main.daos
 import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
-import framework.models.BaseNamespace
+import framework.models.BaseObject
 import org.jetbrains.exposed.dao.*
 
 /**
@@ -50,7 +50,7 @@ class NewUserAccount(
         val value: UserAccount,
         val privateKey: String,
         val secretKey: String
-): BaseNamespace() {
+): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {
         val map = mutableMapOf<String, Any?>()
         map.put("value", value.toMap())
