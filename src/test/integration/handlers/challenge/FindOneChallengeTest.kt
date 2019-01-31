@@ -36,6 +36,7 @@ class FindOneChallengeTest : WordSpec() {
                 user,
                 "/challenge",
                 "GET",
+                    null,
                 mapOf(
                     Pair("id", user.value.idValue)
                 )
@@ -44,6 +45,7 @@ class FindOneChallengeTest : WordSpec() {
                 user,
                 "/challenge",
                 "GET",
+                    null,
                 mapOf(
                     Pair("id", 404)
                 )

@@ -38,6 +38,7 @@ class FindAllChallengeBalancesTest : WordSpec() {
                 user1,
                 "/user/balances",
                 "GET",
+                    null,
                 mapOf(
                     Pair("userId", user1.value.idValue.toString())
                 )
@@ -46,6 +47,7 @@ class FindAllChallengeBalancesTest : WordSpec() {
                 user2,
                 "/user/balances",
                 "GET",
+                    null,
                 mapOf(
                     Pair("userId", user2.value.idValue.toString())
                 )

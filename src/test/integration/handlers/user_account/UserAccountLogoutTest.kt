@@ -34,9 +34,11 @@ class UserAccountLogoutTest : WordSpec() {
                 "/user/logout",
                 "PATCH",
                 mapOf(
-                    Pair("userId", user.value.idValue),
                     Pair("firstname", "dev"),
                     Pair("lastname", "ncnt")
+                ),
+                mapOf(
+                    Pair("userId", user.value.idValue.toString())
                 )
             )
         }

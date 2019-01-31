@@ -32,8 +32,8 @@ interface Controller<M> {
         return when(method) {
             ControllerHelper.HTTP_GET -> {
                 when {
-                    requestData.body.containsKey("id") -> {
-                        val id = requestData.body["id"].toString().toIntOrNull()
+                    requestData.queryParams.containsKey("id") -> {
+                        val id = requestData.queryParams["id"].toString().toIntOrNull()
 
                         id ?: throw Exception("Id must be an integer")
                         restController.findOne(user, requestData, id.toString().toInt())
