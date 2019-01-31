@@ -19,11 +19,16 @@ jobs:
       - run:
           name: Package latest jar
           command: 'mvn clean package -DskipTests=true'
+      - persist_to_workspace:
+          root: ~/ncnt-api
+          paths:
+            - .
   test:
-    working_directory: ~/ncnt-api
     docker: # run the steps with Docker
     - image: circleci/openjdk:8-jdk-browsers
     steps:
+      - attach_workspace:
+          at: ~/ncnt-api
       - checkout
       - run:
           name: Run tests
@@ -32,6 +37,8 @@ jobs:
     docker:
       - image: amaysim/serverless
     steps:
+      - attach_workspace:
+        at: ~/ncnt-api
       - run:
           name: Configure serverless aws
           command: 'serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}'
