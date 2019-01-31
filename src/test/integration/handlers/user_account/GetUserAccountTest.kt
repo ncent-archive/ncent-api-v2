@@ -45,6 +45,7 @@ class GetUserAccountTest : WordSpec() {
                 user1,
                 "/user",
                 "GET",
+                    null,
                 mapOf(
                         Pair("id", user1.value.idValue),
                         Pair("userId", user1.value.idValue.toString())

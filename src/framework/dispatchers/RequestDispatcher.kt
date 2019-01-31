@@ -63,8 +63,8 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
 
     fun findUserByRequest(requestData: ControllerHelper.RequestData) : UserAccount? {
         return GetUserAccountService.execute(
-            requestData.body["userId"]?.toString()?.toInt(),
-            requestData.body["email"]?.toString(),
+            requestData.queryParams["userId"]?.toString()?.toInt(),
+            requestData.queryParams["email"]?.toString(),
             requestData.userAuth?.apiKey
         ).data
     }

@@ -40,11 +40,13 @@ class ShareChallengeTest : WordSpec() {
                 "/challenge/share",
                 "PATCH",
                 mapOf(
-                    Pair("userId", user1.value.idValue.toString()),
                     Pair("challengeId", challenge.idValue),
                     Pair("publicKeyToShareWith", user2.value.cryptoKeyPair.publicKey),
                     Pair("shares", 3),
                     Pair("emailToShareWith", user2.value.userMetadata.email)
+                ),
+                mapOf(
+                    Pair("userId", user1.value.idValue.toString())
                 )
             )
             newUserMap = TestHelper.buildRequest(
@@ -52,23 +54,27 @@ class ShareChallengeTest : WordSpec() {
                 "/challenge/share",
                 "PATCH",
                 mapOf(
-                    Pair("userId", user1.value.idValue.toString()),
                     Pair("challengeId", challenge.idValue),
                     Pair("emailToShareWith", "test@test.com"),
                     Pair("shares", 3)
-                )
+                ),
+                    mapOf(
+                            Pair("userId", user1.value.idValue.toString())
+                    )
             )
             tooManySharesMap = TestHelper.buildRequest(
                 user1,
                 "/challenge/share",
                 "PATCH",
                 mapOf(
-                    Pair("userId", user1.value.idValue.toString()),
                     Pair("challengeId", challenge.idValue),
                     Pair("publicKeyToShareWith", user2.value.cryptoKeyPair.publicKey),
                     Pair("emailToShareWith", user2.value.userMetadata.email),
                     Pair("shares", 1000)
-                )
+                ),
+                    mapOf(
+                            Pair("userId", user1.value.idValue.toString())
+                    )
             )
         }
     }

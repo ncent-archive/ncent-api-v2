@@ -2,14 +2,14 @@ Table of Contents
 
 1. [User APIs](#user-apis)
    + [Find One User](#find-one-user)
-   + [Get User Balances](#get-user-balances)
+   + [GET (requestData object must pass data in as query parameters instead of request body) User Balances](#GET (requestData object must pass data in as query parameters instead of request body)-user-balances)
    + [Create User](#user-create)
    + [Login](#login)
    + [Logout](#logout)
 1. [Challenge APIs](#challenge-apis)
    + [Find One Challenge](#find-one-challenge)
    + [Find All Challenges](#find-all-challenges)
-   + [Get All Balances For a Challenge](#get-all-balances-for-a-challenge)
+   + [GET (requestData object must pass data in as query parameters instead of request body) All Balances For a Challenge](#GET (requestData object must pass data in as query parameters instead of request body)-all-balances-for-a-challenge)
    + [Create Challenge](#create-challenge)
    + [Share Challenge](#share-challenge)
    + [Redeem Challenge](#redeem-challenge)
@@ -56,7 +56,7 @@ This API is a simple retrieval for a single user account
 
 #### Method
 
-GET
+GET (requestData object must pass data in as query parameters instead of request body)
 
 #### Parameters
 
@@ -121,7 +121,7 @@ GET
 }
 ```
 
-## Get User Balances
+## GET (requestData object must pass data in as query parameters instead of request body) User Balances
 
 This API will return all of the caller's balances for each challenge that they have participated in
 
@@ -131,7 +131,7 @@ This API will return all of the caller's balances for each challenge that they h
 
 #### Method
 
-GET
+GET (requestData object must pass data in as query parameters instead of request body)
 
 #### Parameters
 
@@ -149,7 +149,7 @@ GET
 {
   "statusCode" : 200,
   "body" : {
-    "challengeToUnsharedTransactions" : [ {
+    "challenGET (requestData object must pass data in as query parameters instead of request body)oUnsharedTransactions" : [ {
       "challenge" : {
         "createdAt" : "2019-01-23T13:55:04.401-08:00",
         "updatedAt" : "null",
@@ -936,7 +936,7 @@ This API is called in order to retrieve the data for a single challenge
 
 #### Method
 
-GET
+GET (requestData object must pass data in as query parameters instead of request body)
 
 #### Parameters
 
@@ -1062,7 +1062,7 @@ This API is called in order to retrieve the data for all challenges for the call
 
 #### Method
 
-GET
+GET (requestData object must pass data in as query parameters instead of request body)
 
 #### Parameters
 
@@ -1451,7 +1451,7 @@ GET
 }
 ```
 
-## Get All Balances For a Challenge
+## GET (requestData object must pass data in as query parameters instead of request body) All Balances For a Challenge
 
 This API is called by a challenge sponsor in order to retrieve all balances being held by other users on that challenge
 
@@ -1461,7 +1461,7 @@ This API is called by a challenge sponsor in order to retrieve all balances bein
 
 #### Method
 
-GET
+GET (requestData object must pass data in as query parameters instead of request body)
 
 #### Parameters
 

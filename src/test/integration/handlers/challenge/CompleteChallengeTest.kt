@@ -57,9 +57,11 @@ class CompleteChallengeTest : WordSpec() {
                         "/challenge/complete",
                         "PATCH",
                         mapOf(
-                            Pair("userId", user1.value.idValue.toString()),
                             Pair("challengeId", challenge.idValue),
                             Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        ),
+                        mapOf(
+                            Pair("userId", user1.value.idValue.toString())
                         )
                     )
 
@@ -78,9 +80,11 @@ class CompleteChallengeTest : WordSpec() {
                         "/challenge/complete",
                         "PATCH",
                         mapOf(
-                                Pair("userId", user2.value.idValue.toString()),
-                                Pair("challengeId", challenge.idValue),
-                                Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                            Pair("challengeId", challenge.idValue),
+                            Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        ),
+                        mapOf(
+                            Pair("userId", user2.value.idValue.toString())
                         )
                     )
 
@@ -96,9 +100,11 @@ class CompleteChallengeTest : WordSpec() {
                         "/challenge/complete",
                         "PATCH",
                         mapOf(
-                            Pair("userId", user1.value.idValue.toString()),
                             Pair("challengeId", notActivatedChallenge.idValue),
                             Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        ),
+                        mapOf(
+                            Pair("userId", user1.value.idValue.toString())
                         )
                     )
 
@@ -117,9 +123,11 @@ class CompleteChallengeTest : WordSpec() {
                         "/challenge/redeem",
                         "PATCH",
                         mapOf(
-                            Pair("userId", user1.value.idValue.toString()),
                             Pair("challengeId", challenge.idValue),
                             Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        ),
+                        mapOf(
+                            Pair("userId", user1.value.idValue.toString())
                         )
                     )
 
@@ -138,11 +146,14 @@ class CompleteChallengeTest : WordSpec() {
                         "/challenge/complete",
                         "PATCH",
                         mapOf(
-                            Pair("userId", user2.value.idValue.toString()),
                             Pair("challengeId", challenge.idValue),
                             Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        ),
+                        mapOf(
+                            Pair("userId", user2.value.idValue.toString())
                         )
                     )
+
 
                     val redeemChallengeResult = handler.handleRequest(map, contxt)
                     redeemChallengeResult.statusCode shouldBe 403
@@ -156,9 +167,11 @@ class CompleteChallengeTest : WordSpec() {
                         "/challenge/redeem",
                         "PATCH",
                         mapOf(
-                            Pair("userId", user1.value.idValue.toString()),
                             Pair("challengeId", notActivatedChallenge.idValue),
                             Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
+                        ),
+                        mapOf(
+                            Pair("userId", user1.value.idValue.toString())
                         )
                     )
 

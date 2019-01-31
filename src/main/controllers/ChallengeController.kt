@@ -114,7 +114,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     fun balances(user: UserAccount?, requestData: RequestData): SOAResult<EmailToChallengeBalanceList> {
         validateApiKey(user!!, requestData)
 
-        val challengeId = requestData.body["challengeId"] as Int
+        val challengeId = requestData.queryParams["challengeId"] as Int
 
         val getAllBalancesForChallengeResult = GetAllBalancesForChallengeService.execute(user, challengeId)
 
