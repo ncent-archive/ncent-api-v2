@@ -41,6 +41,12 @@ jobs:
 
 workflows:
   version: 2.1
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
   build_and_test:
     jobs:
       - build
