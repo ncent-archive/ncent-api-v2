@@ -44,7 +44,7 @@ class GetUserAccountTest : WordSpec() {
             handler = Handler(true)
             contxt = mockk()
             map = TestHelper.buildRequest(
-                user1,
+                user2,
                 "/user",
                 "GET",
                     null,
