@@ -52,7 +52,7 @@ object TransactionsMetadata : Table("transactions_to_metadatas") {
 
 data class TransactionNamespace(val from: String?=null, val to: String?=null, val action: ActionNamespace?=null, val previousTransaction: Int?=null, val metadatas: Array<MetadatasNamespace>? = null)
 
-class TransactionList(val transactions: List<Transaction>): BaseNamespace() {
+class TransactionList(val transactions: List<Transaction>): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
         map.put("transactions", transactions.map { it.toMap() })
@@ -62,7 +62,7 @@ class TransactionList(val transactions: List<Transaction>): BaseNamespace() {
 
 data class TransactionNamespaceList(val transactions: List<TransactionNamespace>)
 
-class TransactionToShare(val transaction: Transaction, val shares: Int): BaseNamespace() {
+class TransactionToShare(val transaction: Transaction, val shares: Int): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
         map.put("transaction", transaction.toMap())
@@ -73,7 +73,7 @@ class TransactionToShare(val transaction: Transaction, val shares: Int): BaseNam
 
 data class TransactionToShareNamespace(val transaction: TransactionNamespace, val shares: Int)
 
-class ShareTransactionList(val transactionsToShares: List<TransactionToShare>): BaseNamespace() {
+class ShareTransactionList(val transactionsToShares: List<TransactionToShare>): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
         map.put("transactionsToShares", transactionsToShares.map { it.toMap() })
@@ -86,7 +86,7 @@ data class ShareTransactionListNamespace(val transactionsToShares: List<Transact
 class TransactionWithNewUser(
     val transactions: List<Transaction>,
     val newUser: NewUserAccount? = null
-): BaseNamespace() {
+): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
         map.put("transactions", transactions.map { it.toMap() })

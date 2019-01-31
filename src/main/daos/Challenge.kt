@@ -188,7 +188,7 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
 
 class ChallengeList(
     val challenges: List<Challenge>
-): BaseNamespace() {
+): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
         map.put("challenges", challenges.map { it.toMap() })
@@ -196,7 +196,7 @@ class ChallengeList(
     }
 }
 
-class ChallengeToUnsharedTransaction(val challenge: Challenge, val shareTransactionList: ShareTransactionList): BaseNamespace() {
+class ChallengeToUnsharedTransaction(val challenge: Challenge, val shareTransactionList: ShareTransactionList): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
         map.put("challenge", challenge.toMap())
@@ -207,7 +207,7 @@ class ChallengeToUnsharedTransaction(val challenge: Challenge, val shareTransact
 
 data class ChallengeToUnsharedTransactionNamespace(val challenge: ChallengeNamespace, val shareTransactionList: ShareTransactionListNamespace)
 
-class ChallengeToUnsharedTransactionsList(val challengeToUnsharedTransactions: List<ChallengeToUnsharedTransaction>): BaseNamespace() {
+class ChallengeToUnsharedTransactionsList(val challengeToUnsharedTransactions: List<ChallengeToUnsharedTransaction>): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
         map.put("challengeToUnsharedTransactions", challengeToUnsharedTransactions.map { it.toMap() })
@@ -217,7 +217,7 @@ class ChallengeToUnsharedTransactionsList(val challengeToUnsharedTransactions: L
 
 data class ChallengeToUnsharedTransactionsNamespaceList(val challengeToUnsharedTransactions: List<ChallengeToUnsharedTransactionNamespace>)
 
-class EmailToChallengeBalanceList(val challengeId: Int, val emailToChallengeBalances: MutableMap<String, Int>): BaseNamespace() {
+class EmailToChallengeBalanceList(val challengeId: Int, val emailToChallengeBalances: MutableMap<String, Int>): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
         map.put("challengeId", challengeId)

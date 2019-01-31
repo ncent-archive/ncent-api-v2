@@ -1,8 +1,6 @@
 package framework.models
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.jetbrains.exposed.dao.*
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
@@ -14,12 +12,12 @@ abstract class BaseIntIdTable(name: String) : IntIdTable(name) {
     val deletedAt = datetime("deletedAt").nullable()
 }
 
-abstract class BaseIntEntity(id: EntityID<Int>, table: BaseIntIdTable) : IntEntity(id) {
+abstract class BaseIntEntity(id: EntityID<Int>, table: BaseIntIdTable) : BaseObject, IntEntity(id) {
     val createdAt by table.createdAt
     var updatedAt by table.updatedAt
     var deletedAt by table.deletedAt
 
-    open fun toMap(): MutableMap<String, Any?> {
+    override fun toMap(): MutableMap<String, Any?> {
         return mutableMapOf(
             Pair("id", idValue),
             Pair("createdAt", createdAt.toString()),
@@ -29,8 +27,8 @@ abstract class BaseIntEntity(id: EntityID<Int>, table: BaseIntIdTable) : IntEnti
     }
 }
 
-abstract class BaseNamespace {
-    abstract fun toMap(): MutableMap<String, Any?>
+interface BaseObject {
+    fun toMap(): MutableMap<String, Any?>
 }
 
 abstract class BaseIntEntityClass<E : BaseIntEntity>(table: BaseIntIdTable) : IntEntityClass<E>(table) {
