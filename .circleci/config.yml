@@ -2,28 +2,30 @@ version: 2.1
 
 jobs:
   node-js-install:
+    steps:
     - restore_cache:
       key: node-js-install-{{ checksum "pom.xml" }}
     - run:
-        command: |
-          sudo apt install curl &&
-          curl -sL https://deb.nodesource.com/setup_10.x | sudo bash - &&
-          sudo apt install nodejs
+      command: |
+        sudo apt install curl &&
+        curl -sL https://deb.nodesource.com/setup_10.x | sudo bash - &&
+        sudo apt install nodejs
     - save_cache: # saves the project dependencies
-        paths:
-        - ~/.nodejs
-        key: node-js-install-{{ checksum "pom.xml" }}
+      paths:
+      - ~/.nodejs
+      key: node-js-install-{{ checksum "pom.xml" }}
   serverless-install:
+    steps:
     - restore_cache:
       key: serverless-install-{{ checksum "pom.xml" }}
     - run:
-        command: |
-          npm install -g serverless &&
-          serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}
+      command: |
+        npm install -g serverless &&
+        serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}
     - save_cache: # saves the project dependencies
-        paths:
-        - ~/.nodejs
-        key: serverless-install-{{ checksum "pom.xml" }}
+      paths:
+      - ~/.nodejs
+      key: serverless-install-{{ checksum "pom.xml" }}
   build:
     working_directory: ~/ncnt-api
     docker: # run the steps with Docker
@@ -31,43 +33,43 @@ jobs:
     steps:
     - checkout
     - restore_cache:
-        key: ncnt-api-{{ checksum "pom.xml" }}
+      key: ncnt-api-{{ checksum "pom.xml" }}
     - run:
       command: mvn dependency:go-offline
     - save_cache: # saves the project dependencies
-        paths:
-        - ~/.m2
-        key: ncnt-api-{{ checksum "pom.xml" }}
+      paths:
+      - ~/.m2
+      key: ncnt-api-{{ checksum "pom.xml" }}
 
   build-test:
     - run: mvn clean test # run the actual tests
   build-deploy-development:
-    - run: serverless deploy --stage development
+  - run: serverless deploy --stage development
 
 workflows:
   version: 2.1
   build-deploy:
     jobs:
-      - node-js-install:
+    - node-js-install:
+      filters:
+        branches:
+          only: master
+    - serverless-install:
+        requires:
+        - node-js-install
         filters:
           branches:
             only: master
-      - serverless-install:
-          requires:
-            - node-js-install
-          filters:
-            branches:
-              only: master
-      - build-test:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
-      - build-deploy-development:
-          requires:
-            - build
-            - serverless-install
-          filters:
-            branches:
-              only: master
+    - build-test:
+        requires:
+        - build
+        filters:
+          branches:
+            only: master
+    - build-deploy-development:
+        requires:
+        - build
+        - serverless-install
+        filters:
+          branches:
+            only: master
