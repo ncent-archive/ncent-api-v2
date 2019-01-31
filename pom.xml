@@ -199,19 +199,19 @@
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test</testSourceDirectory>
         <plugins>
-            <plugin>
-                <groupId>org.jetbrains.dokka</groupId>
-                <artifactId>dokka-maven-plugin</artifactId>
-                <version>${dokka.version}</version>
-                <executions>
-                    <execution>
-                        <phase>pre-site</phase>
-                        <goals>
-                            <goal>dokka</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.jetbrains.dokka</groupId>-->
+                <!--<artifactId>dokka-maven-plugin</artifactId>-->
+                <!--<version>${dokka.version}</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>pre-site</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>dokka</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
