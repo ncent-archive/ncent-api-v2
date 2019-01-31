@@ -1,92 +1,61 @@
 version: 2.1
 
 jobs:
-  node-js-install:
-    working_directory: ~/ncnt-api
-    docker: # run the steps with Docker
-    - image: circleci/openjdk:8-jdk-browsers
-    steps:
-    - restore_cache:
-        key: node-js-install-{{ checksum "pom.xml" }}
-    - run:
-      command: |
-        sudo apt install curl &&
-        curl -sL https://deb.nodesource.com/setup_10.x | sudo bash - &&
-        sudo apt install nodejs
-    - save_cache: # saves the project dependencies
-        paths:
-        - ~/.nodejs
-        key: node-js-install-{{ checksum "pom.xml" }}
-  serverless-install:
-    working_directory: ~/ncnt-api
-    docker: # run the steps with Docker
-    - image: circleci/openjdk:8-jdk-browsers
-    steps:
-    - restore_cache:
-        key: serverless-install-{{ checksum "pom.xml" }}
-    - run:
-      command: |
-        npm install -g serverless &&
-        serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}
-    - save_cache: # saves the project dependencies
-        paths:
-        - ~/.nodejs
-        key: serverless-install-{{ checksum "pom.xml" }}
   build:
+    working_directory: ~/ncnt-api
+    docker: # run the steps with Docker
+      - image: circleci/openjdk:8-jdk-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          key: ncnt-api-{{ checksum "pom.xml" }}
+      - run:
+          name: Get maven dependancies
+          command: 'mvn dependency:go-offline'
+      - save_cache: # saves the project dependencies
+          paths:
+          - ~/.m2
+          key: ncnt-api-{{ checksum "pom.xml" }}
+      - run:
+          name: Package latest jar
+          command: 'mvn clean package -DskipTests=true'
+  test:
     working_directory: ~/ncnt-api
     docker: # run the steps with Docker
     - image: circleci/openjdk:8-jdk-browsers
     steps:
     - checkout
-    - restore_cache:
-        key: ncnt-api-{{ checksum "pom.xml" }}
     - run:
-      command: mvn dependency:go-offline
-    - save_cache: # saves the project dependencies
-        paths:
-        - ~/.m2
-        key: ncnt-api-{{ checksum "pom.xml" }}
-  build-test:
-    working_directory: ~/ncnt-api
-    docker: # run the steps with Docker
-    - image: circleci/openjdk:8-jdk-browsers
-    steps:
-    - run: mvn clean test # run the actual tests
-  build-deploy-development:
-    working_directory: ~/ncnt-api
-    docker: # run the steps with Docker
-    - image: circleci/openjdk:8-jdk-browsers
-    steps:
-    - run: serverless deploy --stage development
+        name: Run tests
+        command: 'mvn test'
+  deploy-dev:
+    docker:
+      - image: amaysim/serverless
+      steps:
+      - run:
+          name: Configure serverless aws
+          command: 'serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}'
+      - run:
+          name: Deploy to development
+          command: 'serverless deploy --stage development'
 
 workflows:
   version: 2.1
-  build-deploy:
+  build_and_test:
     jobs:
-    - node-js-install:
-      filters:
-        branches:
-          only: master
-    - serverless-install:
+      - build
+      - test:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+  build_and_deploy:
+    jobs:
+    - build_and_test
+    - deploy-dev:
         requires:
-        - node-js-install
-        filters:
-          branches:
-            only: master
-    - build-test:
-        requires:
-        - build
-        filters:
-          branches:
-            only: master
-    - build:
-        filters:
-          branches:
-            only: master
-    - build-deploy-development:
-        requires:
-        - build
-        - serverless-install
+          - build
         filters:
           branches:
             only: master
