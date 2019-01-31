@@ -4,10 +4,11 @@ jobs:
   node-js-install:
     - restore_cache:
       key: node-js-install-{{ checksum "pom.xml" }}
-    - run: |
-      sudo apt install curl &&
-      curl -sL https://deb.nodesource.com/setup_10.x | sudo bash - &&
-      sudo apt install nodejs
+    - run:
+        command: |
+          sudo apt install curl &&
+          curl -sL https://deb.nodesource.com/setup_10.x | sudo bash - &&
+          sudo apt install nodejs
     - save_cache: # saves the project dependencies
         paths:
         - ~/.nodejs
@@ -15,9 +16,10 @@ jobs:
   serverless-install:
     - restore_cache:
       key: serverless-install-{{ checksum "pom.xml" }}
-    - run: |
-        npm install -g serverless &&
-        serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}
+    - run:
+        command: |
+          npm install -g serverless &&
+          serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}
     - save_cache: # saves the project dependencies
         paths:
         - ~/.nodejs
@@ -30,7 +32,8 @@ jobs:
     - checkout
     - restore_cache:
         key: ncnt-api-{{ checksum "pom.xml" }}
-    - run: mvn dependency:go-offline
+    - run:
+      command: mvn dependency:go-offline
     - save_cache: # saves the project dependencies
         paths:
         - ~/.m2
