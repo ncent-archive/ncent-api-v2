@@ -51,11 +51,13 @@ jobs:
     working_directory: ~/ncnt-api
     docker: # run the steps with Docker
     - image: circleci/openjdk:8-jdk-browsers
+    steps:
     - run: mvn clean test # run the actual tests
   build-deploy-development:
     working_directory: ~/ncnt-api
     docker: # run the steps with Docker
     - image: circleci/openjdk:8-jdk-browsers
+    steps:
     - run: serverless deploy --stage development
 
 workflows:
