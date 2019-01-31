@@ -16,7 +16,7 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
     override fun findOne(user: UserAccount, requestData: RequestData, id: Int): SOAResult<UserAccount> {
         validateApiKey(user, requestData)
         return DaoService.execute {
-            val result = GetUserAccountService.execute(user.idValue)
+            val result = GetUserAccountService.execute(id)
             DaoService.throwOrReturn(result.result, result.message)
             return@execute result.data!!
         }
