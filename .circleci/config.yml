@@ -48,7 +48,7 @@ workflows:
   version: 2.1
   build-deploy:
     jobs:
-    - node-js-install:
+      - node-js-install:
         filters:
           branches:
             only: master
