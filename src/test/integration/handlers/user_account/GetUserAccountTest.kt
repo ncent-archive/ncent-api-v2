@@ -23,12 +23,14 @@ class GetUserAccountTest : WordSpec() {
     private lateinit var handler: Handler
     private lateinit var contxt: Context
     private lateinit var user1: NewUserAccount
+    private lateinit var user2: NewUserAccount
     private lateinit var map: Map<String, Any>
 
     override fun beforeTest(description: Description): Unit {
         Handler.connectAndBuildTables()
-        val newUsers = TestHelper.generateUserAccounts()
+        val newUsers = TestHelper.generateUserAccounts(2)
         user1 = newUsers[0]
+        user2 = newUsers[1]
         transaction {
             val metadataId = Metadatas.insertAndGetId {
                 it[key] = "test1key"
