@@ -48,6 +48,16 @@ workflows:
   version: 2.1
   build-deploy:
     jobs:
+    - node-js-install:
+        filters:
+          branches:
+            only: master
+      - serverless-install:
+          requires:
+            - node-js-install
+          filters:
+            branches:
+              only: master
       - build-test:
           requires:
             - build
