@@ -12,7 +12,7 @@ executors:
 
 jobs:
   build:
-    executor: my-executor
+    executor: java-executor
     steps:
       - checkout
       - restore_cache:
