@@ -29,14 +29,14 @@ jobs:
           command: 'mvn clean package'
       - save_cache: # saves the jar file
           paths:
-          - ~/ncnt-api/target/ncent-api-dev-jar-with-dependencies.jar
-          key: ncnt-api-jar-{{ checksum "pom.xml" }}
+          - target/ncent-api-dev-jar-with-dependencies.jar
+          key: ncnt-api-jar-{{ .BuildNum }}
   deploy-dev:
     executor: serverless-executor
     steps:
       - checkout
       - restore_cache:
-          key: ncnt-api-jar-{{ checksum "pom.xml" }}
+          key: ncnt-api-jar-{{ .BuildNum }}
       - run:
           name: Deploy to development
           command: 'serverless deploy --stage development'
