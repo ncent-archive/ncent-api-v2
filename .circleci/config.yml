@@ -29,7 +29,7 @@ jobs:
           command: 'mvn clean package'
       - save_cache: # saves the jar file
           paths:
-          - /target
+          - target/ncent-api-dev-jar-with-dependencies.jar
           key: ncnt-api-jar-{{ checksum "pom.xml" }}
   deploy-dev:
     executor: serverless-executor
