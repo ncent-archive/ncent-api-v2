@@ -32,7 +32,7 @@ class UserAccountLogoutTest : WordSpec() {
             map = TestHelper.buildRequest(
                 user,
                 "/user/logout",
-                "PATCH",
+                "POST",
                 mapOf(
                     Pair("firstname", "dev"),
                     Pair("lastname", "ncnt")
