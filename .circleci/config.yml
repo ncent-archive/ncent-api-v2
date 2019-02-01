@@ -1,9 +1,12 @@
 version: 2.1
 
 executors:
-  my-executor:
+  java-executor:
     docker:
       - image: circleci/openjdk:8-jdk-browsers
+    working_directory: ~/ncnt-api
+  serverless-executor:
+    docker:
       - image: amaysim/serverless:1.36.3
     working_directory: ~/ncnt-api
 
@@ -29,8 +32,11 @@ jobs:
           - /target
           key: ncnt-api-jar-{{ checksum "pom.xml" }}
   deploy-dev:
-    executor: my-executor
+    executor: serverless-executor
     steps:
+      - checkout
+      - restore_cache:
+          key: ncnt-api-jar-{{ checksum "pom.xml" }}
       - run:
           name: Configure serverless aws
           command: 'serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}'
