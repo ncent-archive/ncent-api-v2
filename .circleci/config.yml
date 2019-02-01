@@ -1,15 +1,18 @@
 version: 2.1
 
 executors:
-  my-executor:
+  java-executor:
     docker:
       - image: circleci/openjdk:8-jdk-browsers
+    working_directory: ~/ncnt-api
+  serverless-executor:
+    docker:
       - image: amaysim/serverless:1.36.3
     working_directory: ~/ncnt-api
 
 jobs:
   build:
-    executor: my-executor
+    executor: java-executor
     steps:
       - checkout
       - restore_cache:
@@ -22,56 +25,33 @@ jobs:
           - ~/.m2
           key: ncnt-api-{{ checksum "pom.xml" }}
       - run:
-          name: Package latest jar
-          command: 'mvn clean package -DskipTests=true'
+          name: Build, Test, and Package latest jar
+          command: 'mvn clean package'
       - save_cache: # saves the jar file
           paths:
-          - /target
-          key: ncnt-api-jar-{{ checksum "pom.xml" }}
-  test:
-    executor: my-executor
+          - target/ncent-api-dev-jar-with-dependencies.jar
+          key: ncnt-api-jar-{{ .BuildNum }}
+  deploy-dev:
+    executor: serverless-executor
     steps:
       - checkout
       - restore_cache:
-          key: ncnt-api-{{ checksum "pom.xml" }}
-      - restore_cache:
-          key: ncnt-api-jar-{{ checksum "pom.xml" }}
+          key: ncnt-api-jar-{{ .BuildNum }}
       - run:
-          name: Run tests
-          command: 'mvn test'
-#  deploy-dev:
-#    executor: my-executor
-#    steps:
-#      - run:
-#          name: Configure serverless aws
-#          command: 'serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY}'
-#      - run:
-#          name: Deploy to development
-#          command: 'serverless deploy --stage development'
+          name: Deploy to development
+          command: 'serverless deploy --stage development'
 
 workflows:
   version: 2.1
   build_and_test:
     jobs:
       - build
-      - test:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
-#  build_and_deploy:
-#    jobs:
-#    - build
-#    - test:
-#        requires:
-#        - build
-#        filters:
-#          branches:
-#            only: master
-#    - deploy-dev:
-#        requires:
-#          - test
-#        filters:
-#          branches:
-#            only: master
+  build_and_deploy:
+    jobs:
+    - build
+    - deploy-dev:
+        requires:
+          - build
+        filters:
+          branches:
+            only: master
