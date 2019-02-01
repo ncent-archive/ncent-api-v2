@@ -798,7 +798,7 @@ This API is called in order to begin a session for a user account
 
 #### Method
 
-PATCH
+POST
 
 #### Parameters
 
@@ -865,7 +865,7 @@ This API is called in order to begin a session for a user account
 
 #### Method
 
-PATCH
+POST
 
 #### Parameters
 
