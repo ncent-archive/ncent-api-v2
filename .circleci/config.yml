@@ -15,6 +15,8 @@ jobs:
     executor: java-executor
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/ncnt-api
       - restore_cache:
           key: ncnt-api-{{ checksum "pom.xml" }}
       - run:
@@ -27,16 +29,15 @@ jobs:
       - run:
           name: Build, Test, and Package latest jar
           command: 'mvn clean package'
-      - save_cache: # saves the jar file
-          paths:
-          - target/ncent-api-dev-jar-with-dependencies.jar
-          key: ncnt-api-jar-{{ .BuildNum }}
+      - persist_to_workspace:
+          root: .
+          paths: target/ncent-api-dev-jar-with-dependencies.jar
   deploy-dev:
     executor: serverless-executor
     steps:
       - checkout
-      - restore_cache:
-          key: ncnt-api-jar-{{ .BuildNum }}
+      - attach_workspace:
+          at: ~/ncnt-api
       - run:
           name: Deploy to development
           command: 'serverless deploy --stage development'
