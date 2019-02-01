@@ -28,7 +28,7 @@ jobs:
           key: ncnt-api-{{ checksum "pom.xml" }}
       - run:
           name: Build, Test, and Package latest jar
-          command: 'mvn clean package && ls target'
+          command: 'mvn clean compile assembly:singleg && ls target'
       - persist_to_workspace:
           root: .
           paths: target/ncent-api-dev-jar-with-dependencies.jar
