@@ -17,7 +17,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     override fun create(user: UserAccount?, requestData: RequestData): SOAResult<Challenge> {
         validateApiKey(user!!, requestData)
         return DaoService.execute {
-            val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(requestData.body["challengeNamespace"]!!.toString())
+            val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(requestData.body["challengeNamespace"]!! as String)
 
             val generateChallengeResult = GenerateChallengeService.execute(user, challengeNamespace)
             DaoService.throwOrReturn(generateChallengeResult.result, generateChallengeResult.message)
