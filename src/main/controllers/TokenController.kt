@@ -9,7 +9,7 @@ import main.daos.UserAccount
 import main.helpers.ControllerHelper.RequestData
 
 class TokenController: DefaultController<Token>(), RestController<Token, UserAccount> {
-    override fun findOne(user: UserAccount, requestData: RequestData, id: Int): SOAResult<Token> {
+    override fun findOne(user: UserAccount, requestData: RequestData, id: Int?): SOAResult<Token> {
         throw NotImplementedError()
     }
 

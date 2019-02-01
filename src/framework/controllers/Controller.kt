@@ -35,8 +35,11 @@ interface Controller<M> {
                     requestData.queryParams.containsKey("id") -> {
                         val id = requestData.queryParams["id"].toString().toIntOrNull()
 
-                        id ?: throw Exception("Id must be an integer")
-                        restController.findOne(user, requestData, id.toString().toInt())
+                        if (id == null) {
+                            restController.findOne(user, requestData, null)
+                        } else {
+                            restController.findOne(user, requestData, id.toString().toInt())
+                        }
                     }
                     else -> {
                         return restController.findAll(user, requestData)
