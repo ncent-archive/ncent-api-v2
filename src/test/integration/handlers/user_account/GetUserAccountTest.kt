@@ -62,8 +62,30 @@ class GetUserAccountTest : WordSpec() {
 
     init {
         "correct path" should {
-            "should return a valid user account" {
+            "should return a valid user account when passed a valid user id" {
                 transaction {
+                    val response = handler.handleRequest(map, contxt)
+                    response.statusCode shouldBe 200
+                    val userAccount = JsonHelper.parse<UserAccountNamespace>(response.body as String)
+
+                    userAccount.userMetadata.email shouldBe "dev0@ncnt.io"
+                    userAccount.userMetadata.metadatas.first().key shouldBe "test1key"
+                }
+            }
+
+            "should return a valid user account when passed a valid email" {
+                transaction {
+                    map = TestHelper.buildRequest(
+                            user2,
+                            "/user",
+                            "GET",
+                            null,
+                            mapOf(
+                                    Pair("id", null),
+                                    Pair("email", user1.value.userMetadata.email),
+                                    Pair("userId", user1.value.idValue.toString())
+                            )
+                    )
                     val response = handler.handleRequest(map, contxt)
                     response.statusCode shouldBe 200
                     val userAccount = JsonHelper.parse<UserAccountNamespace>(response.body as String)

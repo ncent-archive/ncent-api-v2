@@ -13,10 +13,15 @@ import main.helpers.ControllerHelper.RequestData
 import main.services.user_account.*
 
 class UserAccountController: DefaultController<UserAccount>(), RestController<UserAccount, UserAccount> {
-    override fun findOne(user: UserAccount, requestData: RequestData, id: Int): SOAResult<UserAccount> {
+    override fun findOne(user: UserAccount, requestData: RequestData, id: Int?): SOAResult<UserAccount> {
         validateApiKey(user, requestData)
         return DaoService.execute {
-            val result = GetUserAccountService.execute(id)
+            var result = SOAResult<UserAccount?>(SOAResultType.FAILURE, null)
+            if (requestData.queryParams["email"] != null) {
+                result = GetUserAccountService.execute(null, requestData.queryParams["email"] as String)
+            } else if (id != null) {
+                result = GetUserAccountService.execute(id)
+            }
             DaoService.throwOrReturn(result.result, result.message)
             return@execute result.data!!
         }

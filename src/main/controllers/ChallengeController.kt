@@ -25,7 +25,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         }
     }
 
-    override fun findOne(user: UserAccount, requestData: RequestData, id: Int): SOAResult<Challenge> {
+    override fun findOne(user: UserAccount, requestData: RequestData, id: Int?): SOAResult<Challenge> {
         validateApiKey(user, requestData)
 
         val challenge = ChallengeHelper.findChallengeById(id)

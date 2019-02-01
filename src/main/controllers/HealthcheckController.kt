@@ -25,7 +25,7 @@ class HealthcheckController: DefaultController<Healthcheck>(), RestController<He
         message = "default"
     }
 
-    override fun findOne(user: UserAccount, requestData: RequestData, id: Int): SOAResult<Healthcheck> {
+    override fun findOne(user: UserAccount, requestData: RequestData, id: Int?): SOAResult<Healthcheck> {
         return SOAResult(SOAResultType.SUCCESS, "", defaultHealthyHealthCheck)
     }
 

@@ -35,7 +35,7 @@ interface ReadableController<T, U> {
      * @param id Unique id
      * @return [T] that has that ID
      */
-    fun findOne(user: U, requestData: RequestData, id: Int): SOAResult<T> {
+    fun findOne(user: U, requestData: RequestData, id: Int?): SOAResult<T> {
         throw InvalidEndpoint()
     }
 
