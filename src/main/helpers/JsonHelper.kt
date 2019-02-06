@@ -26,10 +26,4 @@ object JsonHelper {
     inline fun <reified T> parseArray(value: String): List<T> {
         return KLAX.parseArray(value)!!
     }
-
-    fun toJsonObject(value: Any): JsonObject {
-        val string = KLAX.toJsonString(value)
-        val map = KLAX.parse<Map<String, Any?>>(string)
-        return JsonObject(map!!)
-    }
 }

@@ -1,8 +1,10 @@
 package test
 
+import com.beust.klaxon.JsonObject
 import framework.models.idValue
 import framework.services.DaoService
 import main.daos.*
+import main.helpers.JsonHelper
 import main.helpers.UserAccountHelper
 import main.services.challenge.GenerateChallengeService
 import main.services.completion_criteria.GenerateCompletionCriteriaService
@@ -18,6 +20,12 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
 object TestHelper {
+
+    fun toJsonObject(value: Any): JsonObject {
+        val string = JsonHelper.KLAX.toJsonString(value)
+        val map = JsonHelper.KLAX.parse<Map<String, Any?>>(string)
+        return JsonObject(map!!)
+    }
 
     // Used to generate a request to the api, used for integration testing
     fun buildRequest(user: NewUserAccount?, path: String, httpMethod: String, body: Map<String, Any>? = null, queryParams: Map<String, Any?>? = null): Map<String, Any> {
