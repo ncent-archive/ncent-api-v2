@@ -38,7 +38,7 @@ class ChallengeCreationTest : WordSpec() {
                 "/challenge/",
                 "POST",
                 mapOf(
-                    Pair("challengeNamespace", Klaxon().toJsonString(challengeNamespace))
+                    Pair("challengeNamespace", challengeNamespace)
                 ),
                 mapOf(
                     Pair("userId", newUser.value.idValue)
