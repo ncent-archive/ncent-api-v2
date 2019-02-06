@@ -5,7 +5,6 @@ import framework.services.DaoService
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.models.ForbiddenException
-import kotlinserverless.framework.models.NotFoundException
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
