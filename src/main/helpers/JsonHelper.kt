@@ -1,5 +1,6 @@
 package main.helpers
 
+import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 
 
@@ -18,7 +19,17 @@ object JsonHelper {
         return KLAX.parse<T>(string)!!
     }
 
+    inline fun <reified T> parse(value: JsonObject): T {
+        return KLAX.parseFromJsonObject<T>(value)!!
+    }
+
     inline fun <reified T> parseArray(value: String): List<T> {
         return KLAX.parseArray(value)!!
+    }
+
+    fun toJsonObject(value: Any): JsonObject {
+        val string = KLAX.toJsonString(value)
+        val map = KLAX.parse<Map<String, Any?>>(string)
+        return JsonObject(map!!)
     }
 }

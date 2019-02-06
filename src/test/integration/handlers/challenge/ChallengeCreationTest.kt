@@ -12,6 +12,7 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import kotlinserverless.framework.models.Handler
 import main.daos.*
+import main.helpers.JsonHelper
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.extension.ExtendWith
 import test.TestHelper
@@ -38,7 +39,7 @@ class ChallengeCreationTest : WordSpec() {
                 "/challenge/",
                 "POST",
                 mapOf(
-                    Pair("challengeNamespace", Klaxon().toJsonString(challengeNamespace))
+                    Pair("challengeNamespace", JsonHelper.toJsonObject(challengeNamespace))
                 ),
                 mapOf(
                     Pair("userId", newUser.value.idValue)
