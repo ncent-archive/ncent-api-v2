@@ -1,5 +1,6 @@
 package main.controllers
 
+import com.beust.klaxon.JsonObject
 import framework.services.DaoService
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
@@ -17,7 +18,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     override fun create(user: UserAccount?, requestData: RequestData): SOAResult<Challenge> {
         validateApiKey(user!!, requestData)
         return DaoService.execute {
-            val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(requestData.body["challengeNamespace"]!! as String)
+            val challengeNamespace = JsonHelper.parse<ChallengeNamespace>(requestData.body["challengeNamespace"]!! as JsonObject)
 
             val generateChallengeResult = GenerateChallengeService.execute(user, challengeNamespace)
             DaoService.throwOrReturn(generateChallengeResult.result, generateChallengeResult.message)
