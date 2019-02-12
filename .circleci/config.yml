@@ -41,6 +41,15 @@ jobs:
       - run:
           name: Deploy to development
           command: 'serverless deploy --stage development'
+  deploy-prod:
+    executor: serverless-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/ncnt-api
+      - run:
+          name: Deploy to production
+          command: 'serverless deploy --stage production -c ./serverless-prod.yml'
 
 workflows:
   version: 2.1
@@ -56,3 +65,9 @@ workflows:
         filters:
           branches:
             only: master
+    - deploy-prod:
+        requires:
+        - build
+        filters:
+          branches:
+            only: production
