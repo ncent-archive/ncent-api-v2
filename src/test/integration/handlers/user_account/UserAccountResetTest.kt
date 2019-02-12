@@ -32,10 +32,7 @@ class UserAccountResetTest : WordSpec() {
                     user,
                     "/user/reset",
                     "PATCH",
-                    mapOf(
-                            Pair("firstname", "dev"),
-                            Pair("lastname", "ncnt")
-                    ),
+                    null,
                     mapOf(
                             Pair("userId", user.value.idValue.toString())
                     )
