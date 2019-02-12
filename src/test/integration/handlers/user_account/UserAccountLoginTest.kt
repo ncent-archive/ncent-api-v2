@@ -32,10 +32,7 @@ class UserAccountLoginTest : WordSpec() {
                 user,
                 "/user/login",
                 "POST",
-                mapOf(
-                    Pair("firstname", "dev"),
-                    Pair("lastname", "ncnt")
-                ),
+                null,
                 mapOf(
                     Pair("userId", user.value.idValue.toString())
                 )
