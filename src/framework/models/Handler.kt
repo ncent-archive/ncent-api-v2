@@ -51,12 +51,12 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       }
     }
     catch (e: MyException) {
-      log(e, e.message!!)
+      log(e, e.message)
       status = e.code
       body = e.message
     }
     catch (e: Throwable) {
-      log(e, e.message!!)
+      log(e, e.message)
       status = 500
       body = "Internal server error " + e.message.toString() + "\n" + e.stackTrace.map { "\n"+it.toString() }
     }
@@ -75,7 +75,16 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     inline fun build(block: ApiGatewayResponse.Builder.() -> Unit) = ApiGatewayResponse.Builder().apply(block).build()
     private val LOG = LogManager.getLogger(this::class.java)!!
     val objectMapper = ObjectMapper()
-    private val bugsnag = Bugsnag(System.getenv("bugsnag_api_key") ?: "cad9f1eff4ebf70b7d26b18931964796")
+
+    private var bugsnagInstance: Bugsnag? = null
+    private fun bugsnag(): Bugsnag {
+      if(bugsnagInstance == null) {
+        bugsnagInstance = Bugsnag(System.getenv("bugsnag_api_key") ?: "local")
+        bugsnagInstance!!.setNotifyReleaseStages("production", "development")
+        bugsnagInstance!!.setReleaseStage(System.getenv("release_stage") ?: "local")
+      }
+      return bugsnagInstance!!
+    }
 
     private val TABLES = arrayOf(
       Healthchecks,
@@ -107,7 +116,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     fun log(e: Throwable?, message: String?) {
       if(e != null) {
         LOG.error(message, e)
-        bugsnag.notify(e)
+        bugsnag().notify(e)
       } else if(message != null) {
         LOG.info(message)
       }

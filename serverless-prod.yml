@@ -35,6 +35,8 @@ provider:
     database_driver: ${ssm:/ncnt/production/database/driver}
     database_user: ${ssm:/ncnt/production/database/user}
     database_password: ${ssm:/ncnt/production/database/password~true}
+    bugsnag_api_key: ${ssm:/ncnt/production/bugsnag/apikey}
+    release_stage: ${ssm:/ncnt/production/release_stage}
   #      database_url: jdbc:mysql://localhost:3306/ncnt
   #      database_driver: com.mysql.jdbc.Driver
   #      database_user: root

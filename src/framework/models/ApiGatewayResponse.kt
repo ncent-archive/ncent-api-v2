@@ -2,10 +2,8 @@ package kotlinserverless.framework.models
 
 import com.beust.klaxon.Json
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.BaseObject
 import framework.services.DaoService
-import org.apache.log4j.LogManager
 import java.util.*
 
 
@@ -32,7 +30,7 @@ class ApiGatewayResponse(
       var body = try {
         getBody(rawBody)
       } catch(e: IllegalStateException) {
-        Handler.log(e, e.message!!)
+        Handler.log(e, e.message)
         DaoService.execute {
           getBody(rawBody)
         }.data!!

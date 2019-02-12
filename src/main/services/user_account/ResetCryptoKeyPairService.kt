@@ -36,7 +36,7 @@ object ResetCryptoKeyPairService {
 
             SOAResult(SOAResultType.SUCCESS, null, keypairResult.data!!)
         } catch(e: Exception) {
-            Handler.log(e, e.message!!)
+            Handler.log(e, e.message)
             SOAResult(SOAResultType.FAILURE, e.message, null)
         }
     }

@@ -21,7 +21,7 @@ object UpdateUserService {
             }
             SOAResult(SOAResultType.SUCCESS, null, caller.userMetadata)
         } catch(e: Exception) {
-            Handler.log(e, e.message!!)
+            Handler.log(e, e.message)
             SOAResult(SOAResultType.FAILURE, e.message, null)
         }
     }

@@ -46,7 +46,7 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
                 ) as SOAResult<Any>
             }
             catch(e: InvocationTargetException) {
-                Handler.log(e, e.message!!)
+                Handler.log(e, e.message)
                 throw e.targetException
             }
 

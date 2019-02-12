@@ -42,7 +42,7 @@ object ResetApiCredsService {
 
             SOAResult(SOAResultType.SUCCESS, null, apiCredNamespace)
         } catch(e: Exception) {
-            Handler.log(e, e.message!!)
+            Handler.log(e, e.message)
             SOAResult(SOAResultType.FAILURE, e.message, null)
         }
     }

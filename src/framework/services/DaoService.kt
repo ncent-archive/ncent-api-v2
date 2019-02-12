@@ -19,19 +19,19 @@ object DaoService {
             result.data = tx
             result.result = SOAResultType.SUCCESS
         } catch(e: SoAErrorException) {
-            Handler.log(e, e.message!!)
+            Handler.log(e, e.message)
             println("There was service error: " + e.message)
             result.message = if(e.message != null) e.message else e.toString()
         } catch(e: SoAFailureException) {
-            Handler.log(e, e.message!!)
+            Handler.log(e, e.message)
             println("There was service failure: " + e.message)
             result.message = if(e.message != null) e.message else e.toString()
         } catch(e: SQLException) {
-            Handler.log(e, e.message!!)
+            Handler.log(e, e.message)
             println("There was a SQL error with a DaoService execution: " + e.message)
             result.message = if(e.message != null) e.message else e.toString()
         } catch(e: Throwable) {
-            Handler.log(e, e.message!!)
+            Handler.log(e, e.message)
             println("There was a general error with a DaoService execution: " + e.message)
             result.message = if(e.message != null) e.message else e.toString()
         } finally {

@@ -24,7 +24,7 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 					func.call(restController, user, requestData) as SOAResult<T>
 				}
 				catch(e: InvocationTargetException) {
-					Handler.log(e, e.message!!)
+					Handler.log(e, e.message)
 					throw e.targetException
 				}
 				catch(e: Exception) {
