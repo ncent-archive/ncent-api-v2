@@ -1,12 +1,13 @@
 package kotlinserverless.framework.models
 
-import kotlinserverless.framework.models.ApiGatewayResponse.Companion.LOG
 import kotlinserverless.framework.dispatchers.RequestDispatcher
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
+import com.bugsnag.Bugsnag
+import com.fasterxml.jackson.databind.ObjectMapper
 import main.daos.*
 import org.apache.log4j.BasicConfigurator
-import org.apache.log4j.Logger
+import org.apache.log4j.LogManager
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -50,17 +51,17 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       }
     }
     catch (e: MyException) {
-      LOG.error(e.message, e)
+      log(e, e.message!!)
       status = e.code
       body = e.message
     }
     catch (e: Throwable) {
-      LOG.error(e.message, e)
+      log(e, e.message!!)
       status = 500
       body = "Internal server error " + e.message.toString() + "\n" + e.stackTrace.map { "\n"+it.toString() }
     }
     finally {
-      return ApiGatewayResponse.build {
+      return build {
         statusCode = status
         rawBody = body
       }
@@ -70,6 +71,11 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
   companion object {
     lateinit var db: Database
     lateinit var connection: Connection
+
+    inline fun build(block: ApiGatewayResponse.Builder.() -> Unit) = ApiGatewayResponse.Builder().apply(block).build()
+    private val LOG = LogManager.getLogger(this::class.java)!!
+    val objectMapper = ObjectMapper()
+    private val bugsnag = Bugsnag(System.getenv("bugsnag_api_key") ?: "cad9f1eff4ebf70b7d26b18931964796")
 
     private val TABLES = arrayOf(
       Healthchecks,
@@ -98,15 +104,20 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       UsersMetadata
     )
 
+    fun log(e: Throwable?, message: String?) {
+      if(e != null) {
+        LOG.error(message, e)
+        bugsnag.notify(e)
+      } else if(message != null) {
+        LOG.info(message)
+      }
+    }
+
     fun connectAndBuildTables(): Database {
       db = connectToDatabase()
       dropTables()
       buildTables()
       return db
-    }
-
-    fun log(): Logger {
-      return LOG
     }
 
     private fun buildTables(test: Boolean = false) {

@@ -1,9 +1,6 @@
 package framework.services
 
-import kotlinserverless.framework.models.ApiGatewayResponse
-import kotlinserverless.framework.models.SoAErrorException
-import kotlinserverless.framework.models.SoAFailureException
-import kotlinserverless.framework.models.UnauthorizedError
+import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -22,19 +19,19 @@ object DaoService {
             result.data = tx
             result.result = SOAResultType.SUCCESS
         } catch(e: SoAErrorException) {
-            ApiGatewayResponse.LOG.error(e.message, e)
+            Handler.log(e, e.message!!)
             println("There was service error: " + e.message)
             result.message = if(e.message != null) e.message else e.toString()
         } catch(e: SoAFailureException) {
-            ApiGatewayResponse.LOG.error(e.message, e)
+            Handler.log(e, e.message!!)
             println("There was service failure: " + e.message)
             result.message = if(e.message != null) e.message else e.toString()
         } catch(e: SQLException) {
-            ApiGatewayResponse.LOG.error(e.message, e)
+            Handler.log(e, e.message!!)
             println("There was a SQL error with a DaoService execution: " + e.message)
             result.message = if(e.message != null) e.message else e.toString()
         } catch(e: Throwable) {
-            ApiGatewayResponse.LOG.error(e.message, e)
+            Handler.log(e, e.message!!)
             println("There was a general error with a DaoService execution: " + e.message)
             result.message = if(e.message != null) e.message else e.toString()
         } finally {

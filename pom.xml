@@ -164,7 +164,6 @@
            <version>5.1.6</version>
        </dependency>
 
-       <!-- https://mvnrepository.com/artifact/com.beust/klaxon -->
        <dependency>
            <groupId>com.beust</groupId>
            <artifactId>klaxon</artifactId>
@@ -175,6 +174,12 @@
            <groupId>org.apache.maven.plugins</groupId>
            <artifactId>maven-dependency-plugin</artifactId>
            <version>3.1.1</version>
+       </dependency>
+
+       <dependency>
+           <groupId>com.bugsnag</groupId>
+           <artifactId>bugsnag</artifactId>
+           <version>[3.0,4.0)</version>
        </dependency>
 
    </dependencies>
