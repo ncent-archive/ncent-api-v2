@@ -25,10 +25,10 @@ provider:
   region: ${opt:region, 'us-west-1'}
   vpc:
     securityGroupIds:
-      - sg-03e1b070d826d2767
+      - ${ssm:/ncnt/development/securitygroup} # sg-03e1b070d826d2767
     subnetIds:
-      - subnet-00173f7ae2ead86ec
-      - subnet-0e1d69b5214c618df
+      - ${ssm:/ncnt/development/subnet/1} # subnet-00173f7ae2ead86ec
+      - ${ssm:/ncnt/development/subnet/2} # subnet-0e1d69b5214c618df
   #    Define function environment variables here
   environment:
     database_url: ${ssm:/ncnt/development/database/url~true}
