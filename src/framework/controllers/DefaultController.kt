@@ -24,11 +24,11 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 					func.call(restController, user, requestData) as SOAResult<T>
 				}
 				catch(e: InvocationTargetException) {
+					Handler.log(e, e.message)
 					throw e.targetException
 				}
 				catch(e: Exception) {
-					println("There was an error routing!")
-					println(e)
+					Handler.log(e, "There was an error routing")
 					super.defaultRouting(incls, outcls, requestData, user, restController)
 				}
 			}

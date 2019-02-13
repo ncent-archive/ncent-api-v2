@@ -1,5 +1,6 @@
 package main.services.user
 
+import kotlinserverless.framework.models.Handler
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
@@ -20,6 +21,7 @@ object UpdateUserService {
             }
             SOAResult(SOAResultType.SUCCESS, null, caller.userMetadata)
         } catch(e: Exception) {
+            Handler.log(e, e.message)
             SOAResult(SOAResultType.FAILURE, e.message, null)
         }
     }

@@ -1,6 +1,7 @@
 package main.services.user_account
 
 import framework.models.idValue
+import kotlinserverless.framework.models.Handler
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
@@ -26,20 +27,22 @@ object ResetApiCredsService {
 
             // TODO log or error result?
             val transactionResult = GenerateTransactionService.execute(
-                    TransactionNamespace(
-                            userAccount.cryptoKeyPair.publicKey,
-                            null,
-                            ActionNamespace(
-                                    ActionType.UPDATE,
-                                    userAccount.idValue,
-                                    UserAccount::class.simpleName!!
-                            ),
-                            null, null
-                    )
+                TransactionNamespace(
+                    userAccount.cryptoKeyPair.publicKey,
+                    null,
+                    ActionNamespace(
+                        ActionType.UPDATE,
+                        userAccount.idValue,
+                        UserAccount::class.simpleName!!
+                    ),
+                    null, null
+                )
             )
+            Handler.log(null, transactionResult.message)
 
             SOAResult(SOAResultType.SUCCESS, null, apiCredNamespace)
         } catch(e: Exception) {
+            Handler.log(e, e.message)
             SOAResult(SOAResultType.FAILURE, e.message, null)
         }
     }

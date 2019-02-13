@@ -2,12 +2,8 @@ package kotlinserverless.framework.models
 
 import com.beust.klaxon.Json
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
-import framework.models.BaseIntEntity
 import framework.models.BaseObject
 import framework.services.DaoService
-import org.apache.log4j.LogManager
-import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
 
@@ -21,11 +17,6 @@ class ApiGatewayResponse(
         val headers: Map<String, String>? = Collections.emptyMap(),
         @Json("isBase64Encoded") @JsonProperty("isBase64Encoded") val isBase64Encoded: Boolean = false
 ): Response {
-  companion object {
-    inline fun build(block: Builder.() -> Unit) = Builder().apply(block).build()
-    val LOG = LogManager.getLogger(this::class.java) //TODO: figure out how to user the correct class name.
-    val objectMapper = ObjectMapper()
-  }
 
   /**
    * Uses the Builder pattern to create the response
@@ -39,13 +30,14 @@ class ApiGatewayResponse(
       var body = try {
         getBody(rawBody)
       } catch(e: IllegalStateException) {
+        Handler.log(e, e.message)
         DaoService.execute {
           getBody(rawBody)
         }.data!!
       }
 
       if(body != null && body !is String)
-        body = objectMapper.writeValueAsString(body)
+        body = Handler.objectMapper.writeValueAsString(body)
       return ApiGatewayResponse(statusCode, body, headers)
     }
 
