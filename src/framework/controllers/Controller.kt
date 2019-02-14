@@ -24,11 +24,10 @@ interface Controller<M> {
         val method = (requestData.request.input[ControllerHelper.HTTP_METHOD] as String).toLowerCase()
         if(method == ControllerHelper.HTTP_POST)
             return restController.create(user, requestData)
-        try {
-            user!!
-        } catch(e: NullPointerException) {
-            throw NullPointerException("You must pass the user authentication header and value in order to use this.")
-        }
+
+        if(user == null)
+            throw NotFoundException("The authentication header must include valid authentication for a valid user.")
+
         return when(method) {
             ControllerHelper.HTTP_GET -> {
                 when {

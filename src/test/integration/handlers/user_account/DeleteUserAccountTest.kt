@@ -46,8 +46,7 @@ class DeleteUserAccountTest : WordSpec() {
             "should delete the user and return success" {
                 transaction {
                     val response = handler.handleRequest(map, contxt)
-                    response.statusCode shouldBe 200
-                    response.body shouldBe null
+                    response.statusCode shouldBe 204
                 }
             }
         }

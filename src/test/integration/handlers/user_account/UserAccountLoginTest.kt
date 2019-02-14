@@ -31,11 +31,7 @@ class UserAccountLoginTest : WordSpec() {
             map = TestHelper.buildRequest(
                 user,
                 "/user/login",
-                "POST",
-                null,
-                mapOf(
-                    Pair("userId", user.value.idValue.toString())
-                )
+                "POST"
             )
         }
     }

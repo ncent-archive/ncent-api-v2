@@ -49,13 +49,13 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
         }
     }
 
-    override fun delete(user: UserAccount, requestData: RequestData): SOAResult<Boolean> {
+    override fun delete(user: UserAccount, requestData: RequestData): SOAResult<Boolean?> {
         validateApiKey(user!!, requestData)
 
         return DaoService.execute {
             val result = DeleteUserAccountService.execute(user)
             DaoService.throwOrReturn(result.result, result.message)
-            return@execute result.data!!
+            return@execute result.data
         }
     }
 
