@@ -106,6 +106,13 @@ functions:
         path: /user
         method: post
 
+  user_delete:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - http:
+        path: /user
+        method: delete
+
   user_login:
     handler: kotlinserverless.framework.models.Handler
     events:
