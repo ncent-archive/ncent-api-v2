@@ -4,6 +4,7 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.ReferenceOption
 
 /**
  * RewardPool; model representing transactions related to a particular reward
@@ -29,10 +30,10 @@ class RewardPool(id: EntityID<Int>) : BaseIntEntity(id, RewardPools) {
 }
 
 object RewardPools : BaseIntIdTable("reward_pools") {
-    val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
+    val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs, onDelete = ReferenceOption.CASCADE)
 }
 
 object RewardsToTransactions : BaseIntIdTable("rewards_to_transactions") {
-    val rewardPool = reference("reward_pool_to_transaction", RewardPools).primaryKey()
-    val transactions = reference("transaction_to_reward", Transactions).primaryKey()
+    val rewardPool = reference("reward_pool_to_transaction", RewardPools, onDelete = ReferenceOption.CASCADE).primaryKey()
+    val transactions = reference("transaction_to_reward", Transactions, onDelete = ReferenceOption.CASCADE).primaryKey()
 }

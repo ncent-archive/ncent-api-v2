@@ -5,6 +5,7 @@ import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import framework.models.idValue
 import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.joda.time.DateTime
 
 /**
@@ -71,7 +72,7 @@ object ChallengeSettings : BaseIntIdTable("challenge_settings") {
     var sponsorName = varchar("sponsorName", 100)
     var expiration = datetime("expiration")
     var shareExpiration = datetime("shareExpiration")
-    var admin = reference("admin", UserAccounts)
+    var admin = reference("admin", UserAccounts, onDelete = ReferenceOption.CASCADE)
     var offChain = bool("off_chain").default(false)
     var maxShares = integer("max_shares")
     var maxRewards = integer("max_rewards").default(1).nullable()

@@ -41,6 +41,12 @@ abstract class BaseIntEntityClass<E : BaseIntEntity>(table: BaseIntIdTable) : In
                 } catch (e: Exception) {
                     //nothing much to do here
                 }
+            } else if (action.changeType == EntityChangeType.Removed) {
+                try {
+                    action.toEntity(this)?.deletedAt = currentUtc()
+                } catch (e: Exception) {
+                    //nothing much to do here
+                }
             }
         }
     }

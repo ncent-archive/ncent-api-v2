@@ -5,6 +5,7 @@ import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import framework.models.BaseObject
 import org.jetbrains.exposed.dao.*
+import org.jetbrains.exposed.sql.ReferenceOption
 
 /**
  * User Accounts will be used exclusively by the API in order to manage
@@ -36,7 +37,7 @@ class UserAccount(id: EntityID<Int>) : BaseIntEntity(id, UserAccounts) {
 }
 
 object UserAccounts : BaseIntIdTable("user_accounts") {
-    val userMetadata = reference("user", Users)
+    val userMetadata = reference("user", Users, onDelete = ReferenceOption.CASCADE)
     val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
     val apiCreds = reference("api_cred", ApiCreds)
     val session = reference("session", Sessions)

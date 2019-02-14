@@ -2,6 +2,7 @@ package main.daos
 
 import framework.models.*
 import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 
 /**
@@ -41,13 +42,13 @@ class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
 object Transactions : BaseIntIdTable("transactions") {
     val from = varchar("from", 256)
     val to = varchar("to", 256).nullable()
-    val action = reference("action", Actions)
-    val previousTransaction = optReference("previous_transaction", Transactions)
+    val action = reference("action", Actions, onDelete = ReferenceOption.CASCADE)
+    val previousTransaction = optReference("previous_transaction", Transactions, onDelete = ReferenceOption.CASCADE)
 }
 
 object TransactionsMetadata : Table("transactions_to_metadatas") {
-    val transaction = reference("transaction_to_metadatas", Transactions).primaryKey()
-    val metadata = reference("metadata_to_transaction", Metadatas).primaryKey()
+    val transaction = reference("transaction_to_metadatas", Transactions, onDelete = ReferenceOption.CASCADE).primaryKey()
+    val metadata = reference("metadata_to_transaction", Metadatas, onDelete = ReferenceOption.CASCADE).primaryKey()
 }
 
 data class TransactionNamespace(val from: String?=null, val to: String?=null, val action: ActionNamespace?=null, val previousTransaction: Int?=null, val metadatas: Array<MetadatasNamespace>? = null)

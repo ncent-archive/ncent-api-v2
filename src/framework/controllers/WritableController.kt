@@ -35,7 +35,7 @@ interface WritableController<T, U> {
      * @param user [U] User who is requesting (to verify permissions)
      * @param id Unique ID of the [T]
      */
-    fun delete(user: U, requestData: RequestData, id: Int): SOAResult<T> {
+    fun delete(user: U, requestData: RequestData): SOAResult<Boolean> {
         throw InvalidEndpoint()
     }
 }
