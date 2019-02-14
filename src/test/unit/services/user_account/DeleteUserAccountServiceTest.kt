@@ -24,7 +24,7 @@ class DeleteUserAccountServiceTest : WordSpec() {
 
     init {
         "calling execute with a valid user account" should {
-            "return a success result and a deleted user account" {
+            "return a success result" {
                 transaction {
                     val user = GenerateUserAccountService.execute("dev@ncnt.io", "dev", "ncnt").data!!.value
                     val result = DeleteUserAccountService.execute(user)
