@@ -4,6 +4,7 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.ReferenceOption
 
 /**
  * Representation of a TokenType
@@ -33,7 +34,7 @@ class TokenType(id: EntityID<Int>) : BaseIntEntity(id, TokenTypes) {
 
 object TokenTypes : BaseIntIdTable("token_types") {
     val name = varchar("name", 100).uniqueIndex()
-    val parentToken = reference("parent_token", TokenTypes).nullable()
+    val parentToken = reference("parent_token", TokenTypes, onDelete = ReferenceOption.CASCADE).nullable()
     val parentTokenConversionRate = double("parent_token_conversion_rate").nullable()
 }
 

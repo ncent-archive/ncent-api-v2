@@ -5,6 +5,7 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.*
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 
 /**
@@ -40,7 +41,7 @@ object Users : BaseIntIdTable("users") {
 }
 
 object UsersMetadata : Table("users_to_metadatas") {
-	val user = reference("user_to_metadatas", Users).primaryKey()
-	val metadata = reference("metadata_to_transaction", Metadatas).primaryKey()
+	val user = reference("user_to_metadatas", Users, onDelete = ReferenceOption.CASCADE).primaryKey()
+	val metadata = reference("metadata_to_transaction", Metadatas, onDelete = ReferenceOption.CASCADE).primaryKey()
 }
 data class UserNamespace(val email: String, val firstname: String, val lastname: String, val metadatas: Array<MetadatasNamespace> = arrayOf())

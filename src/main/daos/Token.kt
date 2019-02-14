@@ -4,6 +4,7 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.ReferenceOption
 
 /**
  * Representation of a Token -- used when transfering/sharing tokens via transactions
@@ -28,7 +29,7 @@ class Token(id: EntityID<Int>) : BaseIntEntity(id, Tokens) {
 
 object Tokens : BaseIntIdTable("tokens") {
     val amount = integer("amount")
-    val tokenType = reference("token_type", TokenTypes)
+    val tokenType = reference("token_type", TokenTypes, onDelete = ReferenceOption.CASCADE)
 }
 
 data class TokenNamespace(val amount: Int, val tokenType: TokenTypeNamespace)

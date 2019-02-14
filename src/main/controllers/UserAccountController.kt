@@ -1,6 +1,5 @@
 package main.controllers
 
-import framework.models.idValue
 import framework.services.DaoService
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
@@ -45,6 +44,16 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
                 requestData.body["email"]!! as String,
                 requestData.body["firstname"]!! as String,
                 requestData.body["lastname"]!! as String)
+            DaoService.throwOrReturn(result.result, result.message)
+            return@execute result.data!!
+        }
+    }
+
+    override fun delete(user: UserAccount, requestData: RequestData): SOAResult<Boolean> {
+        validateApiKey(user!!, requestData)
+
+        return DaoService.execute {
+            val result = DeleteUserAccountService.execute(user)
             DaoService.throwOrReturn(result.result, result.message)
             return@execute result.data!!
         }

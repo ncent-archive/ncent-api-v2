@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.*
 import main.services.transaction.GetTransactionsService
 import org.jetbrains.exposed.dao.*
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
@@ -227,8 +228,8 @@ class EmailToChallengeBalanceList(val challengeId: Int, val emailToChallengeBala
 }
 
 object Challenges : BaseIntIdTable("challenges") {
-    val parentChallenge = reference("parent_challenge", Challenges).nullable()
-    val challengeSettings = reference("challenge_settings", ChallengeSettings)
+    val parentChallenge = reference("parent_challenge", Challenges, onDelete = ReferenceOption.CASCADE).nullable()
+    val challengeSettings = reference("challenge_settings", ChallengeSettings, onDelete = ReferenceOption.CASCADE)
     val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
     val distributionFeeReward = reference("distribution_fee_reward", Rewards)
     val completionCriteria = reference("completion_criteria", CompletionCriterias)
@@ -251,12 +252,12 @@ class SubChallenge(id: EntityID<Int>) : BaseIntEntity(id, SubChallenges) {
 data class SubChallengeNamespace(val subChallengeId: Int?, val type: String?)
 
 object ChallengeToSubChallenges : BaseIntIdTable("challenge_to_sub_challenges") {
-    val challenge = reference("challenge_to_sub_challenge", Challenges).primaryKey()
-    val subChallenge = reference("sub_challenge_to_challenge", SubChallenges).primaryKey()
+    val challenge = reference("challenge_to_sub_challenge", Challenges, onDelete = ReferenceOption.CASCADE).primaryKey()
+    val subChallenge = reference("sub_challenge_to_challenge", SubChallenges, onDelete = ReferenceOption.CASCADE).primaryKey()
 }
 
 object SubChallenges : BaseIntIdTable("sub_challenge") {
-    val subChallenge = reference("sub_challenge_to_challenge", Challenges).primaryKey()
+    val subChallenge = reference("sub_challenge_to_challenge", Challenges, onDelete = ReferenceOption.CASCADE).primaryKey()
     val type = enumeration("sub_challenge_type", SubChallengeType::class)
 }
 

@@ -4,6 +4,7 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 import org.joda.time.DateTime
 
@@ -33,13 +34,13 @@ class CompletionCriteria(id: EntityID<Int>) : BaseIntEntity(id, CompletionCriter
 }
 
 object PrerequisiteChallenge : Table("prerequisite_challenge") {
-    var completionCriteria = reference("completion_criteria_to_prereq", CompletionCriterias).primaryKey()
-    var prereqChallenge = reference("prereq_to_completion_criteria", Challenges).primaryKey()
+    var completionCriteria = reference("completion_criteria_to_prereq", CompletionCriterias, onDelete = ReferenceOption.CASCADE).primaryKey()
+    var prereqChallenge = reference("prereq_to_completion_criteria", Challenges, onDelete = ReferenceOption.CASCADE).primaryKey()
 }
 
 object CompletionCriterias : BaseIntIdTable("completion_criterias") {
     val address = varchar("address", 256)
-    val reward = reference("reward", Rewards)
+    val reward = reference("reward", Rewards, onDelete = ReferenceOption.CASCADE)
 }
 
 data class CompletionCriteriaNamespace(val address: String?, val reward: RewardNamespace, val prereq: List<Int> = listOf())

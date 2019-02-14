@@ -50,7 +50,7 @@ interface Controller<M> {
                 restController.update(user, requestData)
             }
             ControllerHelper.HTTP_DELETE -> {
-                restController.delete(user, requestData, requestData.body["id"].toString().toInt())
+                restController.delete(user, requestData)
             }
             ControllerHelper.HTTP_PATCH -> {
                 restController.update(user, requestData)
