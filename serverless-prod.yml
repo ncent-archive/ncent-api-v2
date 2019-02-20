@@ -75,202 +75,202 @@ functions:
   user:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /user_test/hello
         method: get
+    - schedule: rate(10 minutes)
 
   health:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /health/health
         method: get
+    - schedule: rate(10 minutes)
 
   dbhealth:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /dbhealth/health
         method: get
+    - schedule: rate(10 minutes)
 
   user_get:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /user
         method: get
+    - schedule: rate(10 minutes)
 
   user_create:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /user
         method: post
+    - schedule: rate(10 minutes)
 
   user_login:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /user/login
         method: post
+    - schedule: rate(10 minutes)
 
   user_logout:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /user/logout
         method: post
+    - schedule: rate(10 minutes)
 
   user_reset:
     handler: kotlinserverless.framework.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /user/reset
         method: patch
+    - schedule: rate(10 minutes)
 
   token_get:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /token
         method: get
+    - schedule: rate(10 minutes)
 
   tokens_get:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /tokens
         method: get
+    - schedule: rate(10 minutes)
 
   token_create:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /token
         method: post
+    - schedule: rate(10 minutes)
 
   token_transfer:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /token/transfer
         method: post
+    - schedule: rate(10 minutes)
 
   reward_pool:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /reward/pool
         method: post
+    - schedule: rate(10 minutes)
 
   reward_create:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /reward
         method: post
+    - schedule: rate(10 minutes)
 
   completion_create:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /completion
         method: post
+    - schedule: rate(10 minutes)
 
   completion_complete:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /completion
         method: put
+    - schedule: rate(10 minutes)
 
   transaction:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /transaction
         method: post
+    - schedule: rate(10 minutes)
 
   challenge_create:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /challenge
         method: post
+    - schedule: rate(10 minutes)
 
   challenge_get:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /challenge
         method: get
+    - schedule: rate(10 minutes)
 
   challenges_get:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /challenges
         method: get
+    - schedule: rate(10 minutes)
 
   challenge_expire:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /challenge/expire
         method: put
+    - schedule: rate(10 minutes)
 
   challenge_invalidate:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /challenge/invalidate
         method: put
+    - schedule: rate(10 minutes)
 
   challenge_validate:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /challenge/validate
         method: put
+    - schedule: rate(10 minutes)
 
   challenge_complete:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /challenge/complete
         method: put
+    - schedule: rate(10 minutes)
 
   challenge_share:
     handler: kotlinserverless.framework.models.Handler
     events:
-    - schedule: rate(10 minutes)
     - http:
         path: /challenge/share
         method: put
+    - schedule: rate(10 minutes)
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
