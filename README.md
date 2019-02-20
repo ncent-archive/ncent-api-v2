@@ -101,7 +101,7 @@ NOTE: Make sure you're using Java 8 (v1.8.*)
 Feel free to create merge requests
 
 ## Author
-Arya Soltanieh (@lostcodingsomewhere)
+[Arya Soltanieh](https://github.com/lostcodingsomewhere)
 
 Contributions by:
-Adam Foosner (@nucat176)
+- [Adam Foosner](https://github.com/nucat176)
