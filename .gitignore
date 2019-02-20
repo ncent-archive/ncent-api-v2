@@ -6,6 +6,7 @@ target
 .classpath
 .idea
 *.iml
+/node_modules/
 
 # Package Files
 *.jar
