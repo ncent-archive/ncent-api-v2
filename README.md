@@ -5,11 +5,12 @@
  * [Deploying](#Deploying)
  * [CI/CD](#CI/CD)
  * [Contribute](#Contributing)
+ * [Contributors](#Contributors)
  * [Author](#Author)
 
 ## Overview
 
-- nCent Api
+- [nCent](https://ncent.io/) Api
 - This api is to be used to interact with the nCent protocol.
 - Currently the logic is running via a traditional application structure.
     - We will be moving most of the protocol logic into a blockchain
@@ -98,10 +99,13 @@ NOTE: Make sure you're using Java 8 (v1.8.*)
     - after any deployment, postman tests will get triggered
    
 ## Contributing
-Feel free to create merge requests
+- Feel free to create pull requests in your own branch, include descriptions and tests.
+- Contact info: [nCent](mailto:as@ncnt.io,kk@ncnt.io,af@ncnt.io)
+
+## Contributors
+Contributions by:
+- [Adam Foosner](https://github.com/nucat176)
+- [Arya Soltanieh](https://github.com/lostcodingsomewhere)
 
 ## Author
 [Arya Soltanieh](https://github.com/lostcodingsomewhere)
-
-Contributions by:
-- [Adam Foosner](https://github.com/nucat176)
