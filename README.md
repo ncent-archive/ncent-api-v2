@@ -3,7 +3,7 @@
  * [Overview](#Overview)
  * [Installation](#Install)
  * [Deploying](#Deploying)
- * [CI/CD](#Continuous deployment and integration)
+ * [CI/CD](#CI/CD)
  * [Contribute](#Contributing)
  * [Author](#Author)
 
@@ -89,7 +89,7 @@ NOTE: Make sure you're using Java 8 (v1.8.*)
     ./start.sh local
     ./start.sh production
     ```
-## Continuous deployment and integration
+## CI/CD
 - Using [circleci](https://circleci.com/docs/2.0/first-steps/#section=getting-started) you can setup continuous integration and deployment. Look at /.circleci/config.yml
 - Current configuration depends on the following:
     - all new pull requests will auto build and test
@@ -101,4 +101,7 @@ NOTE: Make sure you're using Java 8 (v1.8.*)
 Feel free to create merge requests
 
 ## Author
-Arya Soltanieh
+Arya Soltanieh (@lostcodingsomewhere)
+
+Contributions by:
+Adam Foosner (@nucat176)

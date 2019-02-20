@@ -50,6 +50,25 @@ jobs:
       - run:
           name: Deploy to production
           command: 'serverless deploy --stage production -c ./serverless-prod.yml'
+  postman-dev:
+    executor: java-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/ncnt-api
+      - restore_cache:
+          key: postman-dev-{{ checksum "./src/test/nCent-API.postman_collection.json" }}
+      - run:
+          name: Get postman dependancies
+          command: 'npm i -g newman'
+      - save_cache: # saves the project dependencies
+          paths:
+          - ~/ncnt-api/node_modules
+          key: postman-dev-{{ checksum "~/ncnt-api/src/test/nCent-API.postman_collection.json" }}
+      - run:
+          name: Run postman against dev env
+          command: 'postman ~/ncnt-api/src/test/nCent-API.postman_collection.json'
+
 
 workflows:
   version: 2.1
