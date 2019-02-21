@@ -76,9 +76,9 @@ functions:
     handler: kotlinserverless.framework.models.Handler
     events:
     - schedule: rate(10 minutes)
-      - http:
-          path: /user_test/hello
-          method: get
+    - http:
+        path: /user_test/hello
+        method: get
   health:
     handler: kotlinserverless.framework.models.Handler
     events:
