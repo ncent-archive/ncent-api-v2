@@ -16,7 +16,6 @@ import org.jetbrains.exposed.sql.ReferenceOption
  * @property userMetadata UserMetadata
  * @property cryptoKeyPair CryptoKeyPair
  * @property apiCreds ApiCreds
- * @property session Sessions
  */
 class UserAccount(id: EntityID<Int>) : BaseIntEntity(id, UserAccounts) {
     companion object : BaseIntEntityClass<UserAccount>(UserAccounts)
@@ -24,14 +23,12 @@ class UserAccount(id: EntityID<Int>) : BaseIntEntity(id, UserAccounts) {
     var userMetadata by User referencedOn UserAccounts.userMetadata
     var cryptoKeyPair by CryptoKeyPair referencedOn UserAccounts.cryptoKeyPair
     var apiCreds by ApiCred referencedOn UserAccounts.apiCreds
-    var session by Session referencedOn UserAccounts.session
 
     override fun toMap(): MutableMap<String, Any?> {
         var map = super.toMap()
         map.put("userMetadata", userMetadata.toMap())
         map.put("cryptoKeyPair", cryptoKeyPair.toMap())
         map.put("apiCreds", apiCreds.toMap())
-        map.put("session", session.toMap())
         return map
     }
 }
@@ -40,10 +37,9 @@ object UserAccounts : BaseIntIdTable("user_accounts") {
     val userMetadata = reference("user", Users, onDelete = ReferenceOption.CASCADE)
     val cryptoKeyPair = reference("crypto_key_pair", CryptoKeyPairs)
     val apiCreds = reference("api_cred", ApiCreds)
-    val session = reference("session", Sessions)
 }
 
-data class UserAccountNamespace(val userMetadata: UserNamespace, val cryptoKeyPair: CryptoKeyPairNamespace, val apiCreds: ApiCredNamespace, val session: SessionNamespace)
+data class UserAccountNamespace(val userMetadata: UserNamespace, val cryptoKeyPair: CryptoKeyPairNamespace, val apiCreds: ApiCredNamespace)
 
 data class NewUserAccountNamespace(val value: UserAccountNamespace, val privateKey: String, val secretKey: String)
 

@@ -59,45 +59,6 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
         }
     }
 
-    fun login(user: UserAccount?, requestData: RequestData): SOAResult<UserAccount> {
-        validateApiKey(user!!, requestData)
-
-        val result = SOAResult<UserAccount>(SOAResultType.FAILURE, null, null)
-
-        //TODO: Full session implementation
-        val startSessionResult = StartSessionService.execute()
-        if (startSessionResult.result != SOAResultType.SUCCESS) {
-            result.message = "Failed to start session"
-        } else {
-            result.result = SOAResultType.SUCCESS
-            result.data = user
-        }
-
-        return result
-    }
-
-    fun logout(user: UserAccount?, requestData: RequestData): SOAResult<UserAccount> {
-        validateApiKey(user!!, requestData)
-
-        val result = SOAResult<UserAccount>(
-            SOAResultType.FAILURE,
-            "",
-            null
-        )
-
-        val endSessionResult = EndSessionService.execute(user.session.sessionKey)
-
-        if (endSessionResult.result != SOAResultType.SUCCESS) {
-            result.message = endSessionResult.message
-            return result
-        }
-
-        result.data = user
-        result.result = SOAResultType.SUCCESS
-
-        return result
-    }
-
     fun reset(user: UserAccount, requestData: RequestData): SOAResult<NewUserAccount> {
         validateApiKey(user, requestData)
         return DaoService.execute {

@@ -91,7 +91,6 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       Users,
       CryptoKeyPairs,
       ApiCreds,
-      Sessions,
       UserAccounts,
       Actions,
       Transactions,

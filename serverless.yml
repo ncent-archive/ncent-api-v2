@@ -79,13 +79,6 @@ functions:
     - http:
         path: /user_test/hello
         method: get
-#  health:
-#    handler: kotlinserverless.framework.models.Handler
-#    events:
-#    - schedule: rate(10 minutes)
-#    - http:
-#        path: /health/health
-#        method: get
 
   dbhealth:
     handler: kotlinserverless.framework.models.Handler
@@ -118,22 +111,6 @@ functions:
     - http:
         path: /user
         method: delete
-
-#  user_login:
-#    handler: kotlinserverless.framework.models.Handler
-#    events:
-#    - schedule: rate(10 minutes)
-#    - http:
-#        path: /user/login
-#        method: post
-#
-#  user_logout:
-#    handler: kotlinserverless.framework.models.Handler
-#    events:
-#    - schedule: rate(10 minutes)
-#    - http:
-#        path: /user/logout
-#        method: post
 
   user_reset:
     handler: kotlinserverless.framework.Handler
