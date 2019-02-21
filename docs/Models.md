@@ -5,7 +5,6 @@ Table of Contents
    + [UserAccount](#useraccount)
    + [User](#user)
    + [ApiCred](#apiCred)
-   + [Session](#session)
 1. [Challenge Models](#challenge-models)
    + [Entity Relationship Diagram](#challenge-models-relationship-diagram)
    + [Challenge](#challenge)
@@ -46,9 +45,6 @@ The parent model for all user-related information
    * Required field
 1. apiCreds
    * Reference to ApiCred table
-   * Required field
-1. session
-   * Reference to Session table
    * Required field
 
 ## User

@@ -4,8 +4,6 @@ Table of Contents
    + [Find One User](#find-one-user)
    + [GET (requestData object must pass data in as query parameters instead of request body) User Balances](#GET (requestData object must pass data in as query parameters instead of request body)-user-balances)
    + [Create User](#user-create)
-   + [Login](#login)
-   + [Logout](#logout)
 1. [Challenge APIs](#challenge-apis)
    + [Find One Challenge](#find-one-challenge)
    + [Find All Challenges](#find-all-challenges)
@@ -105,13 +103,6 @@ GET (requestData object must pass data in as query parameters instead of request
       "updatedAt" : "null",
       "deletedAt" : "null",
       "apiKey" : "[B@de6e913"
-    },
-    "session" : {
-      "createdAt" : "2019-01-23T12:24:40.427-08:00",
-      "updatedAt" : "null",
-      "deletedAt" : "null",
-      "sessionKey" : "1ac8e722-480f-4125-9b28-550828ea091c",
-      "expiration" : "2019-01-24T12:24:40.418-08:00"
     }
   },
   "headers" : {
@@ -769,151 +760,10 @@ POST
         "updatedAt" : "null",
         "deletedAt" : "null",
         "apiKey" : "[B@1673c486"
-      },
-      "session" : {
-        "createdAt" : "2019-01-24T20:36:47.372Z",
-        "updatedAt" : "null",
-        "deletedAt" : "null",
-        "sessionKey" : "dc62fd6b-4867-4247-a18e-9a724f2f1010",
-        "expiration" : "2019-01-25T20:36:47.368Z"
       }
     },
     "privateKey" : "[C@6edeb1aa",
     "secretKey" : "[C@3c06f5c3"
-  },
-  "headers" : {
-    "X-Powered-By" : "AWS Lambda & Serverless"
-  },
-  "base64Encoded" : false
-}
-```
-
-## Login
-
-This API is called in order to begin a session for a user account
-
-#### Route
-
-/user/login
-
-#### Method
-
-POST
-
-#### Parameters
-
-1. user
-   * The user making the API call
-   * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
-   
-#### Sample Response
-
-```json
-{
-  "statusCode" : 200,
-  "body" : {
-    "createdAt" : "2019-01-24T12:36:47.486-08:00",
-    "updatedAt" : "null",
-    "deletedAt" : "null",
-    "userMetadata" : {
-      "createdAt" : "2019-01-24T12:36:47.484-08:00",
-      "updatedAt" : "null",
-      "deletedAt" : "null",
-      "email" : "dev0@ncnt.io",
-      "firstname" : "dev0",
-      "lastname" : "ncnt0",
-      "metadatas" : [ ]
-    },
-    "cryptoKeyPair" : {
-      "createdAt" : "2019-01-24T12:36:47.485-08:00",
-      "updatedAt" : "null",
-      "deletedAt" : "null",
-      "publicKey" : "[B@455851a"
-    },
-    "apiCreds" : {
-      "createdAt" : "2019-01-24T12:36:47.485-08:00",
-      "updatedAt" : "null",
-      "deletedAt" : "null",
-      "apiKey" : "[B@624f330b"
-    },
-    "session" : {
-      "createdAt" : "2019-01-24T12:36:47.485-08:00",
-      "updatedAt" : "null",
-      "deletedAt" : "null",
-      "sessionKey" : "05bcb7e0-512c-4c7e-a937-ee86819846e1",
-      "expiration" : "2019-01-25T12:36:47.479-08:00"
-    }
-  },
-  "headers" : {
-    "X-Powered-By" : "AWS Lambda & Serverless"
-  },
-  "base64Encoded" : false
-}
-```
-
-## Logout
-
-This API is called in order to begin a session for a user account
-
-#### Route
-
-/user/logout
-
-#### Method
-
-POST
-
-#### Parameters
-
-1. user
-   * The user making the API call
-   * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
-   
-#### Sample Response
-
-```json
-{
-  "statusCode" : 200,
-  "body" : {
-    "createdAt" : "2019-01-24T12:36:47.573-08:00",
-    "updatedAt" : "null",
-    "deletedAt" : "null",
-    "userMetadata" : {
-      "createdAt" : "2019-01-24T12:36:47.571-08:00",
-      "updatedAt" : "null",
-      "deletedAt" : "null",
-      "email" : "dev0@ncnt.io",
-      "firstname" : "dev0",
-      "lastname" : "ncnt0",
-      "metadatas" : [ ]
-    },
-    "cryptoKeyPair" : {
-      "createdAt" : "2019-01-24T12:36:47.572-08:00",
-      "updatedAt" : "null",
-      "deletedAt" : "null",
-      "publicKey" : "[B@661b77ad"
-    },
-    "apiCreds" : {
-      "createdAt" : "2019-01-24T12:36:47.573-08:00",
-      "updatedAt" : "null",
-      "deletedAt" : "null",
-      "apiKey" : "[B@510ab846"
-    },
-    "session" : {
-      "createdAt" : "2019-01-24T12:36:47.573-08:00",
-      "updatedAt" : "null",
-      "deletedAt" : "null",
-      "sessionKey" : "5d4bfbf3-7c90-4885-8110-fc9a0bc49e21",
-      "expiration" : "2019-01-24T20:36:47.581Z"
-    }
   },
   "headers" : {
     "X-Powered-By" : "AWS Lambda & Serverless"
