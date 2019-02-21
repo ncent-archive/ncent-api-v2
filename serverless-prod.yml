@@ -80,14 +80,6 @@ functions:
           method: get
       - schedule: rate(10 minutes)
 
-  health:
-    handler: kotlinserverless.framework.models.Handler
-    events:
-      - http:
-          path: /health/health
-          method: get
-      - schedule: rate(10 minutes)
-
   dbhealth:
     handler: kotlinserverless.framework.models.Handler
     events:
@@ -109,22 +101,6 @@ functions:
     events:
       - http:
           path: /user
-          method: post
-      - schedule: rate(10 minutes)
-
-  user_login:
-    handler: kotlinserverless.framework.models.Handler
-    events:
-      - http:
-          path: /user/login
-          method: post
-      - schedule: rate(10 minutes)
-
-  user_logout:
-    handler: kotlinserverless.framework.models.Handler
-    events:
-      - http:
-          path: /user/logout
           method: post
       - schedule: rate(10 minutes)
 

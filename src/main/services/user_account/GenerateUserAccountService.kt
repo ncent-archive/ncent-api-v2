@@ -18,11 +18,6 @@ object GenerateUserAccountService {
             return SOAResult(apiCredResult.result, apiCredResult.message, null)
         val apiCredNamespace: ApiCredNamespace = apiCredResult.data!!
 
-        val sessionResult = StartSessionService.execute()
-        if(sessionResult.result != SOAResultType.SUCCESS)
-            return SOAResult(apiCredResult.result, sessionResult.message, null)
-        val sessionNamespace: SessionNamespace = sessionResult.data!!
-
         return DaoService.execute {
             val user = User.new {
                 email = uemail
@@ -32,10 +27,6 @@ object GenerateUserAccountService {
             val apiCred = ApiCred.new {
                 apiKey = apiCredNamespace.apiKey
                 secretKey = apiCredNamespace.secretKey
-            }
-            val newSession = Session.new {
-                sessionKey = sessionNamespace.sessionKey
-                expiration = DateTime.parse(sessionNamespace.expiration)
             }
 
             val keyPairResult = GenerateCryptoKeyPairService.execute()
@@ -47,7 +38,6 @@ object GenerateUserAccountService {
                 userMetadata = user
                 cryptoKeyPair = keyPairData.value
                 apiCreds = apiCred
-                session = newSession
             }
 
             // TODO log or error result?
