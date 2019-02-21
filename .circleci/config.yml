@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Deploy to development
           command: |
-            cat serverless-dev.yml >> serverless.yml
+            cat serverless-dev.yml > serverless.yml
             serverless deploy --stage development
   deploy-prod:
     executor: serverless-executor
@@ -52,7 +52,7 @@ jobs:
       - run:
           name: Deploy to production
           command: |
-            cat serverless-prod.yml >> serverless.yml
+            cat serverless-prod.yml > serverless.yml
             serverless deploy --stage production
   postman-dev:
     executor: java-executor
