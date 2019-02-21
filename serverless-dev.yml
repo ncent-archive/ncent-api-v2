@@ -1,0 +1,298 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: ncent-api # NOTE: update this with your service name
+app: ncent-api
+tenant: ncntdev
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: java8
+  region: ${opt:region, 'us-west-1'}
+  vpc:
+    securityGroupIds:
+      - ${ssm:/ncnt/development/securitygroup} # sg-03e1b070d826d2767
+    subnetIds:
+      - ${ssm:/ncnt/development/subnet/1} # subnet-00173f7ae2ead86ec
+      - ${ssm:/ncnt/development/subnet/2} # subnet-0e1d69b5214c618df
+  #    Define function environment variables here
+  environment:
+    database_url: ${ssm:/ncnt/development/database/url~true}
+    database_driver: ${ssm:/ncnt/development/database/driver}
+    database_user: ${ssm:/ncnt/development/database/user}
+    database_password: ${ssm:/ncnt/development/database/password~true}
+    bugsnag_api_key: ${ssm:/ncnt/development/bugsnag/apikey~true}
+    release_stage: ${ssm:/ncnt/development/release_stage}
+  #      database_url: jdbc:mysql://localhost:3306/ncnt
+  #      database_driver: com.mysql.jdbc.Driver
+  #      database_user: root
+  #      database_password: ncntroot
+
+# you can overwrite defaults here
+#  stage: dev
+#  region: us-east-1
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+package:
+  artifact: target/ncent-api-dev-jar-with-dependencies.jar
+  excludeDevDependencies: false
+
+functions:
+  user:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /user_test/hello
+        method: get
+
+  dbhealth:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /dbhealth/health
+        method: get
+
+  user_get:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /user
+        method: get
+
+  user_create:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /user
+        method: post
+
+  user_delete:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /user
+        method: delete
+
+  user_reset:
+    handler: kotlinserverless.framework.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /user/reset
+        method: patch
+
+  token_get:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /token
+        method: get
+
+  tokens_get:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /tokens
+        method: get
+
+  token_create:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /token
+        method: post
+
+  token_transfer:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /token/transfer
+        method: post
+
+  reward_pool:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /reward/pool
+        method: post
+
+  reward_create:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /reward
+        method: post
+
+  completion_create:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /completion
+        method: post
+
+  completion_complete:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /completion
+        method: put
+
+  transaction:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /transaction
+        method: post
+
+  challenge_create:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /challenge
+        method: post
+
+  challenge_get:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /challenge
+        method: get
+
+  challenges_get:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /challenges
+        method: get
+
+  challenge_expire:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /challenge/expire
+        method: put
+
+  challenge_invalidate:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /challenge/invalidate
+        method: put
+
+  challenge_validate:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /challenge/validate
+        method: put
+
+  challenge_complete:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /challenge/complete
+        method: put
+
+  challenge_share:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+    - schedule: rate(10 minutes)
+    - http:
+        path: /challenge/share
+        method: put
+
+#    The following are a few example events you can configure
+#    NOTE: Please make sure to change your handler code to work with those events
+#    Check the event documentation for details
+#    events:
+#      - http:
+#          path: users/create
+#          method: get
+#      - s3: ${env:BUCKET}
+#      - schedule: rate(10 minutes)
+#      - sns: greeter-topic
+#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
+#      - alexaSkill: amzn1.ask.skill.xx-xx-xx-xx
+#      - alexaSmartHome: amzn1.ask.skill.xx-xx-xx-xx
+#      - iot:
+#          sql: "SELECT * FROM 'some_topic'"
+#      - cloudwatchEvent:
+#          event:
+#            source:
+#              - "aws.ec2"
+#            detail-type:
+#              - "EC2 Instance State-change Notification"
+#            detail:
+#              state:
+#                - pending
+#      - cloudwatchLog: '/aws/lambda/hello'
+#      - cognitoUserPool:
+#          pool: MyUserPool
+#          trigger: PreSignUp
+
+# you can add CloudFormation resource templates here
+#resources:
+#  Resources:
+#    NewResource:
+#      Type: AWS::S3::Bucket
+#      Properties:
+#        BucketName: my-new-bucket
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"

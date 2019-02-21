@@ -40,7 +40,9 @@ jobs:
           at: ~/ncnt-api
       - run:
           name: Deploy to development
-          command: 'serverless deploy --stage development'
+          command: |
+            cat serverless-dev.yml >> serverless.yml
+            serverless deploy --stage development
   deploy-prod:
     executor: serverless-executor
     steps:
@@ -49,7 +51,9 @@ jobs:
           at: ~/ncnt-api
       - run:
           name: Deploy to production
-          command: 'serverless deploy --stage production -c ./serverless-prod.yml'
+          command: |
+            cat serverless-prod.yml >> serverless.yml
+            serverless deploy --stage production
   postman-dev:
     executor: java-executor
     steps:
