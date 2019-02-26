@@ -235,7 +235,8 @@ object TestHelper {
                     maxDistributionFeeReward = null,
                     maxSharesPerReceivedShare = null,
                     maxDepth = null,
-                    maxNodes = null
+                    maxNodes = null,
+                    metadatas = arrayOf(MetadatasNamespace("TESTkey$i","TESTvalue$i"))
                 )
             )
         }

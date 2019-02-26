@@ -3,6 +3,7 @@ package main.services.challenge
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
+import org.jetbrains.exposed.sql.SizedCollection
 import org.joda.time.DateTime
 
 /**
@@ -10,7 +11,14 @@ import org.joda.time.DateTime
  */
 object GenerateChallengeSettingsService {
     fun execute(caller: UserAccount, challengeSettingNamespace: ChallengeSettingNamespace) : SOAResult<ChallengeSetting> {
-        return SOAResult(SOAResultType.SUCCESS, null, ChallengeSetting.new {
+        val metadatasToAdd = challengeSettingNamespace.metadatas.map {
+            md -> Metadata.new {
+                key = md.key
+                value = md.value
+            }
+        }
+
+        var challengeSetting = ChallengeSetting.new {
             name = challengeSettingNamespace.name
             description = challengeSettingNamespace.description
             imageUrl = challengeSettingNamespace.imageUrl
@@ -25,6 +33,10 @@ object GenerateChallengeSettingsService {
             maxSharesPerReceivedShare = challengeSettingNamespace.maxSharesPerReceivedShare?.toInt()
             maxDepth = challengeSettingNamespace.maxDepth?.toInt()
             maxNodes = challengeSettingNamespace.maxNodes?.toInt()
-        })
+        }
+
+        challengeSetting.metadatas = SizedCollection(metadatasToAdd)
+
+        return SOAResult(SOAResultType.SUCCESS, null, challengeSetting)
     }
 }

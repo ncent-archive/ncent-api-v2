@@ -4,8 +4,10 @@ import framework.models.BaseIntEntity
 import framework.models.BaseIntEntityClass
 import framework.models.BaseIntIdTable
 import framework.models.idValue
+import main.daos.UsersMetadata.primaryKey
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.sql.ReferenceOption
+import org.jetbrains.exposed.sql.Table
 import org.joda.time.DateTime
 
 /**
@@ -44,6 +46,7 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
     var maxSharesPerReceivedShare by ChallengeSettings.maxSharesPerReceivedShare
     var maxDepth by ChallengeSettings.maxDepth
     var maxNodes by ChallengeSettings.maxNodes
+    var metadatas by Metadata via ChallengeSettingsMetadata
 
     override fun toMap(): MutableMap<String, Any?> {
         var map = super.toMap()
@@ -61,8 +64,14 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
         map.put("maxSharesPerReceivedShare", maxSharesPerReceivedShare.toString())
         map.put("maxDepth", maxDepth.toString())
         map.put("maxNodes", maxNodes.toString())
+        map.put("metadatas", metadatas.map { it.toMap() })
         return map
     }
+}
+
+object ChallengeSettingsMetadata : Table("challenge_settings_to_metadatas") {
+    val challengeSetting = reference("challenge_setting_to_metadatas", ChallengeSettings, onDelete = ReferenceOption.CASCADE).primaryKey()
+    val metadata = reference("metadata_to_challenge", Metadatas, onDelete = ReferenceOption.CASCADE).primaryKey()
 }
 
 object ChallengeSettings : BaseIntIdTable("challenge_settings") {
@@ -96,5 +105,6 @@ data class ChallengeSettingNamespace(
     val maxDistributionFeeReward: String? = null,
     val maxSharesPerReceivedShare: String? = null,
     val maxDepth: String? = null,
-    val maxNodes: String? = null
+    val maxNodes: String? = null,
+    val metadatas: Array<MetadatasNamespace> = arrayOf()
 )

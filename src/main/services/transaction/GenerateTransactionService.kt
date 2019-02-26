@@ -40,7 +40,8 @@ object GenerateTransactionService {
             previousTransaction = previousTxEntity
         }
 
-        transaction.metadatas = SizedCollection(metadatasToAdd)
+        if(metadatasToAdd.any())
+            transaction.metadatas = SizedCollection(metadatasToAdd)
         return SOAResult(SOAResultType.SUCCESS, null, transaction)
     }
 }
