@@ -7,7 +7,7 @@ import org.joda.time.DateTimeZone
 fun currentUtc(): DateTime = DateTime.now(DateTimeZone.UTC)
 
 abstract class BaseIntIdTable(name: String) : IntIdTable(name) {
-    val createdAt = datetime("createdAt").clientDefault { currentUtc() }
+    val createdAt = datetime("createdAt").default(currentUtc())
     val updatedAt = datetime("updatedAt").nullable()
     val deletedAt = datetime("deletedAt").nullable()
 }
