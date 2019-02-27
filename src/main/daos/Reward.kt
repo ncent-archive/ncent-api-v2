@@ -31,9 +31,9 @@ class Reward(id: EntityID<Int>) : BaseIntEntity(id, Rewards) {
     }
 }
 
-object RewardsMetadata : Table("rewards_to_metadatas") {
-    val reward = reference("reward_to_metadatas", Rewards, onDelete = ReferenceOption.CASCADE).primaryKey()
-    val metadata = reference("metadata_to_reward", Metadatas, onDelete = ReferenceOption.CASCADE).primaryKey()
+object RewardsMetadata : BaseIntIdTable("rewards_to_metadatas") {
+    val reward = reference("reward_to_metadatas", Rewards, onDelete = ReferenceOption.CASCADE)
+    val metadata = reference("metadata_to_reward", Metadatas, onDelete = ReferenceOption.CASCADE)
 }
 
 object Rewards : BaseIntIdTable("rewards") {

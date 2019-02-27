@@ -69,9 +69,9 @@ class ChallengeSetting(id: EntityID<Int>) : BaseIntEntity(id, ChallengeSettings)
     }
 }
 
-object ChallengeSettingsMetadata : Table("challenge_settings_to_metadatas") {
-    val challengeSetting = reference("challenge_setting_to_metadatas", ChallengeSettings, onDelete = ReferenceOption.CASCADE).primaryKey()
-    val metadata = reference("metadata_to_challenge", Metadatas, onDelete = ReferenceOption.CASCADE).primaryKey()
+object ChallengeSettingsMetadata : BaseIntIdTable("challenge_settings_to_metadatas") {
+    val challengeSetting = reference("challenge_setting_to_metadatas", ChallengeSettings, onDelete = ReferenceOption.CASCADE)
+    val metadata = reference("metadata_to_challenge", Metadatas, onDelete = ReferenceOption.CASCADE)
 }
 
 object ChallengeSettings : BaseIntIdTable("challenge_settings") {

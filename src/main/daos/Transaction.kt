@@ -46,9 +46,9 @@ object Transactions : BaseIntIdTable("transactions") {
     val previousTransaction = optReference("previous_transaction", Transactions, onDelete = ReferenceOption.CASCADE)
 }
 
-object TransactionsMetadata : Table("transactions_to_metadatas") {
-    val transaction = reference("transaction_to_metadatas", Transactions, onDelete = ReferenceOption.CASCADE).primaryKey()
-    val metadata = reference("metadata_to_transaction", Metadatas, onDelete = ReferenceOption.CASCADE).primaryKey()
+object TransactionsMetadata : BaseIntIdTable("transactions_to_metadatas") {
+    val transaction = reference("transaction_to_metadatas", Transactions, onDelete = ReferenceOption.CASCADE)
+    val metadata = reference("metadata_to_transaction", Metadatas, onDelete = ReferenceOption.CASCADE)
 }
 
 data class TransactionNamespace(val from: String?=null, val to: String?=null, val action: ActionNamespace?=null, val previousTransaction: Int?=null, val metadatas: Array<MetadatasNamespace>? = null)
