@@ -89,16 +89,16 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
 
         val finalResult = SOAResult<TransactionWithNewUser?>(SOAResultType.FAILURE, null, null)
 
-        val challengeId = requestData.body["challengeId"] as Int
+        val challengeId = requestData.body["challengeId"] as String
         val publicKeyToShareWith = requestData.body["publicKeyToShareWith"] as String?
-        val shares = requestData.body["shares"] as Int
+        val shares = requestData.body["shares"] as String
         val expiration = requestData.body["expiration"] as String?
         val emailToShareWith = requestData.body["emailToShareWith"] as String?
 
-        val challenge = ChallengeHelper.findChallengeById(challengeId)
+        val challenge = ChallengeHelper.findChallengeById(challengeId.toInt())
 
         DaoService.execute {
-            val serviceResult = ShareChallengeService.execute(user, challenge, shares, publicKeyToShareWith, emailToShareWith, expiration)
+            val serviceResult = ShareChallengeService.execute(user, challenge, shares.toInt(), publicKeyToShareWith, emailToShareWith, expiration)
             finalResult.result = serviceResult.result
             finalResult.message = serviceResult.message
             finalResult.data = serviceResult.data
