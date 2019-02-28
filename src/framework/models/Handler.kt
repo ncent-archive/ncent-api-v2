@@ -109,7 +109,8 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
       ChallengeSettings,
       SubChallenges,
       ChallengeToSubChallenges,
-      UsersMetadata
+      UsersMetadata,
+      ChallengeSettingsMetadata
     )
 
     fun log(e: Throwable?, message: String?) {

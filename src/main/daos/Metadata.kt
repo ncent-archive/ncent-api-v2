@@ -30,7 +30,7 @@ class Metadata(id: EntityID<Int>) : BaseIntEntity(id, Metadatas) {
 
 object Metadatas : BaseIntIdTable("metadatas") {
     val key = varchar("md_key", 256)
-    val value = varchar("md_value", 256)
+    val value = text("md_value")
 }
 
 data class MetadatasNamespace(val key: String, val value: String)

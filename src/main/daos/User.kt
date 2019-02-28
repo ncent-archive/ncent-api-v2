@@ -40,7 +40,7 @@ object Users : BaseIntIdTable("users") {
 	val lastname = varchar("lastname", 20)
 }
 
-object UsersMetadata : Table("users_to_metadatas") {
+object UsersMetadata : BaseIntIdTable("users_to_metadatas") {
 	val user = reference("user_to_metadatas", Users, onDelete = ReferenceOption.CASCADE).primaryKey()
 	val metadata = reference("metadata_to_transaction", Metadatas, onDelete = ReferenceOption.CASCADE).primaryKey()
 }
