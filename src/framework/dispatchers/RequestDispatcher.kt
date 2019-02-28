@@ -8,6 +8,7 @@ import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.helpers.ControllerHelper
+import main.helpers.JsonHelper
 import main.services.user_account.GetUserAccountService
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -23,6 +24,9 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
     @Throws(RouterException::class, NotFoundException::class)
     override fun locate(request: ApiGatewayRequest): Any? {
         val path = request.input["path"]
+        val requestString = JsonHelper.KLAX.toJsonString(request)
+        Handler.log(null, requestString)
+        println(requestString)
         for ((regex, inputModel, outputModel, controller) in ROUTER.routes) {
 			if (!Regex(regex).matches(path as CharSequence)) {
 				continue
