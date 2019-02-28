@@ -19,10 +19,10 @@ abstract class BaseIntEntity(id: EntityID<Int>, table: BaseIntIdTable) : BaseObj
 
     override fun toMap(): MutableMap<String, Any?> {
         return mutableMapOf(
-            Pair("id", idValue),
-            Pair("createdAt", createdAt.toString()),
-            Pair("updatedAt", updatedAt.toString()),
-            Pair("deletedAt", deletedAt.toString())
+            Pair("id", idValue)
+//            Pair("createdAt", createdAt.toString()),
+//            Pair("updatedAt", updatedAt.toString()),
+//            Pair("deletedAt", deletedAt.toString())
         )
     }
 }
