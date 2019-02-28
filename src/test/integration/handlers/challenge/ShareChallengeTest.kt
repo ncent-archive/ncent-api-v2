@@ -42,7 +42,7 @@ class ShareChallengeTest : WordSpec() {
                 mapOf(
                     Pair("challengeId", challenge.idValue.toString()),
                     Pair("publicKeyToShareWith", user2.value.cryptoKeyPair.publicKey),
-                    Pair("shares", "3"),
+                    Pair("shares", 3),
                     Pair("emailToShareWith", user2.value.userMetadata.email)
                 ),
                 mapOf(
@@ -56,7 +56,7 @@ class ShareChallengeTest : WordSpec() {
                 mapOf(
                     Pair("challengeId", challenge.idValue.toString()),
                     Pair("emailToShareWith", "test@test.com"),
-                    Pair("shares", "3")
+                    Pair("shares", 3)
                 ),
                     mapOf(
                             Pair("userId", user1.value.idValue.toString())
@@ -70,7 +70,7 @@ class ShareChallengeTest : WordSpec() {
                     Pair("challengeId", challenge.idValue.toString()),
                     Pair("publicKeyToShareWith", user2.value.cryptoKeyPair.publicKey),
                     Pair("emailToShareWith", user2.value.userMetadata.email),
-                    Pair("shares", "1000")
+                    Pair("shares", 1000)
                 ),
                     mapOf(
                             Pair("userId", user1.value.idValue.toString())

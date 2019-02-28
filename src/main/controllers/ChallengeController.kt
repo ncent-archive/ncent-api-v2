@@ -91,7 +91,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
 
         val challengeId = requestData.body["challengeId"] as String
         val publicKeyToShareWith = requestData.body["publicKeyToShareWith"] as String?
-        val shares = requestData.body["shares"] as String
+        val shares = requestData.body["shares"] as Int
         val expiration = requestData.body["expiration"] as String?
         val emailToShareWith = requestData.body["emailToShareWith"] as String?
 
