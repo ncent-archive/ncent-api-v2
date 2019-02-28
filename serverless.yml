@@ -240,14 +240,6 @@ functions:
         path: /challenge/validate
         method: put
 
-  challenge_redeem:
-    handler: kotlinserverless.framework.models.Handler
-    events:
-    - schedule: rate(10 minutes)
-    - http:
-        path: /challenge/redeem
-        method: put
-
   challenge_complete:
     handler: kotlinserverless.framework.models.Handler
     events:
