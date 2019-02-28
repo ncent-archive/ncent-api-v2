@@ -91,7 +91,7 @@ class TransactionWithNewUser(
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
         map.put("transactions", transactions.map { it.toMap() })
-        map.put("newUser", newUser?.toMap())
+        map.put("newUser", newUser?.toMap() ?: "")
         return map
     }
 }
