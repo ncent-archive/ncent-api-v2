@@ -26,6 +26,11 @@ routes:
 # Challenges Microservice
 # =========================
 
+  - regex: '^/challenge/share(/*[a-zA-Z0-9]*)?'
+    inputModel: main.daos.Challenge
+    outputModel: main.daos.TransactionWithNewUser
+    controller: main.controllers.ChallengeController
+
   - regex: '^/challenge(/*[a-zA-Z0-9]*)?'
     inputModel: main.daos.Challenge
     outputModel: main.daos.Challenge
