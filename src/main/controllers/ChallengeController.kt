@@ -98,7 +98,7 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         val challenge = ChallengeHelper.findChallengeById(challengeId.toInt())
 
         DaoService.execute {
-            val serviceResult = ShareChallengeService.execute(user, challenge, shares.toInt(), publicKeyToShareWith, emailToShareWith, expiration)
+            val serviceResult = ShareChallengeService.execute(user, challenge, shares, publicKeyToShareWith, emailToShareWith, expiration)
             finalResult.result = serviceResult.result
             finalResult.message = serviceResult.message
             finalResult.data = serviceResult.data
