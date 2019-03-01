@@ -33,7 +33,7 @@ class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
         map.put("from", from)
         map.put("to", to)
         map.put("action", action.toMap())
-        map.put("previousTransactionId", previousTransaction?.idValue)
+        map.put("previousTransactionId", previousTransaction?.idValue ?: "")
         map.put("metadatas", metadatas.map { it.toMap() })
         return map
     }
