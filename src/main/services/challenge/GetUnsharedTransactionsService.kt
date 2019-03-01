@@ -41,7 +41,7 @@ object GetUnsharedTransactionsService {
         var sharedTransactionCount = mutableMapOf<Int, Int>()
         sharedTransactionResult.data!!.transactions.forEach { tx ->
             val shares = tx.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
-            if(hasShareExpired(tx, Transaction.find { Transactions.previousTransaction eq tx.id }.count())) return@forEach
+//            if(hasShareExpired(tx, Transaction.find { Transactions.previousTransaction eq tx.id }.count())) return@forEach
 //            tx.previousTransaction?.let { prevTx ->
 //                val sharesPlusExistingShares = sharedTransactionCount.getOrDefault(prevTx.idValue, 0) + shares
 //                sharedTransactionCount[prevTx.idValue] = sharesPlusExistingShares
