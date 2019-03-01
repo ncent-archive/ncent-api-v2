@@ -36,17 +36,17 @@ object GetUnsharedTransactionsService {
         if(sharedTransactionResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, sharedTransactionResult.message)
 
-        val receivedShares = receivedTransactionResult.data!!.transactions
+//        val receivedShares = receivedTransactionResult.data!!.transactions
 
-        var sharedTransactionCount = mutableMapOf<Int, Int>()
-        sharedTransactionResult.data!!.transactions.forEach { tx ->
-            val shares = tx.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
+//        var sharedTransactionCount = mutableMapOf<Int, Int>()
+//        sharedTransactionResult.data!!.transactions.forEach { tx ->
+//            val shares = tx.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
 //            if(hasShareExpired(tx, Transaction.find { Transactions.previousTransaction eq tx.id }.count())) return@forEach
 //            tx.previousTransaction?.let { prevTx ->
 //                val sharesPlusExistingShares = sharedTransactionCount.getOrDefault(prevTx.idValue, 0) + shares
 //                sharedTransactionCount[prevTx.idValue] = sharesPlusExistingShares
 //            }
-        }
+//        }
 
         var unsharedTransactions = mutableListOf<TransactionToShare>()
 
