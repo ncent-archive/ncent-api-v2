@@ -36,27 +36,27 @@ object GetUnsharedTransactionsService {
         if(sharedTransactionResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, sharedTransactionResult.message)
 
-//        val receivedShares = receivedTransactionResult.data!!.transactions
+        val receivedShares = receivedTransactionResult.data!!.transactions
 
-//        var sharedTransactionCount = mutableMapOf<Int, Int>()
-//        sharedTransactionResult.data!!.transactions.forEach { tx ->
-//            val shares = tx.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
-//            if(hasShareExpired(tx, Transaction.find { Transactions.previousTransaction eq tx.id }.count())) return@forEach
-//            tx.previousTransaction?.let { prevTx ->
-//                val sharesPlusExistingShares = sharedTransactionCount.getOrDefault(prevTx.idValue, 0) + shares
-//                sharedTransactionCount[prevTx.idValue] = sharesPlusExistingShares
-//            }
-//        }
+        var sharedTransactionCount = mutableMapOf<Int, Int>()
+        sharedTransactionResult.data!!.transactions.forEach { tx ->
+            val shares = tx.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
+            if(hasShareExpired(tx, Transaction.find { Transactions.previousTransaction eq tx.id }.count())) return@forEach
+            tx.previousTransaction?.let { prevTx ->
+                val sharesPlusExistingShares = sharedTransactionCount.getOrDefault(prevTx.idValue, 0) + shares
+                sharedTransactionCount[prevTx.idValue] = sharesPlusExistingShares
+            }
+        }
 
         var unsharedTransactions = mutableListOf<TransactionToShare>()
 
-//        receivedShares.forEach { receivedShare ->
-//            val shares = receivedShare.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
-//            val availableShares = shares - sharedTransactionCount.getOrDefault(receivedShare.idValue, 0)
-//            if(availableShares > 0 && !hasShareExpired(receivedShare, sharedTransactionCount.get(receivedShare.idValue))) {
-//                unsharedTransactions.add(TransactionToShare(receivedShare, availableShares))
-//            }
-//        }
+        receivedShares.forEach { receivedShare ->
+            val shares = receivedShare.metadatas.filter { it.key == "maxShares" }.first().value.toInt()
+            val availableShares = shares - sharedTransactionCount.getOrDefault(receivedShare.idValue, 0)
+            if(availableShares > 0 && !hasShareExpired(receivedShare, sharedTransactionCount.get(receivedShare.idValue))) {
+                unsharedTransactions.add(TransactionToShare(receivedShare, availableShares))
+            }
+        }
 
         return SOAResult(SOAResultType.SUCCESS, null, ShareTransactionList(unsharedTransactions))
     }

@@ -50,11 +50,13 @@ object GetChallengesService {
 
         var challengeToUnsharedTransactionsList = mutableListOf<ChallengeToUnsharedTransaction>()
         challengeResult.forEach {
-            val sharesForChallenge = GetUnsharedTransactionsService.execute(
-                caller,
-                it.idValue
-            ).data!!
-            challengeToUnsharedTransactionsList.add(ChallengeToUnsharedTransaction(it, sharesForChallenge))
+            if(!it.challengeSettings.offChain) {
+                val sharesForChallenge = GetUnsharedTransactionsService.execute(
+                    caller,
+                    it.idValue
+                ).data!!
+                challengeToUnsharedTransactionsList.add(ChallengeToUnsharedTransaction(it, sharesForChallenge))
+            }
         }
         return SOAResult(SOAResultType.SUCCESS, null, ChallengeToUnsharedTransactionsList(challengeToUnsharedTransactionsList))
     }
