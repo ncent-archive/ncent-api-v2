@@ -37,7 +37,7 @@ routes:
 
   - regex: '^/challenges(/*[a-zA-Z0-9]*)?'
     inputModel: main.daos.Challenge
-    outputModel: main.daos.ChallengeToUnsharedTransactionList
+    outputModel: main.daos.Challenge
     controller: main.controllers.ChallengeController
 
 # =========================
