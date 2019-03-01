@@ -37,8 +37,8 @@ routes:
 
   - regex: '^/challenges(/*[a-zA-Z0-9]*)?'
     inputModel: main.daos.Challenge
-    outputModel: main.daos.Challenge
-    controller: main.controllers.ChallengeController
+    outputModel: main.daos.ChallengeList
+    controller: main.controllers.ChallengesController
 
 # =========================
 # Completion Criteria Microservice

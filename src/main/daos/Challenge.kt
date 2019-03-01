@@ -1,6 +1,5 @@
 package main.daos
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.*
 import main.services.transaction.GetTransactionsService
 import org.jetbrains.exposed.dao.*
