@@ -34,7 +34,7 @@ object ChallengeHelper {
         }
 
         if (getChallengesResult.data == null || getChallengesResult.data?.challengeToUnsharedTransactions?.isEmpty() == true) {
-            throw NotFoundException("No challenges found")
+            throw NotFoundException(getChallengesResult.message ?: "No challenges found")
         }
 
         return getChallengesResult
