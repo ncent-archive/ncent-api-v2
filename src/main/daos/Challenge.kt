@@ -32,7 +32,9 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
 
     override fun toMap(): MutableMap<String, Any?> {
         var map = super.toMap()
-        map.put("parentChallenge", parentChallenge?.idValue.toString())
+        if (parentChallenge != null) {
+            map.put("parentChallenge", parentChallenge?.idValue.toString())
+        }
         map.put("challengeSettings", challengeSettings?.toMap())
         map.put("subChallenges", subChallenges.map { it.toMap() })
         map.put("completionCriteria", completionCriterias?.toMap())
