@@ -23,12 +23,21 @@ routes:
     controller: main.controllers.UserAccountController
 
 # =========================
-# Challenges Microservice
+# Challenge Microservice
 # =========================
 
   - regex: '^/challenge(/*[a-zA-Z0-9]*)?'
     inputModel: main.daos.Challenge
     outputModel: main.daos.Challenge
+    controller: main.controllers.ChallengeController
+
+# =========================
+# Challenges Microservice
+# =========================
+
+  - regex: '^/challenges(/*[a-zA-Z0-9]*)?'
+    inputModel: main.daos.Challenge
+    outputModel: main.daos.ChallengeToUnsharedTransactionList
     controller: main.controllers.ChallengeController
 
 # =========================
