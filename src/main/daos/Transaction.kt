@@ -72,7 +72,7 @@ class TransactionToShare(val transaction: Transaction, val shares: Int): BaseObj
     }
 }
 
-data class TransactionToShareNamespace(val transaction: TransactionNamespace, val shares: Int)
+data class TransactionToShareNamespace(val transactions: TransactionNamespace, val shares: Int)
 
 class ShareTransactionList(val transactionsToShares: List<TransactionToShare>): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {

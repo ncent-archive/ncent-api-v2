@@ -84,10 +84,10 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     @Throws(ForbiddenException::class)
-    fun share(user: UserAccount?, requestData: RequestData): SOAResult<TransactionWithNewUser?> {
+    fun share(user: UserAccount?, requestData: RequestData): SOAResult<TransactionWithNewUser> {
         validateApiKey(user!!, requestData)
 
-        val finalResult = SOAResult<TransactionWithNewUser?>(SOAResultType.FAILURE, null, null)
+        val finalResult = SOAResult<TransactionWithNewUser>(SOAResultType.FAILURE, null, null)
 
         val challengeId = requestData.body["challengeId"] as String
         val publicKeyToShareWith = requestData.body["publicKeyToShareWith"] as String?
