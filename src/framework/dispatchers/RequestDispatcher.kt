@@ -24,8 +24,6 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
     @Throws(RouterException::class, NotFoundException::class)
     override fun locate(request: ApiGatewayRequest): Any? {
         val path = request.input["path"]
-        Handler.log(null, request.toString())
-        println(request.toString())
         for ((regex, inputModel, outputModel, controller) in ROUTER.routes) {
 			if (!Regex(regex).matches(path as CharSequence)) {
 				continue
