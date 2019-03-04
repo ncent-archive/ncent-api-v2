@@ -38,9 +38,10 @@ data class Route(
     var outputModel: String,
     var controller: String,
     var shouldValidatePost: Boolean,
-    var shouldValidatePut: Boolean
+    var shouldValidatePut: Boolean,
+    var shouldValidateGet: Boolean
 ) {
-    constructor(): this("", "", "", "", true, true)
+    constructor(): this("", "", "", "", true, true, true)
 }
 
 /**

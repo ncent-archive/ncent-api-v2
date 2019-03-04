@@ -29,7 +29,8 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 		restController: RestController<T, UserAccount>,
 		method: String,
 		shouldValidatePost: Boolean,
-		shouldValidatePut: Boolean
+		shouldValidatePut: Boolean,
+		shouldValidateGet: Boolean
     ): SOAResult<*> {
 		val pathString = requestData.request.input["path"].toString()
 		when(method) {
@@ -39,6 +40,10 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 			}
 			ControllerHelper.HTTP_PUT -> {
 				if(shouldValidatePut)
+					validateApiKey(user!!, requestData)
+			}
+			ControllerHelper.HTTP_GET -> {
+				if(shouldValidateGet)
 					validateApiKey(user!!, requestData)
 			}
 			else -> validateApiKey(user!!, requestData)
@@ -58,10 +63,30 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 				}
 				catch(e: Exception) {
 					Handler.log(e, "There was an error routing")
-					super.defaultRouting(incls, outcls, requestData, user, restController, method, shouldValidatePost, shouldValidatePut)
+					super.defaultRouting(
+						incls,
+						outcls,
+						requestData,
+						user,
+						restController,
+						method,
+						shouldValidatePost,
+						shouldValidatePut,
+						shouldValidateGet
+					)
 				}
 			}
 		}
-		return super.defaultRouting(incls, outcls, requestData, user, restController, method, shouldValidatePost, shouldValidatePut)
+		return super.defaultRouting(
+			incls,
+			outcls,
+			requestData,
+			user,
+			restController,
+			method,
+			shouldValidatePost,
+			shouldValidatePut,
+			shouldValidateGet
+		)
 	}
 }

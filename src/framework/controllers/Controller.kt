@@ -28,7 +28,8 @@ interface Controller<M> {
         restController: RestController<T, UserAccount>,
         method: String,
         shouldValidatePost: Boolean,
-        shouldValidatePut: Boolean
+        shouldValidatePut: Boolean,
+        shouldValidateGet: Boolean
     ): SOAResult<*> {
         if(method == ControllerHelper.HTTP_POST)
             return restController.create(user, requestData)

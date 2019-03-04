@@ -24,7 +24,7 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
     @Throws(RouterException::class, NotFoundException::class)
     override fun locate(request: ApiGatewayRequest): Any? {
         val path = request.input["path"]
-        for ((regex, inputModel, outputModel, controller, shouldValidatePost, shouldValidatePut) in ROUTER.routes) {
+        for ((regex, inputModel, outputModel, controller, shouldValidatePost, shouldValidatePut, shouldValidateGet) in ROUTER.routes) {
 			if (!Regex(regex).matches(path as CharSequence)) {
 				continue
 			}
@@ -47,7 +47,8 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
                     controllerInstance,
                     method,
                     shouldValidatePost,
-                    shouldValidatePut
+                    shouldValidatePut,
+                    shouldValidateGet
                 ) as SOAResult<Any>
             }
             catch(e: InvocationTargetException) {
