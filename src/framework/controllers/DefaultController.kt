@@ -5,7 +5,6 @@ import framework.services.DaoService
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
 import main.daos.UserAccount
-import main.helpers.ChallengeHelper
 import main.helpers.ControllerHelper
 import main.services.user_account.ValidateApiKeyService
 import java.lang.reflect.InvocationTargetException
@@ -23,14 +22,14 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 
 	@Throws(ForbiddenException::class)
 	override fun <T : BaseIntEntity> defaultRouting(
-			incls: String,
-			outcls: Class<T>,
-            requestData: ControllerHelper.RequestData,
-			user: UserAccount?,
-            restController: RestController<T, UserAccount>,
-			method: String,
-			shouldValidatePost: Boolean,
-			shouldValidatePut: Boolean
+		incls: String,
+		outcls: Class<T>,
+		requestData: ControllerHelper.RequestData,
+		user: UserAccount?,
+		restController: RestController<T, UserAccount>,
+		method: String,
+		shouldValidatePost: Boolean,
+		shouldValidatePut: Boolean
     ): SOAResult<*> {
 		val pathString = requestData.request.input["path"].toString()
 		when(method) {
