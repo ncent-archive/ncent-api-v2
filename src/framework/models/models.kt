@@ -32,8 +32,15 @@ interface Request {
  * @property controller Name of controller class
  * @constructor Creates an empty object with empty values
  */
-data class Route(var regex: String, var inputModel: String, var outputModel: String, var controller: String) {
-    constructor(): this("", "", "", "")
+data class Route(
+    var regex: String,
+    var inputModel: String,
+    var outputModel: String,
+    var controller: String,
+    var shouldValidatePost: Boolean,
+    var shouldValidatePut: Boolean
+) {
+    constructor(): this("", "", "", "", true, true)
 }
 
 /**

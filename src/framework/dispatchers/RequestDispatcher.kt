@@ -24,7 +24,7 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
     @Throws(RouterException::class, NotFoundException::class)
     override fun locate(request: ApiGatewayRequest): Any? {
         val path = request.input["path"]
-        for ((regex, inputModel, outputModel, controller) in ROUTER.routes) {
+        for ((regex, inputModel, outputModel, controller, shouldValidatePost, shouldValidatePut) in ROUTER.routes) {
 			if (!Regex(regex).matches(path as CharSequence)) {
 				continue
 			}
@@ -36,6 +36,7 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
             val func = controllerClass.members.find { it.name == "defaultRouting" }
             val requestData = ControllerHelper.getRequestData(request)
             val user = findUserByRequest(requestData)
+            val method = (requestData.request.input[ControllerHelper.HTTP_METHOD] as String).toLowerCase()
             val result = try {
                 func?.call(
                     controllerInstance,
@@ -43,7 +44,10 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
                     outputModelClass::class.java,
                     requestData,
                     user,
-                    controllerInstance
+                    controllerInstance,
+                    method,
+                    shouldValidatePost,
+                    shouldValidatePut
                 ) as SOAResult<Any>
             }
             catch(e: InvocationTargetException) {
