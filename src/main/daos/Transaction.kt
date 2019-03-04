@@ -66,7 +66,7 @@ data class TransactionNamespaceList(val transactions: List<TransactionNamespace>
 class TransactionToShare(val transaction: Transaction, val shares: Int): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
-        map.put("transaction", transaction.toMap())
+        map.put("transactions", transaction.toMap())
         map.put("shares", shares)
         return map
     }
