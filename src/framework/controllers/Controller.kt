@@ -20,8 +20,17 @@ interface Controller<M> {
      * @param request Http Client request
      * @param service CRUD service to execute
      */
-    fun <T : BaseIntEntity> defaultRouting(inputClass: String, outcls: Class<T>, requestData: ControllerHelper.RequestData, user: UserAccount?, restController: RestController<T, UserAccount>): SOAResult<*> {
-        val method = (requestData.request.input[ControllerHelper.HTTP_METHOD] as String).toLowerCase()
+    fun <T : BaseIntEntity> defaultRouting(
+        inputClass: String,
+        outcls: Class<T>,
+        requestData: ControllerHelper.RequestData,
+        user: UserAccount?,
+        restController: RestController<T, UserAccount>,
+        method: String,
+        shouldValidatePost: Boolean,
+        shouldValidatePut: Boolean,
+        shouldValidateGet: Boolean
+    ): SOAResult<*> {
         if(method == ControllerHelper.HTTP_POST)
             return restController.create(user, requestData)
 

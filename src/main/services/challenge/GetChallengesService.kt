@@ -49,12 +49,17 @@ object GetChallengesService {
         val challengeResult = Challenge.wrapRows(query).toList().distinct()
 
         var challengeToUnsharedTransactionsList = mutableListOf<ChallengeToUnsharedTransaction>()
-        challengeResult.forEach {
-            val sharesForChallenge = GetUnsharedTransactionsService.execute(
-                caller,
-                it.idValue
-            ).data!!
-            challengeToUnsharedTransactionsList.add(ChallengeToUnsharedTransaction(it, sharesForChallenge))
+        challengeResult.forEach { challenge ->
+            val challengeToUnsharedTransaction = if(challenge.challengeSettings.offChain) {
+                ChallengeToUnsharedTransaction(challenge, ShareTransactionList(listOf()))
+            } else {
+                val sharesForChallenge =
+                    GetUnsharedTransactionsService.execute(
+                        caller, challenge.idValue
+                    ).data!!
+                ChallengeToUnsharedTransaction(challenge, sharesForChallenge)
+            }
+            challengeToUnsharedTransactionsList.add(challengeToUnsharedTransaction)
         }
         return SOAResult(SOAResultType.SUCCESS, null, ChallengeToUnsharedTransactionsList(challengeToUnsharedTransactionsList))
     }

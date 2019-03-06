@@ -7,11 +7,17 @@ routes:
     inputModel: main.daos.Healthcheck
     outputModel: main.daos.Healthcheck
     controller: main.controllers.HealthcheckController
+    shouldValidatePost: true
+    shouldValidatePut: true
+    shouldValidateGet: false
 
   - regex: '^/dbhealth(/*[a-zA-Z0-9]*)?'
     inputModel: main.daos.Healthcheck
     outputModel: main.daos.Healthcheck
     controller: main.controllers.DatabaseHealthcheckController
+    shouldValidatePost: true
+    shouldValidatePut: true
+    shouldValidateGet: false
     
 # =========================
 # User Microservice
@@ -21,15 +27,33 @@ routes:
     inputModel: main.daos.UserAccount
     outputModel: main.daos.UserAccount
     controller: main.controllers.UserAccountController
+    shouldValidatePost: false
+    shouldValidatePut: true
+    shouldValidateGet: true
 
 # =========================
-# Challenges Microservice
+# Challenge Microservice
 # =========================
 
   - regex: '^/challenge(/*[a-zA-Z0-9]*)?'
     inputModel: main.daos.Challenge
     outputModel: main.daos.Challenge
     controller: main.controllers.ChallengeController
+    shouldValidatePost: true
+    shouldValidatePut: true
+    shouldValidateGet: true
+
+# =========================
+# Challenges Microservice
+# =========================
+
+  - regex: '^/challenges(/*[a-zA-Z0-9]*)?'
+    inputModel: main.daos.Challenge
+    outputModel: main.daos.Challenge
+    controller: main.controllers.ChallengeController
+    shouldValidatePost: true
+    shouldValidatePut: true
+    shouldValidateGet: true
 
 # =========================
 # Completion Criteria Microservice
@@ -39,6 +63,9 @@ routes:
     inputModel: main.daos.CompletionCriteria
     outputModel: main.daos.CompletionCriteria
     controller: main.controllers.CompletionCriteriaController
+    shouldValidatePost: true
+    shouldValidatePut: true
+    shouldValidateGet: true
 
 # =========================
 # Rewards Microservice
@@ -48,6 +75,9 @@ routes:
     inputModel: main.daos.Reward
     outputModel: main.daos.Reward
     controller: main.controllers.RewardController
+    shouldValidatePost: true
+    shouldValidatePut: true
+    shouldValidateGet: true
 
 # =========================
 # Token Microservice
@@ -57,11 +87,17 @@ routes:
     inputModel: main.daos.Token
     outputModel: main.daos.Token
     controller: main.controllers.TokenController
+    shouldValidatePost: true
+    shouldValidatePut: true
+    shouldValidateGet: true
 
   - regex: '^/tokens(/*[a-zA-Z0-9]*)?'
     inputModel: main.daos.Token
     outputModel: main.daos.Token
     controller: main.controllers.TokensController
+    shouldValidatePost: true
+    shouldValidatePut: true
+    shouldValidateGet: true
 
 # =========================
 # Transactions Microservice
@@ -71,6 +107,9 @@ routes:
     inputModel: main.daos.Transaction
     outputModel: main.daos.Transaction
     controller: main.controllers.TransactionController
+    shouldValidatePost: true
+    shouldValidatePut: true
+    shouldValidateGet: true
 
 # =========================
 # User Account Microservice
@@ -80,4 +119,7 @@ routes:
     inputModel: main.daos.UserNamespace
     outputModel: main.daos.User
     controller: main.controllers.UserController
+    shouldValidatePost: true
+    shouldValidatePut: true
+    shouldValidateGet: true
 

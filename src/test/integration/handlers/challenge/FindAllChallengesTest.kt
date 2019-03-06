@@ -35,22 +35,22 @@ class FindAllChallengesTest : WordSpec() {
             user2 = newUsers[1]
             challenge = TestHelper.generateFullChallenge(user1.value, user1.value).first()
             map = TestHelper.buildRequest(
-                    user1,
-                    "/challenge/findAll",
-                    "GET",
-                    null,
-                    mapOf(
-                            Pair("userId", user1.value.idValue.toString())
-                    )
+                user1,
+                "/challenges",
+                "GET",
+                null,
+                mapOf(
+                    Pair("userId", user1.value.idValue.toString())
+                )
             )
             notFoundMap = TestHelper.buildRequest(
-                    user2,
-                    "/challenge/findAll",
-                    "GET",
-                    null,
-                    mapOf(
-                            Pair("userId", user2.value.idValue.toString())
-                    )
+                user2,
+                "/challenges",
+                "GET",
+                null,
+                mapOf(
+                    Pair("userId", user2.value.idValue.toString())
+                )
             )
         }
     }
@@ -77,7 +77,7 @@ class FindAllChallengesTest : WordSpec() {
                 transaction {
                     val findAllChallengesResult = handler.handleRequest(notFoundMap, contxt)
                     findAllChallengesResult.statusCode shouldBe 404
-                    findAllChallengesResult.body shouldBe "No challenges found for ${user2.value.cryptoKeyPair.publicKey}"
+                    findAllChallengesResult.body shouldBe "No challenges found"
                 }
             }
         }

@@ -1,21 +1,55 @@
 package kotlinserverless.framework.controllers
 
 import framework.models.BaseIntEntity
+import framework.services.DaoService
 import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
 import main.daos.UserAccount
 import main.helpers.ControllerHelper
+import main.services.user_account.ValidateApiKeyService
 import java.lang.reflect.InvocationTargetException
 
 open class DefaultController<T: BaseIntEntity> : Controller<T> {
+	@Throws(ForbiddenException::class)
+	fun validateApiKey(user: UserAccount, requestData: ControllerHelper.RequestData) {
+		if(requestData.userAuth == null)
+			throw UnauthorizedError("Must include authentication for this endpoint")
+		val validateApiKeyResult = DaoService.execute {
+			ValidateApiKeyService.execute(user, requestData.userAuth.secretKey)
+		}
+		DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
+	}
+
+	@Throws(ForbiddenException::class)
 	override fun <T : BaseIntEntity> defaultRouting(
-			incls: String,
-			outcls: Class<T>,
-            requestData: ControllerHelper.RequestData,
-			user: UserAccount?,
-            restController: RestController<T, UserAccount>
+		incls: String,
+		outcls: Class<T>,
+		requestData: ControllerHelper.RequestData,
+		user: UserAccount?,
+		restController: RestController<T, UserAccount>,
+		method: String,
+		shouldValidatePost: Boolean,
+		shouldValidatePut: Boolean,
+		shouldValidateGet: Boolean
     ): SOAResult<*> {
-		val path = requestData.request.input["path"].toString().removePrefix("/").split("/")
+		val pathString = requestData.request.input["path"].toString()
+		when(method) {
+			ControllerHelper.HTTP_POST -> {
+				if(shouldValidatePost)
+					validateApiKey(user!!, requestData)
+			}
+			ControllerHelper.HTTP_PUT -> {
+				if(shouldValidatePut)
+					validateApiKey(user!!, requestData)
+			}
+			ControllerHelper.HTTP_GET -> {
+				if(shouldValidateGet)
+					validateApiKey(user!!, requestData)
+			}
+			else -> validateApiKey(user!!, requestData)
+		}
+
+		val path = pathString.removePrefix("/").split("/")
 
 		if(path.size > 1) {
 			val func = restController::class.members.find { it.name == path[1] }
@@ -29,10 +63,30 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 				}
 				catch(e: Exception) {
 					Handler.log(e, "There was an error routing")
-					super.defaultRouting(incls, outcls, requestData, user, restController)
+					super.defaultRouting(
+						incls,
+						outcls,
+						requestData,
+						user,
+						restController,
+						method,
+						shouldValidatePost,
+						shouldValidatePut,
+						shouldValidateGet
+					)
 				}
 			}
 		}
-		return super.defaultRouting(incls, outcls, requestData, user, restController)
+		return super.defaultRouting(
+			incls,
+			outcls,
+			requestData,
+			user,
+			restController,
+			method,
+			shouldValidatePost,
+			shouldValidatePut,
+			shouldValidateGet
+		)
 	}
 }

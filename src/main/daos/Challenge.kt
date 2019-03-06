@@ -1,6 +1,5 @@
 package main.daos
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import framework.models.*
 import main.services.transaction.GetTransactionsService
 import org.jetbrains.exposed.dao.*
@@ -31,13 +30,13 @@ class Challenge(id: EntityID<Int>) : BaseIntEntity(id, Challenges) {
     var distributionFeeReward by Reward referencedOn Challenges.distributionFeeReward
 
     override fun toMap(): MutableMap<String, Any?> {
-        var map = super.toMap()
-        map.put("parentChallenge", parentChallenge?.idValue.toString())
-        map.put("challengeSettings", challengeSettings?.toMap())
-        map.put("subChallenges", subChallenges.map { it.toMap() })
-        map.put("completionCriteria", completionCriterias?.toMap())
-        map.put("cryptoKeyPair", cryptoKeyPair?.toMap())
-        map.put("distributionFeeReward", distributionFeeReward?.toMap())
+        val map = super.toMap()
+        map["parentChallenge"] = parentChallenge?.idValue?.toString()
+        map["challengeSettings"] = challengeSettings.toMap()
+        map["subChallenges"] = subChallenges.map { it.toMap() }
+        map["completionCriteria"] = completionCriterias.toMap()
+        map["cryptoKeyPair"] = cryptoKeyPair.toMap()
+        map["distributionFeeReward"] = distributionFeeReward.toMap()
         return map
     }
 

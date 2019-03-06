@@ -33,7 +33,7 @@ class Transaction(id: EntityID<Int>) : BaseIntEntity(id, Transactions) {
         map.put("from", from)
         map.put("to", to)
         map.put("action", action.toMap())
-        map.put("previousTransactionId", previousTransaction?.idValue)
+        map.put("previousTransactionId", previousTransaction?.idValue ?: "")
         map.put("metadatas", metadatas.map { it.toMap() })
         return map
     }
@@ -66,13 +66,13 @@ data class TransactionNamespaceList(val transactions: List<TransactionNamespace>
 class TransactionToShare(val transaction: Transaction, val shares: Int): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {
         var map = mutableMapOf<String, Any?>()
-        map.put("transaction", transaction.toMap())
+        map.put("transactions", transaction.toMap())
         map.put("shares", shares)
         return map
     }
 }
 
-data class TransactionToShareNamespace(val transaction: TransactionNamespace, val shares: Int)
+data class TransactionToShareNamespace(val transactions: TransactionNamespace, val shares: Int)
 
 class ShareTransactionList(val transactionsToShares: List<TransactionToShare>): BaseObject {
     override fun toMap(): MutableMap<String, Any?> {

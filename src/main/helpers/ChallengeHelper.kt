@@ -34,7 +34,7 @@ object ChallengeHelper {
         }
 
         if (getChallengesResult.data == null || getChallengesResult.data?.challengeToUnsharedTransactions?.isEmpty() == true) {
-            throw NotFoundException("No challenges found for ${user.cryptoKeyPair.publicKey}")
+            throw NotFoundException("No challenges found")
         }
 
         return getChallengesResult

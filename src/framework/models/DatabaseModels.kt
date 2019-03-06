@@ -7,7 +7,7 @@ import org.joda.time.DateTimeZone
 fun currentUtc(): DateTime = DateTime.now(DateTimeZone.UTC)
 
 abstract class BaseIntIdTable(name: String) : IntIdTable(name) {
-    val createdAt = datetime("createdAt").clientDefault { currentUtc() }
+    val createdAt = datetime("createdAt").default(currentUtc())
     val updatedAt = datetime("updatedAt").nullable()
     val deletedAt = datetime("deletedAt").nullable()
 }
@@ -18,12 +18,14 @@ abstract class BaseIntEntity(id: EntityID<Int>, table: BaseIntIdTable) : BaseObj
     var deletedAt by table.deletedAt
 
     override fun toMap(): MutableMap<String, Any?> {
-        return mutableMapOf(
-            Pair("id", idValue),
-            Pair("createdAt", createdAt.toString()),
-            Pair("updatedAt", updatedAt.toString()),
-            Pair("deletedAt", deletedAt.toString())
-        )
+        val map = mutableMapOf<String, Any?>()
+        map["id"] = idValue
+        map["createdAt"] = createdAt.toString()
+        if(updatedAt != null)
+            map["updatedAt"] = updatedAt!!.toString()
+        if(deletedAt != null)
+            map["deletedAt"] = deletedAt.toString()
+        return map
     }
 }
 
