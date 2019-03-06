@@ -112,6 +112,14 @@ functions:
           method: patch
       - schedule: rate(10 minutes)
 
+  user_balances:
+    handler: kotlinserverless.framework.Handler
+    events:
+      - schedule: rate(10 minutes)
+      - http:
+          path: /user/balances
+          method: get
+
   token_get:
     handler: kotlinserverless.framework.models.Handler
     events:
@@ -247,6 +255,14 @@ functions:
           path: /challenge/share
           method: put
       - schedule: rate(10 minutes)
+
+  challenge_balances:
+    handler: kotlinserverless.framework.models.Handler
+    events:
+      - schedule: rate(10 minutes)
+      - http:
+          path: /challenge/balances
+          method: get
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
