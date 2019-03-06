@@ -232,21 +232,21 @@ functions:
         path: /challenge/expire
         method: put
 
-  challenge_invalidate:
-    handler: kotlinserverless.framework.models.Handler
-    events:
-    - schedule: rate(10 minutes)
-    - http:
-        path: /challenge/invalidate
-        method: put
-
-  challenge_validate:
-    handler: kotlinserverless.framework.models.Handler
-    events:
-    - schedule: rate(10 minutes)
-    - http:
-        path: /challenge/validate
-        method: put
+#  challenge_invalidate:
+#    handler: kotlinserverless.framework.models.Handler
+#    events:
+#    - schedule: rate(10 minutes)
+#    - http:
+#        path: /challenge/invalidate
+#        method: put
+#
+#  challenge_validate:
+#    handler: kotlinserverless.framework.models.Handler
+#    events:
+#    - schedule: rate(10 minutes)
+#    - http:
+#        path: /challenge/validate
+#        method: put
 
   challenge_complete:
     handler: kotlinserverless.framework.models.Handler

@@ -224,21 +224,21 @@ functions:
           method: put
       - schedule: rate(10 minutes)
 
-  challenge_invalidate:
-    handler: kotlinserverless.framework.models.Handler
-    events:
-      - http:
-          path: /challenge/invalidate
-          method: put
-      - schedule: rate(10 minutes)
-
-  challenge_validate:
-    handler: kotlinserverless.framework.models.Handler
-    events:
-      - http:
-          path: /challenge/validate
-          method: put
-      - schedule: rate(10 minutes)
+#  challenge_invalidate:
+#    handler: kotlinserverless.framework.models.Handler
+#    events:
+#      - http:
+#          path: /challenge/invalidate
+#          method: put
+#      - schedule: rate(10 minutes)
+#
+#  challenge_validate:
+#    handler: kotlinserverless.framework.models.Handler
+#    events:
+#      - http:
+#          path: /challenge/validate
+#          method: put
+#      - schedule: rate(10 minutes)
 
   challenge_complete:
     handler: kotlinserverless.framework.models.Handler
