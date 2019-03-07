@@ -23,7 +23,7 @@ routes:
 # User Balances Microservice
 # =========================
 
-  - regex: '^/user/balances*'
+  - regex: '^/user/balances*?'
     inputModel: main.daos.UserAccount
     outputModel: main.daos.ChallengeToUnsharedTransactionsList
     controller: main.controllers.UserAccountController
@@ -47,7 +47,7 @@ routes:
 # Challenge Balances Microservice
 # =========================
 
-  - regex: '^/challenge/balances*'
+  - regex: '^/challenge/balances*?'
     inputModel: main.daos.Challenge
     outputModel: main.daos.EmailToChallengeBalanceList
     controller: main.controllers.ChallengeController
