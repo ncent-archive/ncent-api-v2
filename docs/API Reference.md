@@ -56,15 +56,11 @@ This API is a simple retrieval for a single user account
 
 GET (requestData object must pass data in as query parameters instead of request body)
 
-#### Parameters
+#### Query Parameters
 
-1. user
+1. userId
    * The user making the API call
    * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
 1. id
    * The ID of the user to be retrieved
    * Datatype: Int
@@ -112,7 +108,7 @@ GET (requestData object must pass data in as query parameters instead of request
 }
 ```
 
-## GET (requestData object must pass data in as query parameters instead of request body) User Balances
+## Get User Balances
 
 This API will return all of the caller's balances for each challenge that they have participated in
 
@@ -122,17 +118,13 @@ This API will return all of the caller's balances for each challenge that they h
 
 #### Method
 
-GET (requestData object must pass data in as query parameters instead of request body)
+GET
 
-#### Parameters
+#### Query Parameters
 
-1. user
+1. userId
    * The user making the API call
-   * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
+   * Datatype: Int
    
 #### Sample Response
 
@@ -717,19 +709,14 @@ This API is used for the creation of a new User instance
 
 POST 
 
-#### Parameters 
-
-1. user
-   * The user making the API call
-   * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
-      * body - a nested object containing the following user data fields (as Strings)
-         * email 
-         * firstname
-         * lastname
+#### Sample Request Body
+```json
+{
+  "email": "dev@ncnt.io",
+  "firstname": "nCent",
+  "lastname": "Labs"
+}
+```
 
 #### Sample Response
 ```json
@@ -788,15 +775,11 @@ This API is called in order to retrieve the data for a single challenge
 
 GET (requestData object must pass data in as query parameters instead of request body)
 
-#### Parameters
+#### Query Parameters
 
-1. user
+1. userId
    * The user making the API call
-   * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
+   * Datatype: Int
 1. id
    * The ID of the challenge to be retrieved
    * Datatype: Int
@@ -914,16 +897,12 @@ This API is called in order to retrieve the data for all challenges for the call
 
 GET (requestData object must pass data in as query parameters instead of request body)
 
-#### Parameters
+#### Query Parameters
 
-1. user
+1. userId
    * The user making the API call
-   * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
-   
+   * Datatype: Int
+      
 #### Sample Response
 
 ```json
@@ -1301,7 +1280,7 @@ GET (requestData object must pass data in as query parameters instead of request
 }
 ```
 
-## GET (requestData object must pass data in as query parameters instead of request body) All Balances For a Challenge
+## Get All Balances For a Challenge
 
 This API is called by a challenge sponsor in order to retrieve all balances being held by other users on that challenge
 
@@ -1311,20 +1290,13 @@ This API is called by a challenge sponsor in order to retrieve all balances bein
 
 #### Method
 
-GET (requestData object must pass data in as query parameters instead of request body)
+GET
 
-#### Parameters
+#### Query Parameters
 
-1. user
+1. userId
    * The user making the API call
-   * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
-1. id
-  * The ID of the challenge for which to retrieve the balances
-  * Datatype: Int
+   * Datatype: Int
    
 #### Sample Response
 
@@ -1357,17 +1329,47 @@ This API is called in order to create a new challenge
 
 POST
 
-#### Parameters
+#### Query Parameters
 
-1. user
+1. userId
    * The user making the API call
-   * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
-      * body - a data object containing a "challengeNamespace field", which should contain the appropriate data for the challenge to be created. 
-               For more information on the required and optional data fields for a Challenge, read about the [Challenge Model](./Models.md)
+   * Datatype: Int
+   
+#### Sample Request Body
+```json
+{
+  "challengeNamespace": {
+    "challengeSettings": {
+      "admin" : 1, 
+      "description" : "nCent Senior Engineer", 
+      "expiration" : "2020-02-02T00:35:01.441Z", 
+      "imageUrl" : "", 
+      "maxShares" : 10, 
+      "name" : "nCent Senior Engineer", 
+      "offChain" : true, 
+      "shareExpiration" : "2020-02-02T00:35:01.441Z", 
+      "sponsorName" : "nCent Labs",
+    }, 
+    "completionCriteria": {
+      "address" : "[B@708f5957", 
+      "prereq" : [], 
+      "reward" : {
+        "type": {
+          "audience": "PROVIDENCE", 
+          "type" : "N_OVER_2"
+        }
+      }
+    }, 
+    "distributionFeeReward": {
+      "type": {
+        "audience": "PROVIDENCE", 
+        "type" : "SINGLE"
+      }
+    }, 
+    "subChallenges" : []
+  }
+}
+```
    
 #### Sample Response
 
@@ -1482,22 +1484,23 @@ This API is called in order to share a challenge with another user, and invite t
 
 PATCH
 
-#### Parameters
+#### Query Parameters
 
-1. user
+1. userId
    * The user making the API call
-   * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
-      * body - an object containing the following fields:
-         * challengeId - the Integer ID of the challenge to be shared
-         * publicKeyToShareWith - the optional String representation of the public key address of the recipient's crypto wallet, if recipient email is not known
-         * shares - the Integer number of invitations to send to the recipient
-         * expiration - the optional DateTime representation of the expiration of the invitations
-         * emailToShareWith - the optional email address of the recipient, if the crypto public key is not known
+   * Datatype: Int
    
+#### Sample Request Body
+```json
+{
+  "challengeId": 1,
+  "shares": 1,
+  "expiration": "2020-02-02T00:35:01.441Z",
+  "publicKeyToShareWith": "some_public_key",
+  "emailToShareWith": "dev@ncnt.io"
+}
+```
+      
 #### Sample Response
 
 ```json
@@ -1566,18 +1569,19 @@ This API is called by the sponsor in order to trigger challenge redemption for a
 
 PATCH
 
-#### Parameters
+#### Query Parameters
 
-1. user
+1. userId
    * The user making the API call
-   * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
-      * body - a data object containing the following fields:
-         * completerPublicKey - a String representation of the redeemer's public key
-         * challengeId - the challenge for which the recipient is to be redeemed
+   * Datatype: Int
+   
+#### Sample Request Body
+```json
+{
+  "challengeId": 1,
+  "completerPublicKey": "some_public_key"
+}
+```
    
 #### Sample Response
 
@@ -1662,20 +1666,20 @@ This API is called by the sponsor in order to trigger redemption for a single pa
 
 PATCH
 
-#### Parameters
+#### Query Parameters
 
-1. user
+1. userId
    * The user making the API call
-   * Datatype: UserAccount
-1. requestData
-   * Datatype: Object
-   * Contains the following fields:
-      * secretKey - the caller's API secret key for verification
-      * body - a data object containing the following fields:
-          * completerPublicKey - a String representation of the redeemer's public key
-          * challengeId - the challenge for which the recipient is to be redeemed
-         
+   * Datatype: Int         
    
+#### Sample Request Body
+```json
+{
+  "challengeId": 1,
+  "completerPublicKey": "some_public_key"
+}
+```
+
 #### Sample Response
 
 ```json
@@ -1746,59 +1750,3 @@ PATCH
   "base64Encoded" : false
 }
 ```
-
-# ChallengeSetting APIs
-
-The following APIs will interact with the ChallengeSettings controller.
-
-## retrieveChallengeSettings
-
-# CompletionCriteria APIs
-
-The following APIs will interact with the CompletionCriterias controller
-
-## retrieveCompletionCriteria
-
-# Reward APIs
-
-The following APIs will interact with the Rewards controller.
-
-## retrieveReward
-
-# RewardPool APIs
-
-The following APIs will interact with the RewardPools controller.
-
-## retrieveRewardPool
-
-## addToRewardPool
-
-# RewardType APIs
-
-The following APIs will interact with the RewardTypes controller.
-
-## retrieveRewardType
-
-# Token APIs
-
-The following APIs will interact with the Tokens controller.
-
-## retrieveAllTokens
-
-## retrieveToken
-
-## sendTokens
-   
-# Transaction APIs
-
-The following APIs will interact with the Transactions controller.
-
-## retrieveAllTransactions
-
-## retrieveAllTransactionsForUser
-
-## retrieveAllTransactionsForChallenge
-
-##retrieveProvenanceChainFIFO
-
-## createTransaction
