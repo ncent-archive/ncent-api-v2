@@ -1348,7 +1348,7 @@ POST
       "name" : "nCent Senior Engineer", 
       "offChain" : true, 
       "shareExpiration" : "2020-02-02T00:35:01.441Z", 
-      "sponsorName" : "nCent Labs",
+      "sponsorName" : "nCent Labs"
     }, 
     "completionCriteria": {
       "address" : "[B@708f5957", 
@@ -1750,3 +1750,59 @@ PATCH
   "base64Encoded" : false
 }
 ```
+
+# ChallengeSetting APIs
+
+The following APIs will interact with the ChallengeSettings controller.
+
+## retrieveChallengeSettings
+
+# CompletionCriteria APIs
+
+The following APIs will interact with the CompletionCriterias controller
+
+## retrieveCompletionCriteria
+
+# Reward APIs
+
+The following APIs will interact with the Rewards controller.
+
+## retrieveReward
+
+# RewardPool APIs
+
+The following APIs will interact with the RewardPools controller.
+
+## retrieveRewardPool
+
+## addToRewardPool
+
+# RewardType APIs
+
+The following APIs will interact with the RewardTypes controller.
+
+## retrieveRewardType
+
+# Token APIs
+
+The following APIs will interact with the Tokens controller.
+
+## retrieveAllTokens
+
+## retrieveToken
+
+## sendTokens
+   
+# Transaction APIs
+
+The following APIs will interact with the Transactions controller.
+
+## retrieveAllTransactions
+
+## retrieveAllTransactionsForUser
+
+## retrieveAllTransactionsForChallenge
+
+##retrieveProvenanceChainFIFO
+
+## createTransaction
