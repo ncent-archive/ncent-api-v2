@@ -47,7 +47,7 @@ routes:
 # Challenge Balances Microservice
 # =========================
 
-  - regex: '^/challenge/balances*?'
+  - regex: '^/challenge/balances(/*[a-zA-Z0-9]*)?'
     inputModel: main.daos.Challenge
     outputModel: main.daos.EmailToChallengeBalanceList
     controller: main.controllers.ChallengeController
