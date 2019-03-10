@@ -18,18 +18,6 @@ routes:
     shouldValidatePost: true
     shouldValidatePut: true
     shouldValidateGet: false
-    
-# =========================
-# User Balances Microservice
-# =========================
-
-  - regex: '^/user/balances*?'
-    inputModel: main.daos.UserAccount
-    outputModel: main.daos.ChallengeToUnsharedTransactionsList
-    controller: main.controllers.UserAccountController
-    shouldValidatePost: false
-    shouldValidatePut: false
-    shouldValidateGet: true
 
 # =========================
 # User Microservice
