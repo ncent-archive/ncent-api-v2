@@ -102,9 +102,9 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     fun balances(user: UserAccount?, requestData: RequestData): SOAResult<EmailToChallengeBalanceList> {
-        val challengeId = requestData.queryParams["challengeId"] as Int
+        val challengeId = requestData.queryParams["challengeId"] as String
 
-        val getAllBalancesForChallengeResult = GetAllBalancesForChallengeService.execute(user!!, challengeId)
+        val getAllBalancesForChallengeResult = GetAllBalancesForChallengeService.execute(user!!, challengeId.toInt())
 
         if (getAllBalancesForChallengeResult.data == null && getAllBalancesForChallengeResult.message == "User not permitted to make this call") {
             throw ForbiddenException(getAllBalancesForChallengeResult.message)
