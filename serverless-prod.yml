@@ -105,7 +105,7 @@ functions:
       - schedule: rate(10 minutes)
 
   user_reset:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
       - http:
           path: /user/reset
@@ -113,7 +113,7 @@ functions:
       - schedule: rate(10 minutes)
 
   user_balances:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
       - schedule: rate(10 minutes)
       - http:

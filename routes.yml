@@ -18,7 +18,7 @@ routes:
     shouldValidatePost: true
     shouldValidatePut: true
     shouldValidateGet: false
-    
+
 # =========================
 # User Microservice
 # =========================

@@ -113,7 +113,7 @@ functions:
         method: delete
 
   user_reset:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
     - schedule: rate(10 minutes)
     - http:
@@ -121,7 +121,7 @@ functions:
         method: patch
 
   user_balances:
-    handler: kotlinserverless.framework.Handler
+    handler: kotlinserverless.framework.models.Handler
     events:
       - schedule: rate(10 minutes)
       - http:
