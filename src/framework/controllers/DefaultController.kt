@@ -17,7 +17,7 @@ open class DefaultController<T: BaseIntEntity> : Controller<T> {
 		val validateApiKeyResult = DaoService.execute {
 			ValidateApiKeyService.execute(user, requestData.userAuth.secretKey)
 		}
-		DaoService.throwOrReturn(validateApiKeyResult.result, validateApiKeyResult.message)
+		DaoService.throwOrReturn(validateApiKeyResult)
 	}
 
 	@Throws(ForbiddenException::class)

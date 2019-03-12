@@ -10,6 +10,14 @@ object GetUserAccountService {
         return DaoService.execute {
             try {
                 when {
+                    apiKey != null -> {
+                        val query = UserAccounts
+                                .innerJoin(ApiCreds)
+                                .select {
+                                    ApiCreds.apiKey eq apiKey
+                                }
+                        UserAccount.wrapRows(query).toList().distinct().first()
+                    }
                     userId != null -> {
                         UserAccount.findById(userId)!!
                     }
@@ -18,14 +26,6 @@ object GetUserAccountService {
                                 .innerJoin(Users)
                                 .select {
                                     Users.email eq email
-                                }
-                        UserAccount.wrapRows(query).toList().distinct().first()
-                    }
-                    apiKey != null -> {
-                        val query = UserAccounts
-                                .innerJoin(ApiCreds)
-                                .select {
-                                    ApiCreds.apiKey eq apiKey
                                 }
                         UserAccount.wrapRows(query).toList().distinct().first()
                     }

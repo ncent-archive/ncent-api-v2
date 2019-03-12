@@ -38,8 +38,7 @@ class FindOneChallengeTest : WordSpec() {
                 "GET",
                     null,
                 mapOf(
-                    Pair("id", challenge.idValue),
-                    Pair("userId", user.value.idValue)
+                    Pair("id", challenge.idValue)
                 )
             )
             badMap = TestHelper.buildRequest(
@@ -48,8 +47,7 @@ class FindOneChallengeTest : WordSpec() {
                 "GET",
                     null,
                 mapOf(
-                    Pair("id", 404),
-                    Pair("userId", user.value.idValue)
+                    Pair("id", 404)
                 )
             )
         }

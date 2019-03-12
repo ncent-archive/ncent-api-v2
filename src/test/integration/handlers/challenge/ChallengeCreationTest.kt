@@ -40,9 +40,6 @@ class ChallengeCreationTest : WordSpec() {
                 "POST",
                 mapOf(
                     Pair("challengeNamespace", TestHelper.toJsonObject(challengeNamespace))
-                ),
-                mapOf(
-                    Pair("userId", newUser.value.idValue)
                 )
             )
 
@@ -52,9 +49,6 @@ class ChallengeCreationTest : WordSpec() {
                 "POST",
                 mapOf(
                     Pair("challengeNamespace", "null")
-                ),
-                mapOf(
-                    Pair("userId", newUser.value.idValue)
                 )
             )
         }

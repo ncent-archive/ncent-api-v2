@@ -59,9 +59,6 @@ class CompleteChallengeTest : WordSpec() {
                         mapOf(
                             Pair("challengeId", challenge.idValue),
                             Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
-                        ),
-                        mapOf(
-                            Pair("userId", user1.value.idValue.toString())
                         )
                     )
 
@@ -76,15 +73,12 @@ class CompleteChallengeTest : WordSpec() {
             "should return a 403 forbidden response when attempted by a public key other than the sponsor's" {
                 transaction {
                     map = TestHelper.buildRequest(
-                        user1,
+                        user2,
                         "/challenge/complete",
                         "PATCH",
                         mapOf(
                             Pair("challengeId", challenge.idValue),
                             Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
-                        ),
-                        mapOf(
-                            Pair("userId", user2.value.idValue.toString())
                         )
                     )
 
@@ -102,9 +96,6 @@ class CompleteChallengeTest : WordSpec() {
                         mapOf(
                             Pair("challengeId", notActivatedChallenge.idValue),
                             Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
-                        ),
-                        mapOf(
-                            Pair("userId", user1.value.idValue.toString())
                         )
                     )
 
@@ -125,9 +116,6 @@ class CompleteChallengeTest : WordSpec() {
                         mapOf(
                             Pair("challengeId", challenge.idValue),
                             Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
-                        ),
-                        mapOf(
-                            Pair("userId", user1.value.idValue.toString())
                         )
                     )
 
@@ -142,15 +130,12 @@ class CompleteChallengeTest : WordSpec() {
             "should return a 403 forbidden response when attempted by a public key other than the sponsor's" {
                 transaction {
                     map = TestHelper.buildRequest(
-                        user1,
+                        user2,
                         "/challenge/complete",
                         "PATCH",
                         mapOf(
                             Pair("challengeId", challenge.idValue),
                             Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
-                        ),
-                        mapOf(
-                            Pair("userId", user2.value.idValue.toString())
                         )
                     )
 
@@ -169,9 +154,6 @@ class CompleteChallengeTest : WordSpec() {
                         mapOf(
                             Pair("challengeId", notActivatedChallenge.idValue),
                             Pair("completerPublicKey", user2.value.cryptoKeyPair.publicKey)
-                        ),
-                        mapOf(
-                            Pair("userId", user1.value.idValue.toString())
                         )
                     )
 
