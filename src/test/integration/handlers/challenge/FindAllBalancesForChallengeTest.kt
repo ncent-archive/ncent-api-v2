@@ -58,9 +58,7 @@ class FindAllBalancesForChallengeTest : WordSpec() {
                             "GET",
                             null,
                             mapOf(
-                                    Pair("userId", user1.value.idValue.toString()),
-                                    Pair("challengeId", challenge.idValue.toString())
-
+                                Pair("challengeId", challenge.idValue.toString())
                             )
                     )
 
@@ -87,8 +85,7 @@ class FindAllBalancesForChallengeTest : WordSpec() {
                             "GET",
                             null,
                             mapOf(
-                                    Pair("userId", user2.value.idValue.toString()),
-                                    Pair("challengeId", challenge.idValue.toString())
+                                Pair("challengeId", challenge.idValue.toString())
                             )
                     )
 

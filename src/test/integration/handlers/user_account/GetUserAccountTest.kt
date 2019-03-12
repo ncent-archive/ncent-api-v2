@@ -49,8 +49,7 @@ class GetUserAccountTest : WordSpec() {
                 "GET",
                     null,
                 mapOf(
-                        Pair("id", user1.value.idValue),
-                        Pair("userId", user1.value.idValue.toString())
+                    Pair("id", user1.value.idValue)
                 )
             )
         }
@@ -81,9 +80,8 @@ class GetUserAccountTest : WordSpec() {
                             "GET",
                             null,
                             mapOf(
-                                    Pair("id", null),
-                                    Pair("email", user1.value.userMetadata.email),
-                                    Pair("userId", user1.value.idValue.toString())
+                                Pair("id", null),
+                                Pair("email", user1.value.userMetadata.email)
                             )
                     )
                     val response = handler.handleRequest(map, contxt)

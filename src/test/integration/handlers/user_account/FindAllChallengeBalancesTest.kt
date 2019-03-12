@@ -38,19 +38,13 @@ class FindAllChallengeBalancesTest : WordSpec() {
                 user1,
                 "/user/balances",
                 "GET",
-                    null,
-                mapOf(
-                    Pair("userId", user1.value.idValue.toString())
-                )
+                null
             )
             notFoundMap = TestHelper.buildRequest(
                 user2,
                 "/user/balances",
                 "GET",
-                    null,
-                mapOf(
-                    Pair("userId", user2.value.idValue.toString())
-                )
+                null
             )
         }
     }
