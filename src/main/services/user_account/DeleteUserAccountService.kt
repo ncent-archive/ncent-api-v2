@@ -12,6 +12,6 @@ object DeleteUserAccountService {
         user.userMetadata.delete()
         user.cryptoKeyPair.delete()
         user.apiCreds.delete()
-        return SOAResult(SOAResultType.SUCCESS, null, null)
+        return SOAResult(SOAResultType.SUCCESS, null, true)
     }
 }
