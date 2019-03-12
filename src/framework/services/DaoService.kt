@@ -39,6 +39,17 @@ object DaoService {
         }
     }
 
+    fun <T> throwOrReturn(result: SOAResult<T>) {
+        if(result.message?.equals("Invalid api credentials") == true)
+            throw UnauthorizedError(result.message!!)
+
+        when(result.result) {
+            SOAResultType.FAILURE -> throw SoAFailureException(result.message)
+            SOAResultType.ERROR -> throw SoAErrorException(result.message)
+            else -> return
+        }
+    }
+
     fun throwOrReturn(result: SOAResultType, message: String?) {
         if(message?.equals("Invalid api credentials") == true)
             throw UnauthorizedError(message!!)
