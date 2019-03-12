@@ -3,7 +3,6 @@ package main.helpers
 import framework.services.DaoService
 import kotlinserverless.framework.models.NotFoundException
 import kotlinserverless.framework.services.SOAResult
-import kotlinserverless.framework.services.SOAResultType
 import main.daos.Challenge
 import main.daos.ChallengeToUnsharedTransactionsList
 import main.daos.UserAccount
@@ -16,15 +15,7 @@ object ChallengeHelper {
             throw InternalError()
         }
 
-        val findChallengeResult = DaoService.execute {
-            Challenge.findById(challengeId)
-        }
-
-        if (findChallengeResult.result != SOAResultType.SUCCESS || findChallengeResult.data == null) {
-            throw NotFoundException("Challenge not found")
-        }
-
-        return findChallengeResult.data!!
+        return Challenge.findById(challengeId)!!
     }
 
     @Throws(NotFoundException::class)

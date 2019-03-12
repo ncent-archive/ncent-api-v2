@@ -4,6 +4,7 @@ import kotlinserverless.framework.models.*
 import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.lang.reflect.InvocationTargetException
 import java.sql.SQLException
 
 object DaoService {
@@ -30,13 +31,14 @@ object DaoService {
             Handler.log(e, e.message)
             println("There was a SQL error with a DaoService execution: " + e.message)
             result.message = if(e.message != null) e.message else e.toString()
+        } catch(e: InvocationTargetException) {
+            throw e.targetException
         } catch(e: Throwable) {
             Handler.log(e, e.message)
             println("There was a general error with a DaoService execution: " + e.message)
             result.message = if(e.message != null) e.message else e.toString()
-        } finally {
-            return result
         }
+        return result
     }
 
     fun throwOrReturn(result: SOAResult<*>) {

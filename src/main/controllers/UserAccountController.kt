@@ -1,6 +1,5 @@
 package main.controllers
 
-import framework.services.DaoService
 import kotlinserverless.framework.controllers.RestController
 import kotlinserverless.framework.controllers.DefaultController
 import kotlinserverless.framework.services.SOAResult
@@ -13,17 +12,13 @@ import main.services.user_account.*
 
 class UserAccountController: DefaultController<UserAccount>(), RestController<UserAccount, UserAccount> {
     override fun findOne(user: UserAccount, requestData: RequestData, id: Int?): SOAResult<UserAccount> {
-        val result = DaoService.execute {
-            return@execute if (requestData.queryParams["email"] != null) {
-                GetUserAccountService.execute(null, requestData.queryParams["email"] as String)
-            } else if (id != null) {
-                GetUserAccountService.execute(id)
-            } else {
-                SOAResult(SOAResultType.FAILURE, null)
-            }
+        return if (requestData.queryParams["email"] != null) {
+            GetUserAccountService.execute(null, requestData.queryParams["email"] as String)
+        } else if (id != null) {
+            GetUserAccountService.execute(id)
+        } else {
+            SOAResult(SOAResultType.FAILURE, null)
         }
-        DaoService.throwOrReturn(result)
-        return result.data!!
     }
 
     fun balances(user: UserAccount, requestData: RequestData): SOAResult<ChallengeToUnsharedTransactionsList> {
@@ -37,29 +32,17 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
     }
 
     override fun create(user: UserAccount?, requestData: RequestData): SOAResult<NewUserAccount> {
-        val result = DaoService.execute {
-            GenerateUserAccountService.execute(
-                requestData.body["email"] as String,
-                requestData.body["firstname"] as String,
-                requestData.body["lastname"] as String)
-        }
-        DaoService.throwOrReturn(result)
-        return result.data!!
+        return GenerateUserAccountService.execute(
+            requestData.body["email"] as String,
+            requestData.body["firstname"] as String,
+            requestData.body["lastname"] as String)
     }
 
     override fun delete(user: UserAccount, requestData: RequestData): SOAResult<Boolean> {
-        val result = DaoService.execute {
-            DeleteUserAccountService.execute(user)
-        }
-        DaoService.throwOrReturn(result)
-        return result.data!!
+        return DeleteUserAccountService.execute(user)
     }
 
     fun reset(user: UserAccount, requestData: RequestData): SOAResult<NewUserAccount> {
-        val result = DaoService.execute {
-            ResetUserAccount.execute(user)
-        }
-        DaoService.throwOrReturn(result)
-        return result.data!!
+        return ResetUserAccount.execute(user)
     }
 }
