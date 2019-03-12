@@ -25,13 +25,9 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     override fun findAll(user: UserAccount, requestData: RequestData): SOAResult<List<Challenge>> {
-        val challengesResult = ChallengeHelper.getChallenges(user)
+        val challenges = ChallengeHelper.getChallenges(user)
 
-        if (challengesResult.data == null) {
-            throw InternalError()
-        }
-
-        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, challengesResult.data!!.challengeToUnsharedTransactions.map { it -> it.challenge })
+        return SOAResult(SOAResultType.SUCCESS, null, challenges.challengeToUnsharedTransactions.map { it.challenge })
     }
 
     fun complete(user: UserAccount?, requestData: RequestData): SOAResult<TransactionList> {

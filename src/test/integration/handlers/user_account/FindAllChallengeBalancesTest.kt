@@ -71,7 +71,7 @@ class FindAllChallengeBalancesTest : WordSpec() {
                 transaction {
                     val findAllChallengesResult = handler.handleRequest(notFoundMap, contxt)
                     findAllChallengesResult.statusCode shouldBe 404
-                    findAllChallengesResult.body shouldBe "No challenges found"
+                    findAllChallengesResult.body shouldBe "Not Found"
                 }
             }
         }
