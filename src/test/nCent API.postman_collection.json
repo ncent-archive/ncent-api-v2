@@ -740,6 +740,63 @@
 						"description": null
 					},
 					"response": []
+				},
+				{
+					"name": "FindAllBalancesForChallenge",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bb1e0b0f-d58a-4147-9cf9-0c700570105c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{encodedApiKeyAndSecret}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://us8t47w3me.execute-api.us-west-1.amazonaws.com/development/challenge/balances?userId={{testUserId}}&challengeId={{testChallengeId}}",
+							"protocol": "https",
+							"host": [
+								"us8t47w3me",
+								"execute-api",
+								"us-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"development",
+								"challenge",
+								"balances"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{testUserId}}",
+									"equals": true
+								},
+								{
+									"key": "challengeId",
+									"value": "{{testChallengeId}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
 				}
 			]
 		},
