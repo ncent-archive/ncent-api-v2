@@ -39,25 +39,36 @@ object DaoService {
         }
     }
 
-    fun <T> throwOrReturn(result: SOAResult<T>) {
-        if(result.message?.equals("Invalid api credentials") == true)
-            throw UnauthorizedError(result.message!!)
+    fun throwOrReturn(result: SOAResult<*>) {
+        when {
+            result.message?.equals("Invalid api credentials") == true -> {
+                throw UnauthorizedError(result.message!!)
+            }
+            result.message?.contains("Cannot transition from") == true ->  {
+                throw ForbiddenException(result.message)
+            }
+            result.message?.contains("User not permitted") == true ->  {
+                throw ForbiddenException(result.message)
+            }
+            result.message?.contains("You do not have enough") == true ->  {
+                throw ForbiddenException(result.message)
+            }
+            result.message?.contains("has not been") == true ->  {
+                throw ForbiddenException(result.message)
+            }
+            result.message?.contains("user cannot") == true -> {
+                throw ForbiddenException(result.message)
+            }
+            else -> null
+        }
 
         when(result.result) {
             SOAResultType.FAILURE -> throw SoAFailureException(result.message)
             SOAResultType.ERROR -> throw SoAErrorException(result.message)
-            else -> return
+            else -> null
         }
-    }
 
-    fun throwOrReturn(result: SOAResultType, message: String?) {
-        if(message?.equals("Invalid api credentials") == true)
-            throw UnauthorizedError(message!!)
-
-        when(result) {
-            SOAResultType.FAILURE -> throw SoAFailureException(message)
-            SOAResultType.ERROR -> throw SoAErrorException(message)
-            else -> return
-        }
+        if(result.data is SOAResult<*>)
+            throwOrReturn(result.data!! as SOAResult<*>)
     }
 }

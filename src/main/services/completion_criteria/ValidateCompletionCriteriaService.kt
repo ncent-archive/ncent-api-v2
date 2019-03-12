@@ -13,6 +13,7 @@ object ValidateCompletionCriteriaService {
         // TODO -- eventually move this logic to the completion criteria
         // TODO -- in future there will be different completion criteria types, and
         // TODO -- the object should decide if it is valid or not
+
         return SOAResult(SOAResultType.SUCCESS, null,caller.cryptoKeyPair.publicKey == completionCriteria.address)
     }
 }

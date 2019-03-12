@@ -25,7 +25,7 @@ object RedeemChallengeService {
             caller,
             challenge.completionCriterias
         )
-        if(validationResult.result != SOAResultType.SUCCESS)
+        if(validationResult.result != SOAResultType.SUCCESS || !validationResult.data!!)
             return SOAResult(SOAResultType.FAILURE, validationResult.message)
 
         // validate user has any shares available -- without any they cannot complete
