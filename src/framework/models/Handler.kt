@@ -45,7 +45,7 @@ open class Handler: RequestHandler<Map<String, Any>, ApiGatewayResponse> {
     try {
       body = requestDispatcher.locate(ApiGatewayRequest(input, context))
 
-      status = when (body == null) {
+      status = when (body == null || body == true) {
         true -> 204
         false -> 200
       }

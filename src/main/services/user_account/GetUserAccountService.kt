@@ -3,10 +3,11 @@ package main.services.user_account
 import kotlinserverless.framework.services.SOAResult
 import main.daos.*
 import framework.services.DaoService
+import kotlinserverless.framework.models.NotFoundException
 import org.jetbrains.exposed.sql.select
 
 object GetUserAccountService {
-    fun execute(userId: Int? = null, email: String? = null, apiKey: String? = null): SOAResult<UserAccount?> {
+    fun execute(userId: Int? = null, email: String? = null, apiKey: String? = null): SOAResult<UserAccount> {
         return DaoService.execute {
             try {
                 when {
@@ -30,11 +31,11 @@ object GetUserAccountService {
                         UserAccount.wrapRows(query).toList().distinct().first()
                     }
                     else -> {
-                        null
+                        throw NotFoundException()
                     }
                 }
             } catch(e: NoSuchElementException) {
-                return@execute null
+                throw NotFoundException()
             }
         }
     }
