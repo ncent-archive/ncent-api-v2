@@ -22,13 +22,9 @@ class UserAccountController: DefaultController<UserAccount>(), RestController<Us
     }
 
     fun balances(user: UserAccount, requestData: RequestData): SOAResult<ChallengeToUnsharedTransactionsList> {
-        val challengesResult = ChallengeHelper.getChallenges(user)
+        val challenges = ChallengeHelper.getChallenges(user)
 
-        if (challengesResult.data == null) {
-            throw InternalError()
-        }
-
-        return SOAResult(SOAResultType.SUCCESS, challengesResult.message, challengesResult.data!!)
+        return SOAResult(SOAResultType.SUCCESS, null, challenges!!)
     }
 
     override fun create(user: UserAccount?, requestData: RequestData): SOAResult<NewUserAccount> {
