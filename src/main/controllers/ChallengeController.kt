@@ -30,18 +30,24 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         return SOAResult(SOAResultType.SUCCESS, null, challenges.challengeToUnsharedTransactions.map { it.challenge })
     }
 
+    fun activate(user: UserAccount?, requestData: RequestData): SOAResult<Transaction> {
+        val challengeId = requestData.body["challengeId"] as String
+
+        return ActivateChallengeService.execute(user!!, challengeId.toInt())
+    }
+
     fun complete(user: UserAccount?, requestData: RequestData): SOAResult<TransactionList> {
         val completerPublicKey = requestData.body["completerPublicKey"] as String
-        val challengeId = requestData.body["challengeId"] as Int
-        val challenge = ChallengeHelper.findChallengeById(challengeId)
+        val challengeId = requestData.body["challengeId"] as String
+        val challenge = ChallengeHelper.findChallengeById(challengeId.toInt())
 
         return CompleteChallengeService.execute(user!!, challenge, completerPublicKey)
     }
 
     fun redeem(user: UserAccount?, requestData: RequestData): SOAResult<TransactionList> {
         val completerPublicKey = requestData.body["completerPublicKey"] as String
-        val challengeId = requestData.body["challengeId"] as Int
-        val challenge = ChallengeHelper.findChallengeById(challengeId)
+        val challengeId = requestData.body["challengeId"] as String
+        val challenge = ChallengeHelper.findChallengeById(challengeId.toInt())
 
         return RedeemChallengeService.execute(user!!, challenge, completerPublicKey)
     }
