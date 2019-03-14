@@ -31,23 +31,23 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
     }
 
     fun activate(user: UserAccount?, requestData: RequestData): SOAResult<Transaction> {
-        val challengeId = requestData.body["challengeId"] as String
+        val challengeId = requestData.body["challengeId"] as Int
 
-        return ActivateChallengeService.execute(user!!, challengeId.toInt())
+        return ActivateChallengeService.execute(user!!, challengeId)
     }
 
     fun complete(user: UserAccount?, requestData: RequestData): SOAResult<TransactionList> {
         val completerPublicKey = requestData.body["completerPublicKey"] as String
-        val challengeId = requestData.body["challengeId"] as String
-        val challenge = ChallengeHelper.findChallengeById(challengeId.toInt())
+        val challengeId = requestData.body["challengeId"] as Int
+        val challenge = ChallengeHelper.findChallengeById(challengeId)
 
         return CompleteChallengeService.execute(user!!, challenge, completerPublicKey)
     }
 
     fun redeem(user: UserAccount?, requestData: RequestData): SOAResult<TransactionList> {
         val completerPublicKey = requestData.body["completerPublicKey"] as String
-        val challengeId = requestData.body["challengeId"] as String
-        val challenge = ChallengeHelper.findChallengeById(challengeId.toInt())
+        val challengeId = requestData.body["challengeId"] as Int
+        val challenge = ChallengeHelper.findChallengeById(challengeId)
 
         return RedeemChallengeService.execute(user!!, challenge, completerPublicKey)
     }

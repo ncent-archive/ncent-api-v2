@@ -50,7 +50,7 @@ class ActivateChallengeTest : WordSpec() {
                             "/challenge/activate",
                             "PUT",
                             mapOf(
-                                    Pair("challengeId", challenge.idValue.toString())
+                                    Pair("challengeId", challenge.idValue)
                             )
                     )
 
