@@ -16,10 +16,10 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "a449a6a5-f92e-4736-83ba-1e419a1f059f",
+								"id": "20a5bc5a-8a99-462c-a858-caf404f7c46b",
 								"type": "text/javascript",
 								"exec": [
-									"const email = \"dev1@ncnt.io\";",
+									"const email = \"dev134@ncnt.io\";",
 									"pm.environment.set(\"testUserEmail\", email);"
 								]
 							}
@@ -27,7 +27,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b7b0824f-58fa-4970-8c05-cdf6be611fc8",
+								"id": "464379cc-4335-4f97-a377-dd45586df4c6",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
@@ -36,10 +36,13 @@
 									"",
 									"pm.environment.set(\"testUser\", pm.response.json().value);",
 									"pm.environment.set(\"testUserId\", pm.response.json().value.id);",
-									"pm.environment.set(\"apiKey\", pm.response.json().value.apiCreds.apiKey)",
+									"pm.environment.set(\"apiKey\", pm.response.json().value.apiCreds.apiKey);",
+									"pm.environment.set(\"secretKey\", pm.response.json().secretKey);",
+									"pm.environment.set(\"publicKey1\", pm.response.json().value.cryptoKeyPair.publicKey);",
 									"",
-									"const secretKey = pm.response.json().value.apiCreds.secretKey;",
-									"const encodedApiKeyAndSecret = btoa(`${pm.apiKey}:${secretKey}`);",
+									"const apiKey = pm.response.json().value.apiCreds.apiKey;",
+									"const secretKey = pm.response.json().secretKey;",
+									"const encodedApiKeyAndSecret = btoa(`${apiKey}:${secretKey}`);",
 									"pm.environment.set(\"encodedApiKeyAndSecret\", encodedApiKeyAndSecret); ",
 									"",
 									"const testUserEmail = pm.environment.get(\"testUserEmail\");",
@@ -170,23 +173,28 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "17b05b12-16f1-4478-bb66-cf8e94f99560",
+								"id": "1eef3733-a42b-4469-8697-91d6467d4130",
+								"type": "text/javascript",
 								"exec": [
-									"const email = \"dev4@ncnt.io\";",
+									"const email = \"dev434@ncnt.io\";",
 									"pm.environment.set(\"testUserEmail2\", email);"
-								],
-								"type": "text/javascript"
+								]
 							}
 						},
 						{
 							"listen": "test",
 							"script": {
-								"id": "74ea467d-06fe-436f-9de7-2c1a0b9fd6ea",
+								"id": "f185ab65-bfb6-4b22-b891-4166af48a137",
+								"type": "text/javascript",
 								"exec": [
 									"pm.environment.set(\"testUser2\", pm.response.json().value);",
-									"pm.environment.set(\"testUserId2\", pm.response.json().value.id);"
-								],
-								"type": "text/javascript"
+									"pm.environment.set(\"testUserId2\", pm.response.json().value.id);",
+									"pm.environment.set(\"publicKey2\", pm.response.json().value.cryptoKeyPair.publicKey)",
+									"const apiKey = pm.response.json().value.apiCreds.apiKey;",
+									"const secretKey = pm.response.json().secretKey;",
+									"const encodedApiKeyAndSecret = btoa(`${apiKey}:${secretKey}`);",
+									"pm.environment.set(\"encodedApiKeyAndSecret2\", encodedApiKeyAndSecret); "
+								]
 							}
 						}
 					],
@@ -250,7 +258,7 @@
 			"description": "This folder contains the saved requests that will be made to APIs present in the Challenge Controller: https://github.com/ncent/ncent-api-v2/blob/master/src/main/controllers/ChallengeController.kt",
 			"item": [
 				{
-					"name": "Challenge create",
+					"name": "Challenge create offChain",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -294,7 +302,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"challengeNamespace\": {\n    \"challengeSettings\": {\n      \"admin\" : {{testUserId}}, \n      \"description\" : \"nCent Senior Engineer\", \n      \"expiration\" : \"2020-02-02T00:35:01.441Z\", \n      \"imageUrl\" : \"\", \n      \"maxShares\" : 10, \n      \"name\" : \"nCent Senior Engineer\", \n      \"offChain\" : true, \n      \"shareExpiration\" : \"2020-02-02T00:35:01.441Z\", \n      \"sponsorName\" : \"nCent Labs\",\n      \"metadatas\": [{\n        \"key\": \"jobDetails\",\n        \"value\": \"{\\\"company\\\": {\\\"name\\\": \\\"nCent Labs\\\",\\\"iconUrl\\\": \\\"https://ncent.io/Applications/landingPage/img/ncent_NOsubline_500px_white.png\\\",\\\"shareText\\\": \\\"SHARE this job, get upto $4k reward if ANYONE in your network (or network's network(s)) finds the hire!\\\",\\\"applyText\\\": \\\"\\\",\\\"totalUsdReward\\\": \\\"8000.00\\\",\\\"jobsUrl\\\": \\\"\\\",\\\"jobTitle\\\": \\\"Senior Software Engineer\\\",\\\"location\\\": \\\"Remote - Global\\\",\\\"description\\\": \\\"nCent Labs is a Stanford / Google / MIT PhD-led blockchain startup backed by Sequoia, SV Angel, Winklevoss Capital, MetaStable, Naval Ravikant, Steve Jurvetson, and others. We have a bold mission to create a freer and fairer decentralized internet where the users directly benefit from the network effects they create and own. To do this, we are launching a novel new blockchain that has viral incentives built into the protocol. We have a fast-paced culture and are focused on shipping robust code. \\n We're looking for mindful, empathetic, and self-aware engineers to join our team to help us move thinking forward. With a strong focus on growth and personal development, Medium is the ideal place to develop your skills in an environment that is built on mutual trust and respect.\\\",\\\"list\\\": [],\\\"benefits\\\": {\\\"title\\\": \\\"Benefits\\\",\\\"description\\\": \\\"nCent is a fast-paced early stage startup that offers you the chance to build a leading company. All positions at nCent are remote. nCent offers competitive salary and generous token / equity grants. We welcome qualified applicants of all backgrounds.\\\",\\\"list\\\": []}},\\\"subJobs\\\": [{\\\"title\\\": \\\"Backend\\\",\\\"responsibilities\\\": {\\\"title\\\": \\\"Responsibilities\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Work with engineers, and senior executives to execute on turning our vision into a tangible roadmap every quarter\\\",\\\"Build, test, and release product-facing features with stringent correctness and scalability requirements\\\",\\\"Build API's and middleware applications that are highly available and performant for any type of front end application\\\",\\\"Design, implement, test and maintain backend components: application, data, infrastructure, analytics and deployment\\\",\\\"Contribute to open source projects\\\",\\\"Consistently improve maintainability and stability of the codebase\\\"]},\\\"requirements\\\": {\\\"title\\\": \\\"Requirements\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"You have at least 4 years of experience in software engineering\\\",\\\"You have the ability to work both independently from start to finish on a project and with a distributed team\\\",\\\"You've designed, built, scaled and maintained production services, and know how to compose a service oriented architecture\\\",\\\"Expertise in Java or similar language (such as Kotlin or C++)\\\",\\\"You write high quality, well tested and documented code to meet the needs of your customers\\\",\\\"Real passion for agile, test-driven development, continuous integration and automated testing\\\",\\\"You know what high quality code — and software engineering processes — look like and know how to foster an environment that creates them\\\",\\\"You respectfully challenge your peers, and welcome being challenged\\\",\\\"You are passionate about learning, and want to help us learn too\\\"]},\\\"niceToHave\\\": {\\\"title\\\": \\\"Nice to Have\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Experience working remotely\\\",\\\"Experience with AWS (Lambda, EC2, API Gateway, RDS)\\\",\\\"Experience working in a service-oriented or microservice architecture\\\",\\\"You have deep knowledge of API design principles and best-practices, caching, resiliency, RPC, REST, and HTTP\\\",\\\"Experience with Serverless apps\\\",\\\"Some understanding of the in's and out's of the blockchain community and mission for the ecosystem\\\",\\\"Some understanding of the problems that currently exist in our space\\\"]}},{\\\"title\\\": \\\"Full Stack\\\",\\\"responsibilities\\\": {\\\"title\\\": \\\"Responsibilities\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Build full stack applications that leverage recursive incentives to solve otherwise impossible problems\\\",\\\"Work with engineers, and senior executives to execute on turning our vision into a tangible roadmap every quarter\\\",\\\"Architect and build product features from the database all the way to the UI\\\",\\\"Collaborate closely with colleagues and bring innovative and delightful designs to life; you'll have freedom to shape the look and feel\\\",\\\"Contribute to open source projects\\\",\\\"Consistently improve maintainability and stability of the codebase\\\"]},\\\"requirements\\\": {\\\"title\\\": \\\"Requirements\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"You have at least 4 years of experience in software engineering\\\",\\\"You enjoy being a generalist, with a willingness to work on both frontend and backend\\\",\\\"You have experience in programming and interacting with APIs\\\",\\\"You have experience building single page web applications\\\",\\\"Expertise in Java or similar language (such as Kotlin or C++)\\\",\\\"Expertise in Javascript, NodeJS, React\\\"\\\"You write high quality, well tested and documented code to meet the needs of your customers\\\",\\\"You have the ability to work both independently from start to finish on a project and with a distributed team\\\",\\\"Real passion for agile, test-driven development, continuous integration and automated testing\\\",\\\"You know what high quality code — and software engineering processes — look like and know how to foster an environment that creates them\\\",\\\"You respectfully challenge your peers, and welcome being challenged\\\",\\\"You are passionate about learning, and want to help us learn too\\\"]},\\\"niceToHave\\\": {\\\"title\\\": \\\"Nice to Have\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Experience working remotely\\\",\\\"Experience with AWS (Lambda, EC2, API Gateway, RDS)\\\",\\\"Experience working in a service-oriented or microservice architecture\\\",\\\"You have deep knowledge of API design principles and best-practices, caching, resiliency, RPC, REST, and HTTP\\\",\\\"Experience building mobile applications (native and cross platform)\\\",\\\"Some understanding of the in's and out's of the blockchain community and mission for the ecosystem\\\",\\\"Some understanding of the problems that currently exist in our space\\\"]}}]}\"\n      }]\n    }, \n    \"completionCriteria\": {\n      \"address\" : \"[B@708f5957\", \n      \"prereq\" : [], \n      \"reward\" : {\n        \"type\": {\n          \"audience\": \"PROVIDENCE\", \n          \"type\" : \"N_OVER_2\"\n        }\n      }\n    }, \n    \"distributionFeeReward\": {\n      \"type\": {\n        \"audience\": \"PROVIDENCE\", \n        \"type\" : \"SINGLE\"\n      }\n    }, \n    \"subChallenges\" : []\n  }\n}"
+							"raw": "{\n  \"challengeNamespace\": {\n    \"challengeSettings\": {\n      \"admin\" : {{testUserId}}, \n      \"description\" : \"nCent Senior Engineer\", \n      \"expiration\" : \"2020-02-02T00:35:01.441Z\", \n      \"imageUrl\" : \"\", \n      \"maxShares\" : 10, \n      \"name\" : \"nCent Senior Engineer\", \n      \"offChain\" : true, \n      \"shareExpiration\" : \"2020-02-02T00:35:01.441Z\", \n      \"sponsorName\" : \"nCent Labs\",\n      \"metadatas\": [{\n        \"key\": \"jobDetails\",\n        \"value\": \"{\\\"company\\\": {\\\"name\\\": \\\"nCent Labs\\\",\\\"iconUrl\\\": \\\"https://ncent.io/Applications/landingPage/img/ncent_NOsubline_500px_white.png\\\",\\\"shareText\\\": \\\"SHARE this job, get upto $4k reward if ANYONE in your network (or network's network(s)) finds the hire!\\\",\\\"applyText\\\": \\\"\\\",\\\"totalUsdReward\\\": \\\"8000.00\\\",\\\"jobsUrl\\\": \\\"\\\",\\\"jobTitle\\\": \\\"Senior Software Engineer\\\",\\\"location\\\": \\\"Remote - Global\\\",\\\"description\\\": \\\"nCent Labs is a Stanford / Google / MIT PhD-led blockchain startup backed by Sequoia, SV Angel, Winklevoss Capital, MetaStable, Naval Ravikant, Steve Jurvetson, and others. We have a bold mission to create a freer and fairer decentralized internet where the users directly benefit from the network effects they create and own. To do this, we are launching a novel new blockchain that has viral incentives built into the protocol. We have a fast-paced culture and are focused on shipping robust code. \\n We're looking for mindful, empathetic, and self-aware engineers to join our team to help us move thinking forward. With a strong focus on growth and personal development, Medium is the ideal place to develop your skills in an environment that is built on mutual trust and respect.\\\",\\\"list\\\": [],\\\"benefits\\\": {\\\"title\\\": \\\"Benefits\\\",\\\"description\\\": \\\"nCent is a fast-paced early stage startup that offers you the chance to build a leading company. All positions at nCent are remote. nCent offers competitive salary and generous token / equity grants. We welcome qualified applicants of all backgrounds.\\\",\\\"list\\\": []}},\\\"subJobs\\\": [{\\\"title\\\": \\\"Backend\\\",\\\"responsibilities\\\": {\\\"title\\\": \\\"Responsibilities\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Work with engineers, and senior executives to execute on turning our vision into a tangible roadmap every quarter\\\",\\\"Build, test, and release product-facing features with stringent correctness and scalability requirements\\\",\\\"Build API's and middleware applications that are highly available and performant for any type of front end application\\\",\\\"Design, implement, test and maintain backend components: application, data, infrastructure, analytics and deployment\\\",\\\"Contribute to open source projects\\\",\\\"Consistently improve maintainability and stability of the codebase\\\"]},\\\"requirements\\\": {\\\"title\\\": \\\"Requirements\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"You have at least 4 years of experience in software engineering\\\",\\\"You have the ability to work both independently from start to finish on a project and with a distributed team\\\",\\\"You've designed, built, scaled and maintained production services, and know how to compose a service oriented architecture\\\",\\\"Expertise in Java or similar language (such as Kotlin or C++)\\\",\\\"You write high quality, well tested and documented code to meet the needs of your customers\\\",\\\"Real passion for agile, test-driven development, continuous integration and automated testing\\\",\\\"You know what high quality code — and software engineering processes — look like and know how to foster an environment that creates them\\\",\\\"You respectfully challenge your peers, and welcome being challenged\\\",\\\"You are passionate about learning, and want to help us learn too\\\"]},\\\"niceToHave\\\": {\\\"title\\\": \\\"Nice to Have\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Experience working remotely\\\",\\\"Experience with AWS (Lambda, EC2, API Gateway, RDS)\\\",\\\"Experience working in a service-oriented or microservice architecture\\\",\\\"You have deep knowledge of API design principles and best-practices, caching, resiliency, RPC, REST, and HTTP\\\",\\\"Experience with Serverless apps\\\",\\\"Some understanding of the in's and out's of the blockchain community and mission for the ecosystem\\\",\\\"Some understanding of the problems that currently exist in our space\\\"]}},{\\\"title\\\": \\\"Full Stack\\\",\\\"responsibilities\\\": {\\\"title\\\": \\\"Responsibilities\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Build full stack applications that leverage recursive incentives to solve otherwise impossible problems\\\",\\\"Work with engineers, and senior executives to execute on turning our vision into a tangible roadmap every quarter\\\",\\\"Architect and build product features from the database all the way to the UI\\\",\\\"Collaborate closely with colleagues and bring innovative and delightful designs to life; you'll have freedom to shape the look and feel\\\",\\\"Contribute to open source projects\\\",\\\"Consistently improve maintainability and stability of the codebase\\\"]},\\\"requirements\\\": {\\\"title\\\": \\\"Requirements\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"You have at least 4 years of experience in software engineering\\\",\\\"You enjoy being a generalist, with a willingness to work on both frontend and backend\\\",\\\"You have experience in programming and interacting with APIs\\\",\\\"You have experience building single page web applications\\\",\\\"Expertise in Java or similar language (such as Kotlin or C++)\\\",\\\"Expertise in Javascript, NodeJS, React\\\"\\\"You write high quality, well tested and documented code to meet the needs of your customers\\\",\\\"You have the ability to work both independently from start to finish on a project and with a distributed team\\\",\\\"Real passion for agile, test-driven development, continuous integration and automated testing\\\",\\\"You know what high quality code — and software engineering processes — look like and know how to foster an environment that creates them\\\",\\\"You respectfully challenge your peers, and welcome being challenged\\\",\\\"You are passionate about learning, and want to help us learn too\\\"]},\\\"niceToHave\\\": {\\\"title\\\": \\\"Nice to Have\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Experience working remotely\\\",\\\"Experience with AWS (Lambda, EC2, API Gateway, RDS)\\\",\\\"Experience working in a service-oriented or microservice architecture\\\",\\\"You have deep knowledge of API design principles and best-practices, caching, resiliency, RPC, REST, and HTTP\\\",\\\"Experience building mobile applications (native and cross platform)\\\",\\\"Some understanding of the in's and out's of the blockchain community and mission for the ecosystem\\\",\\\"Some understanding of the problems that currently exist in our space\\\"]}}]}\"\n      }]\n    }, \n    \"completionCriteria\": {\n      \"address\" : \"{{publicKey1}}\", \n      \"prereq\" : [], \n      \"reward\" : {\n        \"type\": {\n          \"audience\": \"PROVIDENCE\", \n          \"type\" : \"N_OVER_2\"\n        }\n      }\n    }, \n    \"distributionFeeReward\": {\n      \"type\": {\n        \"audience\": \"PROVIDENCE\", \n        \"type\" : \"SINGLE\"\n      }\n    }, \n    \"subChallenges\" : []\n  }\n}"
 						},
 						"url": {
 							"raw": "https://us8t47w3me.execute-api.us-west-1.amazonaws.com/development/challenge?userId={{testUserId}}",
@@ -357,7 +365,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"challengeNamespace\": {\n    \"challengeSettings\": {\n      \"admin\" : {{testUserId}}, \n      \"description\" : \"nCent Senior Engineer\", \n      \"expiration\" : \"2020-02-02T00:35:01.441Z\", \n      \"imageUrl\" : \"\", \n      \"maxShares\" : 10, \n      \"name\" : \"nCent Senior Engineer\", \n      \"offChain\" : false, \n      \"shareExpiration\" : \"2020-02-02T00:35:01.441Z\", \n      \"sponsorName\" : \"nCent Labs\",\n      \"metadatas\": [{\n        \"key\": \"jobDetails\",\n        \"value\": \"{\\\"company\\\": {\\\"name\\\": \\\"nCent Labs\\\",\\\"iconUrl\\\": \\\"https://ncent.io/Applications/landingPage/img/ncent_NOsubline_500px_white.png\\\",\\\"shareText\\\": \\\"SHARE this job, get upto $4k reward if ANYONE in your network (or network's network(s)) finds the hire!\\\",\\\"applyText\\\": \\\"\\\",\\\"totalUsdReward\\\": \\\"8000.00\\\",\\\"jobsUrl\\\": \\\"\\\",\\\"jobTitle\\\": \\\"Senior Software Engineer\\\",\\\"location\\\": \\\"Remote - Global\\\",\\\"description\\\": \\\"nCent Labs is a Stanford / Google / MIT PhD-led blockchain startup backed by Sequoia, SV Angel, Winklevoss Capital, MetaStable, Naval Ravikant, Steve Jurvetson, and others. We have a bold mission to create a freer and fairer decentralized internet where the users directly benefit from the network effects they create and own. To do this, we are launching a novel new blockchain that has viral incentives built into the protocol. We have a fast-paced culture and are focused on shipping robust code. \\n We're looking for mindful, empathetic, and self-aware engineers to join our team to help us move thinking forward. With a strong focus on growth and personal development, Medium is the ideal place to develop your skills in an environment that is built on mutual trust and respect.\\\",\\\"list\\\": [],\\\"benefits\\\": {\\\"title\\\": \\\"Benefits\\\",\\\"description\\\": \\\"nCent is a fast-paced early stage startup that offers you the chance to build a leading company. All positions at nCent are remote. nCent offers competitive salary and generous token / equity grants. We welcome qualified applicants of all backgrounds.\\\",\\\"list\\\": []}},\\\"subJobs\\\": [{\\\"title\\\": \\\"Backend\\\",\\\"responsibilities\\\": {\\\"title\\\": \\\"Responsibilities\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Work with engineers, and senior executives to execute on turning our vision into a tangible roadmap every quarter\\\",\\\"Build, test, and release product-facing features with stringent correctness and scalability requirements\\\",\\\"Build API's and middleware applications that are highly available and performant for any type of front end application\\\",\\\"Design, implement, test and maintain backend components: application, data, infrastructure, analytics and deployment\\\",\\\"Contribute to open source projects\\\",\\\"Consistently improve maintainability and stability of the codebase\\\"]},\\\"requirements\\\": {\\\"title\\\": \\\"Requirements\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"You have at least 4 years of experience in software engineering\\\",\\\"You have the ability to work both independently from start to finish on a project and with a distributed team\\\",\\\"You've designed, built, scaled and maintained production services, and know how to compose a service oriented architecture\\\",\\\"Expertise in Java or similar language (such as Kotlin or C++)\\\",\\\"You write high quality, well tested and documented code to meet the needs of your customers\\\",\\\"Real passion for agile, test-driven development, continuous integration and automated testing\\\",\\\"You know what high quality code — and software engineering processes — look like and know how to foster an environment that creates them\\\",\\\"You respectfully challenge your peers, and welcome being challenged\\\",\\\"You are passionate about learning, and want to help us learn too\\\"]},\\\"niceToHave\\\": {\\\"title\\\": \\\"Nice to Have\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Experience working remotely\\\",\\\"Experience with AWS (Lambda, EC2, API Gateway, RDS)\\\",\\\"Experience working in a service-oriented or microservice architecture\\\",\\\"You have deep knowledge of API design principles and best-practices, caching, resiliency, RPC, REST, and HTTP\\\",\\\"Experience with Serverless apps\\\",\\\"Some understanding of the in's and out's of the blockchain community and mission for the ecosystem\\\",\\\"Some understanding of the problems that currently exist in our space\\\"]}},{\\\"title\\\": \\\"Full Stack\\\",\\\"responsibilities\\\": {\\\"title\\\": \\\"Responsibilities\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Build full stack applications that leverage recursive incentives to solve otherwise impossible problems\\\",\\\"Work with engineers, and senior executives to execute on turning our vision into a tangible roadmap every quarter\\\",\\\"Architect and build product features from the database all the way to the UI\\\",\\\"Collaborate closely with colleagues and bring innovative and delightful designs to life; you'll have freedom to shape the look and feel\\\",\\\"Contribute to open source projects\\\",\\\"Consistently improve maintainability and stability of the codebase\\\"]},\\\"requirements\\\": {\\\"title\\\": \\\"Requirements\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"You have at least 4 years of experience in software engineering\\\",\\\"You enjoy being a generalist, with a willingness to work on both frontend and backend\\\",\\\"You have experience in programming and interacting with APIs\\\",\\\"You have experience building single page web applications\\\",\\\"Expertise in Java or similar language (such as Kotlin or C++)\\\",\\\"Expertise in Javascript, NodeJS, React\\\"\\\"You write high quality, well tested and documented code to meet the needs of your customers\\\",\\\"You have the ability to work both independently from start to finish on a project and with a distributed team\\\",\\\"Real passion for agile, test-driven development, continuous integration and automated testing\\\",\\\"You know what high quality code — and software engineering processes — look like and know how to foster an environment that creates them\\\",\\\"You respectfully challenge your peers, and welcome being challenged\\\",\\\"You are passionate about learning, and want to help us learn too\\\"]},\\\"niceToHave\\\": {\\\"title\\\": \\\"Nice to Have\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Experience working remotely\\\",\\\"Experience with AWS (Lambda, EC2, API Gateway, RDS)\\\",\\\"Experience working in a service-oriented or microservice architecture\\\",\\\"You have deep knowledge of API design principles and best-practices, caching, resiliency, RPC, REST, and HTTP\\\",\\\"Experience building mobile applications (native and cross platform)\\\",\\\"Some understanding of the in's and out's of the blockchain community and mission for the ecosystem\\\",\\\"Some understanding of the problems that currently exist in our space\\\"]}}]}\"\n      }]\n    }, \n    \"completionCriteria\": {\n      \"address\" : \"[B@708f5957\", \n      \"prereq\" : [], \n      \"reward\" : {\n        \"type\": {\n          \"audience\": \"PROVIDENCE\", \n          \"type\" : \"N_OVER_2\"\n        }\n      }\n    }, \n    \"distributionFeeReward\": {\n      \"type\": {\n        \"audience\": \"PROVIDENCE\", \n        \"type\" : \"SINGLE\"\n      }\n    }, \n    \"subChallenges\" : []\n  }\n}"
+							"raw": "{\n  \"challengeNamespace\": {\n    \"challengeSettings\": {\n      \"admin\" : {{testUserId}}, \n      \"description\" : \"nCent Senior Engineer\", \n      \"expiration\" : \"2020-02-02T00:35:01.441Z\", \n      \"imageUrl\" : \"\", \n      \"maxShares\" : 10, \n      \"name\" : \"nCent Senior Engineer\", \n      \"offChain\" : false, \n      \"shareExpiration\" : \"2020-02-02T00:35:01.441Z\", \n      \"sponsorName\" : \"nCent Labs\",\n      \"metadatas\": [{\n        \"key\": \"jobDetails\",\n        \"value\": \"{\\\"company\\\": {\\\"name\\\": \\\"nCent Labs\\\",\\\"iconUrl\\\": \\\"https://ncent.io/Applications/landingPage/img/ncent_NOsubline_500px_white.png\\\",\\\"shareText\\\": \\\"SHARE this job, get upto $4k reward if ANYONE in your network (or network's network(s)) finds the hire!\\\",\\\"applyText\\\": \\\"\\\",\\\"totalUsdReward\\\": \\\"8000.00\\\",\\\"jobsUrl\\\": \\\"\\\",\\\"jobTitle\\\": \\\"Senior Software Engineer\\\",\\\"location\\\": \\\"Remote - Global\\\",\\\"description\\\": \\\"nCent Labs is a Stanford / Google / MIT PhD-led blockchain startup backed by Sequoia, SV Angel, Winklevoss Capital, MetaStable, Naval Ravikant, Steve Jurvetson, and others. We have a bold mission to create a freer and fairer decentralized internet where the users directly benefit from the network effects they create and own. To do this, we are launching a novel new blockchain that has viral incentives built into the protocol. We have a fast-paced culture and are focused on shipping robust code. \\n We're looking for mindful, empathetic, and self-aware engineers to join our team to help us move thinking forward. With a strong focus on growth and personal development, Medium is the ideal place to develop your skills in an environment that is built on mutual trust and respect.\\\",\\\"list\\\": [],\\\"benefits\\\": {\\\"title\\\": \\\"Benefits\\\",\\\"description\\\": \\\"nCent is a fast-paced early stage startup that offers you the chance to build a leading company. All positions at nCent are remote. nCent offers competitive salary and generous token / equity grants. We welcome qualified applicants of all backgrounds.\\\",\\\"list\\\": []}},\\\"subJobs\\\": [{\\\"title\\\": \\\"Backend\\\",\\\"responsibilities\\\": {\\\"title\\\": \\\"Responsibilities\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Work with engineers, and senior executives to execute on turning our vision into a tangible roadmap every quarter\\\",\\\"Build, test, and release product-facing features with stringent correctness and scalability requirements\\\",\\\"Build API's and middleware applications that are highly available and performant for any type of front end application\\\",\\\"Design, implement, test and maintain backend components: application, data, infrastructure, analytics and deployment\\\",\\\"Contribute to open source projects\\\",\\\"Consistently improve maintainability and stability of the codebase\\\"]},\\\"requirements\\\": {\\\"title\\\": \\\"Requirements\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"You have at least 4 years of experience in software engineering\\\",\\\"You have the ability to work both independently from start to finish on a project and with a distributed team\\\",\\\"You've designed, built, scaled and maintained production services, and know how to compose a service oriented architecture\\\",\\\"Expertise in Java or similar language (such as Kotlin or C++)\\\",\\\"You write high quality, well tested and documented code to meet the needs of your customers\\\",\\\"Real passion for agile, test-driven development, continuous integration and automated testing\\\",\\\"You know what high quality code — and software engineering processes — look like and know how to foster an environment that creates them\\\",\\\"You respectfully challenge your peers, and welcome being challenged\\\",\\\"You are passionate about learning, and want to help us learn too\\\"]},\\\"niceToHave\\\": {\\\"title\\\": \\\"Nice to Have\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Experience working remotely\\\",\\\"Experience with AWS (Lambda, EC2, API Gateway, RDS)\\\",\\\"Experience working in a service-oriented or microservice architecture\\\",\\\"You have deep knowledge of API design principles and best-practices, caching, resiliency, RPC, REST, and HTTP\\\",\\\"Experience with Serverless apps\\\",\\\"Some understanding of the in's and out's of the blockchain community and mission for the ecosystem\\\",\\\"Some understanding of the problems that currently exist in our space\\\"]}},{\\\"title\\\": \\\"Full Stack\\\",\\\"responsibilities\\\": {\\\"title\\\": \\\"Responsibilities\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Build full stack applications that leverage recursive incentives to solve otherwise impossible problems\\\",\\\"Work with engineers, and senior executives to execute on turning our vision into a tangible roadmap every quarter\\\",\\\"Architect and build product features from the database all the way to the UI\\\",\\\"Collaborate closely with colleagues and bring innovative and delightful designs to life; you'll have freedom to shape the look and feel\\\",\\\"Contribute to open source projects\\\",\\\"Consistently improve maintainability and stability of the codebase\\\"]},\\\"requirements\\\": {\\\"title\\\": \\\"Requirements\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"You have at least 4 years of experience in software engineering\\\",\\\"You enjoy being a generalist, with a willingness to work on both frontend and backend\\\",\\\"You have experience in programming and interacting with APIs\\\",\\\"You have experience building single page web applications\\\",\\\"Expertise in Java or similar language (such as Kotlin or C++)\\\",\\\"Expertise in Javascript, NodeJS, React\\\"\\\"You write high quality, well tested and documented code to meet the needs of your customers\\\",\\\"You have the ability to work both independently from start to finish on a project and with a distributed team\\\",\\\"Real passion for agile, test-driven development, continuous integration and automated testing\\\",\\\"You know what high quality code — and software engineering processes — look like and know how to foster an environment that creates them\\\",\\\"You respectfully challenge your peers, and welcome being challenged\\\",\\\"You are passionate about learning, and want to help us learn too\\\"]},\\\"niceToHave\\\": {\\\"title\\\": \\\"Nice to Have\\\",\\\"description\\\": \\\"\\\",\\\"list\\\": [\\\"Experience working remotely\\\",\\\"Experience with AWS (Lambda, EC2, API Gateway, RDS)\\\",\\\"Experience working in a service-oriented or microservice architecture\\\",\\\"You have deep knowledge of API design principles and best-practices, caching, resiliency, RPC, REST, and HTTP\\\",\\\"Experience building mobile applications (native and cross platform)\\\",\\\"Some understanding of the in's and out's of the blockchain community and mission for the ecosystem\\\",\\\"Some understanding of the problems that currently exist in our space\\\"]}}]}\"\n      }]\n    }, \n    \"completionCriteria\": {\n      \"address\" : \"{{publicKey1}}\", \n      \"prereq\" : [], \n      \"reward\" : {\n        \"type\": {\n          \"audience\": \"PROVIDENCE\", \n          \"type\" : \"N_OVER_2\"\n        }\n      }\n    }, \n    \"distributionFeeReward\": {\n      \"type\": {\n        \"audience\": \"PROVIDENCE\", \n        \"type\" : \"SINGLE\"\n      }\n    }, \n    \"subChallenges\" : []\n  }\n}"
 						},
 						"url": {
 							"raw": "https://us8t47w3me.execute-api.us-west-1.amazonaws.com/development/challenge?userId={{testUserId}}",
@@ -386,7 +394,7 @@
 					"response": []
 				},
 				{
-					"name": "Challenge findOne",
+					"name": "Challenge findOne offChain",
 					"event": [
 						{
 							"listen": "test",
@@ -559,6 +567,124 @@
 							]
 						},
 						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Activate Challenge onChain",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b83d8412-464a-4806-bb87-8c3e9513122c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{encodedApiKeyAndSecret}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"challengeId\": \"{{testChallengeOCId}}\"\n}"
+						},
+						"url": {
+							"raw": "https://us8t47w3me.execute-api.us-west-1.amazonaws.com/development/challenge/activate?userId={{testUserId}}",
+							"protocol": "https",
+							"host": [
+								"us8t47w3me",
+								"execute-api",
+								"us-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"development",
+								"challenge",
+								"activate"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{testUserId}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Active Challenge offChain",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ebf2e099-55bc-47c4-bdf1-c04986c98f55",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{encodedApiKeyAndSecret}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"challengeId\": \"{{testChallengeId}}\"\n}"
+						},
+						"url": {
+							"raw": "https://us8t47w3me.execute-api.us-west-1.amazonaws.com/development/challenge/activate?userId={{testUserId}}",
+							"protocol": "https",
+							"host": [
+								"us8t47w3me",
+								"execute-api",
+								"us-west-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"development",
+								"challenge",
+								"activate"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{testUserId}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
 					},
 					"response": []
 				},
@@ -801,6 +927,124 @@
 			]
 		},
 		{
+			"name": "Complete Challenge offChain",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ea012e31-6437-40c0-8b02-d01938308d69",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{encodedApiKeyAndSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"challengeId\": \"{{testChallengeId}}\",\n  \"completerPublicKey\": \"{{publicKey2}}\"\n}"
+				},
+				"url": {
+					"raw": "https://us8t47w3me.execute-api.us-west-1.amazonaws.com/development/challenge/complete?userId={{testUserId}}",
+					"protocol": "https",
+					"host": [
+						"us8t47w3me",
+						"execute-api",
+						"us-west-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"development",
+						"challenge",
+						"complete"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "{{testUserId}}",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Complete Challenge onChain",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5eb1fb0b-1243-4fb9-bbb3-d36cc14f89cc",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{encodedApiKeyAndSecret}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"challengeId\": \"{{testChallengeOCId}}\",\n  \"completerPublicKey\": \"{{publicKey2}}\"\n}"
+				},
+				"url": {
+					"raw": "https://us8t47w3me.execute-api.us-west-1.amazonaws.com/development/challenge/complete?userId={{testUserId}}",
+					"protocol": "https",
+					"host": [
+						"us8t47w3me",
+						"execute-api",
+						"us-west-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"development",
+						"challenge",
+						"complete"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "{{testUserId}}",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
 			"name": "UserAccount delete",
 			"event": [
 				{
@@ -864,8 +1108,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic {{encodedApiKeyAndSecret}}",
-						"type": "text"
+						"value": "Basic {{encodedApiKeyAndSecret2}}"
 					}
 				],
 				"body": {
