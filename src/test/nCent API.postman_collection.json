@@ -16,10 +16,10 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "20a5bc5a-8a99-462c-a858-caf404f7c46b",
+								"id": "9039c781-80ab-43c4-8723-083c523f0f47",
 								"type": "text/javascript",
 								"exec": [
-									"const email = \"dev134@ncnt.io\";",
+									"const email = \"dev136@ncnt.io\";",
 									"pm.environment.set(\"testUserEmail\", email);"
 								]
 							}
@@ -173,10 +173,10 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "1eef3733-a42b-4469-8697-91d6467d4130",
+								"id": "10889a99-ee81-4472-9082-ad2ff1235c40",
 								"type": "text/javascript",
 								"exec": [
-									"const email = \"dev434@ncnt.io\";",
+									"const email = \"dev436@ncnt.io\";",
 									"pm.environment.set(\"testUserEmail2\", email);"
 								]
 							}
@@ -600,7 +600,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"challengeId\": \"{{testChallengeOCId}}\"\n}"
+							"raw": "{\n\t\"challengeId\": {{testChallengeOCId}}\n}"
 						},
 						"url": {
 							"raw": "https://us8t47w3me.execute-api.us-west-1.amazonaws.com/development/challenge/activate?userId={{testUserId}}",
@@ -659,7 +659,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"challengeId\": \"{{testChallengeId}}\"\n}"
+							"raw": "{\n\t\"challengeId\": {{testChallengeId}}\n}"
 						},
 						"url": {
 							"raw": "https://us8t47w3me.execute-api.us-west-1.amazonaws.com/development/challenge/activate?userId={{testUserId}}",
@@ -738,7 +738,8 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "{{testUserId}}"
+									"value": "{{testUserId}}",
+									"equals": true
 								}
 							]
 						},
@@ -956,7 +957,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"challengeId\": \"{{testChallengeId}}\",\n  \"completerPublicKey\": \"{{publicKey2}}\"\n}"
+					"raw": "{\n  \"challengeId\": {{testChallengeId}},\n  \"completerPublicKey\": \"{{publicKey2}}\"\n}"
 				},
 				"url": {
 					"raw": "https://us8t47w3me.execute-api.us-west-1.amazonaws.com/development/challenge/complete?userId={{testUserId}}",
@@ -1015,7 +1016,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"challengeId\": \"{{testChallengeOCId}}\",\n  \"completerPublicKey\": \"{{publicKey2}}\"\n}"
+					"raw": "{\n  \"challengeId\": {{testChallengeOCId}},\n  \"completerPublicKey\": \"{{publicKey2}}\"\n}"
 				},
 				"url": {
 					"raw": "https://us8t47w3me.execute-api.us-west-1.amazonaws.com/development/challenge/complete?userId={{testUserId}}",
@@ -1093,7 +1094,8 @@
 					"query": [
 						{
 							"key": "userId",
-							"value": "{{testUserId}}"
+							"value": "{{testUserId}}",
+							"equals": true
 						}
 					]
 				},
