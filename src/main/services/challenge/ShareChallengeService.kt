@@ -111,7 +111,10 @@ object ShareChallengeService {
         if(receivedTransactionResult.result != SOAResultType.SUCCESS)
             return SOAResult(SOAResultType.FAILURE, receivedTransactionResult.message)
 
-        val previousTx = receivedTransactionResult.data!!.transactions?.first()
+        var previousTx: Transaction? = null
+        if(receivedTransactionResult.data!!.transactions.isEmpty() == false) {
+            previousTx = receivedTransactionResult.data!!.transactions.first()
+        }
 
         val txResult = GenerateTransactionService.execute(TransactionNamespace(
             from = caller.cryptoKeyPair.publicKey,
