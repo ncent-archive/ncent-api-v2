@@ -1,26 +1,34 @@
-package test.unit.services.challenge
+package test.integration.handlers.challenge
 
+import com.amazonaws.services.lambda.runtime.Context
 import framework.models.idValue
-import io.kotlintest.*
 import io.kotlintest.specs.WordSpec
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlinserverless.framework.services.SOAResultType
-import main.daos.*
+import io.kotlintest.Description
+import io.kotlintest.shouldBe
+import io.kotlintest.TestResult
 import kotlinserverless.framework.models.Handler
-import main.services.challenge.GetChainsForChallengeService
-import main.services.challenge.GetUnsharedTransactionsService
+import io.mockk.mockk
+import main.daos.*
+import main.helpers.JsonHelper
+import main.services.challenge.ActivateChallengeService
 import main.services.challenge.ShareChallengeService
-import org.jetbrains.exposed.sql.transactions.transaction
 import test.TestHelper
+import org.jetbrains.exposed.sql.transactions.transaction
 
 @ExtendWith(MockKExtension::class)
-class GetChainsForChallengeServiceTest : WordSpec() {
+class FindAllChainsForChallengeTest : WordSpec() {
+    private lateinit var handler: Handler
+    private lateinit var contxt: Context
+    private lateinit var map: Map<String, Any>
     private lateinit var newUserAccounts: List<NewUserAccount>
     private lateinit var challenge1: Challenge
 
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
+        handler = Handler(true)
+        contxt = mockk()
         transaction {
             newUserAccounts = TestHelper.generateUserAccounts(8)
             challenge1 = TestHelper.generateChallenge(newUserAccounts[0].value,1, true)[0]
@@ -33,18 +41,23 @@ class GetChainsForChallengeServiceTest : WordSpec() {
     }
 
     init {
-        "calling execute with a valid challenge" should {
-            "return the chains of emails" {
+        "Calling the API with a valid challenge" should {
+            "should return a valid list of chains" {
                 transaction {
-                    val chainsResult = GetChainsForChallengeService.execute(
-                        newUserAccounts[0].value,
-                        challenge1.idValue
+                    map = TestHelper.buildRequest(
+                        newUserAccounts[0],
+                        "/challenge/chains",
+                        "GET",
+                        mapOf(
+                                Pair("challengeId", challenge1.idValue.toString())
+                        )
                     )
 
-                    chainsResult.result shouldBe  SOAResultType.SUCCESS
-                    chainsResult.data!!.count() shouldBe 5
-                    chainsResult.data!!.first().count() shouldBe 3
-                    chainsResult.data!! shouldBe mutableListOf(
+                    val getAllChainsResult = handler.handleRequest(map, contxt)
+                    getAllChainsResult.statusCode shouldBe 200
+
+                    val emailToChallengeBalanceList = JsonHelper.parse<ChallengeChains>(getAllChainsResult.body!!.toString())
+                    emailToChallengeBalanceList.chains.map { it.chain } shouldBe mutableListOf(
                         mutableListOf(
                             "dev0@ncnt.io", "dev1@ncnt.io", "dev5@ncnt.io"
                         ),

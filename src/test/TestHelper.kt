@@ -7,6 +7,7 @@ import main.daos.*
 import main.helpers.JsonHelper
 import main.helpers.UserAccountHelper
 import main.services.challenge.GenerateChallengeService
+import main.services.challenge.ShareChallengeService
 import main.services.completion_criteria.GenerateCompletionCriteriaService
 import main.services.reward.AddToRewardPoolService
 import main.services.reward.GenerateRewardService
@@ -282,5 +283,63 @@ object TestHelper {
                 dataType = Challenge::class.simpleName!!
             )
         )).data!!
+    }
+
+    /**
+     *          0
+     *        / \ \  \
+     *       1  2  3  4
+     *      / \       \
+     *     5  6        7
+     */
+    fun createChainsOfShares(newUserAccounts: List<NewUserAccount>, challenge1: Challenge) {
+        ShareChallengeService.execute(
+            newUserAccounts[0].value,
+            challenge1,
+            1,
+            newUserAccounts[1].value.cryptoKeyPair.publicKey
+        )
+
+        ShareChallengeService.execute(
+            newUserAccounts[0].value,
+            challenge1,
+            1,
+            newUserAccounts[2].value.cryptoKeyPair.publicKey
+        )
+
+        ShareChallengeService.execute(
+            newUserAccounts[0].value,
+            challenge1,
+            1,
+            newUserAccounts[3].value.cryptoKeyPair.publicKey
+        )
+
+        ShareChallengeService.execute(
+            newUserAccounts[0].value,
+            challenge1,
+            1,
+            newUserAccounts[4].value.cryptoKeyPair.publicKey
+        )
+
+        ShareChallengeService.execute(
+            newUserAccounts[1].value,
+            challenge1,
+            1,
+            newUserAccounts[5].value.cryptoKeyPair.publicKey
+        )
+
+        ShareChallengeService.execute(
+            newUserAccounts[1].value,
+            challenge1,
+            1,
+            newUserAccounts[6].value.cryptoKeyPair.publicKey
+        )
+
+        ShareChallengeService.execute(
+            newUserAccounts[4].value,
+            challenge1,
+            1,
+            newUserAccounts[7].value.cryptoKeyPair.publicKey
+        )
     }
 }
