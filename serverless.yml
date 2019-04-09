@@ -224,14 +224,6 @@ functions:
         path: /challenges
         method: get
 
-  challenge_expire:
-    handler: kotlinserverless.framework.models.Handler
-    events:
-    - schedule: rate(10 minutes)
-    - http:
-        path: /challenge/expire
-        method: put
-
 #  challenge_invalidate:
 #    handler: kotlinserverless.framework.models.Handler
 #    events:
