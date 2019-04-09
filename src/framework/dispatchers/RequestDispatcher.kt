@@ -78,7 +78,7 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
 		throw RouterException(path as? String ?: "")
     }
 
-    fun findUserByRequest(requestData: ControllerHelper.RequestData) : UserAccount? {
+    private fun findUserByRequest(requestData: ControllerHelper.RequestData) : UserAccount? {
         return GetUserAccountService.execute(
             requestData.queryParams["userId"]?.toString()?.toInt(),
             requestData.queryParams["email"]?.toString(),

@@ -184,8 +184,8 @@ object TestHelper {
         }.data!!
     }
 
-    fun generateChallenge(userAccount: UserAccount, count: Int = 1): List<Challenge> {
-        var challengeNamespaces = generateChallengeNamespace(userAccount, count)
+    fun generateChallenge(userAccount: UserAccount, count: Int = 1, offChain: Boolean = false): List<Challenge> {
+        var challengeNamespaces = generateChallengeNamespace(userAccount, count, offChain)
         return DaoService.execute {
             var challenges = mutableListOf<Challenge>()
 
@@ -197,8 +197,8 @@ object TestHelper {
         }.data!!
     }
 
-    fun generateChallengeNamespace(userAccount: UserAccount, count: Int = 1): List<ChallengeNamespace> {
-        var challengeSettingsList = generateChallengeSettingsNamespace(userAccount, count)
+    fun generateChallengeNamespace(userAccount: UserAccount, count: Int = 1, offChain: Boolean = false): List<ChallengeNamespace> {
+        var challengeSettingsList = generateChallengeSettingsNamespace(userAccount, count, offChain)
         var challengeDistributionReward = generateRewardNamespace(RewardTypeName.SINGLE)
         var challengeNamespaces = mutableListOf<ChallengeNamespace>()
         var completionCriteriaNamespace = generateCompletionCriteriaNamespace(userAccount)
@@ -216,7 +216,7 @@ object TestHelper {
         return challengeNamespaces
     }
 
-    fun generateChallengeSettingsNamespace(userAccount: UserAccount, count: Int = 1): List<ChallengeSettingNamespace> {
+    fun generateChallengeSettingsNamespace(userAccount: UserAccount, count: Int = 1, offChain: Boolean = false): List<ChallengeSettingNamespace> {
         var challengeSettingsList = mutableListOf<ChallengeSettingNamespace>()
         val exp = DateTime.now(DateTimeZone.UTC).plusDays(1).toString()
         for(i in 0..(count - 1)) {
@@ -230,7 +230,7 @@ object TestHelper {
                     shareExpiration = exp,
                     admin = userAccount.idValue,
                     maxShares = 100,
-                    offChain = false,
+                    offChain = offChain,
                     maxRewards = null,
                     maxDistributionFeeReward = null,
                     maxSharesPerReceivedShare = null,
