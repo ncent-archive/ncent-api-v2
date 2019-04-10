@@ -48,8 +48,9 @@ class FindAllChainsForChallengeTest : WordSpec() {
                         newUserAccounts[0],
                         "/challenge/chains",
                         "GET",
+                        null,
                         mapOf(
-                                Pair("challengeId", challenge1.idValue.toString())
+                            Pair("challengeId", challenge1.idValue.toString())
                         )
                     )
 
