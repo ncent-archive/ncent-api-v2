@@ -5,36 +5,31 @@ import kotlinserverless.framework.services.SOAResult
 import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import main.helpers.ChallengeHelper
-import main.services.transaction.GetProvidenceChainsService
+import main.services.transaction.GetProvidenceChainService
 import main.services.transaction.GetTransactionsService
 import org.jetbrains.exposed.sql.select
 
 object GetChainsForChallengeService {
-    fun execute(caller: UserAccount, challengeId: Int): SOAResult<MutableList<MutableList<String>>> {
+    fun execute(caller: UserAccount, challengeId: Int): SOAResult<Challenger<UserAccount>> {
         val challenge = ChallengeHelper.findChallengeById(challengeId)
         val transaction = getOriginatingTransaction(challenge)
         if(transaction == null)
             return SOAResult(SOAResultType.FAILURE, "Failed to find a correct transaction for this challenge.")
 
-        val chainsTransactionsResult = GetProvidenceChainsService.execute(transaction)
-        if(chainsTransactionsResult.data == null || chainsTransactionsResult.data!!.isEmpty())
-            return SOAResult(SOAResultType.FAILURE, "Failed to find any providence chains for this challenge.")
+        val challengers = getChildrenGraph(transaction)
 
-        val chains = chainsTransactionsResult.data!!
+        return SOAResult(SOAResultType.SUCCESS,null, challengers)
+    }
 
-        val toPublicKeys = chains.map { txList -> txList.transactions.map { tx -> tx.to ?: "" } }
-        val userAccountsMap = getUserAccountsByPublicKeys(toPublicKeys.flatten())
-
-        var resultEmails = mutableListOf<MutableList<String>>()
-        chains.forEach { txs ->
-            var resultEmailsForChain = mutableListOf<String>()
-            txs.transactions.forEach { tx ->
-                val email = userAccountsMap[tx.to]!!.userMetadata.email
-                resultEmailsForChain.add(email)
-            }
-            resultEmails.add(resultEmailsForChain)
+    private fun getChildrenGraph(currentTransaction: Transaction): Challenger<UserAccount> {
+        var children = GetProvidenceChainService.getChildren(currentTransaction.id).toMutableList()
+        var childrenGraph = mutableListOf<Challenger<UserAccount>>()
+        while(children.any()) {
+            val currentChild = children.removeAt(0)
+            val currentChildChildrenGraph = getChildrenGraph(currentChild)
+            childrenGraph.add(currentChildChildrenGraph)
         }
-        return SOAResult(SOAResultType.SUCCESS,null, resultEmails)
+        return Challenger(getUserAccountByPublicKey(currentTransaction.to!!), childrenGraph)
     }
 
     private fun getOriginatingTransaction(challenge: Challenge): Transaction? {
@@ -54,13 +49,12 @@ object GetChainsForChallengeService {
         return null
     }
 
-    private fun getUserAccountsByPublicKeys(publicKeys: List<String>): Map<String, UserAccount> {
+    private fun getUserAccountByPublicKey(publicKey: String): UserAccount {
         val query = UserAccounts
             .innerJoin(CryptoKeyPairs)
             .select {
-                CryptoKeyPairs.publicKey inList publicKeys
+                CryptoKeyPairs.publicKey eq publicKey
             }
-        val userAccounts = UserAccount.wrapRows(query).toList()
-        return userAccounts.associate { userAccount -> userAccount.cryptoKeyPair.publicKey to userAccount }
+        return UserAccount.wrapRows(query).toList().first()
     }
 }

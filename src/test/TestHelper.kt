@@ -292,7 +292,7 @@ object TestHelper {
      *      / \       \
      *     5  6        7
      */
-    fun createChainsOfShares(newUserAccounts: List<NewUserAccount>, challenge1: Challenge) {
+    fun createChainsOfShares(newUserAccounts: List<NewUserAccount>, challenge1: Challenge): Challenger<UserAccount> {
         ShareChallengeService.execute(
             newUserAccounts[0].value,
             challenge1,
@@ -340,6 +340,25 @@ object TestHelper {
             challenge1,
             1,
             newUserAccounts[7].value.cryptoKeyPair.publicKey
+        )
+
+        val challenger1 = Challenger(
+            newUserAccounts[1].value,
+            listOf(Challenger(newUserAccounts[5].value), Challenger(newUserAccounts[6].value))
+        )
+        val challenger4 = Challenger(
+            newUserAccounts[4].value,
+            listOf(Challenger(newUserAccounts[7].value))
+        )
+
+        return Challenger(
+            newUserAccounts[0].value,
+            listOf(
+                challenger1,
+                Challenger(newUserAccounts[2].value),
+                Challenger(newUserAccounts[3].value),
+                challenger4
+            )
         )
     }
 }

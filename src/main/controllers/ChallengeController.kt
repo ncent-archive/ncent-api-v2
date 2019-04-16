@@ -52,18 +52,10 @@ class ChallengeController: DefaultController<Challenge>(), RestController<Challe
         return RedeemChallengeService.execute(user!!, challenge, completerPublicKey)
     }
 
-    fun chains(user: UserAccount?, requestData: RequestData): SOAResult<ChallengeChains> {
+    fun chains(user: UserAccount?, requestData: RequestData): SOAResult<Challenger<UserAccount>> {
         val challengeId = requestData.queryParams["challengeId"] as String
 
-        val chainsResult = GetChainsForChallengeService.execute(user!!, challengeId.toInt())
-        if(chainsResult.result != SOAResultType.SUCCESS)
-            return SOAResult(chainsResult.result, chainsResult.message)
-
-        return SOAResult(
-            SOAResultType.SUCCESS,
-            null,
-            ChallengeChains(chainsResult.data!!.map { chain -> EmailChain(chain) })
-        )
+        return GetChainsForChallengeService.execute(user!!, challengeId.toInt())
     }
 
     fun share(user: UserAccount?, requestData: RequestData): SOAResult<TransactionWithNewUser> {

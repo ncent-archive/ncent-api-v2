@@ -12,8 +12,6 @@ import kotlinserverless.framework.models.Handler
 import io.mockk.mockk
 import main.daos.*
 import main.helpers.JsonHelper
-import main.services.challenge.ActivateChallengeService
-import main.services.challenge.ShareChallengeService
 import test.TestHelper
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -57,24 +55,15 @@ class FindAllChainsForChallengeTest : WordSpec() {
                     val getAllChainsResult = handler.handleRequest(map, contxt)
                     getAllChainsResult.statusCode shouldBe 200
 
-                    val emailToChallengeBalanceList = JsonHelper.parse<ChallengeChains>(getAllChainsResult.body!!.toString())
-                    emailToChallengeBalanceList.chains.map { it.chain } shouldBe mutableListOf(
-                        mutableListOf(
-                            "dev0@ncnt.io", "dev1@ncnt.io", "dev5@ncnt.io"
-                        ),
-                        mutableListOf(
-                            "dev0@ncnt.io", "dev2@ncnt.io"
-                        ),
-                        mutableListOf(
-                            "dev0@ncnt.io", "dev3@ncnt.io"
-                        ),
-                        mutableListOf(
-                            "dev0@ncnt.io", "dev4@ncnt.io", "dev7@ncnt.io"
-                        ),
-                        mutableListOf(
-                            "dev0@ncnt.io", "dev1@ncnt.io", "dev6@ncnt.io"
-                        )
-                    )
+                    val challenger = JsonHelper.parse<UserAccountChallengerNamespace>(getAllChainsResult.body!!.toString())
+                    challenger.challenger.userMetadata.email shouldBe newUserAccounts[0].value.userMetadata.email
+                    challenger.receivers!!.forEachIndexed { index, challenger ->
+                        challenger.challenger.userMetadata.email shouldBe newUserAccounts[index + 1].value.userMetadata.email
+                    }
+                    challenger.receivers!![0].receivers!![0].challenger.userMetadata.email shouldBe newUserAccounts[5].value.userMetadata.email
+                    challenger.receivers!![0].receivers!![1].challenger.userMetadata.email shouldBe newUserAccounts[6].value.userMetadata.email
+
+                    challenger.receivers!![3].receivers!![0].challenger.userMetadata.email shouldBe newUserAccounts[7].value.userMetadata.email
                 }
             }
         }

@@ -18,13 +18,14 @@ import test.TestHelper
 class GetChainsForChallengeServiceTest : WordSpec() {
     private lateinit var newUserAccounts: List<NewUserAccount>
     private lateinit var challenge1: Challenge
+    private lateinit var challengerGraph: Challenger<UserAccount>
 
     override fun beforeTest(description: Description) {
         Handler.connectAndBuildTables()
         transaction {
             newUserAccounts = TestHelper.generateUserAccounts(8)
             challenge1 = TestHelper.generateChallenge(newUserAccounts[0].value,1, true)[0]
-            TestHelper.createChainsOfShares(newUserAccounts, challenge1)
+            challengerGraph = TestHelper.createChainsOfShares(newUserAccounts, challenge1)
         }
     }
 
@@ -41,26 +42,15 @@ class GetChainsForChallengeServiceTest : WordSpec() {
                         challenge1.idValue
                     )
 
-                    chainsResult.result shouldBe  SOAResultType.SUCCESS
-                    chainsResult.data!!.count() shouldBe 5
-                    chainsResult.data!!.first().count() shouldBe 3
-                    chainsResult.data!! shouldBe mutableListOf(
-                        mutableListOf(
-                            "dev0@ncnt.io", "dev1@ncnt.io", "dev5@ncnt.io"
-                        ),
-                        mutableListOf(
-                            "dev0@ncnt.io", "dev2@ncnt.io"
-                        ),
-                        mutableListOf(
-                            "dev0@ncnt.io", "dev3@ncnt.io"
-                        ),
-                        mutableListOf(
-                            "dev0@ncnt.io", "dev4@ncnt.io", "dev7@ncnt.io"
-                        ),
-                        mutableListOf(
-                            "dev0@ncnt.io", "dev1@ncnt.io", "dev6@ncnt.io"
-                        )
-                    )
+                    chainsResult.result shouldBe SOAResultType.SUCCESS
+                    chainsResult.data!!.challenger.id shouldBe newUserAccounts[0].value.id
+                    chainsResult.data!!.receivers!!.forEachIndexed { index, challenger ->
+                        challenger.challenger.id shouldBe newUserAccounts[index + 1].value.id
+                    }
+                    chainsResult.data!!.receivers!![0].receivers!![0].challenger.id shouldBe newUserAccounts[5].value.id
+                    chainsResult.data!!.receivers!![0].receivers!![1].challenger.id shouldBe newUserAccounts[6].value.id
+
+                    chainsResult.data!!.receivers!![3].receivers!![0].challenger.id shouldBe newUserAccounts[7].value.id
                 }
             }
         }
