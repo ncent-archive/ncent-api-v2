@@ -65,7 +65,7 @@ if (!(argv.vpc_cidr &&
               .then(dbClusterResponse=>{
                 console.log('--DBCluster CREATED ', argv.db_cluster_identifier);
                 aws.command(`ec2 run-instances \
-                  --image-id ami-068670db424b01e9a\
+                  --image-id ami-056ee704806822732 \
                   --count 1 \
                   --instance-type t2.micro \
                   --placement AvailabilityZone=us-west-1a \
