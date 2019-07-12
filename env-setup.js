@@ -95,7 +95,7 @@ if (!(argv.vpc_cidr &&
 
     // Create key pair
     const keyPairResponse = await aws.command(`ec2 create-key-pair --key-name ${argv.key_pair_name}`);
-    console.log('--KeyPair CREATED ', argv.key_pair_name);
+    console.log('--KeyPair CREATED ', keyPairResponse.object['KeyMaterial']);
 
     // Create security Group
     const securityGroupResponse = await  aws.command(`ec2 create-security-group \
