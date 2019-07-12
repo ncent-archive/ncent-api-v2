@@ -51,10 +51,7 @@ NOTE: Make sure you're using Java 8 (v1.8.*)
     - ```shell 
       make name=NAME vpc_cidr=172.21.0.0/16 subnet1_cidr=172.21.1.0/24 subnet2_cidr=172.21.2.0/24 master_user_password=PASSWORD
       ```
-2. [Update Security group to have access between ec2 and rds](https://aws.amazon.com/getting-started/tutorials/configure-connect-serverless-mysql-database-aurora/)
-    - Follow [Step 4] but note below:
-    - Edit inbound to add SSH from all and MYSQL/Aurora from all
-3. Add ncnt database to the newly created db
+2. Add ncnt database to the newly created db
     - Connect to the ec2 instance
     - ```shell 
       ssh -i <path to pem file> ec2-user@<ec2 public url>
@@ -71,7 +68,7 @@ NOTE: Make sure you're using Java 8 (v1.8.*)
       mysql -h <aurora db cluster url> -P 3306 -u <dbusername> -p
       ```
     - [Create database ncnt if it doesn’t exist](https://dev.mysql.com/doc/mysql-getting-started/en/)
-4. [Update serverless.yml](https://serverless.com/framework/docs/providers/aws/guide/serverless.yml/)
+3. [Update serverless.yml](https://serverless.com/framework/docs/providers/aws/guide/serverless.yml/)
     - Vpc:, securityGroupIds, subnetIds
     - Environment: database_url, database_driver, database_user, database_password
     - For local env use after you have [created a mysql database and added a ncnt db](https://dev.mysql.com/doc/mysql-getting-started/en/):
@@ -80,11 +77,11 @@ NOTE: Make sure you're using Java 8 (v1.8.*)
         - database_user: root
         - database_password: <whatever password you set>
     - For production env use creds from above aws instances
-5. [Setup env vars in serverless.yml](https://serverless.com/framework/docs/providers/aws/guide/variables/#referencing-environment-variables) and also [add to AWS SMPS](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) (ex: ${ssm:/ncnt/production/database/user})
-6. [Install serverless](https://serverless.com/framework/docs/providers/aws/guide/installation/)
-7. [Setup AWS Creds for Serverless Framework](https://serverless.com/framework/docs/providers/aws/guide/credentials/)
-8. Create project in [https://dashboard.serverless.com](https://dashboard.serverless.com) if it doesn’t already exist
-9.  To deploy ./start.sh <env>
+4. [Setup env vars in serverless.yml](https://serverless.com/framework/docs/providers/aws/guide/variables/#referencing-environment-variables) and also [add to AWS SMPS](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) (ex: ${ssm:/ncnt/production/database/user})
+5. [Install serverless](https://serverless.com/framework/docs/providers/aws/guide/installation/)
+6. [Setup AWS Creds for Serverless Framework](https://serverless.com/framework/docs/providers/aws/guide/credentials/)
+7. Create project in [https://dashboard.serverless.com](https://dashboard.serverless.com) if it doesn’t already exist
+8.  To deploy ./start.sh <env>
     ```shell 
     ./start.sh local
     ./start.sh production
