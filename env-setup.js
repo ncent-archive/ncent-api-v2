@@ -66,6 +66,33 @@ if (!(argv.vpc_cidr &&
       --map-public-ip-on-launch`);
     console.log('--Subnet us-west-1b Public IP ENABLED ', subnet2Response.object['Subnet']['SubnetId']);
 
+    // Create Gateway 
+    const gatewayResponse = await aws.command(`ec2 create-internet-gateway`);
+    console.log('--Gateway CREATED ', gatewayResponse.object['InternetGateway']['InternetGatewayId']);
+
+    // Attach Internet gateway to VPC
+    const gatewayAttachmentResponse = await aws.command(`ec2 attach-internet-gateway \
+      --internet-gateway-id ${gatewayResponse.object['InternetGateway']['InternetGatewayId']} \
+      --vpc-id ${vpcResponse.object['Vpc']['VpcId']}`);
+    console.log('--Gateway ATTACHED ', gatewayResponse.object['InternetGateway']['InternetGatewayId']);
+
+    // Create Route Table
+    const createRouteTableResponse = await aws.command(`ec2 create-route-table --vpc-id ${vpcResponse.object['Vpc']['VpcId']}`);
+    console.log('--RouteTable CREATED ', createRouteTableResponse.object['RouteTable']['RouteTableId']);
+
+    // Add Internet Gateway Rule
+    const addGatewayRuleResponse = await aws.command(`ec2 create-route \
+      --route-table-id ${createRouteTableResponse.object['RouteTable']['RouteTableId']} \
+      --destination-cidr-block 0.0.0.0/0 \
+      --gateway-id ${gatewayResponse.object['InternetGateway']['InternetGatewayId']}`);
+    console.log('--GatewayRule ADDED');
+
+    // Associate Route Table to a Subnet
+    const associateRouteTableResponse = await aws.command(`ec2 associate-route-table \
+      --route-table-id ${createRouteTableResponse.object['RouteTable']['RouteTableId']} \
+      --subnet-id ${subnet1Response.object['Subnet']['SubnetId']}`);
+    console.log('--RouteTable ASSOCIATED');
+
     // Create key pair
     const keyPairResponse = await aws.command(`ec2 create-key-pair --key-name ${argv.key_pair_name}`);
     console.log('--KeyPair CREATED ', argv.key_pair_name);
