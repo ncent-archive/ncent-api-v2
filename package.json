@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/ncent/ncent-api-v2#readme",
   "dependencies": {
-    "newman": "^4.4.0"
+    "aws-cli-js": "^2.0.5",
+    "minimist": "^1.2.0",
+    "newman": "^4.5.1"
   }
 }
