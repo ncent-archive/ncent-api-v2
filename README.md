@@ -51,6 +51,11 @@ NOTE: Make sure you're using Java 8 (v1.8.*)
     - ```shell 
       make name=NAME vpc_cidr=172.21.0.0/16 subnet1_cidr=172.21.1.0/24 subnet2_cidr=172.21.2.0/24 master_user_password=PASSWORD
       ```
+    - copy the output key and create a pem file for using it on the ssh
+    - change pem file permission as below
+    - ```shell 
+      chmod 444 key.pem
+      ```
 2. Add ncnt database to the newly created db
     - Connect to the ec2 instance
     - ```shell 

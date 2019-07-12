@@ -131,8 +131,10 @@ if (!(argv.vpc_cidr &&
     const dbClusterResponse = await aws.command(`rds create-db-cluster \
       --availability-zones us-west-1a \
       --db-cluster-identifier ${argv.db_cluster_identifier} \
-      --engine aurora-mysql \
-      --engine-version 5.7.12 \
+      --engine aurora \
+      --engine-version 5.6.10a \
+      --engine-mode serverless \
+      --scaling-configuration MinCapacity=4,MaxCapacity=32,SecondsUntilAutoPause=1000,AutoPause=true \
       --master-username ${argv.master_username} \
       --master-user-password ${argv.master_user_password} \
       --db-subnet-group-name ${dbSubnetGroupResponse.object['DBSubnetGroup']['DBSubnetGroupName']} \
