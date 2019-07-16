@@ -13,12 +13,10 @@ object GetUserAccountService {
             try {
                 when {
                     userId != null -> {
-                        println("userId $userId")
                         UserAccount.findById(userId)!!
                     }
                     jwt != null -> {
                         val email = JWT.decode(jwt).getClaim("email").asString()
-                        println("email $email")
                         val query = UserAccounts
                             .innerJoin(Users)
                             .select {
