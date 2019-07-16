@@ -104,7 +104,8 @@ object ControllerHelper {
     )
 
     data class UserAuth(
-        val apiKey: String,
-        val secretKey: String
+        val apiKey: String?,
+        val secretKey: String?,
+        val jwt: String?
     )
 }

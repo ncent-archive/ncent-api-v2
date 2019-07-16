@@ -19,6 +19,8 @@ service: ncent-api # NOTE: update this with your service name
 
 provider:
   name: aws
+  apiKeys:
+    - value: ${ssm:/ncnt/arber-dev/apikey~true}
   runtime: java8
   region: ${opt:region, 'us-west-1'}
   vpc:
@@ -70,22 +72,6 @@ package:
   excludeDevDependencies: false
 
 functions:
-  user:
-    handler: kotlinserverless.framework.models.Handler
-    events:
-    - schedule: rate(10 minutes)
-    - http:
-        path: /user_test/hello
-        method: get
-
-  dbhealth:
-    handler: kotlinserverless.framework.models.Handler
-    events:
-    - schedule: rate(10 minutes)
-    - http:
-        path: /dbhealth/health
-        method: get
-
   user_get:
     handler: kotlinserverless.framework.models.Handler
     events:
@@ -93,6 +79,19 @@ functions:
     - http:
         path: /user
         method: get
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   user_create:
     handler: kotlinserverless.framework.models.Handler
@@ -101,6 +100,19 @@ functions:
     - http:
         path: /user
         method: post
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   user_delete:
     handler: kotlinserverless.framework.models.Handler
@@ -109,6 +121,19 @@ functions:
     - http:
         path: /user
         method: delete
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   user_reset:
     handler: kotlinserverless.framework.models.Handler
@@ -117,6 +142,19 @@ functions:
     - http:
         path: /user/reset
         method: patch
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   user_balances:
     handler: kotlinserverless.framework.models.Handler
@@ -125,6 +163,19 @@ functions:
       - http:
           path: /user/balances
           method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+          authorizer: aws_iam
+          private: true
 
   token_get:
     handler: kotlinserverless.framework.models.Handler
@@ -133,6 +184,19 @@ functions:
     - http:
         path: /token
         method: get
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   tokens_get:
     handler: kotlinserverless.framework.models.Handler
@@ -141,6 +205,19 @@ functions:
     - http:
         path: /tokens
         method: get
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   token_create:
     handler: kotlinserverless.framework.models.Handler
@@ -149,6 +226,19 @@ functions:
     - http:
         path: /token
         method: post
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   token_transfer:
     handler: kotlinserverless.framework.models.Handler
@@ -157,6 +247,19 @@ functions:
     - http:
         path: /token/transfer
         method: post
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   reward_pool:
     handler: kotlinserverless.framework.models.Handler
@@ -165,6 +268,19 @@ functions:
     - http:
         path: /reward/pool
         method: post
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   reward_create:
     handler: kotlinserverless.framework.models.Handler
@@ -173,6 +289,19 @@ functions:
     - http:
         path: /reward
         method: post
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   completion_create:
     handler: kotlinserverless.framework.models.Handler
@@ -181,6 +310,19 @@ functions:
     - http:
         path: /completion
         method: post
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   completion_complete:
     handler: kotlinserverless.framework.models.Handler
@@ -189,6 +331,19 @@ functions:
     - http:
         path: /completion
         method: put
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   transaction:
     handler: kotlinserverless.framework.models.Handler
@@ -197,6 +352,19 @@ functions:
     - http:
         path: /transaction
         method: post
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   challenge_create:
     handler: kotlinserverless.framework.models.Handler
@@ -205,6 +373,19 @@ functions:
     - http:
         path: /challenge
         method: post
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   challenge_get:
     handler: kotlinserverless.framework.models.Handler
@@ -213,6 +394,19 @@ functions:
     - http:
         path: /challenge
         method: get
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   challenges_get:
     handler: kotlinserverless.framework.models.Handler
@@ -221,6 +415,19 @@ functions:
     - http:
         path: /challenges
         method: get
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
 #  challenge_invalidate:
 #    handler: kotlinserverless.framework.models.Handler
@@ -245,6 +452,19 @@ functions:
     - http:
         path: /challenge/complete
         method: put
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   challenge_share:
     handler: kotlinserverless.framework.models.Handler
@@ -253,6 +473,19 @@ functions:
     - http:
         path: /challenge/share
         method: put
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
   challenge_balances:
     handler: kotlinserverless.framework.models.Handler
@@ -261,6 +494,9 @@ functions:
       - http:
           path: /challenge/balances
           method: get
+          cors: true
+          authorizer: aws_iam
+          private: true
 
   challenge_activate:
     handler: kotlinserverless.framework.models.Handler
@@ -269,6 +505,19 @@ functions:
       - http:
           path: /challenge/activate
           method: put
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+          authorizer: aws_iam
+          private: true
 
   challenge_chains:
     handler: kotlinserverless.framework.models.Handler
@@ -277,6 +526,19 @@ functions:
     - http:
         path: /challenge/chains
         method: get
+        cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - jwt
+            allowCredentials: false
+        authorizer: aws_iam
+        private: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
