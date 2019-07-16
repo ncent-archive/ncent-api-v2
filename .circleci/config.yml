@@ -43,6 +43,17 @@ jobs:
           command: |
             cat serverless-dev.yml > serverless.yml
             serverless deploy --stage development
+  deploy-arber-dev:
+    executor: serverless-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/ncnt-api
+      - run:
+          name: Deploy to arber-dev
+          command: |
+            cat serverless-arber-dev.yml > serverless.yml
+            serverless deploy --stage arber-dev
   deploy-prod:
     executor: serverless-executor
     steps:
@@ -83,6 +94,12 @@ workflows:
     jobs:
     - build
     - deploy-dev:
+        requires:
+          - build
+        filters:
+          branches:
+            only: master
+    - deploy-arber-dev:
         requires:
           - build
         filters:
