@@ -1,12 +1,10 @@
 package main.services.user_account
 
 import kotlinserverless.framework.services.SOAResult
-import kotlinserverless.framework.services.SOAResultType
 import main.daos.*
 import framework.services.DaoService
 import kotlinserverless.framework.models.NotFoundException
 import org.jetbrains.exposed.sql.select
-import main.services.user_account.ValidateJWTService
 import com.auth0.jwt.JWT
 
 object GetUserAccountService {
@@ -14,22 +12,19 @@ object GetUserAccountService {
         return DaoService.execute {
             try {
                 when {
+                    userId != null -> {
+                        println("userId $userId")
+                        UserAccount.findById(userId)!!
+                    }
                     jwt != null -> {
-                        println("here1");
-                        val validation = ValidateJWTService.execute(jwt)
-                        println("here2");
-                        if(validation.result != SOAResultType.SUCCESS) {
-                            throw NotFoundException()
-                        } else {
-                            val email = JWT.decode(jwt).getClaim("email").asString()
-                            println("here email")
-                            val query = UserAccounts
-                                .innerJoin(Users)
-                                .select {
-                                    Users.email eq email
-                                }
-                            UserAccount.wrapRows(query).toList().distinct().first()
-                        }
+                        val email = JWT.decode(jwt).getClaim("email").asString()
+                        println("email $email")
+                        val query = UserAccounts
+                            .innerJoin(Users)
+                            .select {
+                                Users.email eq email
+                            }
+                        UserAccount.wrapRows(query).toList().distinct().first()
                     }
                     apiKey != null -> {
                         val query = UserAccounts
@@ -38,9 +33,6 @@ object GetUserAccountService {
                                     ApiCreds.apiKey eq apiKey
                                 }
                         UserAccount.wrapRows(query).toList().distinct().first()
-                    }
-                    userId != null -> {
-                        UserAccount.findById(userId)!!
                     }
                     email != null -> {
                         val query = UserAccounts
