@@ -29,7 +29,7 @@ object UserAccountHelper {
         val keyAndSecret = base64DecodedAuth.split(":".toRegex(), 2)
         if(keyAndSecret.size != 2)
             throw InvalidArguments("The user authentication parameters are not formatted correctly. Should be apikey:secret")
-        return UserAuth(keyAndSecret[0], keyAndSecret[1], null)
+        return UserAuth(keyAndSecret[0], keyAndSecret[1])
     }
 
     fun getOrGenerateUser(

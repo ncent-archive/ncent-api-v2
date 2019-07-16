@@ -106,6 +106,6 @@ object ControllerHelper {
     data class UserAuth(
         val apiKey: String?,
         val secretKey: String?,
-        val jwt: String?
+        val jwt: String? = null
     )
 }
