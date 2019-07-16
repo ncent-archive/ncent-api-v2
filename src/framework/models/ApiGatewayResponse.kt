@@ -24,7 +24,7 @@ class ApiGatewayResponse(
   class Builder {
     var statusCode: Int = 200
     var rawBody: Any? = null
-    var headers: Map<String, String>? = mapOf("X-Powered-By" to "AWS Lambda & Serverless")
+    var headers: Map<String, String>? = mapOf("X-Powered-By" to "AWS Lambda & Serverless", "Access-Control-Allow-Origin" to "*", "Access-Control-Allow-Credentials" to "true")
 
     fun build(): ApiGatewayResponse {
       var body = try {
