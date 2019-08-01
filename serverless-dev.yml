@@ -20,7 +20,7 @@ service: ncent-api # NOTE: update this with your service name
 provider:
   name: aws
   runtime: java8
-  region: ${opt:region, 'us-west-1'}
+  region: us-west-1
   vpc:
     securityGroupIds:
       - ${ssm:/ncnt/development/securitygroup} # sg-03e1b070d826d2767
