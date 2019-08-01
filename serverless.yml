@@ -12,8 +12,6 @@
 # Happy Coding!
 
 service: ncent-api # NOTE: update this with your service name
-app: ncent-api
-tenant: ncntdev
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
