@@ -16,3 +16,4 @@ target
 # Serverless directories
 .serverless
 .history
+*.pem

@@ -17,6 +17,9 @@ object UserAccountHelper {
     }
 
     fun getUserAuth(headers: Map<String, Any>): UserAuth? {
+        if(headers.containsKey("jwt")) {
+           return UserAuth(null, null, headers["jwt"] as String) 
+        }
         if(!headers.containsKey("Authorization"))
             return null
         val authHeaderSplit = (headers["Authorization"] as String).split(" ")

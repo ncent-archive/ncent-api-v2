@@ -82,7 +82,8 @@ open class RequestDispatcher: Dispatcher<ApiGatewayRequest, Any> {
         return GetUserAccountService.execute(
             requestData.queryParams["userId"]?.toString()?.toInt(),
             requestData.queryParams["email"]?.toString(),
-            requestData.userAuth?.apiKey
+            requestData.userAuth?.apiKey,
+            requestData.userAuth?.jwt
         ).data
     }
 

@@ -12,12 +12,15 @@ import java.lang.reflect.InvocationTargetException
 open class DefaultController<T: BaseIntEntity> : Controller<T> {
 	@Throws(ForbiddenException::class)
 	fun validateApiKey(user: UserAccount, requestData: ControllerHelper.RequestData) {
-		if(requestData.userAuth == null)
-			throw UnauthorizedError("Must include authentication for this endpoint")
-		val validateApiKeyResult = DaoService.execute {
-			ValidateApiKeyService.execute(user, requestData.userAuth.secretKey)
+		// JWS was already verified when getting the user email from the jwt payload.
+		if(requestData.userAuth?.jwt == null) {
+			if(requestData.userAuth == null)
+				throw UnauthorizedError("Must include authentication for this endpoint")
+			val validateApiKeyResult = DaoService.execute {
+				ValidateApiKeyService.execute(user, requestData.userAuth.secretKey!!)
+			}
+			DaoService.throwOrReturn(validateApiKeyResult)
 		}
-		DaoService.throwOrReturn(validateApiKeyResult)
 	}
 
 	@Throws(ForbiddenException::class)

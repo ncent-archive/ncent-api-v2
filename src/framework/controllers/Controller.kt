@@ -40,7 +40,7 @@ interface Controller<M> {
         return when(method) {
             ControllerHelper.HTTP_GET -> {
                 when {
-                    requestData.queryParams.containsKey("id") -> {
+                    requestData.queryParams.containsKey("id") || requestData.queryParams.containsKey("email") -> {
                         val id = requestData.queryParams["id"].toString().toIntOrNull()
 
                         if (id == null) {
